@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Mathe-Starter 2026 - Final Fix</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="stylesheet" href="css/tool_gt.css">
+</head>
+<body>
+
+<div id="app">
+    	
+	<div v-if="!viewMode" class="config-container">
+		<h1 style="font-weight: 900; color: var(--slate-800);">Mathe-Starter Konfigurator</h1>
+		
+		<div class="settings-bar">
+			<label class="checkbox-label" style="font-weight: bold;">
+				Aufgabenanzahl:
+				<input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input">
+			</label>
+			<label class="checkbox-label" style="font-weight: bold; margin-left: 30px;">
+				<input type="checkbox" v-model="mentalMathMode">
+				🧠 Easy-Mode
+			</label>
+		</div>
+
+		<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 50px">
+			<button @click="generateAll" class="start-btn" style="margin: 0; padding: 10px 20px;">
+				Aufgaben generieren 🎲
+			</button>
+			
+			<button @click="invertSelection" class="btn-ui" style="background: var(--slate-300); color: var(--slate-800); font-size: 0.9rem;">
+				Selection invertieren 🔄
+			</button>
+		</div>
+		<div class="type-grid">
+			<label v-for="(label, key) in typeLabels" :key="key" class="checkbox-label">
+				<input type="checkbox" v-model="selectedTypes" :value="key">
+				<span>{{ label }}</span>
+			</label>
+		</div>
+	</div>
+
+    <div v-else :class="['presentation-view', { 'dark-mode': isDarkMode }]">
+        <div class="top-bar">
+            <button @click="viewMode = false" class="btn-ui btn-back">← Zurück</button>
+            <div style="font-weight: 900; color: var(--slate-300);">KLASSE 2026</div>
+            
+            <div class="top-bar-actions">
+                <button @click="toggleDarkMode" class="btn-ui btn-theme">
+                    {{ isDarkMode ? 'Hellmodus' : 'Dunkelmodus' }}
+                </button>
+                <button @click="exportJSON" class="btn-ui btn-export">JSON Export</button>
+                <button @click="exportHTML" class="btn-ui btn-export">Drucken (HTML)</button>
+                <button @click="generateAll" class="btn-ui btn-primary">Neue Zahlen 🎲</button>
+                <button @click="toggleSolutions()" class="btn-ui btn-toggle">
+                    {{ showSolutions ? 'Lösungen ausblenden' : 'Lösungen anzeigen' }}
+                </button>
+            </div>
+        </div>
+
+        <div class="task-grid">
+            <div class="column-wrapper">
+                <div v-for="(task, index) in tasks.slice(0, halfCount)" :key="'col1-'+index" class="task-row">
+                    <div class="task-num">{{ index + 1 }}</div>
+                    <div class="content">
+                        <div v-if="!showSolutions" class="math-q" v-html="task.text"></div>
+                        <div v-else class="math-a" v-html="task.solution"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column-wrapper">
+                <div v-for="(task, index) in tasks.slice(halfCount)" :key="'col2-'+index" class="task-row">
+                    <div class="task-num">{{ index + halfCount + 1 }}</div>
+                    <div class="content">
+                        <div v-if="!showSolutions" class="math-q" v-html="task.text"></div>
+                        <div v-else class="math-a" v-html="task.solution"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
