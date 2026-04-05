@@ -1,4 +1,4 @@
-﻿const { createApp, ref, computed, nextTick } = Vue;
+﻿const { createApp, ref, computed, nextTick, onMounted, onBeforeUnmount } = Vue;
 
 /* TODO / Roadmap 
  - Winkel fixen 
@@ -44,15 +44,25 @@ createApp({
         const tasks = ref([]);
         const showSolutions = ref(false);
         const viewMode = ref(false);
+		const worksheetMode = ref(false);
+		const trainingMode = ref(false);
+		const showWorksheetSolutions = ref(false);
+		const showTrainingSolution = ref(false);
+		const currentTrainingIndex = ref(0);
 		const isDarkMode = ref(false);
         const selectedTypes = ref([]);
+        const taskWeights = ref(
+			Object.fromEntries(Object.keys(typeLabels).map(type => [type, 1]))
+		);
         
         // NEUE STATE VARIABLEN
         const taskCount = ref(10);
+		const gtNumber = ref(1);
         const mentalMathMode = ref(false);
 
         // NEU: Berechnet dynamisch die Mitte für die zwei Spalten
         const halfCount = computed(() => Math.ceil(tasks.value.length / 2));
+		const currentTrainingTask = computed(() => tasks.value[currentTrainingIndex.value] ?? null);
         
         const toggleSolutions = async () => {
             showSolutions.value = !showSolutions.value;
@@ -69,12 +79,43 @@ createApp({
 			const newSelection = allTypes.filter(type => !selectedTypes.value.includes(type));
 			selectedTypes.value = newSelection;
 		};
-		
 
-        const generateAll = async () => {
-           if (selectedTypes.value.length === 0) return;
+		const getTaskExportData = () => tasks.value.map(t => ({
+			aufgabentyp: t.type,
+			aufgabe: t.textDisplay ?? '',
+			textDisplay: t.textDisplay ?? '',
+			textPrint: t.textPrint ?? '',
+			loesung: t.solution
+		}));
+
+		const downloadJSONFile = (filename, data) => {
+			const dataStr = JSON.stringify(data, null, 2);
+			const blob = new Blob([dataStr], { type: 'application/json' });
+			const url = URL.createObjectURL(blob);
+
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = filename;
+			a.click();
+			URL.revokeObjectURL(url);
+		};
+
+		const buildTasks = () => {
+			if (selectedTypes.value.length === 0) return false;
 			
-			const types = [...selectedTypes.value]; // Kopie der Auswahl
+			const weightedTypes = selectedTypes.value.flatMap(type => {
+				const rawWeight = Number(taskWeights.value[type]);
+				const weight = Number.isFinite(rawWeight)
+					? Math.max(1, Math.floor(rawWeight))
+					: 1;
+
+				taskWeights.value[type] = weight;
+				return Array(weight).fill(type);
+			});
+
+			if (weightedTypes.length === 0) return false;
+
+			const types = [...weightedTypes];
 			const targetTotal = taskCount.value;
 			let typePool = [];
 
@@ -107,36 +148,122 @@ createApp({
 				let generated = createTask(type, mentalMathMode.value);
 				return {
 					type: type,
-					text: generated.text,
+					textDisplay: generated.textDisplay ?? '',
+					textPrint: generated.textPrint ?? '',
 					solution: generated.solution
 				};
 			});
-            
-            showSolutions.value = false;
-            viewMode.value = true;
+
+			showSolutions.value = false;
+			showWorksheetSolutions.value = false;
+			return true;
+		};
+
+        const generateAll = async () => {
+			if (!buildTasks()) return;
+
+			trainingMode.value = false;
+			worksheetMode.value = false;
+			viewMode.value = true;
 
             await nextTick();
             await typesetMathJax();
         };
 
+		const startTraining = async () => {
+			mentalMathMode.value = true;
+
+			if (!buildTasks()) return;
+
+			viewMode.value = false;
+			worksheetMode.value = false;
+			trainingMode.value = true;
+			currentTrainingIndex.value = 0;
+			showTrainingSolution.value = false;
+
+			await nextTick();
+			await typesetMathJax();
+		};
+
+		const toggleTrainingSolution = async () => {
+			showTrainingSolution.value = !showTrainingSolution.value;
+			await nextTick();
+			await typesetMathJax();
+		};
+
+		const goToPreviousTrainingTask = async () => {
+			if (tasks.value.length === 0) return;
+			if (currentTrainingIndex.value <= 0) {
+				currentTrainingIndex.value = tasks.value.length - 1;
+			} else {
+				currentTrainingIndex.value -= 1;
+			}
+			showTrainingSolution.value = false;
+			await nextTick();
+			await typesetMathJax();
+		};
+
+		const goToNextTrainingTask = async () => {
+			if (tasks.value.length === 0) return;
+			if (currentTrainingIndex.value >= tasks.value.length - 1) {
+				currentTrainingIndex.value = 0;
+			} else {
+				currentTrainingIndex.value += 1;
+			}
+			showTrainingSolution.value = false;
+			await nextTick();
+			await typesetMathJax();
+		};
+
+		const leaveTraining = () => {
+			trainingMode.value = false;
+			showTrainingSolution.value = false;
+			currentTrainingIndex.value = 0;
+		};
+
+		const handleTrainingKeydown = (event) => {
+			if (!trainingMode.value) return;
+
+			if (event.key === 'ArrowLeft') {
+				event.preventDefault();
+				goToPreviousTrainingTask();
+				return;
+			}
+
+			if (event.key === 'ArrowRight') {
+				event.preventDefault();
+				goToNextTrainingTask();
+				return;
+			}
+
+			if (event.key === ' ' || event.code === 'Space') {
+				event.preventDefault();
+				toggleTrainingSolution();
+				return;
+			}
+
+			if (event.key === 'Escape') {
+				event.preventDefault();
+				leaveTraining();
+			}
+		};
+
+		onMounted(() => {
+			window.addEventListener('keydown', handleTrainingKeydown);
+		});
+
+		onBeforeUnmount(() => {
+			window.removeEventListener('keydown', handleTrainingKeydown);
+		});
+
         // --- NEU: JSON Export ---
         const exportJSON = () => {
-            const dataToExport = tasks.value.map(t => ({
-                aufgabentyp: t.type,
-                aufgabe: t.text,
-                loesung: t.solution
-            }));
-            
-            const dataStr = JSON.stringify(dataToExport, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `mathe_aufgaben_${taskCount.value}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
+			downloadJSONFile(`mathe_aufgaben_${taskCount.value}.json`, getTaskExportData());
         };
+
+		const exportWorksheetJSON = () => {
+			downloadJSONFile(`arbeitsblatt_aufgaben_${taskCount.value}.json`, getTaskExportData());
+		};
 
         // Die Funktion nimmt nun einen zweiten Parameter entgegen: isMentalMode
 		
@@ -255,7 +382,7 @@ createApp({
 						${col1.map((t, i) => `
 							<div class="task-row">
 								<div class="num">${i + 1}</div>
-								<div class="math task-text">${t.text}</div>
+								<div class="math task-text">${t.textDisplay ?? ''}</div>
 								<div class="math sol-text" style="display:none; color: #16a34a; font-weight: 500;">${t.solution}</div>
 							</div>`).join('')}
 					</div>
@@ -264,7 +391,7 @@ createApp({
 						${col2.map((t, i) => `
 							<div class="task-row">
 								<div class="num">${i + half + 1}</div>
-								<div class="math task-text">${t.text}</div>
+								<div class="math task-text">${t.textDisplay ?? ''}</div>
 								<div class="math sol-text" style="display:none; color: #16a34a; font-weight: 500;">${t.solution}</div>
 							</div>`).join('')}
 					</div>
@@ -311,19 +438,446 @@ createApp({
 			window.open(url, '_blank');
 		};
 
+		// ============================================================
+		// ARBEITSBLATT-GENERATOR - In-Page Druckansicht
+		// ============================================================
+		const toggleWorksheetSolutions = async () => {
+			showWorksheetSolutions.value = !showWorksheetSolutions.value;
+			await nextTick();
+			await typesetMathJax();
+		};
+
+		const leaveWorksheet = () => {
+			worksheetMode.value = false;
+		};
+
+		const printWorksheet = () => {
+			window.print();
+		};
+
+		const buildWorksheetRowsHTML = () => {
+			const taskDisplay = showWorksheetSolutions.value ? 'none' : 'block';
+			const solutionDisplay = showWorksheetSolutions.value ? 'block' : 'none';
+
+			return tasks.value.map((task, index) => {
+				const copyHtml = `
+					<div class="worksheet-copy">
+						<div class="worksheet-num">${index + 1})</div>
+						<div class="worksheet-content">
+							<div class="worksheet-math task-text" style="display: ${taskDisplay};">${task.textPrint ?? ''}</div>
+							<div class="worksheet-solution sol-text" style="display: ${solutionDisplay};">${task.solution}</div>
+						</div>
+					</div>`;
+
+				return `<div class="worksheet-row">${copyHtml}${copyHtml}</div>`;
+			}).join('');
+		};
+
+		const getWorksheetExportFallbackStyles = () => `
+			:root {
+				--primary: #008000;
+				--slate-800: #1e293b;
+				--slate-500: #64748b;
+				--slate-300: #cbd5e1;
+				--slate-100: #f1f5f9;
+			}
+
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				background: white;
+				color: var(--slate-800);
+				font-family: system-ui, -apple-system, sans-serif;
+			}
+
+			.btn-ui {
+				padding: 10px 20px;
+				border-radius: 15px;
+				border: none;
+				cursor: pointer;
+				font-weight: bold;
+			}
+
+			.btn-toggle { background: var(--slate-800); color: white; min-width: 200px; }
+			.btn-primary { background: var(--primary); color: white; }
+			.btn-export { background: var(--slate-300); color: var(--slate-800); }
+
+			.worksheet-view {
+				min-height: 100vh;
+				padding: 20px;
+				background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+				color: var(--slate-800);
+			}
+
+			.worksheet-toolbar {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 12px;
+				margin-bottom: 18px;
+				flex-wrap: wrap;
+			}
+
+			.worksheet-toolbar-actions {
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+			}
+
+			.worksheet-sheet {
+				max-width: 1400px;
+				margin: 0 auto;
+				padding: 24px 28px;
+				background: white;
+				border: 1px solid rgba(203, 213, 225, 0.7);
+				border-radius: 24px;
+				box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+			}
+
+			.worksheet-sheet-header {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				align-items: center;
+				gap: 22px;
+				padding-bottom: 12px;
+				margin-bottom: 12px;
+				border-bottom: 2px solid var(--slate-100);
+				font-size: 0.95rem;
+				font-weight: 400;
+				color: var(--slate-500);
+			}
+
+			.worksheet-header-copy {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-weight: 400;
+			}
+
+			.worksheet-header-gt {
+				margin-left: 10px;
+				text-align: right;
+			}
+
+			.worksheet-header-copy + .worksheet-header-copy {
+				padding-left: 22px;
+			}
+
+			.worksheet-list {
+				display: flex;
+				flex-direction: column;
+			}
+
+			.worksheet-row {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 22px;
+				padding: 10px 0;
+				page-break-inside: avoid;
+			}
+
+			.worksheet-copy {
+				display: grid;
+				grid-template-columns: 34px 1fr;
+				gap: 12px;
+				align-items: start;
+			}
+
+			.worksheet-copy + .worksheet-copy {
+				padding-left: 22px;
+			}
+
+			.worksheet-num {
+				font-size: 0.95rem;
+				font-weight: 400;
+				color: var(--slate-500);
+				text-align: right;
+				line-height: 1.6;
+			}
+
+			.worksheet-content {
+				min-width: 0;
+			}
+
+			.worksheet-math,
+			.worksheet-solution {
+				font-size: 1.25rem;
+				line-height: 1.35;
+				word-wrap: break-word;
+			}
+
+			.worksheet-solution {
+				color: var(--primary);
+			}
+
+			.worksheet-content p,
+			.worksheet-content ul,
+			.worksheet-content ol {
+				margin: 0 !important;
+				padding: 0 !important;
+			}
+
+			.worksheet-view mjx-container[jax="CHTML"][display="true"] {
+				margin: 6px 0 0 0 !important;
+				font-size: 100% !important;
+			}
+
+			@media (max-width: 960px) {
+				.worksheet-row {
+					grid-template-columns: 1fr;
+					gap: 12px;
+				}
+
+				.worksheet-copy + .worksheet-copy {
+					padding-left: 0;
+					padding-top: 12px;
+				}
+			}
+
+			@media print {
+				@page {
+					size: A4 landscape;
+					margin: 0;
+				}
+
+				html,
+				body {
+					width: 297mm;
+					height: 210mm;
+					margin: 0;
+					padding: 0;
+					background: white;
+					overflow: visible;
+				}
+
+				.no-print {
+					display: none !important;
+				}
+
+				.worksheet-view {
+					width: 297mm;
+					min-height: 210mm;
+					padding: 0;
+					background: white;
+				}
+
+				.worksheet-sheet {
+					width: 297mm;
+					min-height: 210mm;
+					max-width: none;
+					margin: 0;
+					padding: 7mm 0 8mm;
+					box-sizing: border-box;
+					border: none;
+					border-radius: 0;
+					box-shadow: none;
+				}
+
+				.worksheet-sheet-header {
+					width: 297mm;
+					margin: 0 0 4mm 0;
+					padding: 0 8mm 4mm;
+					box-sizing: border-box;
+					border-bottom: 0.3mm solid var(--slate-300);
+					font-size: 0.8rem;
+				}
+
+				.worksheet-row {
+					width: 297mm;
+					grid-template-columns: 148.5mm 148.5mm;
+					gap: 0;
+					padding: 2.4mm 0;
+					box-sizing: border-box;
+					break-inside: avoid;
+					page-break-inside: avoid;
+				}
+
+				.worksheet-copy {
+					width: 148.5mm;
+					grid-template-columns: 8mm 1fr;
+					gap: 3mm;
+					padding: 0 8mm 0 5mm;
+					box-sizing: border-box;
+					align-items: start;
+				}
+
+				.worksheet-copy + .worksheet-copy {
+					margin-left: 0;
+					padding-left: 8mm;
+				}
+
+				.worksheet-num {
+					font-size: 0.78rem;
+					line-height: 1.45;
+					color: #64748b;
+				}
+
+				.worksheet-math,
+				.worksheet-solution {
+					font-size: 0.92rem;
+					line-height: 1.2;
+				}
+
+				.worksheet-content {
+					min-width: 0;
+				}
+
+				.worksheet-content mjx-container {
+					font-size: 92% !important;
+				}
+
+				.worksheet-view mjx-container[jax="CHTML"][display="true"] {
+					margin-top: 1.2mm !important;
+					margin-bottom: 0 !important;
+				}
+			}
+		`;
+
+		const getWorksheetExportStyles = async () => {
+			try {
+				const response = await fetch('css/tool_gt.css', { cache: 'no-cache' });
+				if (response.ok) {
+					const cssText = await response.text();
+					if (cssText.trim().length > 0) {
+						return cssText;
+					}
+				}
+			} catch (e) {
+				console.warn('Worksheet export CSS fallback used:', e);
+			}
+
+			return getWorksheetExportFallbackStyles();
+		};
+
+		const buildWorksheetHTMLDocument = async () => {
+			const inlineStyles = await getWorksheetExportStyles();
+			const worksheetData = JSON.stringify(getTaskExportData());
+			const toggleLabel = showWorksheetSolutions.value ? 'Aufgaben anzeigen' : 'Lösungen anzeigen';
+
+			return `
+			<!DOCTYPE html>
+			<html lang="de">
+			<head>
+				<meta charset="UTF-8">
+				<title>Arbeitsblatt</title>
+				<script>
+					window.MathJax = {
+						tex: { inlineMath: [['\\\\(', '\\\\)']] },
+						svg: { fontCache: 'global' }
+					};
+				<\/script>
+				<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async><\/script>
+				<style>${inlineStyles}</style>
+			</head>
+			<body>
+				<div class="worksheet-view">
+					<div class="worksheet-toolbar no-print">
+						<div class="worksheet-toolbar-actions">
+							<button class="btn-ui btn-toggle" onclick="toggleWorksheetSolutions()" id="toggleBtn">${toggleLabel}</button>
+							<button class="btn-ui btn-export" onclick="exportWorksheetJSON()">JSON Export</button>
+							<button class="btn-ui btn-primary" onclick="window.print()">Drucken</button>
+						</div>
+					</div>
+
+					<div class="worksheet-sheet">
+						<div class="worksheet-sheet-header">
+							<div class="worksheet-header-copy">
+								<span>Name:</span>
+								<span class="worksheet-header-gt">GT ${gtNumber.value}</span>
+							</div>
+							<div class="worksheet-header-copy">
+								<span>Name:</span>
+								<span class="worksheet-header-gt">GT ${gtNumber.value}</span>
+							</div>
+						</div>
+						<div class="worksheet-list">${buildWorksheetRowsHTML()}</div>
+					</div>
+				</div>
+
+				<script>
+					const worksheetData = ${worksheetData};
+					let showSolutions = ${showWorksheetSolutions.value};
+
+					function toggleWorksheetSolutions() {
+						showSolutions = !showSolutions;
+						document.querySelectorAll('.task-text').forEach(el => el.style.display = showSolutions ? 'none' : 'block');
+						document.querySelectorAll('.sol-text').forEach(el => el.style.display = showSolutions ? 'block' : 'none');
+						document.getElementById('toggleBtn').innerText = showSolutions ? 'Aufgaben anzeigen' : 'Lösungen anzeigen';
+						if (window.MathJax?.typesetPromise) {
+							window.MathJax.typesetPromise();
+						}
+					}
+
+					function exportWorksheetJSON() {
+						const blob = new Blob([JSON.stringify(worksheetData, null, 2)], { type: 'application/json' });
+						const url = URL.createObjectURL(blob);
+						const a = document.createElement('a');
+						a.href = url;
+						a.download = 'arbeitsblatt_aufgaben.json';
+						a.click();
+						URL.revokeObjectURL(url);
+					}
+				<\/script>
+			</body>
+			</html>`;
+		};
+
+		const downloadWorksheetHTML = async () => {
+			const htmlContent = await buildWorksheetHTMLDocument();
+			const blob = new Blob([htmlContent], { type: 'text/html' });
+			const url = URL.createObjectURL(blob);
+
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = `arbeitsblatt_aufgaben_${taskCount.value}.html`;
+			a.click();
+			URL.revokeObjectURL(url);
+		};
+
+		const generateWorksheet = async () => {
+			if (!buildTasks()) return;
+
+			trainingMode.value = false;
+			viewMode.value = false;
+			worksheetMode.value = true;
+
+			await nextTick();
+			await typesetMathJax();
+		};
+
         return { 
             tasks, 
             showSolutions, 
             viewMode, 
+			worksheetMode,
+			trainingMode,
+			showWorksheetSolutions,
+			showTrainingSolution,
+			currentTrainingIndex,
+			currentTrainingTask,
 			isDarkMode,
 			invertSelection,
             selectedTypes, 
+			taskWeights,
             typeLabels, 
             taskCount,
+			gtNumber,
             mentalMathMode,
             halfCount,
-            generateAll,
-            toggleSolutions,
+			generateAll,
+			startTraining,
+			toggleTrainingSolution,
+			goToPreviousTrainingTask,
+			goToNextTrainingTask,
+			leaveTraining,
+			generateWorksheet,
+			toggleWorksheetSolutions,
+			leaveWorksheet,
+			printWorksheet,
+			exportWorksheetJSON,
+			downloadWorksheetHTML,
+			toggleSolutions,
 			toggleDarkMode,
             exportJSON,
             exportHTML,
