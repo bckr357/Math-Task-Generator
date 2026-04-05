@@ -21,78 +21,107 @@
 <body>
 
 <div id="app">
-    	
-    <div v-if="!viewMode && !worksheetMode && !trainingMode" class="config-container">
-		<h1 style="font-weight: 900; color: var(--slate-800);">Mathe-Starter Konfigurator</h1>
-		
-		<div class="settings-bar">
-			<label class="checkbox-label" style="font-weight: bold;">
-				Aufgabenanzahl:
-				<input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input">
-			</label>
-            <label class="checkbox-label" style="font-weight: bold;">
-                Anordnung:
-                <select v-model="taskArrangementMode" class="settings-input settings-select">
-                    <option value="fully-random">Komplett zufaellig</option>
-                    <option value="block-random">Blockweise zufaellig</option>
-                    <option value="block-ordered">Blockweise in Reihenfolge</option>
-                </select>
-            </label>
-            <label class="checkbox-label" style="font-weight: bold;">
-				<input type="checkbox" v-model="mentalMathMode">
-				💡 Quiz / Kopfaufgaben
-			</label>
-		</div>
 
-        <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 30px">
-            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-				<button @click="generateAll" class="start-btn" style="margin: 0; padding: 10px 20px;">
-					Display 🎲
-				</button>
-				
-				<button @click="generateWorksheet" class="start-btn" style="margin: 0; padding: 10px 20px; background: var(--primary); color: white;">
-					Arbeitsblatt 📋
-				</button>
+    <div v-if="currentView !== 'home'" :class="['settings-drawer-overlay', { 'is-open': isSettingsSidebarOpen }]" @click="closeSettingsSidebar"></div>
 
-                <button @click="startTraining" class="start-btn" style="margin: 0; padding: 10px 20px; background: var(--primary); color: white;">
-                    Training 🏋️
-                </button>
-			</div>
-			
-			<button @click="invertSelection" class="btn-ui" style="background: var(--slate-300); color: var(--slate-800); font-size: 0.9rem;">
-				Selection invertieren 🔄
-			</button>
-		</div>
-		<div class="type-grid">
-            <div v-for="(label, key) in typeLabels" :key="key" class="type-option">
-                <label class="checkbox-label type-label">
-                    <input type="checkbox" v-model="selectedTypes" :value="key">
-                    <input type="number" v-model.number="taskWeights[key]" min="1" max="9" step="1" class="weight-input" title="Gewichtung">
-                    <span>{{ label }}</span>
-                </label>
+    <aside v-if="currentView !== 'home'" :class="['settings-drawer', { 'is-open': isSettingsSidebarOpen }]">
+        <div class="settings-drawer-header">
+            <div>
+                <div class="settings-drawer-eyebrow">Konfiguration</div>
+                <h2 class="settings-drawer-title">Einstellungen</h2>
             </div>
-		</div>
-	</div>
+            <button @click="closeSettingsSidebar" class="btn-ui btn-back">Schließen</button>
+        </div>
 
-    <div v-else-if="worksheetMode" class="worksheet-view">
-        <div class="worksheet-toolbar no-print">
-            <button @click="leaveWorksheet" class="btn-ui btn-back">← Zurück</button>
-            <label class="worksheet-meta-label">
-                GT
-                <input type="number" v-model.number="gtNumber" min="1" max="99" class="worksheet-meta-input">
+        <div class="settings-drawer-section">
+            <h3 class="settings-drawer-section-title">Allgemein</h3>
+            <label class="settings-stack-label">
+                Aufgabenanzahl
+                <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-input-wide">
             </label>
-            <label class="worksheet-meta-label">
-                Aufgaben
-                <input type="number" v-model.number="taskCount" min="1" max="200" class="worksheet-meta-input" style="width: 56px;">
-            </label>
-            <label class="worksheet-meta-label">
+            <label class="settings-stack-label">
                 Anordnung
-                <select v-model="taskArrangementMode" class="worksheet-meta-input worksheet-meta-select">
+                <select v-model="taskArrangementMode" class="settings-input settings-select settings-input-wide">
                     <option value="fully-random">Komplett zufaellig</option>
                     <option value="block-random">Blockweise zufaellig</option>
                     <option value="block-ordered">Blockweise in Reihenfolge</option>
                 </select>
             </label>
+            <label class="checkbox-label settings-inline-checkbox">
+                <input type="checkbox" v-model="mentalMathMode">
+                Quiz / Kopfaufgaben
+            </label>
+            <label v-if="currentView === 'worksheet'" class="settings-stack-label">
+                GT
+                <input type="number" v-model.number="gtNumber" min="1" max="99" class="settings-input settings-input-small">
+            </label>
+        </div>
+
+        <div class="settings-drawer-section">
+            <div class="settings-section-head">
+                <h3 class="settings-drawer-section-title">Aufgabentypen</h3>
+                <button @click="invertSelection" class="btn-ui btn-export settings-section-btn">Auswahl invertieren</button>
+            </div>
+            <div class="type-grid settings-type-grid">
+                <div v-for="(label, key) in typeLabels" :key="'drawer-'+key" class="type-option">
+                    <label class="checkbox-label type-label">
+                        <input type="checkbox" v-model="selectedTypes" :value="key">
+                        <input type="number" v-model.number="taskWeights[key]" min="1" max="9" step="1" class="weight-input" title="Gewichtung">
+                        <span>{{ label }}</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-drawer-actions">
+            <button @click="refreshCurrentView" class="btn-ui btn-primary settings-apply-btn" :disabled="!hasSelectedTypes">
+                {{ currentView === 'training' ? 'Training starten' : 'Aufgaben erzeugen' }}
+            </button>
+        </div>
+    </aside>
+
+    <div v-if="currentView === 'home'" class="home-view">
+        <div class="home-hero">
+            <div class="home-eyebrow">Mathe-Starter 2026</div>
+            <h1 class="home-title">Modus wählen</h1>
+            <p class="home-copy">Wähle zuerst den Arbeitsmodus. Die eigentlichen Einstellungen bearbeitest du anschließend direkt in der jeweiligen Ansicht über die Seitenleiste.</p>
+        </div>
+
+        <div class="mode-grid">
+            <button @click="switchView('worksheet')" class="mode-card mode-card--worksheet">
+                <span class="mode-card-kicker">Druckansicht</span>
+                <strong>Arbeitsblatt</strong>
+                <span>Zweiseitiges Blatt, Lösungen optional groß für die Tafel.</span>
+            </button>
+
+            <button @click="switchView('presentation')" class="mode-card mode-card--presentation">
+                <span class="mode-card-kicker">Anzeigen</span>
+                <strong>Presentation</strong>
+                <span>Große Darstellung für Projektion, Tafel und gemeinsame Besprechung.</span>
+            </button>
+
+            <button @click="switchView('training')" class="mode-card mode-card--training">
+                <span class="mode-card-kicker">Interaktiv</span>
+                <strong>Training</strong>
+                <span>Einzelaufgaben nacheinander mit schneller Navigation und Lösungsumschaltung.</span>
+            </button>
+        </div>
+    </div>
+
+    <div v-else-if="currentView === 'worksheet'" class="worksheet-view">
+        <div class="workspace-nav no-print">
+            <div class="workspace-nav-brand">Mathe-Starter</div>
+            <div class="workspace-nav-tabs">
+                <button v-for="tab in viewTabs" :key="'worksheet-nav-'+tab.key" @click="switchView(tab.key)" :class="['workspace-nav-tab', { 'is-active': currentView === tab.key }]">{{ tab.label }}</button>
+            </div>
+            <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Einstellungen</button>
+        </div>
+
+        <div class="worksheet-toolbar no-print">
+            <div class="worksheet-toolbar-title">
+                <strong>Arbeitsblatt</strong>
+                <span>GT {{ gtNumber }}</span>
+            </div>
             <div class="worksheet-toolbar-actions">
                 <button @click="toggleWorksheetSolutions" class="btn-ui btn-toggle">
                     {{ showWorksheetSolutions ? 'Aufgaben anzeigen' : 'Lösungen anzeigen' }}
@@ -104,7 +133,16 @@
             </div>
         </div>
 
-        <div :class="['worksheet-sheet', { 'worksheet-sheet--solutions': showWorksheetSolutions }]">
+        <div v-if="!hasGeneratedTasks" class="empty-state">
+            <h2>Noch keine Aufgaben erzeugt</h2>
+            <p>Öffne die Einstellungen, wähle Aufgabentypen aus und erzeuge anschließend das Arbeitsblatt.</p>
+            <div class="empty-state-actions">
+                <button @click="openSettingsSidebar" class="btn-ui btn-export">Einstellungen öffnen</button>
+                <button @click="generateWorksheet" class="btn-ui btn-primary" :disabled="!hasSelectedTypes">Arbeitsblatt erzeugen</button>
+            </div>
+        </div>
+
+        <div v-else :class="['worksheet-sheet', { 'worksheet-sheet--solutions': showWorksheetSolutions }]">
             <template v-if="!showWorksheetSolutions">
                 <div class="worksheet-sheet-header">
                     <div class="worksheet-header-copy">
@@ -165,16 +203,35 @@
         </div>
     </div>
 
-    <div v-else-if="trainingMode" class="training-view">
-        <div class="training-top-bar">
-            <button @click="leaveTraining" class="btn-ui btn-back">← Zurück zum Start</button>
-            <div class="training-progress">Aufgabe {{ currentTrainingIndex + 1 }} – {{ typeLabels[currentTrainingTask?.type] ?? currentTrainingTask?.type ?? '' }}</div>
-            <button @click="toggleTrainingSolution" class="btn-ui btn-toggle">
-                {{ showTrainingSolution ? 'Aufgabe anzeigen' : 'Lösung anzeigen' }}
-            </button>
+    <div v-else-if="currentView === 'training'" class="training-view">
+        <div class="workspace-nav no-print">
+            <div class="workspace-nav-brand">Mathe-Starter</div>
+            <div class="workspace-nav-tabs">
+                <button v-for="tab in viewTabs" :key="'training-nav-'+tab.key" @click="switchView(tab.key)" :class="['workspace-nav-tab', { 'is-active': currentView === tab.key }]">{{ tab.label }}</button>
+            </div>
+            <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Einstellungen</button>
         </div>
 
-        <div class="training-main">
+        <div class="training-top-bar">
+            <div class="training-progress">Aufgabe {{ currentTrainingIndex + 1 }} – {{ typeLabels[currentTrainingTask?.type] ?? currentTrainingTask?.type ?? 'Noch kein Training gestartet' }}</div>
+            <div class="training-top-actions">
+                <button @click="startTraining" class="btn-ui btn-primary">Neu starten</button>
+                <button @click="toggleTrainingSolution" class="btn-ui btn-toggle" :disabled="!currentTrainingTask">
+                    {{ showTrainingSolution ? 'Aufgabe anzeigen' : 'Lösung anzeigen' }}
+                </button>
+            </div>
+        </div>
+
+        <div v-if="!currentTrainingTask" class="empty-state empty-state--training">
+            <h2>Training ist bereit</h2>
+            <p>Wähle zuerst Aufgabentypen in den Einstellungen und starte dann das Training.</p>
+            <div class="empty-state-actions">
+                <button @click="openSettingsSidebar" class="btn-ui btn-export">Einstellungen öffnen</button>
+                <button @click="startTraining" class="btn-ui btn-primary" :disabled="!hasSelectedTypes">Training starten</button>
+            </div>
+        </div>
+
+        <div v-else class="training-main">
             <div class="training-task-card">
                 <div v-if="!showTrainingSolution" class="training-task-content math-q" v-html="currentTrainingTask?.textDisplay ?? ''"></div>
                 <div v-else class="training-task-content math-a" v-html="currentTrainingTask?.solution ?? ''"></div>
@@ -192,36 +249,40 @@
     </div>
 
     <div v-else :class="['presentation-view', { 'dark-mode': isDarkMode }]">
+        <div class="workspace-nav no-print">
+            <div class="workspace-nav-brand">Mathe-Starter</div>
+            <div class="workspace-nav-tabs">
+                <button v-for="tab in viewTabs" :key="'presentation-nav-'+tab.key" @click="switchView(tab.key)" :class="['workspace-nav-tab', { 'is-active': currentView === tab.key }]">{{ tab.label }}</button>
+            </div>
+            <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Einstellungen</button>
+        </div>
+
         <div class="top-bar">
-            <button @click="viewMode = false" class="btn-ui btn-back">← Zurück</button>
             <div style="font-weight: 900; color: var(--slate-300);">KLASSE 2026</div>
             
             <div class="top-bar-actions">
-                <label class="view-meta-label">
-                    Aufgaben
-                    <input type="number" v-model.number="taskCount" min="1" max="200" class="view-meta-input">
-                </label>
-                <label class="view-meta-label">
-                    Anordnung
-                    <select v-model="taskArrangementMode" class="view-meta-select">
-                        <option value="fully-random">Komplett zufaellig</option>
-                        <option value="block-random">Blockweise zufaellig</option>
-                        <option value="block-ordered">Blockweise in Reihenfolge</option>
-                    </select>
-                </label>
                 <button @click="toggleDarkMode" class="btn-ui btn-theme">
                     {{ isDarkMode ? 'Hellmodus' : 'Dunkelmodus' }}
                 </button>
                 <button @click="exportJSON" class="btn-ui btn-export">JSON Export</button>
                 <button @click="exportHTML" class="btn-ui btn-export">Drucken (HTML)</button>
                 <button @click="generateAll" class="btn-ui btn-primary">Neue Zahlen 🎲</button>
-                <button @click="toggleSolutions()" class="btn-ui btn-toggle">
+                <button @click="toggleSolutions()" class="btn-ui btn-toggle" :disabled="!hasGeneratedTasks">
                     {{ showSolutions ? 'Lösungen ausblenden' : 'Lösungen anzeigen' }}
                 </button>
             </div>
         </div>
 
-        <div class="task-grid">
+        <div v-if="!hasGeneratedTasks" class="empty-state empty-state--presentation">
+            <h2>Presentation ist bereit</h2>
+            <p>Öffne die Einstellungen, wähle deine Aufgabentypen und erzeuge dann die Ansicht.</p>
+            <div class="empty-state-actions">
+                <button @click="openSettingsSidebar" class="btn-ui btn-export">Einstellungen öffnen</button>
+                <button @click="generateAll" class="btn-ui btn-primary" :disabled="!hasSelectedTypes">Presentation erzeugen</button>
+            </div>
+        </div>
+
+        <div v-else class="task-grid">
             <div class="column-wrapper">
                 <div v-for="(task, index) in rowWiseFirstColumnTasks" :key="'col1-'+index" class="task-row">
                     <div class="task-num">{{ (index * 2) + 1 }}</div>

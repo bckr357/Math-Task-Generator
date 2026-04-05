@@ -44,9 +44,8 @@ createApp({
         const tasks = ref([]);
         const trainingHistory = ref([]);
         const showSolutions = ref(false);
-        const viewMode = ref(false);
-		const worksheetMode = ref(false);
-		const trainingMode = ref(false);
+		const currentView = ref('home');
+		const isSettingsSidebarOpen = ref(false);
 		const showWorksheetSolutions = ref(false);
 		const showTrainingSolution = ref(false);
 		const currentTrainingIndex = ref(0);
@@ -67,6 +66,60 @@ createApp({
 		const rowWiseFirstColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 0));
 		const rowWiseSecondColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 1));
 		const currentTrainingTask = computed(() => trainingHistory.value[currentTrainingIndex.value] ?? null);
+		const hasGeneratedTasks = computed(() => tasks.value.length > 0);
+		const hasSelectedTypes = computed(() => selectedTypes.value.length > 0);
+		const viewTabs = [
+			{ key: 'home', label: 'Start' },
+			{ key: 'worksheet', label: 'Arbeitsblatt' },
+			{ key: 'presentation', label: 'Presentation' },
+			{ key: 'training', label: 'Training' }
+		];
+
+		const openSettingsSidebar = () => {
+			isSettingsSidebarOpen.value = true;
+		};
+
+		const closeSettingsSidebar = () => {
+			isSettingsSidebarOpen.value = false;
+		};
+
+		const toggleSettingsSidebar = () => {
+			isSettingsSidebarOpen.value = !isSettingsSidebarOpen.value;
+		};
+
+		const setCurrentView = async (view) => {
+			currentView.value = view;
+			await nextTick();
+			await typesetMathJax();
+		};
+
+		const goHome = async () => {
+			closeSettingsSidebar();
+			await setCurrentView('home');
+		};
+
+		const switchView = async (view) => {
+			closeSettingsSidebar();
+
+			if (view === 'home') {
+				await goHome();
+				return;
+			}
+
+			if (view === 'training') {
+				if (currentTrainingTask.value) {
+					await setCurrentView('training');
+					return;
+				}
+
+				if (hasSelectedTypes.value) {
+					await startTraining();
+					return;
+				}
+			}
+
+			await setCurrentView(view);
+		};
         
         const toggleSolutions = async () => {
             showSolutions.value = !showSolutions.value;
@@ -243,10 +296,9 @@ createApp({
 
 		trainingHistory.value.push(firstTask);
 
-		viewMode.value = false;
-		worksheetMode.value = false;
-		trainingMode.value = true;
+		currentView.value = 'training';
 		showTrainingSolution.value = false;
+		closeSettingsSidebar();
 
 		await nextTick();
 		await typesetMathJax();
@@ -255,9 +307,8 @@ createApp({
 	const generateAll = async () => {
 		if (!buildTasks()) return;
 
-		trainingMode.value = false;
-		worksheetMode.value = false;
-		viewMode.value = true;
+		currentView.value = 'presentation';
+		closeSettingsSidebar();
 
 		await nextTick();
 		await typesetMathJax();
@@ -295,14 +346,15 @@ createApp({
 		};
 
 		const leaveTraining = () => {
-			trainingMode.value = false;
 			showTrainingSolution.value = false;
 			currentTrainingIndex.value = 0;
 			trainingHistory.value = [];
+			currentView.value = 'home';
+			closeSettingsSidebar();
 		};
 
 		const handleTrainingKeydown = (event) => {
-			if (!trainingMode.value) return;
+			if (currentView.value !== 'training') return;
 
 			if (event.key === 'ArrowLeft') {
 				event.preventDefault();
@@ -528,7 +580,8 @@ createApp({
 		};
 
 		const leaveWorksheet = () => {
-			worksheetMode.value = false;
+			currentView.value = 'home';
+			closeSettingsSidebar();
 		};
 
 		const printWorksheet = () => {
@@ -918,26 +971,43 @@ createApp({
 		const generateWorksheet = async () => {
 			if (!buildTasks()) return;
 
-			trainingMode.value = false;
-			viewMode.value = false;
-			worksheetMode.value = true;
+			currentView.value = 'worksheet';
+			closeSettingsSidebar();
 
 			await nextTick();
 			await typesetMathJax();
+		};
+
+		const refreshCurrentView = async () => {
+			if (currentView.value === 'worksheet') {
+				await generateWorksheet();
+				return;
+			}
+
+			if (currentView.value === 'presentation') {
+				await generateAll();
+				return;
+			}
+
+			if (currentView.value === 'training') {
+				await startTraining();
+			}
 		};
 
         return { 
             tasks, 
             trainingHistory,
             showSolutions, 
-            viewMode, 
-			worksheetMode,
-			trainingMode,
+			currentView,
+			isSettingsSidebarOpen,
 			showWorksheetSolutions,
 			showTrainingSolution,
 			currentTrainingIndex,
 			currentTrainingTask,
 			isDarkMode,
+			viewTabs,
+			hasGeneratedTasks,
+			hasSelectedTypes,
 			invertSelection,
             selectedTypes, 
 			taskWeights,
@@ -949,6 +1019,12 @@ createApp({
             halfCount,
 			rowWiseFirstColumnTasks,
 			rowWiseSecondColumnTasks,
+			openSettingsSidebar,
+			closeSettingsSidebar,
+			toggleSettingsSidebar,
+			goHome,
+			switchView,
+			refreshCurrentView,
 			generateAll,
 			startTraining,
 			toggleTrainingSolution,

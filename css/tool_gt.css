@@ -14,6 +14,296 @@ body {
     overflow-x: hidden;
 }
 
+.home-view {
+    min-height: 100vh;
+    padding: 48px 28px 56px;
+    background:
+        radial-gradient(circle at top left, rgba(34, 197, 94, 0.12), transparent 30%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    color: var(--slate-800);
+}
+
+.home-hero {
+    max-width: 780px;
+    margin: 0 auto 32px;
+}
+
+.home-eyebrow {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.home-title {
+    margin: 0;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 0.95;
+}
+
+.home-copy {
+    max-width: 680px;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--slate-500);
+    margin: 18px 0 0;
+}
+
+.mode-grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.mode-card {
+    appearance: none;
+    text-align: left;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 28px;
+    padding: 26px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: inherit;
+}
+
+.mode-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 26px 70px rgba(15, 23, 42, 0.12);
+}
+
+.mode-card strong {
+    font-size: 1.55rem;
+}
+
+.mode-card span:last-child {
+    color: var(--slate-500);
+    line-height: 1.45;
+}
+
+.mode-card-kicker {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.mode-card--worksheet {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 253, 244, 0.96) 100%);
+}
+
+.mode-card--presentation {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(239, 246, 255, 0.96) 100%);
+}
+
+.mode-card--training {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.96) 100%);
+}
+
+.workspace-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 16px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid var(--slate-100);
+    flex-wrap: wrap;
+}
+
+.workspace-nav-brand {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--slate-800);
+}
+
+.workspace-nav-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.workspace-nav-tab {
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--slate-300);
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--slate-500);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.workspace-nav-tab.is-active {
+    background: var(--slate-800);
+    border-color: var(--slate-800);
+    color: white;
+}
+
+.settings-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.28);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+    z-index: 70;
+}
+
+.settings-drawer-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.settings-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(420px, 92vw);
+    height: 100vh;
+    background: #ffffff;
+    border-left: 1px solid rgba(148, 163, 184, 0.28);
+    box-shadow: -24px 0 60px rgba(15, 23, 42, 0.16);
+    transform: translateX(100%);
+    transition: transform 0.2s ease;
+    z-index: 80;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 22px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.settings-drawer.is-open {
+    transform: translateX(0);
+}
+
+.settings-drawer-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.settings-drawer-eyebrow {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+
+.settings-drawer-title {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--slate-800);
+}
+
+.settings-drawer-section {
+    margin-bottom: 22px;
+}
+
+.settings-drawer-section-title {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--slate-800);
+}
+
+.settings-stack-label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--slate-500);
+}
+
+.settings-inline-checkbox {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--slate-500);
+}
+
+.settings-input-wide {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.settings-input-small {
+    width: 96px;
+}
+
+.settings-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.settings-section-btn {
+    font-size: 0.88rem;
+}
+
+.settings-type-grid {
+    margin-bottom: 0;
+    padding: 20px;
+}
+
+.settings-drawer-actions {
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+.settings-apply-btn {
+    width: 100%;
+}
+
+.empty-state {
+    max-width: 780px;
+    margin: 60px auto 0;
+    padding: 32px;
+    border-radius: 28px;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 22px 60px rgba(15, 23, 42, 0.08);
+    text-align: center;
+}
+
+.empty-state h2 {
+    margin: 0 0 10px;
+    font-size: 2rem;
+}
+
+.empty-state p {
+    margin: 0;
+    color: var(--slate-500);
+    line-height: 1.5;
+    font-size: 1.05rem;
+}
+
+.empty-state-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 /* --- KONFIGURATOR --- */
 .config-container {
     max-width: 950px;
@@ -120,6 +410,10 @@ body {
     border-bottom: 2px solid var(--slate-100);
     flex-wrap: wrap;
     gap: 10px;
+}
+
+.presentation-view .workspace-nav {
+    border-bottom-color: var(--slate-100);
 }
 
 .btn-ui {
@@ -251,6 +545,26 @@ body {
     border-bottom-color: rgba(148, 163, 184, 0.25);
 }
 
+.presentation-view.dark-mode .workspace-nav {
+    border-bottom-color: rgba(148, 163, 184, 0.25);
+}
+
+.presentation-view.dark-mode .workspace-nav-brand {
+    color: #e2e8f0;
+}
+
+.presentation-view.dark-mode .workspace-nav-tab {
+    background: rgba(30, 41, 59, 0.72);
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+.presentation-view.dark-mode .workspace-nav-tab.is-active {
+    background: #f8fafc;
+    border-color: #f8fafc;
+    color: #0f172a;
+}
+
 .presentation-view.dark-mode .task-grid {
     border-top-color: rgba(148, 163, 184, 0.25);
 }
@@ -333,6 +647,13 @@ body {
     flex-wrap: wrap;
     padding-bottom: 14px;
     border-bottom: 2px solid var(--slate-100);
+}
+
+.training-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .training-progress {
@@ -445,6 +766,18 @@ body {
     gap: 12px;
     margin-bottom: 18px;
     flex-wrap: wrap;
+}
+
+.worksheet-toolbar-title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    color: var(--slate-500);
+}
+
+.worksheet-toolbar-title strong {
+    color: var(--slate-800);
+    font-size: 1.2rem;
 }
 
 .worksheet-toolbar-actions {
@@ -632,6 +965,19 @@ body {
 }
 
 @media (max-width: 960px) {
+    .workspace-nav {
+        align-items: flex-start;
+    }
+
+    .workspace-nav-tabs {
+        width: 100%;
+    }
+
+    .workspace-nav-tab {
+        flex: 1 1 calc(50% - 10px);
+        text-align: center;
+    }
+
     .worksheet-row {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -660,6 +1006,10 @@ body {
     .worksheet-view .worksheet-solution-board .math-a {
         font-size: 2.25rem;
     }
+
+    .mode-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media print {
@@ -683,7 +1033,10 @@ body {
     }
 
     .config-container,
+    .home-view,
     .presentation-view,
+    .settings-drawer,
+    .settings-drawer-overlay,
     .no-print {
         display: none !important;
     }
