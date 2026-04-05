@@ -30,7 +30,15 @@
 				Aufgabenanzahl:
 				<input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input">
 			</label>
-			<label class="checkbox-label" style="font-weight: bold; margin-left: 30px;">
+            <label class="checkbox-label" style="font-weight: bold;">
+                Anordnung:
+                <select v-model="taskArrangementMode" class="settings-input settings-select">
+                    <option value="fully-random">Komplett zufaellig</option>
+                    <option value="block-random">Blockweise zufaellig</option>
+                    <option value="block-ordered">Blockweise in Reihenfolge</option>
+                </select>
+            </label>
+            <label class="checkbox-label" style="font-weight: bold;">
 				<input type="checkbox" v-model="mentalMathMode">
 				💡 Quiz / Kopfaufgaben
 			</label>
@@ -77,6 +85,14 @@
                 Aufgaben
                 <input type="number" v-model.number="taskCount" min="1" max="200" class="worksheet-meta-input" style="width: 56px;">
             </label>
+            <label class="worksheet-meta-label">
+                Anordnung
+                <select v-model="taskArrangementMode" class="worksheet-meta-input worksheet-meta-select">
+                    <option value="fully-random">Komplett zufaellig</option>
+                    <option value="block-random">Blockweise zufaellig</option>
+                    <option value="block-ordered">Blockweise in Reihenfolge</option>
+                </select>
+            </label>
             <div class="worksheet-toolbar-actions">
                 <button @click="toggleWorksheetSolutions" class="btn-ui btn-toggle">
                     {{ showWorksheetSolutions ? 'Aufgaben anzeigen' : 'Lösungen anzeigen' }}
@@ -88,44 +104,71 @@
             </div>
         </div>
 
-        <div class="worksheet-sheet">
-            <div class="worksheet-sheet-header">
-                <div class="worksheet-header-copy">
-                    <span>Name:</span>
-                    <span class="worksheet-header-gt">GT {{ gtNumber }}</span>
+        <div :class="['worksheet-sheet', { 'worksheet-sheet--solutions': showWorksheetSolutions }]">
+            <template v-if="!showWorksheetSolutions">
+                <div class="worksheet-sheet-header">
+                    <div class="worksheet-header-copy">
+                        <span>Name:</span>
+                        <span class="worksheet-header-gt">GT {{ gtNumber }}</span>
+                    </div>
+                    <div class="worksheet-header-copy">
+                        <span>Name:</span>
+                        <span class="worksheet-header-gt">GT {{ gtNumber }}</span>
+                    </div>
                 </div>
-                <div class="worksheet-header-copy">
-                    <span>Name:</span>
-                    <span class="worksheet-header-gt">GT {{ gtNumber }}</span>
-                </div>
-            </div>
 
-            <div class="worksheet-list">
-                <div v-for="(task, index) in tasks" :key="'worksheet-'+index" class="worksheet-row">
-                    <div class="worksheet-copy">
-                        <div class="worksheet-num">{{ index + 1 }})</div>
-                        <div class="worksheet-content">
-                            <div v-if="!showWorksheetSolutions" class="worksheet-math" v-html="task.textPrint"></div>
-                            <div v-else class="worksheet-solution" v-html="task.solution"></div>
+                <div class="worksheet-list">
+                    <div v-for="(task, index) in tasks" :key="'worksheet-'+index" class="worksheet-row">
+                        <div class="worksheet-copy">
+                            <div class="worksheet-num">{{ index + 1 }})</div>
+                            <div class="worksheet-content">
+                                <div class="worksheet-math" v-html="task.textPrint"></div>
+                            </div>
+                        </div>
+
+                        <div class="worksheet-copy">
+                            <div class="worksheet-num">{{ index + 1 }})</div>
+                            <div class="worksheet-content">
+                                <div class="worksheet-math" v-html="task.textPrint"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template v-else>
+                <div class="worksheet-solutions-header">
+                    <span>Lösungen</span>
+                    <span class="worksheet-header-gt">GT {{ gtNumber }}</span>
+                </div>
+
+                <div class="worksheet-solution-board task-grid">
+                    <div class="column-wrapper">
+                        <div v-for="(task, index) in rowWiseFirstColumnTasks" :key="'worksheet-sol-col1-'+index" class="task-row">
+                            <div class="task-num">{{ (index * 2) + 1 }}</div>
+                            <div class="content">
+                                <div class="math-a" v-html="task.solution"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="worksheet-copy">
-                        <div class="worksheet-num">{{ index + 1 }})</div>
-                        <div class="worksheet-content">
-                            <div v-if="!showWorksheetSolutions" class="worksheet-math" v-html="task.textPrint"></div>
-                            <div v-else class="worksheet-solution" v-html="task.solution"></div>
+                    <div class="column-wrapper">
+                        <div v-for="(task, index) in rowWiseSecondColumnTasks" :key="'worksheet-sol-col2-'+index" class="task-row">
+                            <div class="task-num">{{ (index * 2) + 2 }}</div>
+                            <div class="content">
+                                <div class="math-a" v-html="task.solution"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </template>
         </div>
     </div>
 
     <div v-else-if="trainingMode" class="training-view">
         <div class="training-top-bar">
             <button @click="leaveTraining" class="btn-ui btn-back">← Zurück zum Start</button>
-            <div class="training-progress">Aufgabe {{ currentTrainingIndex + 1 }} / {{ trainingHistory.length }} – {{ typeLabels[currentTrainingTask?.type] ?? currentTrainingTask?.type ?? '' }}</div>
+            <div class="training-progress">Aufgabe {{ currentTrainingIndex + 1 }} – {{ typeLabels[currentTrainingTask?.type] ?? currentTrainingTask?.type ?? '' }}</div>
             <button @click="toggleTrainingSolution" class="btn-ui btn-toggle">
                 {{ showTrainingSolution ? 'Aufgabe anzeigen' : 'Lösung anzeigen' }}
             </button>
@@ -133,7 +176,6 @@
 
         <div class="training-main">
             <div class="training-task-card">
-                <div class="training-task-number">#{{ currentTrainingIndex + 1 }}</div>
                 <div v-if="!showTrainingSolution" class="training-task-content math-q" v-html="currentTrainingTask?.textDisplay ?? ''"></div>
                 <div v-else class="training-task-content math-a" v-html="currentTrainingTask?.solution ?? ''"></div>
             </div>
@@ -155,6 +197,18 @@
             <div style="font-weight: 900; color: var(--slate-300);">KLASSE 2026</div>
             
             <div class="top-bar-actions">
+                <label class="view-meta-label">
+                    Aufgaben
+                    <input type="number" v-model.number="taskCount" min="1" max="200" class="view-meta-input">
+                </label>
+                <label class="view-meta-label">
+                    Anordnung
+                    <select v-model="taskArrangementMode" class="view-meta-select">
+                        <option value="fully-random">Komplett zufaellig</option>
+                        <option value="block-random">Blockweise zufaellig</option>
+                        <option value="block-ordered">Blockweise in Reihenfolge</option>
+                    </select>
+                </label>
                 <button @click="toggleDarkMode" class="btn-ui btn-theme">
                     {{ isDarkMode ? 'Hellmodus' : 'Dunkelmodus' }}
                 </button>
@@ -169,8 +223,8 @@
 
         <div class="task-grid">
             <div class="column-wrapper">
-                <div v-for="(task, index) in tasks.slice(0, halfCount)" :key="'col1-'+index" class="task-row">
-                    <div class="task-num">{{ index + 1 }}</div>
+                <div v-for="(task, index) in rowWiseFirstColumnTasks" :key="'col1-'+index" class="task-row">
+                    <div class="task-num">{{ (index * 2) + 1 }}</div>
                     <div class="content">
                         <div v-if="!showSolutions" class="math-q" v-html="task.textDisplay"></div>
                         <div v-else class="math-a" v-html="task.solution"></div>
@@ -179,8 +233,8 @@
             </div>
 
             <div class="column-wrapper">
-                <div v-for="(task, index) in tasks.slice(halfCount)" :key="'col2-'+index" class="task-row">
-                    <div class="task-num">{{ index + halfCount + 1 }}</div>
+                <div v-for="(task, index) in rowWiseSecondColumnTasks" :key="'col2-'+index" class="task-row">
+                    <div class="task-num">{{ (index * 2) + 2 }}</div>
                     <div class="content">
                         <div v-if="!showSolutions" class="math-q" v-html="task.textDisplay"></div>
                         <div v-else class="math-a" v-html="task.solution"></div>

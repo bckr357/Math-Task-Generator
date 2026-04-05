@@ -58,11 +58,14 @@ createApp({
         
         // NEUE STATE VARIABLEN
         const taskCount = ref(10);
+		const taskArrangementMode = ref('fully-random');
 		const gtNumber = ref(1);
         const mentalMathMode = ref(false);
 
         // NEU: Berechnet dynamisch die Mitte für die zwei Spalten
         const halfCount = computed(() => Math.ceil(tasks.value.length / 2));
+		const rowWiseFirstColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 0));
+		const rowWiseSecondColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 1));
 		const currentTrainingTask = computed(() => trainingHistory.value[currentTrainingIndex.value] ?? null);
         
         const toggleSolutions = async () => {
@@ -103,45 +106,89 @@ createApp({
 
 		const buildTasks = () => {
 			if (selectedTypes.value.length === 0) return false;
-			
-			const weightedTypes = selectedTypes.value.flatMap(type => {
+
+			const normalizedWeights = Object.fromEntries(selectedTypes.value.map(type => {
 				const rawWeight = Number(taskWeights.value[type]);
 				const weight = Number.isFinite(rawWeight)
 					? Math.max(1, Math.floor(rawWeight))
 					: 1;
 
 				taskWeights.value[type] = weight;
-				return Array(weight).fill(type);
-			});
+				return [type, weight];
+			}));
+
+			const weightedTypes = selectedTypes.value.flatMap(type => Array(normalizedWeights[type]).fill(type));
 
 			if (weightedTypes.length === 0) return false;
 
 			const types = [...weightedTypes];
 			const targetTotal = taskCount.value;
 			let typePool = [];
+			const arrangementMode = taskArrangementMode.value;
 
-			// 1. So viele vollständige "Sets" wie möglich hinzufügen
-			// Beispiel: 100 Aufgaben / 20 Typen = 5 volle Sets
-			while (typePool.length + types.length <= targetTotal) {
-				// Wir mischen das Set jedes Mal, bevor wir es hinzufügen
-				const shuffledSet = [...types].sort(() => Math.random() - 0.5);
-				typePool = [...typePool, ...shuffledSet];
-			}
+			const getTypeCounts = () => {
+				const counts = Object.fromEntries(selectedTypes.value.map(type => [type, 0]));
+				const fullSets = Math.floor(targetTotal / types.length);
 
-			// 2. Den verbleibenden Rest auffüllen (falls targetTotal kein Vielfaches von types.length ist)
-			if (typePool.length < targetTotal) {
-				const remainingCount = targetTotal - typePool.length;
-				// Den Rest ziehen wir zufällig, aber ohne Duplikate innerhalb des Rests
-				const finalShuffle = [...types].sort(() => Math.random() - 0.5);
-				for (let i = 0; i < remainingCount; i++) {
-					typePool.push(finalShuffle[i]);
+				selectedTypes.value.forEach(type => {
+					counts[type] += fullSets * normalizedWeights[type];
+				});
+
+				const remainingCount = targetTotal - (fullSets * types.length);
+				if (remainingCount > 0) {
+					const finalShuffle = [...types].sort(() => Math.random() - 0.5);
+					for (let i = 0; i < remainingCount; i++) {
+						counts[finalShuffle[i]] += 1;
+					}
 				}
-			}
 
-			// 3. Den gesamten Pool am Ende nochmal mischen (Fisher-Yates)
-			for (let i = typePool.length - 1; i > 0; i--) {
-				const j = Math.floor(Math.random() * (i + 1));
-				[typePool[i], typePool[j]] = [typePool[j], typePool[i]];
+				return counts;
+			};
+
+			if (arrangementMode === 'block-random' || arrangementMode === 'block-ordered') {
+				const typeCounts = getTypeCounts();
+				const labelOrder = Object.keys(typeLabels);
+				const selectedSet = new Set(selectedTypes.value);
+				const orderedTypes = [
+					...labelOrder.filter(type => selectedSet.has(type)),
+					...selectedTypes.value.filter(type => !labelOrder.includes(type))
+				].filter(type => typeCounts[type] > 0);
+
+				const blocks = orderedTypes.map(type => Array(typeCounts[type]).fill(type));
+
+				if (arrangementMode === 'block-random') {
+					for (let i = blocks.length - 1; i > 0; i--) {
+						const j = Math.floor(Math.random() * (i + 1));
+						[blocks[i], blocks[j]] = [blocks[j], blocks[i]];
+					}
+				}
+
+				typePool = blocks.flat();
+			} else {
+
+				// 1. So viele vollständige "Sets" wie möglich hinzufügen
+				// Beispiel: 100 Aufgaben / 20 Typen = 5 volle Sets
+				while (typePool.length + types.length <= targetTotal) {
+					// Wir mischen das Set jedes Mal, bevor wir es hinzufügen
+					const shuffledSet = [...types].sort(() => Math.random() - 0.5);
+					typePool = [...typePool, ...shuffledSet];
+				}
+
+				// 2. Den verbleibenden Rest auffüllen (falls targetTotal kein Vielfaches von types.length ist)
+				if (typePool.length < targetTotal) {
+					const remainingCount = targetTotal - typePool.length;
+					// Den Rest ziehen wir zufällig, aber ohne Duplikate innerhalb des Rests
+					const finalShuffle = [...types].sort(() => Math.random() - 0.5);
+					for (let i = 0; i < remainingCount; i++) {
+						typePool.push(finalShuffle[i]);
+					}
+				}
+
+				// 3. Den gesamten Pool am Ende nochmal mischen (Fisher-Yates)
+				for (let i = typePool.length - 1; i > 0; i--) {
+					const j = Math.floor(Math.random() * (i + 1));
+					[typePool[i], typePool[j]] = [typePool[j], typePool[i]];
+				}
 			}
 
 			// 4. Aufgaben generieren...
@@ -896,9 +943,12 @@ createApp({
 			taskWeights,
             typeLabels, 
             taskCount,
+			taskArrangementMode,
 			gtNumber,
             mentalMathMode,
             halfCount,
+			rowWiseFirstColumnTasks,
+			rowWiseSecondColumnTasks,
 			generateAll,
 			startTraining,
 			toggleTrainingSolution,

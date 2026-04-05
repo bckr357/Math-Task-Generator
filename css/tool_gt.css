@@ -41,14 +41,26 @@ body {
     text-align: center;
 }
 
+.settings-select {
+    width: 240px;
+    text-align: left;
+    font-size: 1rem;
+}
+
 .type-grid {
     display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     background: var(--slate-100);
     padding: 30px;
     border-radius: 20px;
     margin-bottom: 30px;
+}
+
+@media (max-width: 900px) {
+    .type-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .checkbox-label {
@@ -127,6 +139,36 @@ body {
 .top-bar-actions {
     display: flex;
     gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.view-meta-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: var(--slate-500);
+}
+
+.view-meta-select {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--slate-300);
+    background: white;
+    color: var(--slate-800);
+    font-size: 0.95rem;
+}
+
+.view-meta-input {
+    width: 62px;
+    padding: 8px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--slate-300);
+    background: white;
+    color: var(--slate-800);
+    font-size: 0.95rem;
+    text-align: center;
 }
 
 .task-grid {
@@ -231,6 +273,22 @@ body {
 
 .presentation-view.dark-mode .btn-back {
     background: #1e293b;
+    color: #e2e8f0;
+}
+
+.presentation-view.dark-mode .view-meta-label {
+    color: #cbd5e1;
+}
+
+.presentation-view.dark-mode .view-meta-select {
+    background: #1e293b;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+.presentation-view.dark-mode .view-meta-input {
+    background: #1e293b;
+    border-color: #475569;
     color: #e2e8f0;
 }
 
@@ -413,6 +471,11 @@ body {
     background: #fff;
 }
 
+.worksheet-meta-select {
+    width: 230px;
+    text-align: left;
+}
+
 .worksheet-sheet {
     max-width: 1400px;
     margin: 0 auto;
@@ -421,6 +484,17 @@ body {
     border: 1px solid rgba(203, 213, 225, 0.7);
     border-radius: 24px;
     box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+}
+
+.worksheet-sheet--solutions {
+    max-width: none;
+    margin: 0;
+    width: 100%;
+    padding: 8px 0 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .worksheet-sheet-header {
@@ -506,6 +580,52 @@ body {
     padding: 0 !important;
 }
 
+.worksheet-solutions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--slate-100);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--slate-500);
+}
+
+.worksheet-solution-board {
+    margin-top: 8px;
+    border-top: 2px solid var(--slate-100);
+    padding-top: 8px;
+    padding-left: 6px;
+    padding-right: 6px;
+    gap: 42px;
+}
+
+.worksheet-view .worksheet-solution-board .task-row {
+    min-height: 86px;
+    padding: 16px 0;
+}
+
+.worksheet-view .worksheet-solution-board .task-num {
+    font-size: 2.35rem;
+    width: 72px;
+}
+
+.worksheet-view .worksheet-solution-board .content {
+    padding-left: 16px;
+}
+
+.worksheet-view .worksheet-solution-board .math-a {
+    font-size: 2.9rem;
+    line-height: 1.25;
+}
+
+.worksheet-view .worksheet-solution-board mjx-container[jax="CHTML"][display="true"] {
+    margin: 8px 0 0 0 !important;
+    text-align: center !important;
+}
+
 .worksheet-view mjx-container[jax="CHTML"][display="true"] {
     margin: 6px 0 0 0 !important;
     font-size: 100% !important;
@@ -521,6 +641,24 @@ body {
         border-left: none;
         padding-left: 0;
         padding-top: 12px;
+    }
+
+    .worksheet-solution-board {
+        gap: 16px;
+    }
+
+    .worksheet-view .worksheet-solution-board .task-row {
+        min-height: 70px;
+        padding: 12px 0;
+    }
+
+    .worksheet-view .worksheet-solution-board .task-num {
+        font-size: 1.9rem;
+        width: 62px;
+    }
+
+    .worksheet-view .worksheet-solution-board .math-a {
+        font-size: 2.25rem;
     }
 }
 
