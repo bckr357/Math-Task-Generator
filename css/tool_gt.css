@@ -9,7 +9,7 @@
 
 body { 
     margin: 0; 
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: 'Reddit Sans', system-ui, -apple-system, sans-serif;
     background-color: white;
     overflow-x: hidden;
 }
@@ -285,14 +285,16 @@ body {
 
 .training-main {
     flex: 1;
-    display: grid;
-    grid-template-columns: 80px minmax(0, 1fr) 80px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
 }
 
 .training-task-card {
     min-height: 62vh;
+    width: 100%;
+    max-width: 900px;
     border-radius: 28px;
     border: 1px solid rgba(148, 163, 184, 0.35);
     background: rgba(255, 255, 255, 0.88);
@@ -303,6 +305,14 @@ body {
     align-items: center;
     padding: 32px;
     text-align: center;
+}
+
+.training-buttons {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
 }
 
 .training-task-number {
@@ -319,16 +329,22 @@ body {
 }
 
 .training-arrow {
-    width: 64px;
-    height: 64px;
-    border-radius: 999px;
+    padding: 16px 32px;
+    border-radius: 12px;
     border: none;
-    font-size: 2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
     color: white;
     background: #0f172a;
     transition: transform 0.15s ease, opacity 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    flex: 1;
+    justify-content: center;
+    min-width: 180px;
 }
 
 .training-arrow:hover:not(:disabled) {
@@ -342,15 +358,11 @@ body {
 
 @media (max-width: 900px) {
     .training-main {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
         gap: 14px;
     }
 
-    .training-arrow {
-        width: 56px;
-        height: 56px;
-        justify-self: center;
+    .training-buttons {
+        width: 100%;
     }
 
     .training-task-card {

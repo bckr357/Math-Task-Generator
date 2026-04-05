@@ -7,11 +7,15 @@
     <script>
         window.MathJax = {
             tex: { inlineMath: [['\\(', '\\)']] },
-            svg: { fontCache: 'global' }
+            svg: { fontCache: 'global' },
+            chtml: { mtextInheritFont: true }   // ← neu
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,300..900;1,300..900&display=swap">
     <link rel="stylesheet" href="css/tool_gt.css">
 </head>
 <body>
@@ -69,6 +73,10 @@
                 GT
                 <input type="number" v-model.number="gtNumber" min="1" max="99" class="worksheet-meta-input">
             </label>
+            <label class="worksheet-meta-label">
+                Aufgaben
+                <input type="number" v-model.number="taskCount" min="1" max="200" class="worksheet-meta-input" style="width: 56px;">
+            </label>
             <div class="worksheet-toolbar-actions">
                 <button @click="toggleWorksheetSolutions" class="btn-ui btn-toggle">
                     {{ showWorksheetSolutions ? 'Aufgaben anzeigen' : 'Lösungen anzeigen' }}
@@ -117,25 +125,27 @@
     <div v-else-if="trainingMode" class="training-view">
         <div class="training-top-bar">
             <button @click="leaveTraining" class="btn-ui btn-back">← Zurück zum Start</button>
-            <div class="training-progress">Aufgabe {{ currentTrainingIndex + 1 }} / {{ tasks.length }}</div>
+            <div class="training-progress">Aufgabe {{ currentTrainingIndex + 1 }} / {{ trainingHistory.length }} – {{ typeLabels[currentTrainingTask?.type] ?? currentTrainingTask?.type ?? '' }}</div>
             <button @click="toggleTrainingSolution" class="btn-ui btn-toggle">
                 {{ showTrainingSolution ? 'Aufgabe anzeigen' : 'Lösung anzeigen' }}
             </button>
         </div>
 
         <div class="training-main">
-            <button @click="goToPreviousTrainingTask" class="training-arrow" aria-label="Vorherige Aufgabe">
-                ←
-            </button>
-
             <div class="training-task-card">
+                <div class="training-task-number">#{{ currentTrainingIndex + 1 }}</div>
                 <div v-if="!showTrainingSolution" class="training-task-content math-q" v-html="currentTrainingTask?.textDisplay ?? ''"></div>
                 <div v-else class="training-task-content math-a" v-html="currentTrainingTask?.solution ?? ''"></div>
             </div>
 
-            <button @click="goToNextTrainingTask" class="training-arrow" aria-label="Nächste Aufgabe">
-                →
-            </button>
+            <div class="training-buttons">
+                <button @click="goToPreviousTrainingTask" class="training-arrow" :disabled="currentTrainingIndex === 0" aria-label="Vorherige Aufgabe">
+                    ← Letzte Aufgabe
+                </button>
+                <button @click="goToNextTrainingTask" class="training-arrow" aria-label="Nächste Aufgabe">
+                    Nächste Aufgabe →
+                </button>
+            </div>
         </div>
     </div>
 

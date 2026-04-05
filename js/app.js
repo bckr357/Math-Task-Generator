@@ -42,6 +42,7 @@ const typesetMathJax = async () => {
 createApp({
     setup() {
         const tasks = ref([]);
+        const trainingHistory = ref([]);
         const showSolutions = ref(false);
         const viewMode = ref(false);
 		const worksheetMode = ref(false);
@@ -62,7 +63,7 @@ createApp({
 
         // NEU: Berechnet dynamisch die Mitte für die zwei Spalten
         const halfCount = computed(() => Math.ceil(tasks.value.length / 2));
-		const currentTrainingTask = computed(() => tasks.value[currentTrainingIndex.value] ?? null);
+		const currentTrainingTask = computed(() => trainingHistory.value[currentTrainingIndex.value] ?? null);
         
         const toggleSolutions = async () => {
             showSolutions.value = !showSolutions.value;
@@ -159,31 +160,61 @@ createApp({
 			return true;
 		};
 
-        const generateAll = async () => {
-			if (!buildTasks()) return;
+	const generateSingleTrainingTask = () => {
+		if (selectedTypes.value.length === 0) return null;
 
-			trainingMode.value = false;
-			worksheetMode.value = false;
-			viewMode.value = true;
+		const weightedTypes = selectedTypes.value.flatMap(type => {
+			const rawWeight = Number(taskWeights.value[type]);
+			const weight = Number.isFinite(rawWeight)
+				? Math.max(1, Math.floor(rawWeight))
+				: 1;
+			return Array(weight).fill(type);
+		});
 
-            await nextTick();
-            await typesetMathJax();
-        };
+		if (weightedTypes.length === 0) return null;
 
-		const startTraining = async () => {
-			mentalMathMode.value = true;
+		const randomIndex = Math.floor(Math.random() * weightedTypes.length);
+		const selectedType = weightedTypes[randomIndex];
 
-			if (!buildTasks()) return;
-
-			viewMode.value = false;
-			worksheetMode.value = false;
-			trainingMode.value = true;
-			currentTrainingIndex.value = 0;
-			showTrainingSolution.value = false;
-
-			await nextTick();
-			await typesetMathJax();
+		const generated = createTask(selectedType, true);
+		return {
+			type: selectedType,
+			textDisplay: generated.textDisplay ?? '',
+			textPrint: generated.textPrint ?? '',
+			solution: generated.solution
 		};
+	};
+
+	const startTraining = async () => {
+		if (selectedTypes.value.length === 0) return;
+
+		trainingHistory.value = [];
+		currentTrainingIndex.value = 0;
+
+		const firstTask = generateSingleTrainingTask();
+		if (!firstTask) return;
+
+		trainingHistory.value.push(firstTask);
+
+		viewMode.value = false;
+		worksheetMode.value = false;
+		trainingMode.value = true;
+		showTrainingSolution.value = false;
+
+		await nextTick();
+		await typesetMathJax();
+	};
+
+	const generateAll = async () => {
+		if (!buildTasks()) return;
+
+		trainingMode.value = false;
+		worksheetMode.value = false;
+		viewMode.value = true;
+
+		await nextTick();
+		await typesetMathJax();
+	};
 
 		const toggleTrainingSolution = async () => {
 			showTrainingSolution.value = !showTrainingSolution.value;
@@ -192,21 +223,22 @@ createApp({
 		};
 
 		const goToPreviousTrainingTask = async () => {
-			if (tasks.value.length === 0) return;
-			if (currentTrainingIndex.value <= 0) {
-				currentTrainingIndex.value = tasks.value.length - 1;
-			} else {
-				currentTrainingIndex.value -= 1;
-			}
+			if (currentTrainingIndex.value <= 0) return;
+			currentTrainingIndex.value -= 1;
 			showTrainingSolution.value = false;
 			await nextTick();
 			await typesetMathJax();
 		};
 
 		const goToNextTrainingTask = async () => {
-			if (tasks.value.length === 0) return;
-			if (currentTrainingIndex.value >= tasks.value.length - 1) {
-				currentTrainingIndex.value = 0;
+			if (trainingHistory.value.length === 0) return;
+			
+			if (currentTrainingIndex.value >= trainingHistory.value.length - 1) {
+				const newTask = generateSingleTrainingTask();
+				if (newTask) {
+					trainingHistory.value.push(newTask);
+					currentTrainingIndex.value = trainingHistory.value.length - 1;
+				}
 			} else {
 				currentTrainingIndex.value += 1;
 			}
@@ -219,6 +251,7 @@ createApp({
 			trainingMode.value = false;
 			showTrainingSolution.value = false;
 			currentTrainingIndex.value = 0;
+			trainingHistory.value = [];
 		};
 
 		const handleTrainingKeydown = (event) => {
@@ -848,6 +881,7 @@ createApp({
 
         return { 
             tasks, 
+            trainingHistory,
             showSolutions, 
             viewMode, 
 			worksheetMode,
