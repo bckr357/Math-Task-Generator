@@ -78,7 +78,8 @@ const typeLabels = {
 // ============================================================
 
 function createTask(type, isMentalMode) {
-	let t = '', s = '';
+	let s = '';
+	let textDisplay = '', textPrint = '';
 
 	// Beispiel für die Nutzung von isMentalMode:
 	// if (isMentalMode) { Z1 = rnd(2, 5); } else { Z1 = rnd(5, 20); }
@@ -89,34 +90,34 @@ function createTask(type, isMentalMode) {
 
 		case 'db_as':
 			v1 = trueDec(11, 20); v2 = trueDec(0, 10);
-			if (Math.random() > 0.5) { t = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} + ${comma(fmt(v2))} = ${comma((v1 + v2).toFixed(1))} \\)`; }
-			else { t = `\\( ${comma(v1)} - ${comma(fmt(v2))} = \\)`; s = `\\( ${comma(v1)} - ${comma(fmt(v2))} = ${comma((v1 - v2).toFixed(1))} \\)`; }
+			if (Math.random() > 0.5) { textDisplay = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} + ${comma(fmt(v2))} = ${comma((v1 + v2).toFixed(1))} \\)`; }
+			else { textDisplay = `\\( ${comma(v1)} - ${comma(fmt(v2))} = \\)`; s = `\\( ${comma(v1)} - ${comma(fmt(v2))} = ${comma((v1 - v2).toFixed(1))} \\)`; }
 			break;
 		case 'db_md':
 			rd = Math.random();
-			if (rd > 0.7) { v1 = trueDec(0, 9); v2 = rnd(2, 7); t = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(1))} \\)`; }
-			else if (rd > 0.4) { v1 = trueDec(0, 1.5); v2 = trueDec(0, 1.5); t = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(2))} \\)` }
-			else { const res = trueDec(0, 1.5); v2 = rnd(2, 9); v1 = res * v2; t = `\\( ${comma(v1.toFixed(1))} : ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1.toFixed(1))} : ${comma(fmt(v2))} = ${comma(res.toFixed(1))} \\)`; }
+			if (rd > 0.7) { v1 = trueDec(0, 9); v2 = rnd(2, 7); textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(1))} \\)`; }
+			else if (rd > 0.4) { v1 = trueDec(0, 1.5); v2 = trueDec(0, 1.5); textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(2))} \\)` }
+			else { const res = trueDec(0, 1.5); v2 = rnd(2, 9); v1 = res * v2; textDisplay = `\\( ${comma(v1.toFixed(1))} : ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1.toFixed(1))} : ${comma(fmt(v2))} = ${comma(res.toFixed(1))} \\)`; }
 			break;
 		case 'z_as':
 			v1 = rnd(-20, 20); v2 = rnd(-30, 30);
-			if (Math.random() > 0.5) { t = `\\( ${v1} + ${fmt(v2)} =\\)`; s = `\\( ${v1} + ${fmt(v2)} = ${v1 + v2} \\) `; }
-			else { t = `\\( ${v1} - ${fmt(v2)} =\\)`; s = `\\( ${v1} - ${fmt(v2)} = ${v1 - v2} \\)`; }
+			if (Math.random() > 0.5) { textDisplay = `\\( ${v1} + ${fmt(v2)} =\\)`; s = `\\( ${v1} + ${fmt(v2)} = ${v1 + v2} \\) `; }
+			else { textDisplay = `\\( ${v1} - ${fmt(v2)} =\\)`; s = `\\( ${v1} - ${fmt(v2)} = ${v1 - v2} \\)`; }
 			break;
 		case 'z_md':
-			if (Math.random() > 0.5) { v1 = rnd(-15, 15); v2 = rnd(-9, 9); t = `\\( ${v1} \\cdot ${fmt(v2)} = \\)`; s = `\\( ${v1} \\cdot ${fmt(v2)} = ${v1 * v2} \\)`; }
-			else { const res = rnd(-9, 9); v2 = rnd(3, 12); v1 = res * v2; t = `\\( ${v1} : ${v2} = \\)`; s = `\\( ${v1} : ${v2} = ${res} \\)`; }
+			if (Math.random() > 0.5) { v1 = rnd(-15, 15); v2 = rnd(-9, 9); textDisplay = `\\( ${v1} \\cdot ${fmt(v2)} = \\)`; s = `\\( ${v1} \\cdot ${fmt(v2)} = ${v1 * v2} \\)`; }
+			else { const res = rnd(-9, 9); v2 = rnd(3, 12); v1 = res * v2; textDisplay = `\\( ${v1} : ${v2} = \\)`; s = `\\( ${v1} : ${v2} = ${res} \\)`; }
 			break;
 		case 'r_as':
 			v1 = trueDec(-20, 20); v2 = trueDec(-10, 10);
-			if (Math.random() > 0.5) { t = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} + ${comma(fmt(v2))} = ${comma((v1 + v2).toFixed(1))} \\)`; }
-			else { t = `\\( ${comma(v1)} - ${comma(fmt(v2))} = \\)`; s = `\\( ${comma(v1)} - ${comma(fmt(v2))} = ${comma((v1 - v2).toFixed(1))} \\)`; }
+			if (Math.random() > 0.5) { textDisplay = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} + ${comma(fmt(v2))} = ${comma((v1 + v2).toFixed(1))} \\)`; }
+			else { textDisplay = `\\( ${comma(v1)} - ${comma(fmt(v2))} = \\)`; s = `\\( ${comma(v1)} - ${comma(fmt(v2))} = ${comma((v1 - v2).toFixed(1))} \\)`; }
 			break;
 		case 'r_md':
 			rd = Math.random();
-			if (rd > 0.7) { v1 = trueDec(-9, 9); v2 = rnd(-7, 7); t = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(1))} \\)`; }
-			else if (rd > 0.4) { v1 = trueDec(-1.5, 1.5); v2 = trueDec(-1.5, 1.5); t = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(2))} \\)` }
-			else { const res = trueDec(-1.5, 1.5); v2 = rnd(-9, 9); v1 = res * v2; t = `\\( ${comma(v1.toFixed(1))} : ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1.toFixed(1))} : ${comma(fmt(v2))} = ${comma(res.toFixed(1))} \\)`; }
+			if (rd > 0.7) { v1 = trueDec(-9, 9); v2 = rnd(-7, 7); textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(1))} \\)`; }
+			else if (rd > 0.4) { v1 = trueDec(-1.5, 1.5); v2 = trueDec(-1.5, 1.5); textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(2))} \\)` }
+			else { const res = trueDec(-1.5, 1.5); v2 = rnd(-9, 9); v1 = res * v2; textDisplay = `\\( ${comma(v1.toFixed(1))} : ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1.toFixed(1))} : ${comma(fmt(v2))} = ${comma(res.toFixed(1))} \\)`; }
 			break;
 
 		case 'frac_as': {
@@ -159,7 +160,7 @@ function createTask(type, isMentalMode) {
 			const op = isAdd ? '+' : '-';
 			const finalZ = isAdd ? ez1 + ez2 : ez1 - ez2;
 
-			t = `\\[ \\frac{${z1}}{${n1}} ${op} \\frac{${z2}}{${n2}} = \\]`;
+			textDisplay = `\\[ \\frac{${z1}}{${n1}} ${op} \\frac{${z2}}{${n2}} = \\]`;
 
 			// Dynamischer Lösungsweg
 			let step1 = "";
@@ -206,7 +207,7 @@ function createTask(type, isMentalMode) {
 				? ``
 				: `\\frac{${Z1}}{${N1}} \\cdot \\frac{${N2}}{${Z2}} = `;
 
-			t = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} \\]`;
+			textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} \\]`;
 
 			// 4. Der Lösungsstring zeigt nur die Multiplikation und das Endergebnis.
 			s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${step1} \\frac{${finalZ}}{${finalN}} \\]`;
@@ -266,7 +267,7 @@ function createTask(type, isMentalMode) {
 
 			const finalStr = `\\frac{${resZ}}{${resN}}`;
 
-			t = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = \\]`;
+			textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = \\]`;
 
 			s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${stepKehrwert} ${midStep} = \\frac{${resZ}}{${resN}} \\]`;
 
@@ -291,7 +292,7 @@ function createTask(type, isMentalMode) {
 				N = n_base * k;
 			} while (Z === N || getGcd(z_base, n_base) > 1 || Z % N === 0 || N % Z === 0);
 
-			t = `\\[ \\text{Kürze vollständig: } \\frac{${Z}}{${N}} = \\]`;
+			textDisplay = `\\[ \\text{Kürze vollständig: } \\frac{${Z}}{${N}} = \\]`;
 
 			// Lösungsweg mit \underset unter dem Gleichheitszeichen
 			let solutionSteps = `\\frac{${Z}}{${N}}`;
@@ -361,7 +362,7 @@ function createTask(type, isMentalMode) {
 					let mult = p10 / n;
 					let decStr = Number((z / n).toFixed(4)).toString().replace('.', ',');
 
-					t = `\\[ \\frac{${z}}{${n}} \\text{ als Dezimalbruch?}\\]`;
+					textDisplay = `\\[ \\frac{${z}}{${n}} \\text{ als Dezimalbruch?}\\]`;
 
 					if (n === p10) {
 						s = `\\[ \\frac{${z}}{${n}} = ${decStr} \\]`;
@@ -404,7 +405,7 @@ function createTask(type, isMentalMode) {
 					let z_p10 = z * mult;
 
 					// 3. Aufgabenstellung
-					t = `\\( ${decStr} \\) als max. gekürzter gem. Bruch?`;
+					textDisplay = `\\( ${decStr} \\) als max. gekürzter gem. Bruch?`;
 
 					// 4. Lösungsweg (Rückwärts: Dezimal -> Zehnerbruch -> Kürzen -> Ergebnis)
 					if (n === p10) {
@@ -457,7 +458,7 @@ function createTask(type, isMentalMode) {
 					// Da wir auf 100 erweitern, ist der neue Zähler direkt die Prozentzahl
 					let percStr = (z * mult).toString() + '\\,\\%';
 
-					t = `\\[ \\frac{${z}}{${n}} \\text{ in Prozent?}\\]`;
+					textDisplay = `\\[ \\frac{${z}}{${n}} \\text{ in Prozent?}\\]`;
 					s = `\\[ \\frac{${z}}{${n}} \\overset{${mult}}{=} \\frac{${z * mult}}{100} = ${percStr} \\]`;
 
 					break;
@@ -472,7 +473,7 @@ function createTask(type, isMentalMode) {
 						let percVal = is200 ? 200 : 100;
 						let resultVal = is200 ? 2 : 1; // Das gekürzte Ergebnis als ganze Zahl
 
-						t = `\\( ${percVal}\\,\\% \\) als max. gekürzter gem. Bruch?`;
+						textDisplay = `\\( ${percVal}\\,\\% \\) als max. gekürzter gem. Bruch?`;
 						s = `\\[ ${percVal}\\,\\% = \\frac{${percVal}}{100} = ${resultVal} \\]`;
 
 						// Hinweis: Wenn dein System zwingend eine Bruch-Schreibweise als Lösung erwartet, 
@@ -521,7 +522,7 @@ function createTask(type, isMentalMode) {
 					let percStr = percVal.toString() + '\\,\\%';
 
 					// 4. Strings für Aufgabe und Lösung bauen
-					t = `\\( ${percStr} \\) als max. gekürzter gem. Bruch?`;
+					textDisplay = `\\( ${percStr} \\) als max. gekürzter gem. Bruch?`;
 
 					if (n === p10) {
 						s = `\\[ ${percStr} = \\frac{${z}}{100} \\]`;
@@ -545,7 +546,7 @@ function createTask(type, isMentalMode) {
 					let w_simp = Math.floor(z / n);
 					let rem_simp = z % n;
 
-					t = `\\[ \\frac{${z}}{${n}} \\text{ in gemischter Schreibweise?}\\]`;
+					textDisplay = `\\[ \\frac{${z}}{${n}} \\text{ in gemischter Schreibweise?}\\]`;
 					s = `\\[ \\frac{${z}}{${n}} = ${w_simp} \\frac{${rem_simp}}{${n}} \\]`;
 					break;
 				}
@@ -559,7 +560,7 @@ function createTask(type, isMentalMode) {
 					let w_simp = Math.floor(z / n);
 					let rem_simp = z % n;
 
-					t = `\\[ ${w_simp} \\frac{${rem_simp}}{${n}} \\text{ als gemeiner Bruch?}\\]`;
+					textDisplay = `\\[ ${w_simp} \\frac{${rem_simp}}{${n}} \\text{ als gemeiner Bruch?}\\]`;
 					s = `\\[ ${w_simp} \\frac{${rem_simp}}{${n}} = \\frac{${w_simp} \\cdot ${n} + ${rem_simp}}{${n}} = \\frac{${z}}{${n}} \\]`;
 					break;
 				}
@@ -572,7 +573,7 @@ function createTask(type, isMentalMode) {
 					let decStr = Number((p / 100).toFixed(4)).toString().replace('.', ',');
 					let percStr = p.toString().replace('.', ',') + '\\,\\%';
 
-					t = `\\( ${decStr} \\) in Prozent?`;
+					textDisplay = `\\( ${decStr} \\) in Prozent?`;
 					s = `\\( ${decStr} = ${percStr} \\)`;
 					break;
 				}
@@ -581,7 +582,7 @@ function createTask(type, isMentalMode) {
 					let decStr = Number((p / 100).toFixed(4)).toString().replace('.', ',');
 					let percStr = p.toString().replace('.', ',') + '\\,\\%';
 
-					t = `\\( ${percStr} \\) als Dezimalbruch?`;
+					textDisplay = `\\( ${percStr} \\) als Dezimalbruch?`;
 					s = `\\( ${percStr} = ${decStr} \\)`;
 					break;
 				}
@@ -598,12 +599,12 @@ function createTask(type, isMentalMode) {
 			if (rd > 0.67) {
 				pVal = rnd(2, 11) * 100;
 				p = [3, 4, 5, 6, 7, 8, 9, 11, 12, 20, 25, 30, 35, 40, 60, 70, 80, 90][rnd(2, 19) - 2];
-				t = `\\( ${p} \\% \\text{ von } ${pVal} \\text{ ${einheit} sind ___}\\)`;
+				textDisplay = `\\( ${p} \\% \\text{ von } ${pVal} \\text{ ${einheit} sind ___}\\)`;
 				s = `\\( ${p} \\% \\text{ von } ${pVal} \\text{ ${einheit}} \\text{ sind } ${(pVal / 100 * p)} \\text{ ${einheit}}\\)`;
 			} else if (rd > 0.33) {
 				p = [20, 25, 30, 40, 50, 60, 70, 80, 90][rnd(2, 10) - 2];
 				pVal = rnd(2, 9) * p;
-				t = `\\( ${p} \\% \\text{ sind } ${pVal} \\text{ ${einheit} von ___}\\)`;
+				textDisplay = `\\( ${p} \\% \\text{ sind } ${pVal} \\text{ ${einheit} von ___}\\)`;
 				s = `\\( ${p} \\% \\text{ sind } ${pVal} \\text{ ${einheit} von } ${pVal / p * 100} \\text{ ${einheit}}\\)`;
 			} else {
 				// 1. Wähle einen "schönen" Prozentsatz p (z.B. 5, 10, 20, 25, 50...)
@@ -620,7 +621,7 @@ function createTask(type, isMentalMode) {
 				const G = (W * 100) / p;
 
 				// Aufgabe: W und G sind gegeben, p ist gesucht
-				t = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind ___ } \\% \\)`;
+				textDisplay = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind ___ } \\% \\)`;
 
 				// Lösung: Zeigt den Rechenweg oder das Ergebnis
 				s = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind } ${p} \\, \\% \\)`;
@@ -633,16 +634,16 @@ function createTask(type, isMentalMode) {
 			let pVal = rnd(2, 11) * 100;
 			rd = Math.random();
 			if (rd > 0.75) {
-				t = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ erhöht sind ___}\\)`;
+				textDisplay = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ erhöht sind ___}\\)`;
 				s = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ erhöht sind } ${pVal + (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
 			} else if (rd > 0.5) {
-				t = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ reduziert sind ___}\\)`;
+				textDisplay = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ reduziert sind ___}\\)`;
 				s = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ reduziert sind } ${pVal - (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
 			} else if (rd > 0.25) {
-				t = `\\( ${pVal} \\text{ ${einheit} auf } ${100 + p} \\% \\text{ erhöht sind ___}\\)`;
+				textDisplay = `\\( ${pVal} \\text{ ${einheit} auf } ${100 + p} \\% \\text{ erhöht sind ___}\\)`;
 				s = `\\( ${pVal} \\text{ ${einheit} auf } ${100 + p} \\% \\text{ erhöht sind } ${pVal + (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
 			} else {
-				t = `\\( ${pVal} \\text{ ${einheit} auf } ${100 - p} \\% \\text{ reduziert sind ___}\\)`;
+				textDisplay = `\\( ${pVal} \\text{ ${einheit} auf } ${100 - p} \\% \\text{ reduziert sind ___}\\)`;
 				s = `\\( ${pVal} \\text{ ${einheit} auf } ${100 - p} \\% \\text{ reduziert sind } ${pVal - (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
 			}
 			break;
@@ -661,7 +662,7 @@ function createTask(type, isMentalMode) {
 					v1 = rnd(10000, 99999) / 1000;
 					v2 = rnd(100, 9999) / 10;
 					res = v1 + v2;
-					t = `Berechne schriftlich: \\( ${comma(v1)} + ${comma(v2)} \\)`;
+					textDisplay = `Berechne schriftlich: \\( ${comma(v1)} + ${comma(v2)} \\)`;
 					s = `Berechne schriftlich: \\( ${comma(v1)} + ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
 					break;
 
@@ -669,7 +670,7 @@ function createTask(type, isMentalMode) {
 					v1 = trueDec(200, 500);
 					v2 = rnd(5555, 14444) / 100;
 					res = v1 - v2;
-					t = `Berechne schriftlich: \\( ${comma(v1)} - ${comma(v2)} \\)`;
+					textDisplay = `Berechne schriftlich: \\( ${comma(v1)} - ${comma(v2)} \\)`;
 					s = `Berechne schriftlich: \\( ${comma(v1)} - ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
 					break;
 
@@ -680,7 +681,7 @@ function createTask(type, isMentalMode) {
 					v1 = rnd(11, 499) / Math.pow(10, p1);
 					v2 = rnd(11, 299) / Math.pow(10, p2);
 					res = v1 * v2;
-					t = `Berechne schriftlich: \\( ${comma(v1)} \\cdot ${comma(v2)} \\)`;
+					textDisplay = `Berechne schriftlich: \\( ${comma(v1)} \\cdot ${comma(v2)} \\)`;
 					// Bei Multiplikation können bis zu 4 Stellen entstehen (2+2)
 					s = `Berechne schriftlich: \\( ${comma(v1)} \\cdot ${comma(v2)} = ${comma(Number(res.toFixed(4)))} \\)`;
 					break;
@@ -692,7 +693,7 @@ function createTask(type, isMentalMode) {
 					const resultValue = rnd(111, 2999) / Math.pow(10, p3);
 					const dividend = (resultValue * divisor);
 
-					t = `Berechne schriftlich: \\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)`;
+					textDisplay = `Berechne schriftlich: \\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)`;
 					s = `Berechne schriftlich: \\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} = ${comma(resultValue)} \\)`;
 					break;
 			}
@@ -769,7 +770,7 @@ function createTask(type, isMentalMode) {
 					break;
 			}
 
-			t = `\\( ${toCleanString(startValue)} \\text{ ${fromUnit}} = \\text{__ ${toUnit}} \\)`;
+			textDisplay = `\\( ${toCleanString(startValue)} \\text{ ${fromUnit}} = \\text{__ ${toUnit}} \\)`;
 			s = `\\( ${toCleanString(startValue)} \\text{ ${fromUnit}} = ${result} \\text{ ${toUnit}} \\)`;
 			break;
 
@@ -781,10 +782,10 @@ function createTask(type, isMentalMode) {
 			if (shapeType === 0) { // QUADRAT
 				sideA = rnd(3, 12);
 				if (goal === 'A') {
-					t = `Quadrat mit \\( a = ${sideA} \\text{ m} \\). Flächeninhalt?`;
+					textDisplay = `Quadrat mit \\( a = ${sideA} \\text{ m} \\). Flächeninhalt?`;
 					s = `\\( A = a \\cdot a = ${sideA} \\cdot ${sideA} = ${sideA * sideA} \\text{ m}^2 \\)`;
 				} else {
-					t = `Quadrat mit \\( a = ${sideA} \\text{ m} \\). Umfang?`;
+					textDisplay = `Quadrat mit \\( a = ${sideA} \\text{ m} \\). Umfang?`;
 					s = `\\( u = 4 \\cdot a = 4 \\cdot ${sideA} = ${sideA * 4} \\text{ m} \\)`;
 				}
 			}
@@ -792,21 +793,21 @@ function createTask(type, isMentalMode) {
 				sideA = rnd(2, 12); sideB = rnd(3, 7);
 				if (sideA === sideB) { sideB++ }
 				if (goal === 'A') {
-					t = `Rechteck mit \\( a = ${sideA} \\text{ m} \\) und \\( b = ${sideB} \\text{ m} \\). Flächeninhalt?`;
+					textDisplay = `Rechteck mit \\( a = ${sideA} \\text{ m} \\) und \\( b = ${sideB} \\text{ m} \\). Flächeninhalt?`;
 					s = `\\( A = a \\cdot b = ${sideA} \\cdot ${sideB} = ${sideA * sideB} \\text{ m}^2 \\)`;
 				} else {
-					t = `Rechteck mit \\( a = ${sideA} \\text{ m} \\) und \\( b = ${sideB} \\text{ m} \\). Umfang?`;
+					textDisplay = `Rechteck mit \\( a = ${sideA} \\text{ m} \\) und \\( b = ${sideB} \\text{ m} \\). Umfang?`;
 					s = `\\( u = 2 \\cdot (a+b) = 2 \\cdot (${sideA} + ${sideB}) = ${2 * (sideA + sideB)} \\text{ m} \\)`;
 				}
 			}
 			else { // DREIECK
 				if (goal === 'A') {
 					sideA = rnd(2, 12); sideB = rnd(3, 7);
-					t = `Dreieck mit Grundseite \\( g = ${sideA} \\text{ m} \\) und Höhe \\( h = ${sideB} \\text{ m} \\). Flächeninhalt?`;
+					textDisplay = `Dreieck mit Grundseite \\( g = ${sideA} \\text{ m} \\) und Höhe \\( h = ${sideB} \\text{ m} \\). Flächeninhalt?`;
 					s = `\\( A = \\frac{1}{2} \\cdot g \\cdot h = \\frac{1}{2} \\cdot ${sideA} \\cdot ${sideB} = ${(sideA * sideB) / 2} \\text{ m}^2 \\)`.replace('.', ',');
 				} else {
 					sideA = rnd(25, 45); sideB = rnd(61, 129);
-					t = `Dreieck mit Winkeln \\( \\alpha = ${sideA}° \\) und \\( \\beta = ${sideB}°\\). Winkel \\(\\gamma \\)?`;
+					textDisplay = `Dreieck mit Winkeln \\( \\alpha = ${sideA}° \\) und \\( \\beta = ${sideB}°\\). Winkel \\(\\gamma \\)?`;
 					s = `\\( \\gamma = 180° - ${sideA}° - ${sideB}° = ${180 - sideA - sideB}°\\)`;
 				}
 			}
@@ -818,19 +819,19 @@ function createTask(type, isMentalMode) {
 			if (rd > 0.7) {
 				v1 = rnd(-13, 13);
 				if (v1 < 0) {
-					t = `\\( (${v1})^2 = \\)`;
+					textDisplay = `\\( (${v1})^2 = \\)`;
 					s = `\\( (${v1})^2 = ${v1 * v1} \\)`;
 				} else {
-					t = `\\( ${v1}^2 = \\)`;
+					textDisplay = `\\( ${v1}^2 = \\)`;
 					s = `\\( ${v1}^2 = ${v1 * v1} \\)`;
 				}
 			} else if (rd > 0.40) {
 				v1 = rnd(3, 10);
-				t = `\\( \\sqrt{${v1 * v1}} = \\)`;
+				textDisplay = `\\( \\sqrt{${v1 * v1}} = \\)`;
 				s = `\\( \\sqrt{${v1 * v1}} = ${v1} \\)`;
 			} else if (rd > 0.2) {
 				v1 = rnd(3, 9);
-				t = `\\( 2^${v1} = \\)`;
+				textDisplay = `\\( 2^${v1} = \\)`;
 				s = `\\( 2^${v1} = ${Math.pow(2, v1)} \\)`;
 			} else {
 				const staticTasks = [
@@ -842,7 +843,7 @@ function createTask(type, isMentalMode) {
 				];
 				// Zufälligen Index bestimmen
 				const randomIndex = Math.floor(Math.random() * staticTasks.length);
-				t = staticTasks[randomIndex].t;
+				textDisplay = staticTasks[randomIndex].t;
 				s = staticTasks[randomIndex].s;
 			}
 
@@ -861,7 +862,7 @@ function createTask(type, isMentalMode) {
 					teilerArray.push(i);
 				}
 			}
-			t = `Nenne alle Teiler der Zahl ${n}.`;
+			textDisplay = `Nenne alle Teiler der Zahl ${n}.`;
 			let teilerListe = teilerArray.join(', ');
 			s = `\\[ T_{${n}} = \\{ ${teilerListe} \\} \\]`;
 			break;
@@ -913,7 +914,7 @@ function createTask(type, isMentalMode) {
 				digits = 2;
 			}
 
-			t = `Runde \\( ${comma(v1.toFixed(3))} \\) auf ${target}.`;
+			textDisplay = `Runde \\( ${comma(v1.toFixed(3))} \\) auf ${target}.`;
 			s = `\\( ${comma(v1.toFixed(3))} \\approx ${comma(result.toFixed(digits))} \\) (${target})`;
 			break;
 		}
@@ -933,7 +934,7 @@ function createTask(type, isMentalMode) {
 			// Formatierung für die Ausgabe (Vorzeichen von b beachten)
 			const bPart = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
 
-			t = `Löse die Gleichung:<br> \\( ${a}x ${bPart} = ${c} \\)`;
+			textDisplay = `Löse die Gleichung:<br> \\( ${a}x ${bPart} = ${c} \\)`;
 			s = `\\[ \\begin{aligned} 
 						${a}x ${bPart} &= ${c} &&| \\, ${b >= 0 ? '-' : '+'} ${Math.abs(b)} \\\\ 
 						${a}x &= ${c - b} &&| \\, : ${a >= 0 ? a : '(' + a + ')'} \\\\
@@ -972,7 +973,7 @@ function createTask(type, isMentalMode) {
 			const dMinusB = d - b;
 			const divOp = aMinusC >= 0 ? aMinusC : `(${aMinusC})`;
 
-			t = `Löse die Gleichung:<br>\\( ${a}x ${bPart} = ${c}x ${dPart} \\)`;
+			textDisplay = `Löse die Gleichung:<br>\\( ${a}x ${bPart} = ${c}x ${dPart} \\)`;
 
 			s = `\\[ \\begin{aligned} 
 						${a}x ${bPart} &= ${c}x ${dPart} &&| \\, ${op1} \\\\ 
@@ -1048,7 +1049,7 @@ function createTask(type, isMentalMode) {
 					}
 				});
 				resStr = resParts.length === 0 ? '0' : resParts.join(' ').trim();
-				t = `Vereinfache den Term: \\[ ${taskStr} \\]`;
+				textDisplay = `Vereinfache den Term: \\[ ${taskStr} \\]`;
 
 			} else {
 				// --- TYP: KLAMMER AUFLÖSEN ---
@@ -1066,7 +1067,7 @@ function createTask(type, isMentalMode) {
 				let p1 = (resV === 1) ? v : (resV === -1 ? `-${v}` : `${resV}${v}`);
 				let p2 = resN > 0 ? `+ ${resN}` : `- ${Math.abs(resN)}`;
 				resStr = `${p1} ${p2}`;
-				t = `Löse die Klammer auf: \\[ ${taskStr} \\]`;
+				textDisplay = `Löse die Klammer auf: \\[ ${taskStr} \\]`;
 			}
 
 			s = `\\[ ${taskStr} = ${resStr} \\]`;
@@ -1084,7 +1085,7 @@ function createTask(type, isMentalMode) {
 				if (isPrim(i)) prims.push(i);
 			}
 
-			t = `Nenne alle Primzahlen von ${start} bis ${start + 10}.`;
+			textDisplay = `Nenne alle Primzahlen von ${start} bis ${start + 10}.`;
 			s = `\\( ${prims.join(', ')} \\quad \\) (${start} - ${start + 10})`;
 
 			break;
@@ -1187,15 +1188,13 @@ function createTask(type, isMentalMode) {
 
 			}
 
-			t = taskStr;
+			textDisplay = taskStr;
 			s = `\\[ ${resStr} \\]`;
 			break;
 		}
 
 		case 'funktionen': {
 			let subType = randInt(0, 6);
-			let t = "";
-			let s = "";
 
 			// Hilfsvariablen für die Funktionserstellung
 			let isLinear = randInt(0, 1) === 0;
@@ -1231,14 +1230,14 @@ function createTask(type, isMentalMode) {
 			switch (subType) {
 				case 0: // Funktionswert berechnen
 					let xVal = randInt(-4, 4);
-					t = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Berechne den Funktionswert an der Stelle \\( x = ${xVal} \\).`;
+					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Berechne den Funktionswert an der Stelle \\( x = ${xVal} \\).`;
 					s = `\\( f(${xVal}) = ${calcF(xVal)} \\)`;
 					break;
 
 				case 1: // Argument berechnen
 					let targetX = randInt(-3, 3);
 					let targetY = calcF(targetX);
-					t = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Bestimme das Argument \\( x \\), für das der Funktionswert \\( y = ${targetY} \\) ist.`;
+					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Bestimme das Argument \\( x \\), für das der Funktionswert \\( y = ${targetY} \\) ist.`;
 					if (!isLinear && targetX !== 0) {
 						s = `\\( x_1 = ${Math.abs(targetX)}, \\; x_2 = -${Math.abs(targetX)} \\)`;
 					} else {
@@ -1254,13 +1253,13 @@ function createTask(type, isMentalMode) {
 						let mStr = myM === 1 ? "" : (myM === -1 ? "-" : myM);
 						let bStr = myB > 0 ? ` + ${myB}` : (myB < 0 ? ` - ${Math.abs(myB)}` : "");
 						funcStr = `f(x) = ${mStr}x${bStr}`;
-						t = `Berechne die Nullstelle der Funktion \\( ${funcStr} \\).`;
+						textDisplay = `Berechne die Nullstelle der Funktion \\( ${funcStr} \\).`;
 						s = `\\( x = ${root} \\)`;
 					} else {
 						let root = randInt(1, 4);
 						let myB = -(root * root);
 						funcStr = `f(x) = x^2 - ${Math.abs(myB)}`;
-						t = `Berechne die Nullstellen der Funktion \\( ${funcStr} \\).`;
+						textDisplay = `Berechne die Nullstellen der Funktion \\( ${funcStr} \\).`;
 						s = `\\( x_1 = ${root}, \\; x_2 = -${root} \\)`;
 					}
 					break;
@@ -1269,10 +1268,10 @@ function createTask(type, isMentalMode) {
 					let px = randInt(-4, 4);
 					let py = calcF(px);
 					if (randInt(0, 1) === 0) {
-						t = `Der Punkt \\( P(${px} | y) \\) liegt auf dem Graphen der Funktion \\( ${funcStr} \\).<br>Bestimme die fehlende y-Koordinate.`;
+						textDisplay = `Der Punkt \\( P(${px} | y) \\) liegt auf dem Graphen der Funktion \\( ${funcStr} \\).<br>Bestimme die fehlende y-Koordinate.`;
 						s = `\\( y = ${py} \\)`;
 					} else {
-						t = `Der Punkt \\( P(x | ${py}) \\) liegt auf dem Graphen der Funktion \\( ${funcStr} \\).<br>Bestimme die fehlende x-Koordinate.`;
+						textDisplay = `Der Punkt \\( P(x | ${py}) \\) liegt auf dem Graphen der Funktion \\( ${funcStr} \\).<br>Bestimme die fehlende x-Koordinate.`;
 						if (!isLinear && px !== 0) {
 							s = `\\( x = ${Math.abs(px)} \\) oder \\( x = -${Math.abs(px)} \\)`;
 						} else {
@@ -1282,7 +1281,7 @@ function createTask(type, isMentalMode) {
 					break;
 
 				case 4: // Wertetabelle erstellen
-					t = `Gegeben ist \\( ${funcStr} \\).<br>Erstelle eine Wertetabelle für \\( x \\in \\{-2; -1; 0; 1; 2\\} \\).`;
+					textDisplay = `Gegeben ist \\( ${funcStr} \\).<br>Erstelle eine Wertetabelle für \\( x \\in \\{-2; -1; 0; 1; 2\\} \\).`;
 					s = `\\( x = -2 \\Rightarrow y = ${calcF(-2)} \\)<br>` +
 						`\\( x = -1 \\Rightarrow y = ${calcF(-1)} \\)<br>` +
 						`\\( x = 0 \\Rightarrow y = ${calcF(0)} \\)<br>` +
@@ -1291,7 +1290,7 @@ function createTask(type, isMentalMode) {
 					break;
 
 				case 5: // Graph zeichnen
-					t = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Zeichne den zugehörigen Funktionsgraphen.`;
+					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Zeichne den zugehörigen Funktionsgraphen.`;
 					s = `Kontrolle:<br>Der Graph verläuft u.a. durch die Punkte \\( P(0 | ${calcF(0)}) \\) und \\( Q(1 | ${calcF(1)}) \\).`;
 					break;
 
@@ -1301,7 +1300,7 @@ function createTask(type, isMentalMode) {
 					// Wenn isTrue false ist, addiere einen kleinen Störwert auf das echte y
 					let testY = isTrue ? calcF(testX) : calcF(testX) + randInt(1, 3) * (randInt(0, 1) === 0 ? 1 : -1);
 
-					t = `Führe eine Punktprobe durch:<br>Liegt der Punkt \\( P(${testX} | ${testY}) \\) auf dem Graphen von \\( ${funcStr} \\)?`;
+					textDisplay = `Führe eine Punktprobe durch:<br>Liegt der Punkt \\( P(${testX} | ${testY}) \\) auf dem Graphen von \\( ${funcStr} \\)?`;
 					if (isTrue) {
 						s = `Ja, denn \\( f(${testX}) = ${testY} \\) ist eine wahre Aussage.`;
 					} else {
@@ -1413,7 +1412,7 @@ function createTask(type, isMentalMode) {
 					break;
 			}
 
-			t = `Bestimme ${taskName}:<br>${displayData.join(', ')}`;
+			textDisplay = `Bestimme ${taskName}:<br>${displayData.join(', ')}`;
 			s = loesung;
 			break;
 		}
@@ -1429,7 +1428,7 @@ function createTask(type, isMentalMode) {
 				let smallerAngle = stepCount * 30;
 				let largerAngle = 360 - smallerAngle;
 
-				t = `Welchen Winkel bilden die Uhr-Zeiger um ${String(displayHour)}:00 Uhr?`;
+				textDisplay = `Welchen Winkel bilden die Uhr-Zeiger um ${String(displayHour)}:00 Uhr?`;
 				s = `${String(displayHour)}:00 Uhr ➝ ${smallerAngle}° und ${largerAngle}°`;
 
 			} else if (mode === 1) {
@@ -1438,7 +1437,7 @@ function createTask(type, isMentalMode) {
 				let p = prozentListe[randInt(0, prozentListe.length - 1)];
 				let result = (p / 100) * 360;
 
-				t = `Welchem Winkel entsprechen ${p} % in einem Kreisdiagramm?`;
+				textDisplay = `Welchem Winkel entsprechen ${p} % in einem Kreisdiagramm?`;
 				s = `10 % ≙ 36° ⭢ ${p} % ≙ ${result}°`;
 
 
@@ -1455,7 +1454,7 @@ function createTask(type, isMentalMode) {
 				let pick = pools[randInt(0, pools.length - 1)];
 				let grad = pick.val !== undefined ? pick.val : randInt(pick.min, pick.max);
 
-				t = `Welche Winkelart liegt bei ${grad}° vor?`;
+				textDisplay = `Welche Winkelart liegt bei ${grad}° vor?`;
 				s = `${grad}° ➝ ${pick.name}.`;
 
 			} else {
@@ -1463,7 +1462,7 @@ function createTask(type, isMentalMode) {
 				// Winkel zwischen 10° und 350°, bevorzugt 5er Schritte für die Zeichenbarkeit
 				let grad = randInt(15, 250);
 
-				t = `Zeichne den Winkel \\(\\alpha\\) = ${grad}°.`;
+				textDisplay = `Zeichne den Winkel \\(\\alpha\\) = ${grad}°.`;
 				s = `Zeichne den Winkel \\(\\alpha\\) = ${grad}°.`;
 			}
 			break;
@@ -1483,14 +1482,14 @@ function createTask(type, isMentalMode) {
 				let a = randInt(4, 8);
 				let b = randInt(4, 8); // Tiefe
 				let c = randInt(3, 8);
-				t = `Zeichne das Schrägbild eines Quaders in Kavalierperspektive ${pers}.<br><br>Gegeben sind die Breite \\( a = ${a} \\text{ cm} \\), die Tiefe (nach hinten) \\( b = ${b} \\text{ cm} \\) und die Höhe \\( c = ${c} \\text{ cm} \\).`;
+				textDisplay = `Zeichne das Schrägbild eines Quaders in Kavalierperspektive ${pers}.<br><br>Gegeben sind die Breite \\( a = ${a} \\text{ cm} \\), die Tiefe (nach hinten) \\( b = ${b} \\text{ cm} \\) und die Höhe \\( c = ${c} \\text{ cm} \\).`;
 				s = `Kontrolle: Die vordere Fläche ist ein Rechteck (\\( ${a} \\text{ cm} \\times ${c} \\text{ cm} \\)). Die nach hinten verlaufenden Kanten müssen im Heft genau \\( ${fmt(b / 2)} \\text{ cm} \\) lang gezeichnet werden.`;
 
 			} else if (type === 1) {
 				// --- PYRAMIDE ---
 				let a = randInt(4, 8);
 				let h = randInt(5, 9);
-				t = `Zeichne das Schrägbild einer geraden Pyramide mit quadratischer Grundfläche in Kavalierperspektive ${pers}.<br><br>Gegeben sind die Grundkante \\( a = ${a} \\text{ cm} \\) und die Körperhöhe \\( h = ${h} \\text{ cm} \\).`;
+				textDisplay = `Zeichne das Schrägbild einer geraden Pyramide mit quadratischer Grundfläche in Kavalierperspektive ${pers}.<br><br>Gegeben sind die Grundkante \\( a = ${a} \\text{ cm} \\) und die Körperhöhe \\( h = ${h} \\text{ cm} \\).`;
 				s = `Kontrolle: Die vordere Grundkante ist \\( ${a} \\text{ cm} \\) lang, die nach hinten gezeichnete Kante \\( ${fmt(a / 2)} \\text{ cm} \\). Der Höhenfußpunkt liegt genau im Schnittpunkt der beiden Diagonalen der Grundfläche.`;
 
 			} else if (type === 2) {
@@ -1498,21 +1497,21 @@ function createTask(type, isMentalMode) {
 				let a = randInt(3, 6);
 				let b = randInt(3, 7);
 				let hk = randInt(4, 9);
-				t = `Zeichne das Schrägbild eines geraden Prismas in Kavalierperspektive ${pers}.<br><br>Die Grundfläche ist ein rechtwinkliges Dreieck, das parallel zur Zeichenebene liegt (vordere Fläche). Die Katheten sind \\( a = ${a} \\text{ cm} \\) und \\( b = ${b} \\text{ cm} \\). Die Körperhöhe (nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
+				textDisplay = `Zeichne das Schrägbild eines geraden Prismas in Kavalierperspektive ${pers}.<br><br>Die Grundfläche ist ein rechtwinkliges Dreieck, das parallel zur Zeichenebene liegt (vordere Fläche). Die Katheten sind \\( a = ${a} \\text{ cm} \\) und \\( b = ${b} \\text{ cm} \\). Die Körperhöhe (nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
 				s = `Kontrolle: Das rechtwinklige Dreieck wird in wahrer Größe (\\( ${a} \\text{ cm} \\) und \\( ${b} \\text{ cm} \\)) gezeichnet. Die nach hinten verlaufenden Kanten sind im Heft genau \\( ${fmt(hk / 2)} \\text{ cm} \\) lang.`;
 
 			} else if (type === 3) {
 				// --- ZYLINDER ---
 				let r = randInt(2, 4);
 				let hk = randInt(4, 9);
-				t = `Zeichne das Schrägbild eines Zylinders in Kavalierperspektive ${pers}.<br><br>Damit es einfach zu zeichnen ist, "liegt" der Zylinder: Die kreisförmige Grundfläche mit dem Radius \\( r = ${r} \\text{ cm} \\) ist parallel zur Zeichenebene (vordere Fläche). Die Körperhöhe (nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
+				textDisplay = `Zeichne das Schrägbild eines Zylinders in Kavalierperspektive ${pers}.<br><br>Damit es einfach zu zeichnen ist, "liegt" der Zylinder: Die kreisförmige Grundfläche mit dem Radius \\( r = ${r} \\text{ cm} \\) ist parallel zur Zeichenebene (vordere Fläche). Die Körperhöhe (nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
 				s = `Kontrolle: Der vordere Kreis wird in wahrer Größe mit dem Zirkel gezeichnet. Der Mittelpunkt für den hinteren Kreis wird vom vorderen Mittelpunkt im 45°-Winkel um \\( ${fmt(hk / 2)} \\text{ cm} \\) verschoben.`;
 
 			} else if (type === 4) {
 				// --- KREISKEGEL ---
 				let r = randInt(2, 4);
 				let hk = randInt(5, 9);
-				t = `Zeichne das Schrägbild eines Kreiskegels in Kavalierperspektive ${pers}.<br><br>Auch hier "liegt" der Kegel: Die kreisförmige Grundfläche mit dem Radius \\( r = ${r} \\text{ cm} \\) ist parallel zur Zeichenebene (vordere Fläche). Die Körperhöhe (Strecke vom Kreismittelpunkt zur Spitze nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
+				textDisplay = `Zeichne das Schrägbild eines Kreiskegels in Kavalierperspektive ${pers}.<br><br>Auch hier "liegt" der Kegel: Die kreisförmige Grundfläche mit dem Radius \\( r = ${r} \\text{ cm} \\) ist parallel zur Zeichenebene (vordere Fläche). Die Körperhöhe (Strecke vom Kreismittelpunkt zur Spitze nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
 				s = `Kontrolle: Der Kreis wird in wahrer Größe gezeichnet. Die Spitze liegt vom Kreismittelpunkt aus im 45°-Winkel genau \\( ${fmt(hk / 2)} \\text{ cm} \\) nach hinten versetzt. Verbinde die Spitze tangential mit dem Kreis.`;
 			}
 
@@ -1619,7 +1618,7 @@ function createTask(type, isMentalMode) {
 			resS[p[0]] = s1; resS[p[1]] = s2; resS[p[2]] = s3;
 			resA[p[0]] = a1; resA[p[1]] = a2; resA[p[2]] = a3;
 
-			t = `Fertige eine Planfigur an und zeichne das Dreieck:<br>${givenStr}`;
+			textDisplay = `Fertige eine Planfigur an und zeichne das Dreieck:<br>${givenStr}`;
 			s = `Kongruenzsatz ${kongruenzsatz}, alle Maße:<br>\\(a=${cm(resS[0])}\\,cm; \\quad b=${cm(resS[1])}\\,cm; \\quad c=${cm(resS[2])}\\,cm\\)<br>\\(\\alpha=${resA[0]}^\\circ; \\quad \\beta=${resA[1]}^\\circ; \\quad \\gamma=${resA[2]}^\\circ\\)`;
 			break;
 		}
@@ -1647,7 +1646,7 @@ function createTask(type, isMentalMode) {
 				let G = n * multiplier * scale; // Das Ganze (Grundwert)
 				let W = (G / n) * z;            // Der Anteil (Prozentwert)
 
-				t = `\\( \\frac{${z}}{${n}} \\text{ von } ${comma(G)} \\text{ ${einheit} sind ___}\\)`;
+				textDisplay = `\\( \\frac{${z}}{${n}} \\text{ von } ${comma(G)} \\text{ ${einheit} sind ___}\\)`;
 				s = `\\( \\frac{${z}}{${n}} \\text{ von } ${comma(G)} \\text{ ${einheit}} \\text{ sind } ${comma(W)} \\text{ ${einheit}}\\)<br>
 							 \\((${comma(G)} : ${n} \\cdot ${z} = ${comma(W)})\\)`;
 
@@ -1659,7 +1658,7 @@ function createTask(type, isMentalMode) {
 				let W = z * multiplier * scale; // Der Anteil
 				let G = (W / z) * n;            // Das Ganze
 
-				t = `\\( \\frac{${z}}{${n}} \\text{ sind } ${comma(W)} \\text{ ${einheit} von ___}\\)`;
+				textDisplay = `\\( \\frac{${z}}{${n}} \\text{ sind } ${comma(W)} \\text{ ${einheit} von ___}\\)`;
 				s = `\\( \\frac{${z}}{${n}} \\text{ sind } ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit}}\\)<br>
 							 \\((${comma(W)} : ${z} \\cdot ${n} = ${comma(G)})\\)`;
 
@@ -1671,7 +1670,7 @@ function createTask(type, isMentalMode) {
 				let W = z * multiplier;
 				let G = n * multiplier;
 
-				t = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind ___ } \\)`;
+				textDisplay = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind ___ } \\)`;
 				s = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind } \\frac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\frac{${z}}{${n}} \\)`;
 			}
 			break;
@@ -1775,7 +1774,7 @@ function createTask(type, isMentalMode) {
 				}
 			}
 
-			t = `${s1}. ${sFrage}`;
+			textDisplay = `${s1}. ${sFrage}`;
 			// Einfache Zeilenumbrüche (<br>) ohne die vorherigen Worte (Gegeben, Zielwert etc.)
 			s = `${s2}<br>${sStep}<br>${sRes}`;
 			break;
@@ -1826,19 +1825,20 @@ function createTask(type, isMentalMode) {
 					break;
 			}
 
-			t = `\\[ ${taskStr} \\]`;
+			textDisplay = `\\[ ${taskStr} \\]`;
 			s = `\\[ ${taskStr} = ${step1} = ${res} \\]`;
 		}
 
 	}
+
+	if (!textPrint) {
+		textPrint = textDisplay;
+	}
+
 	return {
-		// Fallback-Felder für bestehende Kompatibilität
-		text: t,
-		solution: s,
-		// Neue Felder für Anzeige und Druck (initial identisch)
-		textDisplay: t,
-		textPrint: t,
-		solutionDisplay: s,
-		solutionPrint: s
+		textDisplay,
+		textPrint,
+		solution: s
 	};
-}; 
+};
+
