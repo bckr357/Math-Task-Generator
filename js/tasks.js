@@ -15,6 +15,57 @@ const taskCategories = {
 	advanced: ['potenzen', 'teiler', 'primzahlen', 'units', 'percent', 'pv', 'round', 'anteile', 'prop', 'schriftlich']
 };
 
+// Sichtbare Aufgabentypen je Klassenstufe (wird vom UI-Dropdown genutzt)
+const taskTypesByGrade = {
+	klasse5: [
+		'z_as', 'z_md', 'db_as', 'db_md', 'frac_as',
+		'frac_md', 'frac_simplify', 'frac_convert', 'geometry', 'winkel',
+		'statistik', 'teiler', 'primzahlen', 'round', 'schriftlich',
+		'vorrang'
+	],
+	klasse6: [
+		'z_as', 'z_md', 'db_as', 'db_md', 'r_as',
+		'frac_as', 'frac_md', 'frac_md_pro', 'frac_simplify', 'frac_convert',
+		'percent', 'anteile', 'geometry', 'winkel', 'statistik',
+		'wkt', 'teiler', 'primzahlen', 'round', 'schriftlich',
+		'vorrang'
+	],
+	klasse7: [
+		'z_as', 'z_md', 'r_as', 'r_md', 'db_as',
+		'db_md', 'frac_as', 'frac_md', 'frac_md_pro', 'frac_simplify',
+		'frac_convert', 'percent', 'pv', 'anteile', 'units',
+		'terme', 'equations', 'geometry', 'winkel', 'statistik',
+		'wkt', 'potenzen', 'teiler', 'primzahlen', 'round',
+		'prop', 'schriftlich', 'vorrang'
+	],
+	klasse8: [
+		'z_as', 'z_md', 'r_as', 'r_md', 'db_as',
+		'db_md', 'frac_as', 'frac_md', 'frac_md_pro', 'frac_simplify',
+		'frac_convert', 'percent', 'pv', 'anteile', 'units',
+		'terme', 'equations', 'equations_adv', 'geometry', 'winkel',
+		'schraegbild', 'statistik', 'wkt', 'potenzen', 'teiler',
+		'primzahlen', 'round', 'prop', 'schriftlich', 'vorrang'
+	],
+	klasse9: [
+		'z_as', 'z_md', 'r_as', 'r_md', 'db_as',
+		'db_md', 'frac_as', 'frac_md', 'frac_md_pro', 'frac_simplify',
+		'frac_convert', 'percent', 'pv', 'anteile', 'units',
+		'terme', 'equations', 'equations_adv', 'funktionen', 'geometry',
+		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt',
+		'potenzen', 'teiler', 'primzahlen', 'round', 'prop',
+		'schriftlich', 'vorrang'
+	],
+	klasse10: [
+		'db_as', 'db_md', 'z_as', 'z_md', 'r_as',
+		'r_md', 'frac_simplify', 'frac_md', 'frac_as', 'frac_md_pro',
+		'schriftlich', 'frac_convert', 'anteile', 'vorrang', 'terme',
+		'percent', 'units', 'pv', 'round', 'equations',
+		'geometry', 'wkt', 'statistik', 'funktionen', 'teiler',
+		'primzahlen', 'equations_adv', 'potenzen', 'prop', 'winkel',
+		'schraegbild', 'kongruenz'
+	]
+};
+
 /* TODO / Roadmap 
  - Winkel fixen 
  - neue cases einbauen und validieren 
@@ -38,40 +89,44 @@ const taskCategories = {
  - Punkte pro Aufgabe (auch in der Lösung oder beim interaktiven Modus) 
 */
 
-const typeLabels = {
-	db_as: 'Dezimalbrüche +-',
-	db_md: 'Dezimalbrüche */',
-	z_as: 'Ganze Zahlen +-',
-	z_md: 'Ganze Zahlen */',
-	r_as: 'Rationale Zahlen +-',
-	r_md: 'Rationale Zahlen */',
-	frac_simplify: 'Kürzen',
-	frac_md: 'Brüche */',
-	frac_as: 'Brüche +-',
-	frac_md_pro: 'Brüche */ Pro',
-	schriftlich: 'schriftlich rechnen',
-	frac_convert: 'Brüche <> Prozent',
-	anteile: 'Anteile berechnen',
-	vorrang: 'Vorrangregeln',
-	terme: 'Terme',
-	percent: 'Prozentrechnung',
-	units: 'Einheiten',
-	pv: 'Prozentuale Veränderung',
-	round: 'Runden',
-	equations: 'ax + b = c',
-	geometry: 'Geometrie',
-	wkt: 'Wahrscheinlichkeiten',
-	statistik: 'Statistik',
-	funktionen: 'Funktionen',
-	teiler: 'Teiler',
-	primzahlen: 'Primzahlen',
-	equations_adv: 'ax + b = cx + d',
-	potenzen: 'Potenzen und Wurzeln',
-	prop: 'Proportionalitäten',
-	winkel: 'Winkel',
-	schraegbild: 'Körperdarstellung',
-	kongruenz: 'Kongruenzsätze'
-};
+// Dreiteilige Typ-Definition: [key, Label fuer Einstellungen, Beschreibung fuer Training]
+const typeDefinitions = [
+	['db_as', 'Dezimalbrüche +-', 'Dezimalbrüche addieren und subtrahieren'],
+	['db_md', 'Dezimalbrüche */', 'Dezimalbrüche multiplizieren und dividieren'],
+	['z_as', 'Ganze Zahlen +-', 'Ganze Zahlen addieren und subtrahieren'],
+	['z_md', 'Ganze Zahlen */', 'Ganze Zahlen multiplizieren und dividieren'],
+	['r_as', 'Rationale Zahlen +-', 'Rationale Zahlen addieren und subtrahieren'],
+	['r_md', 'Rationale Zahlen */', 'Rationale Zahlen multiplizieren und dividieren'],
+	['frac_simplify', 'Kürzen', 'Brüche vollständig kürzen'],
+	['frac_md', 'Brüche */', 'Brüche multiplizieren und dividieren'],
+	['frac_as', 'Brüche +-', 'Brüche addieren und subtrahieren'],
+	['frac_md_pro', 'Brüche */ Pro', 'Brüche multiplizieren und dividieren mit Kürzungsstrategie'],
+	['schriftlich', 'schriftlich rechnen', 'Schriftliche Rechenverfahren mit Dezimalzahlen'],
+	['frac_convert', 'Brüche <> Prozent', 'Brüche, Dezimalzahlen und Prozentwerte umwandeln'],
+	['anteile', 'Anteile berechnen', 'Anteile als Brüche eines Ganzen berechnen'],
+	['vorrang', 'Vorrangregeln', 'Terme mit Vorrangregeln korrekt berechnen'],
+	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
+	['percent', 'Prozentrechnung', 'Prozentwert, Grundwert und Prozentsatz berechnen'],
+	['units', 'Einheiten', 'Größen in verschiedene Einheiten umrechnen'],
+	['pv', 'Prozentuale Veränderung', 'Prozentuale Zu- und Abnahmen berechnen'],
+	['round', 'Runden', 'Zahlen auf Ganze, Zehntel oder Hundertstel runden'],
+	['equations', 'ax + b = c', 'Lineare Gleichungen der Form ax + b = c lösen'],
+	['geometry', 'Geometrie', 'Flächeninhalte und Umfänge in der Geometrie berechnen'],
+	['wkt', 'Wahrscheinlichkeiten', 'Einfache Wahrscheinlichkeiten bestimmen'],
+	['statistik', 'Statistik', 'Lageparameter und Spannweite in Datensätzen bestimmen'],
+	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
+	['teiler', 'Teiler', 'Teiler einer Zahl systematisch bestimmen'],
+	['primzahlen', 'Primzahlen', 'Primzahlen in Zahlenbereichen erkennen'],
+	['equations_adv', 'ax + b = cx + d', 'Lineare Gleichungen mit Variablen auf beiden Seiten lösen'],
+	['potenzen', 'Potenzen und Wurzeln', 'Potenzen und Wurzeln berechnen'],
+	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität lösen'],
+	['winkel', 'Winkel', 'Winkelarten erkennen und Winkel berechnen'],
+	['schraegbild', 'Körperdarstellung', 'Schrägbilder von Körpern zeichnen und deuten'],
+	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren und begründen']
+];
+
+const typeLabels = Object.fromEntries(typeDefinitions.map(([key, label]) => [key, label]));
+const typeDescriptions = Object.fromEntries(typeDefinitions.map(([key, , description]) => [key, description]));
 
 // ============================================================
 // AUFGABEN-GENERATOR

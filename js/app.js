@@ -1,4 +1,4 @@
-const { createApp, nextTick, onMounted, onBeforeUnmount } = Vue;
+const { createApp, nextTick, onMounted, onBeforeUnmount, ref, computed, watch } = Vue;
 
 /* TODO / Roadmap
  - Winkel fixen
@@ -23,12 +23,10 @@ const { createApp, nextTick, onMounted, onBeforeUnmount } = Vue;
  - Punkte pro Aufgabe (auch in der Lösung oder beim interaktiven Modus)
 */
 
-let mathJaxReady = false;
 const typesetMathJax = async () => {
     if (window.MathJax?.typesetPromise) {
         try {
             await window.MathJax.typesetPromise();
-            mathJaxReady = true;
         } catch (error) {
             console.warn('MathJax rendering failed:', error);
         }
@@ -38,6 +36,38 @@ const typesetMathJax = async () => {
 createApp({
     setup() {
         const state = window.MTGStateModule.createState(Vue, typeLabels);
+        const allTypes = Object.keys(typeLabels);
+        const selectedGrade = ref('klasse5');
+        const gradeOptions = [
+            { value: 'klasse5', label: 'Klasse 5' },
+            { value: 'klasse6', label: 'Klasse 6' },
+            { value: 'klasse7', label: 'Klasse 7' },
+            { value: 'klasse8', label: 'Klasse 8' },
+            { value: 'klasse9', label: 'Klasse 9' },
+            { value: 'klasse10', label: 'Klasse 10' }
+        ];
+
+        const classConfig = (typeof taskTypesByGrade === 'object' && taskTypesByGrade)
+            ? taskTypesByGrade
+            : {};
+
+        const visibleTypeKeys = computed(() => {
+            const configured = classConfig[selectedGrade.value];
+
+            if (!Array.isArray(configured)) {
+                return allTypes;
+            }
+
+            const validKeys = configured.filter(type => Object.prototype.hasOwnProperty.call(typeLabels, type));
+            return validKeys.length > 0 ? validKeys : allTypes;
+        });
+
+        const visibleTypeEntries = computed(() => visibleTypeKeys.value.map(key => [key, typeLabels[key]]));
+
+        watch(visibleTypeKeys, (keys) => {
+            const allowed = new Set(keys);
+            state.selectedTypes.value = state.selectedTypes.value.filter(type => allowed.has(type));
+        }, { immediate: true });
 
         const taskGeneration = window.MTGTaskGenerationModule.createTaskGenerationModule({
             state,
@@ -75,9 +105,26 @@ createApp({
         });
 
         const invertSelection = () => {
-            const allTypes = Object.keys(typeLabels);
-            const newSelection = allTypes.filter(type => !state.selectedTypes.value.includes(type));
+            const newSelection = visibleTypeKeys.value.filter(type => !state.selectedTypes.value.includes(type));
             state.selectedTypes.value = newSelection;
+        };
+
+        const randomizeTypeSelection = () => {
+            const classTypes = visibleTypeKeys.value;
+            const randomized = classTypes.filter(() => Math.random() > 0.5);
+
+            state.selectedTypes.value = randomized.length > 0
+                ? randomized
+                : [classTypes[Math.floor(Math.random() * classTypes.length)]];
+
+            allTypes.forEach(type => {
+                state.taskWeights.value[type] = 1;
+            });
+        };
+
+        const generateRandomWorksheet = async () => {
+            randomizeTypeSelection();
+            await worksheetMode.generateWorksheet();
         };
 
         const refreshCurrentView = async () => {
@@ -98,7 +145,12 @@ createApp({
 
         return {
             ...state,
+            selectedGrade,
+            gradeOptions,
+            visibleTypeEntries,
             invertSelection,
+            randomizeTypeSelection,
+            generateRandomWorksheet,
             refreshCurrentView,
             openSettingsSidebar: navigation.openSettingsSidebar,
             closeSettingsSidebar: navigation.closeSettingsSidebar,
@@ -119,8 +171,8 @@ createApp({
             printWorksheet: worksheetMode.printWorksheet,
             exportWorksheetJSON: worksheetMode.exportWorksheetJSON,
             downloadWorksheetHTML: worksheetMode.downloadWorksheetHTML,
-            taskCategories,
-            typeLabels
+            typeLabels,
+            typeDescriptions
         };
     }
 }).mount('#app');

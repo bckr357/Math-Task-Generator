@@ -20,7 +20,6 @@ window.MTGStateModule = {
         const gtNumber = ref(1);
         const mentalMathMode = ref(false);
 
-        const halfCount = computed(() => Math.ceil(tasks.value.length / 2));
         const rowWiseFirstColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 0));
         const rowWiseSecondColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 1));
         const currentTrainingTask = computed(() => trainingHistory.value[currentTrainingIndex.value] ?? null);
@@ -49,7 +48,6 @@ window.MTGStateModule = {
             taskArrangementMode,
             gtNumber,
             mentalMathMode,
-            halfCount,
             rowWiseFirstColumnTasks,
             rowWiseSecondColumnTasks,
             currentTrainingTask,
