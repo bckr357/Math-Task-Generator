@@ -673,17 +673,80 @@ body {
 }
 
 @media (max-width: 900px) {
+    .training-view {
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .training-top-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .training-view .toolbar-main-controls {
+        width: 100%;
+    }
+
+    .training-progress {
+        font-size: 0.98rem;
+        line-height: 1.35;
+    }
+
+    .training-top-actions {
+        width: 100%;
+    }
+
+    .training-top-actions .btn-ui {
+        flex: 1 1 180px;
+        min-width: 0;
+    }
+
     .training-main {
         gap: 14px;
     }
 
     .training-buttons {
         width: 100%;
+        gap: 12px;
     }
 
     .training-task-card {
-        min-height: 56vh;
+        min-height: 52vh;
         padding: 24px 16px;
+    }
+
+    .training-view .math-q,
+    .training-view .math-a {
+        font-size: clamp(1.6rem, 6vw, 2.3rem);
+        line-height: 1.25;
+    }
+}
+
+@media (max-width: 560px) {
+    .training-view {
+        padding: 10px;
+    }
+
+    .training-buttons {
+        flex-direction: column;
+    }
+
+    .training-arrow {
+        width: 100%;
+        min-width: 0;
+        padding: 14px 16px;
+        font-size: 1rem;
+    }
+
+    .training-task-card {
+        min-height: 48vh;
+        padding: 16px 12px;
+        border-radius: 18px;
+    }
+
+    .training-task-content {
+        font-size: 1rem;
     }
 }
 

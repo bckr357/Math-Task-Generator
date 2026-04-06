@@ -143,6 +143,76 @@ createApp({
             }
         };
 
+        const allowedViews = new Set(state.viewTabs.map(tab => tab.key));
+
+        const getViewFromUrl = () => {
+            const url = new URL(window.location.href);
+            const queryView = url.searchParams.get('view');
+            const hashView = url.hash.replace(/^#/, '');
+            const candidate = queryView || hashView;
+
+            if (!candidate || !allowedViews.has(candidate)) {
+                return 'home';
+            }
+
+            return candidate;
+        };
+
+        const syncUrlWithView = view => {
+            if (suppressHistorySync) {
+                return;
+            }
+
+            const url = new URL(window.location.href);
+
+            if (view === 'home') {
+                url.searchParams.delete('view');
+                url.hash = '';
+            } else {
+                url.searchParams.set('view', view);
+                url.hash = view;
+            }
+
+            const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+            const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+            if (nextUrl === currentUrl) {
+                return;
+            }
+
+            window.history.pushState({}, '', url);
+        };
+
+        let suppressHistorySync = false;
+
+        watch(() => state.currentView.value, view => {
+            syncUrlWithView(view);
+        }, { immediate: true });
+
+        const applyViewFromUrl = async () => {
+            const urlView = getViewFromUrl();
+
+            if (urlView === state.currentView.value) {
+                return;
+            }
+
+            suppressHistorySync = true;
+            try {
+                await navigation.switchView(urlView);
+            } finally {
+                suppressHistorySync = false;
+            }
+        };
+
+        onMounted(async () => {
+            await applyViewFromUrl();
+            window.addEventListener('popstate', applyViewFromUrl);
+        });
+
+        onBeforeUnmount(() => {
+            window.removeEventListener('popstate', applyViewFromUrl);
+        });
+
         return {
             ...state,
             selectedGrade,

@@ -23,7 +23,10 @@ window.MTGNavigationModule = {
             await setCurrentView('home');
         };
 
-        const switchView = async view => {
+        const switchView = async (view, options = {}) => {
+            const { autoOpenSettingsFromHome = true } = options;
+            const fromHome = state.currentView.value === 'home';
+
             closeSettingsSidebar();
 
             if (view === 'home') {
@@ -34,16 +37,25 @@ window.MTGNavigationModule = {
             if (view === 'training') {
                 if (state.currentTrainingTask.value) {
                     await setCurrentView('training');
+                    if (fromHome && autoOpenSettingsFromHome) {
+                        openSettingsSidebar();
+                    }
                     return;
                 }
 
                 if (state.hasSelectedTypes.value) {
                     await startTraining();
+                    if (fromHome && autoOpenSettingsFromHome) {
+                        openSettingsSidebar();
+                    }
                     return;
                 }
             }
 
             await setCurrentView(view);
+            if (fromHome && view !== 'home' && autoOpenSettingsFromHome) {
+                openSettingsSidebar();
+            }
         };
 
         return {
