@@ -432,6 +432,38 @@ body {
     flex-wrap: wrap;
 }
 
+.header-task-settings {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.header-stack-label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--slate-500);
+    margin: 0;
+}
+
+.header-settings-input {
+    width: 84px;
+    min-width: 84px;
+    padding: 8px 10px;
+    font-size: 1rem;
+}
+
+.header-settings-select {
+    width: 210px;
+    min-width: 210px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
 .task-grid {
     flex-grow: 1;
     display: flex;
@@ -770,8 +802,9 @@ body {
 
 .worksheet-toolbar-title {
     display: flex;
-    align-items: baseline;
-    gap: 10px;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
     color: var(--slate-500);
 }
 
@@ -969,6 +1002,20 @@ body {
 
     .view-switch-select {
         flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .header-task-settings {
+        width: 100%;
+    }
+
+    .header-stack-label {
+        flex: 1 1 180px;
+    }
+
+    .header-settings-input,
+    .header-settings-select {
+        width: 100%;
         min-width: 0;
     }
 
