@@ -37,22 +37,15 @@ createApp({
     setup() {
         const state = window.MTGStateModule.createState(Vue, typeLabels);
         const allTypes = Object.keys(typeLabels);
-        const selectedGrade = ref('klasse5');
-        const gradeOptions = [
-            { value: 'klasse5', label: 'Klasse 5' },
-            { value: 'klasse6', label: 'Klasse 6' },
-            { value: 'klasse7', label: 'Klasse 7' },
-            { value: 'klasse8', label: 'Klasse 8' },
-            { value: 'klasse9', label: 'Klasse 9' },
-            { value: 'klasse10', label: 'Klasse 10' }
-        ];
+        const selectedGrade = ref(5);
+        const gradeOptions = [5, 6, 7, 8, 9, 10];
 
         const classConfig = (typeof taskTypesByGrade === 'object' && taskTypesByGrade)
             ? taskTypesByGrade
             : {};
 
         const visibleTypeKeys = computed(() => {
-            const configured = classConfig[selectedGrade.value];
+            const configured = classConfig[`klasse${selectedGrade.value}`];
 
             if (!Array.isArray(configured)) {
                 return allTypes;
@@ -71,7 +64,8 @@ createApp({
 
         const taskGeneration = window.MTGTaskGenerationModule.createTaskGenerationModule({
             state,
-            createTask
+            createTask,
+            selectedGrade
         });
 
         const trainingMode = window.MTGTrainingModeModule.createTrainingMode({

@@ -6,8 +6,8 @@ const fmt = formatUtils.fmt;
 const comma = formatUtils.comma;
 
 const taskCategories = {
-	arithmetic: ['db_as', 'db_md', 'z_as', 'z_md', 'r_as', 'r_md'],
-	fractions: ['frac_as', 'frac_md', 'frac_md_pro', 'frac_simplify', 'frac_convert'],
+	arithmetic: ['db_as', 'db_md', 'z_as', 'z_md'],
+	fractions: ['frac_as', 'frac_md', 'frac_simplify', 'frac_convert'],
 	algebra: ['terms', 'equations', 'equations_adv', 'vorrang'],
 	geometry: ['geometry', 'winkel', 'schraegbild', 'kongruenz'],
 	functions: ['funktionen'],
@@ -20,35 +20,33 @@ const taskTypesByGrade = {
 	klasse5: [
 		'z_as', 'z_md', 'db_as', 'db_md', 'frac_as',
 		'frac_md', 'frac_simplify', 'frac_convert', 'geometry', 'winkel',
-		'statistik', 'teiler', 'primzahlen', 'round', 'schriftlich',
-		'vorrang'
+		'statistik', 'teiler', 'primzahlen', 'round', 'schriftlich', 'vorrang'
 	],
 	klasse6: [
-		'z_as', 'z_md', 'db_as', 'db_md', 'r_as',
-		'frac_as', 'frac_md', 'frac_md_pro', 'frac_simplify', 'frac_convert',
-		'percent', 'anteile', 'geometry', 'winkel', 'statistik',
-		'wkt', 'teiler', 'primzahlen', 'round', 'schriftlich',
-		'vorrang'
+		'z_as', 'z_md', 'db_as', 'db_md',
+		'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'percent', 
+		'anteile', 'geometry', 'winkel', 'statistik', 'wkt', 
+		'teiler', 'primzahlen', 'round', 'schriftlich', 'vorrang'
 	],
 	klasse7: [
-		'z_as', 'z_md', 'r_as', 'r_md', 'db_as',
-		'db_md', 'frac_as', 'frac_md', 'frac_md_pro', 'frac_simplify',
-		'frac_convert', 'percent', 'pv', 'anteile', 'units',
+		'z_as', 'z_md', 'db_as',
+		'db_md', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert',
+		'percent', 'pv', 'anteile', 'units',
 		'terme', 'equations', 'geometry', 'winkel', 'statistik',
 		'wkt', 'potenzen', 'teiler', 'primzahlen', 'round',
 		'prop', 'schriftlich', 'vorrang'
 	],
 	klasse8: [
-		'z_as', 'z_md', 'r_as', 'r_md', 'db_as',
-		'db_md', 'frac_as', 'frac_md', 'frac_md_pro', 'frac_simplify',
-		'frac_convert', 'percent', 'pv', 'anteile', 'units',
+		'z_as', 'z_md', 'db_as',
+		'db_md', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert',
+		'percent', 'pv', 'anteile', 'units',
 		'terme', 'equations', 'equations_adv', 'geometry', 'winkel',
 		'schraegbild', 'statistik', 'wkt', 'potenzen', 'teiler',
 		'primzahlen', 'round', 'prop', 'schriftlich', 'vorrang'
 	],
 	klasse9: [
-		'z_as', 'z_md', 'r_as', 'r_md', 'db_as',
-		'db_md', 'frac_as', 'frac_md', 'frac_md_pro', 'frac_simplify',
+		'z_as', 'z_md', 'db_as',
+		'db_md', 'frac_as', 'frac_md', 'frac_simplify',
 		'frac_convert', 'percent', 'pv', 'anteile', 'units',
 		'terme', 'equations', 'equations_adv', 'funktionen', 'geometry',
 		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt',
@@ -56,13 +54,12 @@ const taskTypesByGrade = {
 		'schriftlich', 'vorrang'
 	],
 	klasse10: [
-		'db_as', 'db_md', 'z_as', 'z_md', 'r_as',
-		'r_md', 'frac_simplify', 'frac_md', 'frac_as', 'frac_md_pro',
-		'schriftlich', 'frac_convert', 'anteile', 'vorrang', 'terme',
-		'percent', 'units', 'pv', 'round', 'equations',
-		'geometry', 'wkt', 'statistik', 'funktionen', 'teiler',
-		'primzahlen', 'equations_adv', 'potenzen', 'prop', 'winkel',
-		'schraegbild', 'kongruenz'
+		'db_as', 'z_as', 'db_md', 'z_md',
+		'frac_simplify', 'frac_md', 'frac_as', 'schriftlich', 
+		'frac_convert', 'anteile', 'vorrang', 'terme', 'percent', 
+		'units', 'pv', 'round', 'equations', 'geometry', 
+		'wkt', 'statistik', 'funktionen', 'teiler', 'primzahlen', 
+		'equations_adv', 'potenzen', 'prop', 'winkel', 'schraegbild', 'kongruenz'
 	]
 };
 
@@ -91,36 +88,33 @@ const taskTypesByGrade = {
 
 // Dreiteilige Typ-Definition: [key, Label fuer Einstellungen, Beschreibung fuer Training]
 const typeDefinitions = [
-	['db_as', 'Dezimalbrüche +-', 'Dezimalbrüche addieren und subtrahieren'],
-	['db_md', 'Dezimalbrüche */', 'Dezimalbrüche multiplizieren und dividieren'],
-	['z_as', 'Ganze Zahlen +-', 'Ganze Zahlen addieren und subtrahieren'],
-	['z_md', 'Ganze Zahlen */', 'Ganze Zahlen multiplizieren und dividieren'],
-	['r_as', 'Rationale Zahlen +-', 'Rationale Zahlen addieren und subtrahieren'],
-	['r_md', 'Rationale Zahlen */', 'Rationale Zahlen multiplizieren und dividieren'],
-	['frac_simplify', 'Kürzen', 'Brüche vollständig kürzen'],
-	['frac_md', 'Brüche */', 'Brüche multiplizieren und dividieren'],
-	['frac_as', 'Brüche +-', 'Brüche addieren und subtrahieren'],
-	['frac_md_pro', 'Brüche */ Pro', 'Brüche multiplizieren und dividieren mit Kürzungsstrategie'],
-	['schriftlich', 'schriftlich rechnen', 'Schriftliche Rechenverfahren mit Dezimalzahlen'],
-	['frac_convert', 'Brüche <> Prozent', 'Brüche, Dezimalzahlen und Prozentwerte umwandeln'],
+	['teiler', 'Teiler', 'Teiler einer Zahl bestimmen'],
+	['primzahlen', 'Primzahlen', 'Primzahlen in Zahlenbereichen erkennen'],
+	['geometry', 'A und u ebener Figuren', 'Flächeninhalte und Umfänge in der Geometrie berechnen'],
+	['potenzen', 'Potenzen und Wurzeln', 'Potenzen und Wurzeln berechnen'],
+	['schriftlich', 'schriftlich rechnen', 'Schriftliche Rechenverfahren'],
+	['db_as', 'Dezimalbrüche +/-', 'Dezimalbrüche addieren und subtrahieren'],
+	['units', 'Einheiten', 'Größen in verschiedene Einheiten umrechnen'],
+	['db_md', 'Dezimalbrüche ×/÷', 'Dezimalbrüche multiplizieren und dividieren'],
+	['z_as', 'Ganze Zahlen +/-', 'Ganze Zahlen addieren und subtrahieren'],
+	['z_md', 'Ganze Zahlen ×/÷', 'Ganze Zahlen multiplizieren und dividieren'],
+	['frac_as', 'Brüche +/-', 'Brüche addieren und subtrahieren'],
+	['frac_simplify', 'Brüche kürzen', 'Brüche vollständig kürzen'],
+	['frac_md', 'Brüche ×/÷', 'Brüche multiplizieren und dividieren'],
+	['frac_convert', 'Brüche Darstellungsformen', 'Brüche, Dezimalzahlen und Prozentwerte umwandeln'],
 	['anteile', 'Anteile berechnen', 'Anteile als Brüche eines Ganzen berechnen'],
 	['vorrang', 'Vorrangregeln', 'Terme mit Vorrangregeln korrekt berechnen'],
-	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
 	['percent', 'Prozentrechnung', 'Prozentwert, Grundwert und Prozentsatz berechnen'],
-	['units', 'Einheiten', 'Größen in verschiedene Einheiten umrechnen'],
+	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
 	['pv', 'Prozentuale Veränderung', 'Prozentuale Zu- und Abnahmen berechnen'],
-	['round', 'Runden', 'Zahlen auf Ganze, Zehntel oder Hundertstel runden'],
-	['equations', 'ax + b = c', 'Lineare Gleichungen der Form ax + b = c lösen'],
-	['geometry', 'Geometrie', 'Flächeninhalte und Umfänge in der Geometrie berechnen'],
+	['round', 'Dezimalbrüche runden', 'Dezimalbrüche auf Ganze, Zehntel oder Hundertstel runden'],
+	['equations', 'ax + b = c', 'Lineare Gleichung der Form ax + b = c lösen'],
+	['equations_adv', 'ax + b = cx + d', 'Lineare Gleichung der Form ax + b = cx + d lösen'],
 	['wkt', 'Wahrscheinlichkeiten', 'Einfache Wahrscheinlichkeiten bestimmen'],
 	['statistik', 'Statistik', 'Lageparameter und Spannweite in Datensätzen bestimmen'],
-	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
-	['teiler', 'Teiler', 'Teiler einer Zahl systematisch bestimmen'],
-	['primzahlen', 'Primzahlen', 'Primzahlen in Zahlenbereichen erkennen'],
-	['equations_adv', 'ax + b = cx + d', 'Lineare Gleichungen mit Variablen auf beiden Seiten lösen'],
-	['potenzen', 'Potenzen und Wurzeln', 'Potenzen und Wurzeln berechnen'],
-	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität lösen'],
 	['winkel', 'Winkel', 'Winkelarten erkennen und Winkel berechnen'],
+	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
+	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität lösen'],
 	['schraegbild', 'Körperdarstellung', 'Schrägbilder von Körpern zeichnen und deuten'],
 	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren und begründen']
 ];
@@ -132,7 +126,11 @@ const typeDescriptions = Object.fromEntries(typeDefinitions.map(([key, , descrip
 // AUFGABEN-GENERATOR
 // ============================================================
 
-function createTask(type, isMentalMode) {
+function createTask(type, isMentalMode, grade = 5) {
+	if (!Number.isFinite(grade)) {
+		grade = 5;
+	}
+
 	let s = '';
 	let textDisplay = '', textPrint = '';
 
@@ -143,36 +141,81 @@ function createTask(type, isMentalMode) {
 	let rd;
 	switch (type) {
 
-		case 'db_as':
-			v1 = trueDec(11, 20); v2 = trueDec(0, 10);
-			if (Math.random() > 0.5) { textDisplay = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} + ${comma(fmt(v2))} = ${comma((v1 + v2).toFixed(1))} \\)`; }
-			else { textDisplay = `\\( ${comma(v1)} - ${comma(fmt(v2))} = \\)`; s = `\\( ${comma(v1)} - ${comma(fmt(v2))} = ${comma((v1 - v2).toFixed(1))} \\)`; }
+		case 'db_as': {
+			const allowNegativeDecimals = grade > 7;
+			v1 = allowNegativeDecimals ? trueDec(-20, 20) : trueDec(11, 20);
+			v2 = allowNegativeDecimals ? trueDec(-10, 10) : trueDec(0, 10);
+
+			if (Math.random() > 0.5) {
+				textDisplay = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`;
+				s = `\\( ${comma(v1)} + ${comma(fmt(v2))} = ${comma((v1 + v2).toFixed(1))} \\)`;
+			} else {
+				textDisplay = `\\( ${comma(v1)} - ${comma(fmt(v2))} = \\)`;
+				s = `\\( ${comma(v1)} - ${comma(fmt(v2))} = ${comma((v1 - v2).toFixed(1))} \\)`;
+			}
 			break;
-		case 'db_md':
+		}
+		case 'db_md': {
+			const allowNegativeDecimals = grade > 7;
 			rd = Math.random();
-			if (rd > 0.7) { v1 = trueDec(0, 9); v2 = rnd(2, 7); textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(1))} \\)`; }
-			else if (rd > 0.4) { v1 = trueDec(0, 1.5); v2 = trueDec(0, 1.5); textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(2))} \\)` }
-			else { const res = trueDec(0, 1.5); v2 = rnd(2, 9); v1 = res * v2; textDisplay = `\\( ${comma(v1.toFixed(1))} : ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1.toFixed(1))} : ${comma(fmt(v2))} = ${comma(res.toFixed(1))} \\)`; }
+
+			if (rd > 0.7) {
+				v1 = allowNegativeDecimals ? trueDec(-9, 9) : trueDec(0, 9);
+				v2 = allowNegativeDecimals ? rnd(-7, 7) : rnd(2, 7);
+				textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`;
+				s = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(1))} \\)`;
+			} else if (rd > 0.4) {
+				v1 = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
+				v2 = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
+				textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`;
+				s = `\\(${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(2))} \\)`;
+			} else {
+				const res = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
+				v2 = allowNegativeDecimals ? rnd(-9, 9) : rnd(2, 9);
+				while (v2 === 0) {
+					v2 = allowNegativeDecimals ? rnd(-9, 9) : rnd(2, 9);
+				}
+				v1 = res * v2;
+				textDisplay = `\\( ${comma(v1.toFixed(1))} : ${comma(fmt(v2))} =\\)`;
+				s = `\\(${comma(v1.toFixed(1))} : ${comma(fmt(v2))} = ${comma(res.toFixed(1))} \\)`;
+			}
 			break;
+		}
 		case 'z_as':
-			v1 = rnd(-20, 20); v2 = rnd(-30, 30);
-			if (Math.random() > 0.5) { textDisplay = `\\( ${v1} + ${fmt(v2)} =\\)`; s = `\\( ${v1} + ${fmt(v2)} = ${v1 + v2} \\) `; }
-			else { textDisplay = `\\( ${v1} - ${fmt(v2)} =\\)`; s = `\\( ${v1} - ${fmt(v2)} = ${v1 - v2} \\)`; }
+			if (Math.random() > 0.5) {
+				do {
+					v1 = rnd(-20, 20);
+					v2 = rnd(-30, 30);
+				} while (!(v1 < 0 || v2 < 0 || (v1 + v2) < 0));
+				textDisplay = `\\( ${v1} + ${fmt(v2)} =\\)`;
+				s = `\\( ${v1} + ${fmt(v2)} = ${v1 + v2} \\) `;
+			} else {
+				do {
+					v1 = rnd(-20, 20);
+					v2 = rnd(-30, 30);
+				} while (!(v1 < 0 || v2 < 0 || (v1 - v2) < 0));
+				textDisplay = `\\( ${v1} - ${fmt(v2)} =\\)`;
+				s = `\\( ${v1} - ${fmt(v2)} = ${v1 - v2} \\)`;
+			}
 			break;
 		case 'z_md':
-			if (Math.random() > 0.5) { v1 = rnd(-15, 15); v2 = rnd(-9, 9); textDisplay = `\\( ${v1} \\cdot ${fmt(v2)} = \\)`; s = `\\( ${v1} \\cdot ${fmt(v2)} = ${v1 * v2} \\)`; }
-			else { const res = rnd(-9, 9); v2 = rnd(3, 12); v1 = res * v2; textDisplay = `\\( ${v1} : ${v2} = \\)`; s = `\\( ${v1} : ${v2} = ${res} \\)`; }
-			break;
-		case 'r_as':
-			v1 = trueDec(-20, 20); v2 = trueDec(-10, 10);
-			if (Math.random() > 0.5) { textDisplay = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} + ${comma(fmt(v2))} = ${comma((v1 + v2).toFixed(1))} \\)`; }
-			else { textDisplay = `\\( ${comma(v1)} - ${comma(fmt(v2))} = \\)`; s = `\\( ${comma(v1)} - ${comma(fmt(v2))} = ${comma((v1 - v2).toFixed(1))} \\)`; }
-			break;
-		case 'r_md':
-			rd = Math.random();
-			if (rd > 0.7) { v1 = trueDec(-9, 9); v2 = rnd(-7, 7); textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(1))} \\)`; }
-			else if (rd > 0.4) { v1 = trueDec(-1.5, 1.5); v2 = trueDec(-1.5, 1.5); textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(2))} \\)` }
-			else { const res = trueDec(-1.5, 1.5); v2 = rnd(-9, 9); v1 = res * v2; textDisplay = `\\( ${comma(v1.toFixed(1))} : ${comma(fmt(v2))} =\\)`; s = `\\(${comma(v1.toFixed(1))} : ${comma(fmt(v2))} = ${comma(res.toFixed(1))} \\)`; }
+			if (Math.random() > 0.5) {
+				do {
+					v1 = rnd(-15, 15);
+					v2 = rnd(-9, 9);
+				} while (!(v1 < 0 || v2 < 0 || (v1 * v2) < 0));
+				textDisplay = `\\( ${v1} \\cdot ${fmt(v2)} = \\)`;
+				s = `\\( ${v1} \\cdot ${fmt(v2)} = ${v1 * v2} \\)`;
+			} else {
+				let res;
+				do {
+					res = rnd(-9, 9);
+					v2 = rnd(-12, 12);
+				} while (v2 === 0 || !(res < 0 || v2 < 0 || (res * v2) < 0));
+				v1 = res * v2;
+				textDisplay = `\\( ${v1} : ${v2} = \\)`;
+				s = `\\( ${v1} : ${v2} = ${res} \\)`;
+			}
 			break;
 
 		case 'frac_as': {
@@ -233,98 +276,109 @@ function createTask(type, isMentalMode) {
 		}
 
 		case 'frac_md': {
-			let Z1, N1, Z2, N2;
-			const isMult = Math.random() > 0.5;
-
-			// Hilfsfunktion für Teilerfremdheit
-			const getGcd = mathUtils.getGcd;
-
-			// 1. Erzeuge vier Zahlen mit einfachen Bedingungen
-			do {
-				Z1 = rnd(2, 9); // Oder rnd(3, 12), je nach gewünschter Größe
-				N1 = rnd(2, 9);
-				Z2 = rnd(2, 9);
-				N2 = rnd(2, 9);
-			} while (
-				new Set([Z1, N1, Z2, N2]).size < 4 || // Alle vier Zahlen müssen verschieden sein
-				getGcd(Z1, N1) > 1 ||                 // Bruch 1 darf nicht kürzbar sein
-				getGcd(Z2, N2) > 1                    // Bruch 2 darf nicht kürzbar sein
-			);
-
-			const op = isMult ? '\\cdot' : ':';
-
-			// 2. Berechnung der Endergebnisse (sture Multiplikation)
-			const finalZ = isMult ? Z1 * Z2 : Z1 * N2;
-			const finalN = isMult ? N1 * N2 : N1 * Z2;
-
-			// 3. Zwischenschritt-Anzeige
-			let step1 = isMult
-				? ``
-				: `\\frac{${Z1}}{${N1}} \\cdot \\frac{${N2}}{${Z2}} = `;
-
-			textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} \\]`;
-
-			// 4. Der Lösungsstring zeigt nur die Multiplikation und das Endergebnis.
-			s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${step1} \\frac{${finalZ}}{${finalN}} \\]`;
-
-			break;
-		}
-		case 'frac_md_pro': {
 			let Z1, N1, Z2, N2, z1_base, n1_base, z2_base, n2_base, isMult;
 
 			const getGcd = mathUtils.getGcd;
+			const useNaturalNumberVariant = Math.random() < 0.30;
 
-			do {
+			if (useNaturalNumberVariant) {
+				let n;
 				isMult = Math.random() > 0.5;
 
-				// 1. Erzeuge zwei Brüche, die in sich NICHT kürzbar sind
-				let ta1 = rnd(6, 27), tb1 = rnd(6, 27);
-				while (getGcd(ta1, tb1) > 1) { ta1 = rnd(6, 27); tb1 = rnd(6, 27); }
+				do {
+					if (isMentalMode) {
+						Z1 = rnd(2, 9);
+						N1 = rnd(2, 9);
+						n = rnd(2, 9);
+					} else {
+						Z1 = rnd(6, 27);
+						N1 = rnd(6, 27);
+						n = rnd(3, 15);
+					}
+				} while (getGcd(Z1, N1) > 1 || Z1 === N1);
 
-				let ta2 = rnd(6, 27), tb2 = rnd(6, 27);
-				while (getGcd(ta2, tb2) > 1 || (ta1 == ta2 && tb1 == tb2)) { ta2 = rnd(6, 27); tb2 = rnd(6, 27); }
+				const op = isMult ? '\\cdot' : ':';
+				const resZ = isMult ? Z1 * n : Z1;
+				const resN = isMult ? N1 : N1 * n;
+				const step1 = isMult
+					? `\\frac{${Z1}}{${N1}} \\cdot \\frac{${n}}{1}`
+					: `\\frac{${Z1}}{${N1}} \\cdot \\frac{1}{${n}}`;
 
-				// Zuweisung der "großen" Zahlen
-				Z1 = ta1; N1 = tb1; Z2 = ta2; N2 = tb2;
-
-				// 2. Bestimme die Kürzungs-Partner basierend auf der Operation
-				// Bei Mult: Z1 mit N2 und N1 mit Z2
-				// Bei Div:  Z1 mit Z2 und N1 mit N2 (wegen Kehrwert)
-				let g1 = isMult ? getGcd(Z1, N2) : getGcd(Z1, Z2);
-				let g2 = isMult ? getGcd(N1, Z2) : getGcd(N1, N2);
-
-				// BEDINGUNGEN:
-				// - g1 und g2 müssen > 1 sein (es MUSS über Kreuz kürzbar sein)
-				// - Alle 4 Zahlen verschieden
-				// - Keiner ist Vielfaches des anderen im selben Bruch (bereits durch getGcd oben abgedeckt)
-				if (g1 > 1 && g2 > 1 && new Set([Z1, N1, Z2, N2]).size === 4) {
-					// Berechne die Werte für den "midStep" (die gekürzten Zahlen)
-					z1_base = Z1 / g1;
-					n2_base = isMult ? N2 / g1 : Z2 / g1; // Der Partner von Z1
-					n1_base = N1 / g2;
-					z2_base = isMult ? Z2 / g2 : N2 / g2; // Der Partner von N1
-					break;
-				}
-			} while (true);
-
-			const op = isMult ? '\\cdot' : ':';
-			const resZ = z1_base * z2_base;
-			const resN = n1_base * n2_base;
-
-			// Kehrwert-Schritt (nur bei Division)
-			let stepKehrwert = "";
-			if (!isMult) {
-				stepKehrwert = `\\frac{${Z1}}{${N1}} \\cdot \\frac{${N2}}{${Z2}} = `;
+				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} ${n} \\]`;
+				s = `\\[ \\frac{${Z1}}{${N1}} ${op} ${n} = ${step1} = \\frac{${resZ}}{${resN}} \\]`;
+				break;
 			}
 
-			// MidStep nutzt nun die EXAKT gekürzten Werte
-			const midStep = `\\frac{${z1_base}}{${n1_base}} \\cdot \\frac{${z2_base}}{${n2_base}} `;
+			if (isMentalMode) {
+				isMult = Math.random() > 0.5;
 
-			const finalStr = `\\frac{${resZ}}{${resN}}`;
+				do {
+					Z1 = rnd(2, 9);
+					N1 = rnd(2, 9);
+					Z2 = rnd(2, 9);
+					N2 = rnd(2, 9);
+				} while (
+					new Set([Z1, N1, Z2, N2]).size < 4 ||
+					getGcd(Z1, N1) > 1 ||
+					getGcd(Z2, N2) > 1
+				);
 
-			textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = \\]`;
+				const op = isMult ? '\\cdot' : ':';
+				const finalZ = isMult ? Z1 * Z2 : Z1 * N2;
+				const finalN = isMult ? N1 * N2 : N1 * Z2;
+				const step1 = isMult ? '' : `\\frac{${Z1}}{${N1}} \\cdot \\frac{${N2}}{${Z2}} = `;
 
-			s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${stepKehrwert} ${midStep} = \\frac{${resZ}}{${resN}} \\]`;
+				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} \\]`;
+				s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${step1} \\frac{${finalZ}}{${finalN}} \\]`;
+			} else {
+				do {
+					isMult = Math.random() > 0.5;
+
+					// 1. Erzeuge zwei Brüche, die in sich NICHT kürzbar sind
+					let ta1 = rnd(6, 27), tb1 = rnd(6, 27);
+					while (getGcd(ta1, tb1) > 1) { ta1 = rnd(6, 27); tb1 = rnd(6, 27); }
+
+					let ta2 = rnd(6, 27), tb2 = rnd(6, 27);
+					while (getGcd(ta2, tb2) > 1 || (ta1 == ta2 && tb1 == tb2)) { ta2 = rnd(6, 27); tb2 = rnd(6, 27); }
+
+					// Zuweisung der "großen" Zahlen
+					Z1 = ta1; N1 = tb1; Z2 = ta2; N2 = tb2;
+
+					// 2. Bestimme die Kürzungs-Partner basierend auf der Operation
+					// Bei Mult: Z1 mit N2 und N1 mit Z2
+					// Bei Div:  Z1 mit Z2 und N1 mit N2 (wegen Kehrwert)
+					let g1 = isMult ? getGcd(Z1, N2) : getGcd(Z1, Z2);
+					let g2 = isMult ? getGcd(N1, Z2) : getGcd(N1, N2);
+
+					// BEDINGUNGEN:
+					// - g1 und g2 müssen > 1 sein (es MUSS über Kreuz kürzbar sein)
+					// - Alle 4 Zahlen verschieden
+					if (g1 > 1 && g2 > 1 && new Set([Z1, N1, Z2, N2]).size === 4) {
+						// Berechne die Werte für den "midStep" (die gekürzten Zahlen)
+						z1_base = Z1 / g1;
+						n2_base = isMult ? N2 / g1 : Z2 / g1;
+						n1_base = N1 / g2;
+						z2_base = isMult ? Z2 / g2 : N2 / g2;
+						break;
+					}
+				} while (true);
+
+				const op = isMult ? '\\cdot' : ':';
+				const resZ = z1_base * z2_base;
+				const resN = n1_base * n2_base;
+
+				// Kehrwert-Schritt (nur bei Division)
+				let stepKehrwert = "";
+				if (!isMult) {
+					stepKehrwert = `\\frac{${Z1}}{${N1}} \\cdot \\frac{${N2}}{${Z2}} = `;
+				}
+
+				// MidStep nutzt die gekürzten Werte
+				const midStep = `\\frac{${z1_base}}{${n1_base}} \\cdot \\frac{${z2_base}}{${n2_base}}`;
+
+				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = \\]`;
+				s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${stepKehrwert}${midStep} = \\frac{${resZ}}{${resN}} \\]`;
+			}
 
 			break;
 		}
@@ -645,19 +699,17 @@ function createTask(type, isMentalMode) {
 			break;
 		}
 
-
-
 		case 'percent':
 			let p, pVal;
-			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][rnd(2, 11) - 2];
+			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
 			rd = Math.random();
 			if (rd > 0.67) {
 				pVal = rnd(2, 11) * 100;
-				p = [3, 4, 5, 6, 7, 8, 9, 11, 12, 20, 25, 30, 35, 40, 60, 70, 80, 90][rnd(2, 19) - 2];
+				p = [3, 4, 5, 6, 7, 8, 9, 11, 12, 20, 25, 30, 35, 40, 60, 70, 80, 90][randInt(0, 17)];
 				textDisplay = `\\( ${p} \\% \\text{ von } ${pVal} \\text{ ${einheit} sind ___}\\)`;
 				s = `\\( ${p} \\% \\text{ von } ${pVal} \\text{ ${einheit}} \\text{ sind } ${(pVal / 100 * p)} \\text{ ${einheit}}\\)`;
 			} else if (rd > 0.33) {
-				p = [20, 25, 30, 40, 50, 60, 70, 80, 90][rnd(2, 10) - 2];
+				p = [20, 25, 30, 40, 50, 60, 70, 80, 90][randInt(0, 8)];
 				pVal = rnd(2, 9) * p;
 				textDisplay = `\\( ${p} \\% \\text{ sind } ${pVal} \\text{ ${einheit} von ___}\\)`;
 				s = `\\( ${p} \\% \\text{ sind } ${pVal} \\text{ ${einheit} von } ${pVal / p * 100} \\text{ ${einheit}}\\)`;
@@ -684,8 +736,8 @@ function createTask(type, isMentalMode) {
 			break;
 
 		case 'pv': {
-			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][rnd(2, 11) - 2];
-			let p = [3, 4, 5, 6, 7, 10, 20, 25, 50][rnd(2, 10) - 2];
+			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
+			let p = [3, 4, 5, 6, 7, 10, 20, 25, 50][randInt(0, 8)];
 			let pVal = rnd(2, 11) * 100;
 			rd = Math.random();
 			if (rd > 0.75) {
@@ -707,6 +759,7 @@ function createTask(type, isMentalMode) {
 		case 'schriftlich': {
 			const op = rnd(2, 5) - 2; // 0: +, 1: -, 2: *, 3: /
 			let v1, v2, res;
+			const isGrade5 = grade === 5;
 
 			// Hilfsfunktion für zufällige Nachkommastellen (0 bis 2)
 			const getDec = (val, places) => parseFloat(val.toFixed(places));
@@ -730,26 +783,48 @@ function createTask(type, isMentalMode) {
 					break;
 
 				case 2: // MULTIPLIKATION
-					// Faktor 1: 0-2 Stellen, Faktor 2: 0-2 Stellen
-					const p1 = rnd(2, 4) - 1;
-					const p2 = rnd(2, 4) - 2;
-					v1 = rnd(11, 499) / Math.pow(10, p1);
-					v2 = rnd(11, 299) / Math.pow(10, p2);
-					res = v1 * v2;
-					textDisplay = `Berechne schriftlich: \\( ${comma(v1)} \\cdot ${comma(v2)} \\)`;
-					// Bei Multiplikation können bis zu 4 Stellen entstehen (2+2)
-					s = `Berechne schriftlich: \\( ${comma(v1)} \\cdot ${comma(v2)} = ${comma(Number(res.toFixed(4)))} \\)`;
+					if (isGrade5) {
+						v1 = rnd(11, 99);
+						v2 = rnd(2, 19);
+						res = v1 * v2;
+						textDisplay = `Berechne schriftlich: \\( ${v1} \\cdot ${v2} \\)`;
+						s = `Berechne schriftlich: \\( ${v1} \\cdot ${v2} = ${res} \\)`;
+					} else {
+						// Faktor 1: 0-2 Stellen, Faktor 2: 0-2 Stellen
+						do {
+							const p1 = rnd(2, 4) - 1;
+							const p2 = rnd(2, 4) - 2;
+							v1 = rnd(11, 499) / Math.pow(10, p1);
+							v2 = rnd(11, 299) / Math.pow(10, p2);
+						} while (Number.isInteger(v1) && Number.isInteger(v2));
+						res = v1 * v2;
+						textDisplay = `Berechne schriftlich: \\( ${comma(v1)} \\cdot ${comma(v2)} \\)`;
+						// Bei Multiplikation können bis zu 4 Stellen entstehen (2+2)
+						s = `Berechne schriftlich: \\( ${comma(v1)} \\cdot ${comma(v2)} = ${comma(Number(res.toFixed(4)))} \\)`;
+					}
 					break;
 
 				case 3: // DIVISION (durch ganze Zahl)
-					const divisor = rnd(3, 9);
-					const p3 = rnd(2, 4) - 1;
-					// Wir würfeln das Ergebnis zuerst (max 2 Stellen), damit es aufgeht
-					const resultValue = rnd(111, 2999) / Math.pow(10, p3);
-					const dividend = (resultValue * divisor);
+					if (isGrade5) {
+						const divisor = rnd(3, 12);
+						const dividend = rnd(20, 240);
+						const quotient = Math.floor(dividend / divisor);
+						const remainder = dividend % divisor;
 
-					textDisplay = `Berechne schriftlich: \\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)`;
-					s = `Berechne schriftlich: \\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} = ${comma(resultValue)} \\)`;
+						textDisplay = `Berechne schriftlich: \\( ${dividend} : ${divisor} \\)`;
+						s = remainder > 0
+							? `Berechne schriftlich: \\( ${dividend} : ${divisor} = ${quotient} \\, Rest \\, ${remainder} \\)`
+							: `Berechne schriftlich: \\( ${dividend} : ${divisor} = ${quotient} \\)`;
+					} else {
+						const divisor = rnd(3, 9);
+						const p3 = rnd(2, 4) - 1;
+						// Wir würfeln das Ergebnis zuerst (max 2 Stellen), damit es aufgeht
+						const resultValue = rnd(111, 2999) / Math.pow(10, p3);
+						const dividend = (resultValue * divisor);
+
+						textDisplay = `Berechne schriftlich: \\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)`;
+						s = `Berechne schriftlich: \\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} = ${comma(resultValue)} \\)`;
+					}
 					break;
 			}
 			break;
@@ -830,7 +905,7 @@ function createTask(type, isMentalMode) {
 			break;
 
 		case 'geometry':
-			const shapeType = (rnd(2, 4) - 2);
+			const shapeType = randInt(0, grade > 6 ? 2 : 1);
 			const goal = Math.random() > 0.5 ? 'A' : 'u';
 			let sideA, sideB;
 

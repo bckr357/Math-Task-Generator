@@ -1,5 +1,9 @@
 window.MTGTaskGenerationModule = {
-    createTaskGenerationModule({ state, createTask }) {
+    createTaskGenerationModule({ state, createTask, selectedGrade }) {
+        const getNumericGrade = () => Number.isFinite(selectedGrade?.value)
+            ? selectedGrade.value
+            : 5;
+
         const getTaskExportData = () => state.tasks.value.map(task => ({
             aufgabentyp: task.type,
             aufgabe: task.textDisplay ?? '',
@@ -100,7 +104,7 @@ window.MTGTaskGenerationModule = {
             }
 
             state.tasks.value = typePool.map(type => {
-                const generated = createTask(type, state.mentalMathMode.value);
+                const generated = createTask(type, state.mentalMathMode.value, getNumericGrade());
                 return {
                     type,
                     textDisplay: generated.textDisplay ?? '',
@@ -129,7 +133,7 @@ window.MTGTaskGenerationModule = {
 
             const randomIndex = Math.floor(Math.random() * weightedTypes.length);
             const selectedType = weightedTypes[randomIndex];
-            const generated = createTask(selectedType, true);
+            const generated = createTask(selectedType, true, getNumericGrade());
 
             return {
                 type: selectedType,

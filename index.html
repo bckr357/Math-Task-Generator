@@ -52,7 +52,7 @@
                 <label class="settings-stack-label settings-grade-select">
                     Klassenstufe
                     <select v-model="selectedGrade" class="settings-input settings-select settings-input-wide">
-                        <option v-for="grade in gradeOptions" :key="grade.value" :value="grade.value">{{ grade.label }}</option>
+                        <option v-for="grade in gradeOptions" :key="grade" :value="grade">{{ grade }}</option>
                     </select>
                 </label>
                 <button @click="randomizeTypeSelection" class="btn-ui btn-export settings-section-btn">Zufaellige Auswahl</button>
