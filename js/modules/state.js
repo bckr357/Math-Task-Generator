@@ -28,7 +28,7 @@ window.MTGStateModule = {
         const viewTabs = [
             { key: 'home', label: 'Start' },
             { key: 'worksheet', label: 'Arbeitsblatt' },
-            { key: 'presentation', label: 'Presentation' },
+            { key: 'presentation', label: 'Präsentation' },
             { key: 'training', label: 'Training' }
         ];
 
