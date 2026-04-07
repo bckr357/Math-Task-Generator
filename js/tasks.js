@@ -6,9 +6,9 @@ const fmt = formatUtils.fmt;
 const comma = formatUtils.comma;
 
 const taskCategories = {
-	arithmetic: ['db_as', 'db_md', 'z_as', 'z_md'],
-	fractions: ['frac_as', 'frac_md', 'frac_simplify', 'frac_convert'],
-	algebra: ['terms', 'equations', 'equations_adv', 'vorrang'],
+	arithmetic: ['db_as', 'db_md', 'z_as', 'z_md', 'pow10', 'units_calc'],
+	fractions: ['frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order'],
+	algebra: ['terms', 'equations', 'equations_adv', 'formel_umstellen', 'vorrang'],
 	geometry: ['geometry', 'winkel', 'schraegbild', 'kongruenz'],
 	functions: ['funktionen'],
 	statistics: ['statistik', 'wkt'],
@@ -18,48 +18,48 @@ const taskCategories = {
 // Sichtbare Aufgabentypen je Klassenstufe (wird vom UI-Dropdown genutzt)
 const taskTypesByGrade = {
 	klasse5: [
-		'z_as', 'z_md', 'db_as', 'db_md', 'frac_as',
-		'frac_md', 'frac_simplify', 'frac_convert', 'geometry', 'winkel',
+		'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'frac_as',
+		'frac_md', 'frac_simplify', 'frac_convert', 'frac_order', 'geometry', 'winkel',
 		'statistik', 'teiler', 'primzahlen', 'round', 'schriftlich', 'vorrang'
 	],
 	klasse6: [
-		'z_as', 'z_md', 'db_as', 'db_md',
-		'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'percent', 
+		'z_as', 'z_md', 'db_as', 'db_md', 'pow10',
+		'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order', 'percent', 
 		'anteile', 'geometry', 'winkel', 'statistik', 'wkt', 
 		'teiler', 'primzahlen', 'round', 'schriftlich', 'vorrang'
 	],
 	klasse7: [
 		'z_as', 'z_md', 'db_as',
-		'db_md', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert',
-		'percent', 'pv', 'anteile', 'units',
-		'terme', 'equations', 'geometry', 'winkel', 'statistik',
+		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order',
+		'percent', 'pv', 'anteile', 'units', 'units_calc',
+		'terme', 'equations', 'formel_umstellen', 'geometry', 'winkel', 'statistik',
 		'wkt', 'potenzen', 'teiler', 'primzahlen', 'round',
 		'prop', 'schriftlich', 'vorrang'
 	],
 	klasse8: [
 		'z_as', 'z_md', 'db_as',
-		'db_md', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert',
-		'percent', 'pv', 'anteile', 'units',
-		'terme', 'equations', 'equations_adv', 'geometry', 'winkel',
+		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order',
+		'percent', 'pv', 'anteile', 'units', 'units_calc',
+		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'geometry', 'winkel',
 		'schraegbild', 'statistik', 'wkt', 'potenzen', 'teiler',
 		'primzahlen', 'round', 'prop', 'schriftlich', 'vorrang'
 	],
 	klasse9: [
 		'z_as', 'z_md', 'db_as',
-		'db_md', 'frac_as', 'frac_md', 'frac_simplify',
-		'frac_convert', 'percent', 'pv', 'anteile', 'units',
-		'terme', 'equations', 'equations_adv', 'funktionen', 'geometry',
+		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify',
+		'frac_convert', 'frac_order', 'percent', 'pv', 'anteile', 'units', 'units_calc',
+		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'funktionen', 'geometry',
 		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt',
 		'potenzen', 'teiler', 'primzahlen', 'round', 'prop',
 		'schriftlich', 'vorrang'
 	],
 	klasse10: [
-		'db_as', 'z_as', 'db_md', 'z_md',
+		'db_as', 'z_as', 'db_md', 'z_md', 'pow10',
 		'frac_simplify', 'frac_md', 'frac_as', 'schriftlich', 
-		'frac_convert', 'anteile', 'vorrang', 'terme', 'percent', 
-		'units', 'pv', 'round', 'equations', 'geometry', 
+		'frac_convert', 'frac_order', 'anteile', 'vorrang', 'terme', 'percent', 
+		'units', 'units_calc', 'pv', 'round', 'equations', 'geometry', 
 		'wkt', 'statistik', 'funktionen', 'teiler', 'primzahlen', 
-		'equations_adv', 'potenzen', 'prop', 'winkel', 'schraegbild', 'kongruenz'
+		'equations_adv', 'formel_umstellen', 'potenzen', 'prop', 'winkel', 'schraegbild', 'kongruenz'
 	]
 };
 
@@ -68,9 +68,6 @@ const taskTypesByGrade = {
  - neue cases einbauen und validieren 
  - Druck-Modus 
  - Brüche ordnen 
- - Zahl zwischen Brüchen 
- - Gewichtung bei den Aufgaben angeben (gewicht bedeutet, dass die Aufgabe so behandelt wird, als wäre sie mehrfach angeklickt worden) 
- - Bruch zwischen zwei Brüchen 
  - Zeichnungen von Körpern 
  - Kongruenzsätze 
  - Grafik-Modus 
@@ -81,9 +78,10 @@ const taskTypesByGrade = {
  - Aufgaben mit Hilfsmitteln einbauen (z. B. Berechnungen an Flächen und Körpern, Funktionen)
  - Funktionen (Fktswert, Arguemnt, Punktprobe, fehlende Koordninaten berechnen, Wertetaeblle, Graoh zeichnen, Nullstellen usw.) 
  - Kombinatorik 
- - Rechenaufgaben mit verschiedenen Einheiten 
- - Formel umstellen 
  - Punkte pro Aufgabe (auch in der Lösung oder beim interaktiven Modus) 
+ - Verschiedenes mit Bildern zum Einbinden (z. B. Geometrie, Funktionen, Statistik)
+ - Zahl zwischen Brüchen 
+ - Bruch zwischen zwei Brüchen 
 */
 
 // Dreiteilige Typ-Definition: [key, Label fuer Einstellungen, Beschreibung fuer Training]
@@ -116,7 +114,11 @@ const typeDefinitions = [
 	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
 	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität lösen'],
 	['schraegbild', 'Körperdarstellung', 'Schrägbilder von Körpern zeichnen und deuten'],
-	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren und begründen']
+	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren und begründen'],
+	['pow10', 'Zehnerpotenzen ×/÷', 'Natürliche Zahlen und Dezimalzahlen mit Zehnerpotenzen multiplizieren und dividieren'],
+	['units_calc', 'Einheiten rechnen +/-', 'Summen und Differenzen mit benachbarten Einheiten derselben Art berechnen'],
+	['formel_umstellen', 'Formel umstellen', 'Bekannte Formeln nach einer anderen Variablen in 2–3 Schritten umformen'],
+	['frac_order', 'Brüche ordnen', 'Drei gekürzte Brüche der Größe nach sortieren']
 ];
 
 const typeLabels = Object.fromEntries(typeDefinitions.map(([key, label]) => [key, label]));
@@ -217,6 +219,60 @@ function createTask(type, isMentalMode, grade = 5) {
 				s = `\\( ${v1} : ${v2} = ${res} \\)`;
 			}
 			break;
+
+		case 'pow10': {
+			// Zehnerpotenzen: natürliche Zahl oder Dezimalbruch mit 10, 100 oder 1000
+			const powers = [10, 100, 1000];
+			const power = powers[rnd(0, 2)];
+			const isMult = Math.random() > 0.5;
+
+			// Operand: entweder natürliche Zahl oder Dezimalbruch (1-2 Stellen)
+			let operand;
+			let isDecimal;
+
+			if (Math.random() > 0.5) {
+				// Dezimalbruch mit 1-2 Stellen nach Komma
+				isDecimal = true;
+				const isDec2 = Math.random() > 0.5;
+				if (isDec2) {
+					operand = rnd(10, 999) / 100; // 0,10 bis 9,99
+				} else {
+					operand = rnd(1, 99) / 10; // 0,1 bis 9,9
+				}
+			} else {
+				// Natürliche Zahl
+				isDecimal = false;
+				operand = rnd(10, 999);
+			}
+
+			const op = isMult ? '\\cdot' : ':';
+			let result;
+			let resultStr;
+
+			if (isMult) {
+				result = operand * power;
+				resultStr = isDecimal ? result.toFixed(2).replace(/\.?0+$/, '') : result.toString();
+			} else {
+				result = operand / power;
+				// Bei Division: immer mit angemessener Dezimalgenauigkeit
+				resultStr = result.toFixed(4).replace(/\.?0+$/, '');
+			}
+
+			// Formatierung des Operanden
+			const operandStr = isDecimal ? comma(operand) : operand.toString();
+
+			// Aufgabe
+			textDisplay = `\\( ${operandStr} ${op} ${power} \\)`;
+
+			// Lösung mit Erklärung der Kommaverschiebung/Stellenwertverschiebung
+			const shiftCount = power === 10 ? 1 : power === 100 ? 2 : 3;
+			const shiftDirection = isMult ? 'nach rechts' : 'nach links';
+			const shiftDescription = `(Komma ${shiftCount} Stelle${shiftCount > 1 ? 'n' : ''} ${shiftDirection})`;
+
+			s = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad ${shiftDescription}\\)`;
+
+			break;
+		}
 
 		case 'frac_as': {
 			const getGcd = mathUtils.getGcd;
@@ -417,6 +473,145 @@ function createTask(type, isMentalMode, grade = 5) {
 
 			s = `\\[ ${solutionSteps} \\]`;
 
+			break;
+		}
+
+		case 'frac_order': {
+			const getGcd = mathUtils.getGcd;
+
+			// LCM von zwei Zahlen
+			const lcm = (a, b) => (a * b) / getGcd(a, b);
+
+			// Erzeugt einen vollständig gekürzten echten Bruch mit festem Nenner
+			const makeFracWithDen = (den, forbiddenNums = []) => {
+				let num;
+				do {
+					num = randInt(1, den - 1);
+				} while (getGcd(num, den) !== 1 || forbiddenNums.includes(num));
+				return [num, den];
+			};
+
+			// Erlaubte Nenner-Kombinationen (3 Nenner, LCM ≤ 60, kein Nenner doppelt)
+			// Wir ziehen per Zufall eine von mehreren vordefinierten Familien
+			const denominatorFamilies = [
+				[2, 3, 4],
+				[2, 3, 6],
+				[2, 4, 8],
+				[2, 3, 8],
+				[3, 4, 6],
+				[3, 4, 12],
+				[2, 5, 10],
+				[3, 5, 15],
+				[4, 5, 20],
+				[2, 6, 9],
+				[3, 6, 9],
+				[4, 6, 12],
+				[5, 10, 15],
+				[2, 5, 4],
+				[3, 7, 21],
+				[4, 8, 16],
+				[2, 3, 9],
+				[5, 6, 15],
+			];
+
+			const denFamily = denominatorFamilies[randInt(0, denominatorFamilies.length - 1)];
+			// Shuffle family so fractions aren't always in denominator order
+			const shuffled = [...denFamily].sort(() => Math.random() - 0.5);
+			const [d1, d2, d3] = shuffled;
+
+			// 20 % Chance: zwei Zähler sind bereits vor dem Erweitern gleich
+			const twinNumeratorCase = Math.random() < 0.20;
+
+			let f1, f2, f3;
+
+			if (twinNumeratorCase) {
+				// Wähle zufällig, welche zwei Brüche den gleichen Zähler bekommen
+				const pairs = [[0, 1], [0, 2], [1, 2]];
+				const pair = pairs[randInt(0, pairs.length - 1)];
+				const dens = [d1, d2, d3];
+				const denA = dens[pair[0]];
+				const denB = dens[pair[1]];
+
+				// Gemeinsamer Zähler muss zu beiden Nennern teilerfremd sein
+				const maxShared = Math.min(denA, denB) - 1;
+				const sharedCandidates = [];
+				for (let n = 1; n <= maxShared; n++) {
+					if (getGcd(n, denA) === 1 && getGcd(n, denB) === 1) {
+						sharedCandidates.push(n);
+					}
+				}
+
+				if (sharedCandidates.length > 0) {
+					const sharedNum = sharedCandidates[randInt(0, sharedCandidates.length - 1)];
+					const fr = [null, null, null];
+					fr[pair[0]] = [sharedNum, denA];
+					fr[pair[1]] = [sharedNum, denB];
+
+					const thirdIdx = [0, 1, 2].find(i => i !== pair[0] && i !== pair[1]);
+					fr[thirdIdx] = makeFracWithDen(dens[thirdIdx], [sharedNum]);
+
+					[f1, f2, f3] = fr;
+				} else {
+					// Fallback: normale zufällige Brüche
+					f1 = makeFracWithDen(d1);
+					f2 = makeFracWithDen(d2);
+					f3 = makeFracWithDen(d3);
+				}
+			} else {
+				f1 = makeFracWithDen(d1);
+				f2 = makeFracWithDen(d2);
+				f3 = makeFracWithDen(d3);
+				// Sicherstellen: alle drei Brüche sind verschieden
+				let retry = 0;
+				while (retry < 100 && (
+					(f1[0] === f2[0] && f1[1] === f2[1]) ||
+					(f1[0] === f3[0] && f1[1] === f3[1]) ||
+					(f2[0] === f3[0] && f2[1] === f3[1])
+				)) {
+					f1 = makeFracWithDen(d1);
+					f2 = makeFracWithDen(d2);
+					f3 = makeFracWithDen(d3);
+					retry++;
+				}
+			}
+
+			// Hauptnenner berechnen
+			const hn = lcm(lcm(f1[1], f2[1]), f3[1]);
+
+			// Erweiterte Zähler (zum Vergleichen und für die Lösung)
+			const e1 = f1[0] * (hn / f1[1]);
+			const e2 = f2[0] * (hn / f2[1]);
+			const e3 = f3[0] * (hn / f3[1]);
+
+			// Sortierung bestimmen (aufsteigend)
+			const fracs = [
+				{ orig: f1, ext: e1 },
+				{ orig: f2, ext: e2 },
+				{ orig: f3, ext: e3 }
+			];
+			// Zufällig mischen für die Aufgabenstellung
+			const displayOrder = [...fracs].sort(() => Math.random() - 0.5);
+			// Aufsteigend sortiert für die Lösung
+			const sortedAsc = [...fracs].sort((a, b) => a.ext - b.ext);
+
+			const fmtFrac = ([n, d]) => `\\dfrac{${n}}{${d}}`;
+
+			// Aufgabe: Brüche in zufälliger Reihenfolge, Lücken zum Eintragen
+			const displayStr = displayOrder.map(f => fmtFrac(f.orig)).join(' \\quad ');
+
+			// Erweiterungsschritt für jeden Bruch
+			const extStep = fracs.map(f => {
+				const factor = hn / f.orig[1];
+				if (factor === 1) return `\\dfrac{${f.orig[0]}}{${f.orig[1]}}`;
+				return `\\dfrac{${f.orig[0]} \\cdot ${factor}}{${f.orig[1]} \\cdot ${factor}} = \\dfrac{${f.ext}}{${hn}}`;
+			}).join(' \\qquad ');
+
+			// Sortierte Lösung
+			const sortedStr = sortedAsc.map(f => fmtFrac(f.orig)).join(' < ');
+
+			textDisplay = `Sortiere der Größe nach (von klein nach groß):<br>\\[ ${displayStr} \\]`;
+			s = `\\[ \\text{HN} = ${hn}: \\quad ${extStep} \\]` +
+				`\\[ ${sortedStr} \\]`;
 			break;
 		}
 
@@ -904,6 +1099,119 @@ function createTask(type, isMentalMode, grade = 5) {
 			s = `\\( ${toCleanString(startValue)} \\text{ ${fromUnit}} = ${result} \\text{ ${toUnit}} \\)`;
 			break;
 
+		case 'units_calc': {
+			const groups = [
+				{ units: ['mm', 'cm', 'dm', 'm', 'km'], factors: [10, 10, 10, 1000] },
+				{ units: ['mm²', 'cm²', 'dm²', 'm²', 'a', 'ha', 'km²'], factors: [100, 100, 100, 100, 100, 100] },
+				{ units: ['mm³', 'cm³', 'dm³', 'm³'], factors: [1000, 1000, 1000] },
+				{ units: ['mg', 'g', 'kg', 't'], factors: [1000, 1000, 1000] },
+				{ units: ['s', 'min', 'h'], factors: [60, 60] }
+			];
+
+			const g = groups[randInt(0, groups.length - 1)];
+			const isVolumeGroup = g.units[0] === 'mm³';
+			const termCount = isVolumeGroup ? 2 : (isMentalMode ? (Math.random() < 0.75 ? 2 : 3) : (Math.random() < 0.5 ? 2 : 3));
+
+			let termUnitIdx;
+			if (termCount === 2) {
+				const start = randInt(0, g.units.length - 2);
+				termUnitIdx = [start, start + 1];
+			} else {
+				const mid = randInt(1, g.units.length - 2);
+				termUnitIdx = [mid - 1, mid, mid + 1];
+			}
+
+			// Ziel-Einheit vorgeben: kleinste (2 Summanden) bzw. kleinste oder mittlere (3 Summanden)
+			let targetIdx;
+			if (termCount === 3) {
+				const sortedIdx = [...termUnitIdx].sort((a, b) => a - b);
+				targetIdx = Math.random() < 0.6 ? sortedIdx[0] : sortedIdx[1];
+			} else {
+				targetIdx = Math.min(...termUnitIdx);
+			}
+			const targetUnit = g.units[targetIdx];
+
+			// Skalenfaktoren auf kleinste Einheit der Gruppe
+			const scales = [1];
+			for (let i = 1; i < g.units.length; i++) {
+				scales[i] = scales[i - 1] * g.factors[i - 1];
+			}
+
+			const fmtNum = (num) => {
+				const rounded = Number((Math.round(num * 10) / 10).toFixed(1).replace(/\.0$/, ''));
+				return comma(rounded);
+			};
+
+			const pickSimpleValue = () => {
+				if (isMentalMode) {
+					if (Math.random() < 0.8) {
+						return randInt(1, 12); // bevorzugt ganze Zahlen
+					}
+					return randInt(2, 20) / 2; // sonst 0,5-Schritte
+				}
+				return randInt(5, 250) / 10; // max. eine Nachkommastelle
+			};
+
+			let terms;
+			let ops;
+			let converted;
+			let resultInTarget;
+
+			for (let attempts = 0; attempts < 200; attempts++) {
+				terms = termUnitIdx.map((idx) => ({
+					idx,
+					unit: g.units[idx],
+					value: pickSimpleValue()
+				}));
+
+				// Mindestens ein Summand als ganze Zahl (ohne Nachkommastelle)
+				if (!terms.some((t) => Number.isInteger(t.value))) {
+					continue;
+				}
+
+				if (termCount === 2) {
+					ops = [Math.random() < 0.5 ? '+' : '-'];
+				} else {
+					const patterns = [['+', '+'], ['+', '-'], ['-', '+'], ['-', '-']];
+					ops = patterns[randInt(0, patterns.length - 1)];
+				}
+
+				converted = terms.map((t) => t.value * (scales[t.idx] / scales[targetIdx]));
+
+				resultInTarget = converted[0];
+				let hasNegativeIntermediate = resultInTarget < 0;
+				for (let i = 0; i < ops.length; i++) {
+					resultInTarget = ops[i] === '+' ? resultInTarget + converted[i + 1] : resultInTarget - converted[i + 1];
+					if (resultInTarget < 0) {
+						hasNegativeIntermediate = true;
+						break;
+					}
+				}
+
+				// Keine negativen Zwischenergebnisse und positives Endergebnis
+				if (!hasNegativeIntermediate && resultInTarget > 0) {
+					break;
+				}
+			}
+
+			const displayExprParts = [`${fmtNum(terms[0].value)} \\text{ ${terms[0].unit}}`];
+			for (let i = 1; i < terms.length; i++) {
+				displayExprParts.push(`${ops[i - 1]} ${fmtNum(terms[i].value)} \\text{ ${terms[i].unit}}`);
+			}
+
+			const targetExprParts = [`${fmtNum(converted[0])} \\text{ ${targetUnit}}`];
+			for (let i = 1; i < converted.length; i++) {
+				targetExprParts.push(`${ops[i - 1]} ${fmtNum(converted[i])} \\text{ ${targetUnit}}`);
+			}
+
+			const displayExpr = displayExprParts.join(' ');
+			const targetExpr = targetExprParts.join(' ');
+
+			textDisplay = `\\( Rechne \\text{ in } ${targetUnit}: ${displayExpr} = \\)`;
+			s = `\\[ ${displayExpr} = ${targetExpr} = ${fmtNum(resultInTarget)} \\text{ ${targetUnit}} \\]`;
+			break;
+		}
+
 		case 'geometry':
 			const shapeType = randInt(0, grade > 6 ? 2 : 1);
 			const goal = Math.random() > 0.5 ? 'A' : 'u';
@@ -1113,6 +1421,232 @@ function createTask(type, isMentalMode, grade = 5) {
 						\\end{aligned} \\]`;
 			break;
 
+		case 'formel_umstellen': {
+			const formeln = [
+				// --- FLÄCHENINHALT DREIECK ---
+				{
+					task: `Forme nach \\( g \\) um: \\( A = \\frac{g \\cdot h}{2} \\) &nbsp; (Dreieck)`,
+					steps: [
+						{ eq: `A &= \\dfrac{g \\cdot h}{2}`,   op: `\\cdot 2` },
+						{ eq: `2A &= g \\cdot h`,               op: `: h` },
+						{ eq: `g &= \\dfrac{2A}{h}`,            op: null }
+					]
+				},
+				{
+					task: `Forme nach \\( h \\) um: \\( A = \\frac{g \\cdot h}{2} \\) &nbsp; (Dreieck)`,
+					steps: [
+						{ eq: `A &= \\dfrac{g \\cdot h}{2}`,   op: `\\cdot 2` },
+						{ eq: `2A &= g \\cdot h`,               op: `: g` },
+						{ eq: `h &= \\dfrac{2A}{g}`,            op: null }
+					]
+				},
+				// --- KREISFLÄCHE ---
+				{
+					task: `Forme nach \\( r \\) um: \\( A = \\pi \\cdot r^2 \\) &nbsp; (Kreisfläche)`,
+					steps: [
+						{ eq: `A &= \\pi \\cdot r^2`,            op: `: \\pi` },
+						{ eq: `\\dfrac{A}{\\pi} &= r^2`,         op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `r &= \\sqrt{\\dfrac{A}{\\pi}}`,   op: null }
+					]
+				},
+				// --- KREISUMFANG ---
+				{
+					task: `Forme nach \\( r \\) um: \\( u = 2 \\cdot \\pi \\cdot r \\) &nbsp; (Kreisumfang)`,
+					steps: [
+						{ eq: `u &= 2 \\cdot \\pi \\cdot r`,    op: `: 2` },
+						{ eq: `\\dfrac{u}{2} &= \\pi \\cdot r`, op: `: \\pi` },
+						{ eq: `r &= \\dfrac{u}{2\\pi}`,          op: null }
+					]
+				},
+				// --- TRAPEZ ---
+				{
+					task: `Forme nach \\( a \\) um: \\( A = \\frac{(a+c) \\cdot h}{2} \\) &nbsp; (Trapez)`,
+					steps: [
+						{ eq: `A &= \\dfrac{(a + c) \\cdot h}{2}`, op: `\\cdot 2` },
+						{ eq: `2A &= (a + c) \\cdot h`,             op: `: h` },
+						{ eq: `\\dfrac{2A}{h} &= a + c`,            op: `- c` },
+						{ eq: `a &= \\dfrac{2A}{h} - c`,            op: null }
+					]
+				},
+				{
+					task: `Forme nach \\( c \\) um: \\( A = \\frac{(a+c) \\cdot h}{2} \\) &nbsp; (Trapez)`,
+					steps: [
+						{ eq: `A &= \\dfrac{(a + c) \\cdot h}{2}`, op: `\\cdot 2` },
+						{ eq: `2A &= (a + c) \\cdot h`,             op: `: h` },
+						{ eq: `\\dfrac{2A}{h} &= a + c`,            op: `- a` },
+						{ eq: `c &= \\dfrac{2A}{h} - a`,            op: null }
+					]
+				},
+				// --- RAUTE ---
+				{
+					task: `Forme nach \\( d_1 \\) um: \\( A = \\frac{d_1 \\cdot d_2}{2} \\) &nbsp; (Raute)`,
+					steps: [
+						{ eq: `A &= \\dfrac{d_1 \\cdot d_2}{2}`, op: `\\cdot 2` },
+						{ eq: `2A &= d_1 \\cdot d_2`,             op: `: d_2` },
+						{ eq: `d_1 &= \\dfrac{2A}{d_2}`,          op: null }
+					]
+				},
+				// --- RECHTECKUMFANG ---
+				{
+					task: `Forme nach \\( a \\) um: \\( u = 2 \\cdot (a + b) \\) &nbsp; (Rechteck)`,
+					steps: [
+						{ eq: `u &= 2 \\cdot (a + b)`,           op: `: 2` },
+						{ eq: `\\dfrac{u}{2} &= a + b`,          op: `- b` },
+						{ eq: `a &= \\dfrac{u}{2} - b`,          op: null }
+					]
+				},
+				// --- KUGELOBERFLÄCHE ---
+				{
+					task: `Forme nach \\( r \\) um: \\( O = 4 \\cdot \\pi \\cdot r^2 \\) &nbsp; (Kugel)`,
+					steps: [
+						{ eq: `O &= 4 \\cdot \\pi \\cdot r^2`,       op: `: (4\\pi)` },
+						{ eq: `\\dfrac{O}{4\\pi} &= r^2`,             op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `r &= \\sqrt{\\dfrac{O}{4\\pi}}`,       op: null }
+					]
+				},
+				// --- QUADERVOLUMEN ---
+				{
+					task: `Forme nach \\( l \\) um: \\( V = l \\cdot b \\cdot h \\) &nbsp; (Quader)`,
+					steps: [
+						{ eq: `V &= l \\cdot b \\cdot h`,            op: `: b` },
+						{ eq: `\\dfrac{V}{b} &= l \\cdot h`,         op: `: h` },
+						{ eq: `l &= \\dfrac{V}{b \\cdot h}`,         op: null }
+					]
+				},
+				// --- ZYLINDERVOLUMEN nach h ---
+				{
+					task: `Forme nach \\( h \\) um: \\( V = \\pi \\cdot r^2 \\cdot h \\) &nbsp; (Zylinder)`,
+					steps: [
+						{ eq: `V &= \\pi \\cdot r^2 \\cdot h`,       op: `: r^2` },
+						{ eq: `\\dfrac{V}{r^2} &= \\pi \\cdot h`,    op: `: \\pi` },
+						{ eq: `h &= \\dfrac{V}{\\pi r^2}`,            op: null }
+					]
+				},
+				// --- ZYLINDERVOLUMEN nach r ---
+				{
+					task: `Forme nach \\( r \\) um: \\( V = \\pi \\cdot r^2 \\cdot h \\) &nbsp; (Zylinder)`,
+					steps: [
+						{ eq: `V &= \\pi \\cdot r^2 \\cdot h`,       op: `: h` },
+						{ eq: `\\dfrac{V}{h} &= \\pi \\cdot r^2`,    op: `: \\pi` },
+						{ eq: `\\dfrac{V}{\\pi h} &= r^2`,            op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `r &= \\sqrt{\\dfrac{V}{\\pi h}}`,      op: null }
+					]
+				},
+				// --- KEGELVOLUMEN nach h ---
+				{
+					task: `Forme nach \\( h \\) um: \\( V = \\frac{\\pi \\cdot r^2 \\cdot h}{3} \\) &nbsp; (Kegel)`,
+					steps: [
+						{ eq: `V &= \\dfrac{\\pi \\cdot r^2 \\cdot h}{3}`, op: `\\cdot 3` },
+						{ eq: `3V &= \\pi \\cdot r^2 \\cdot h`,             op: `: r^2` },
+						{ eq: `\\dfrac{3V}{r^2} &= \\pi \\cdot h`,          op: `: \\pi` },
+						{ eq: `h &= \\dfrac{3V}{\\pi r^2}`,                 op: null }
+					]
+				},
+				// --- KEGELVOLUMEN nach r ---
+				{
+					task: `Forme nach \\( r \\) um: \\( V = \\frac{\\pi \\cdot r^2 \\cdot h}{3} \\) &nbsp; (Kegel)`,
+					steps: [
+						{ eq: `V &= \\dfrac{\\pi \\cdot r^2 \\cdot h}{3}`, op: `\\cdot 3` },
+						{ eq: `3V &= \\pi \\cdot r^2 \\cdot h`,             op: `: (\\pi h)` },
+						{ eq: `r^2 &= \\dfrac{3V}{\\pi h}`,                 op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `r &= \\sqrt{\\dfrac{3V}{\\pi h}}`,           op: null }
+					]
+				},
+				// --- ZYLINDERMANTEL ---
+				{
+					task: `Forme nach \\( r \\) um: \\( M = 2 \\cdot \\pi \\cdot r \\cdot h \\) &nbsp; (Zylinder)`,
+					steps: [
+						{ eq: `M &= 2 \\cdot \\pi \\cdot r \\cdot h`,  op: `: (2\\pi)` },
+						{ eq: `\\dfrac{M}{2\\pi} &= r \\cdot h`,        op: `: h` },
+						{ eq: `r &= \\dfrac{M}{2\\pi h}`,               op: null }
+					]
+				},
+				// --- PYTHAGORAS ---
+				{
+					task: `Forme nach \\( a \\) um: \\( c^2 = a^2 + b^2 \\) &nbsp; (Pythagoras)`,
+					steps: [
+						{ eq: `c^2 &= a^2 + b^2`,                 op: `- b^2` },
+						{ eq: `c^2 - b^2 &= a^2`,                  op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `a &= \\sqrt{c^2 - b^2}`,            op: null }
+					]
+				},
+				{
+					task: `Forme nach \\( b \\) um: \\( c^2 = a^2 + b^2 \\) &nbsp; (Pythagoras)`,
+					steps: [
+						{ eq: `c^2 &= a^2 + b^2`,                 op: `- a^2` },
+						{ eq: `c^2 - a^2 &= b^2`,                  op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `b &= \\sqrt{c^2 - a^2}`,            op: null }
+					]
+				},
+				{
+					task: `Forme nach \\( a \\) um: \\( c = \\sqrt{a^2 + b^2} \\) &nbsp; (Pythagoras)`,
+					steps: [
+						{ eq: `c &= \\sqrt{a^2 + b^2}`,            op: `(\\,)^2` },
+						{ eq: `c^2 &= a^2 + b^2`,                  op: `- b^2` },
+						{ eq: `c^2 - b^2 &= a^2`,                  op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `a &= \\sqrt{c^2 - b^2}`,            op: null }
+					]
+				},
+				// --- GESCHWINDIGKEIT ---
+				{
+					task: `Forme nach \\( t \\) um: \\( v = \\frac{s}{t} \\) &nbsp; (Geschwindigkeit)`,
+					steps: [
+						{ eq: `v &= \\dfrac{s}{t}`,                op: `\\cdot t` },
+						{ eq: `v \\cdot t &= s`,                    op: `: v` },
+						{ eq: `t &= \\dfrac{s}{v}`,                 op: null }
+					]
+				},
+				// --- WEG-ZEIT-BESCHLEUNIGUNG ---
+				{
+					task: `Forme nach \\( a \\) um: \\( s = \\frac{1}{2} \\cdot a \\cdot t^2 \\) &nbsp; (Kinematik)`,
+					steps: [
+						{ eq: `s &= \\dfrac{1}{2} \\cdot a \\cdot t^2`, op: `\\cdot 2` },
+						{ eq: `2s &= a \\cdot t^2`,                       op: `: t^2` },
+						{ eq: `a &= \\dfrac{2s}{t^2}`,                    op: null }
+					]
+				},
+				// --- DICHTE ---
+				{
+					task: `Forme nach \\( V \\) um: \\( \\rho = \\frac{m}{V} \\) &nbsp; (Dichte)`,
+					steps: [
+						{ eq: `\\rho &= \\dfrac{m}{V}`,             op: `\\cdot V` },
+						{ eq: `\\rho \\cdot V &= m`,                 op: `: \\rho` },
+						{ eq: `V &= \\dfrac{m}{\\rho}`,              op: null }
+					]
+				},
+				// --- TEMPERATUR ---
+				{
+					task: `Forme nach \\( C \\) um: \\( F = \\frac{9}{5} \\cdot C + 32 \\) &nbsp; (Temperatur)`,
+					steps: [
+						{ eq: `F &= \\dfrac{9}{5} \\cdot C + 32`,         op: `- 32` },
+						{ eq: `F - 32 &= \\dfrac{9}{5} \\cdot C`,         op: `\\cdot \\dfrac{5}{9}` },
+						{ eq: `C &= \\dfrac{5}{9} \\cdot (F - 32)`,       op: null }
+					]
+				},
+				// --- KINETISCHE ENERGIE ---
+				{
+					task: `Forme nach \\( v \\) um: \\( E = \\frac{1}{2} \\cdot m \\cdot v^2 \\) &nbsp; (kin. Energie)`,
+					steps: [
+						{ eq: `E &= \\dfrac{1}{2} \\cdot m \\cdot v^2`, op: `\\cdot 2` },
+						{ eq: `2E &= m \\cdot v^2`,                       op: `: m` },
+						{ eq: `\\dfrac{2E}{m} &= v^2`,                    op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `v &= \\sqrt{\\dfrac{2E}{m}}`,              op: null }
+					]
+				}
+			];
+
+			const f = formeln[randInt(0, formeln.length - 1)];
+			const alignLines = f.steps.map(step =>
+				step.op !== null
+					? `${step.eq} &&| \\, ${step.op}`
+					: step.eq
+			).join(' \\\\\n\t\t\t\t');
+
+			textDisplay = `Stelle die Formel um:<br>${f.task}`;
+			s = `\\[ \\begin{aligned}\n\t\t\t\t${alignLines}\n\t\t\t\\end{aligned} \\]`;
+			break;
+		}
+
 		case 'terme': {
 			const vars = ['x', 'y', 'a', 'b'];
 			let selectedVars = [...vars].sort(() => 0.5 - Math.random()).slice(0, 2);
@@ -1222,7 +1756,7 @@ function createTask(type, isMentalMode, grade = 5) {
 		}
 
 		case 'wkt': {
-			let mode = randInt(0, 3); // 0: Urne (3 Farben), 1: Rel. Häufigkeit, 2: 12-seitiger Würfel, 3: Kartenspiel
+			let mode = randInt(0, 4); // 0: Urne (3 Farben), 1: Rel. Häufigkeit, 2: 12-seitiger Würfel, 3: Glücksrad, 4: Urne rückwärts
 			let taskStr, resStr;
 
 			if (mode === 0) {
@@ -1293,7 +1827,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					resStr = `P(\\text{durch ${auswahl} teilbar}) = \\frac{${treffer}}{12} = ${gekuerzt}`;
 				}
 
-			} else {
+			} else if (mode === 3) {
 				// --- TYP: GLÜCKSRAD (2 Farben, zweimal drehen) ---
 				const farben = ['roten', 'blauen', 'grünen', 'gelben', 'weißen'];
 				let w = [...farben].sort(() => 0.5 - Math.random());
@@ -1316,6 +1850,45 @@ function createTask(type, isMentalMode, grade = 5) {
 				// Lösungsweg mit Pfadregel
 				resStr = `P(\\text{${f1Subst}, ${f1Subst}}) = \\frac{${n1}}{${gesamt}} \\cdot \\frac{${n1}}{${gesamt}} = \\frac{${zaehler}}{${nenner}}`;
 
+			} else {
+				// --- TYP: URNE RÜCKWÄRTS (ANZAHL ROTER KUGELN BERECHNEN) ---
+				const usePct = Math.random() < 0.5;
+				let n, redCount;
+
+				if (usePct) {
+					const pctCandidates = [
+						{ pct: 10, simpNum: 1, simpDen: 10 },
+						{ pct: 20, simpNum: 1, simpDen: 5  },
+						{ pct: 25, simpNum: 1, simpDen: 4  },
+						{ pct: 50, simpNum: 1, simpDen: 2  },
+						{ pct: 75, simpNum: 3, simpDen: 4  },
+					];
+					const choice = pctCandidates[randInt(0, pctCandidates.length - 1)];
+					const multMin = Math.ceil(8 / choice.simpDen);
+					const multMax = Math.floor(30 / choice.simpDen);
+					n = choice.simpDen * randInt(multMin, multMax);
+					redCount = n * choice.simpNum / choice.simpDen;
+					taskStr = `In einer Urne liegen ${n} Kugeln. Die Wahrscheinlichkeit eine rote Kugel zu ziehen beträgt ${choice.pct} %. Wie viele rote Kugeln befinden sich in der Urne?`;
+					resStr = `${redCount} \\text{ rote Kugeln} \\quad ${n} \\cdot \\frac{${choice.pct}}{100} = ${n} \\cdot \\frac{${choice.simpNum}}{${choice.simpDen}} = ${redCount}`;
+				} else {
+					const fracCandidates = [
+						{ num: 1, den: 2 },
+						{ num: 1, den: 3 },
+						{ num: 2, den: 3 },
+						{ num: 1, den: 4 },
+						{ num: 3, den: 4 },
+						{ num: 1, den: 5 },
+						{ num: 2, den: 5 },
+						{ num: 3, den: 5 },
+					];
+					const frac = fracCandidates[randInt(0, fracCandidates.length - 1)];
+					const multMin = Math.ceil(8 / frac.den);
+					const multMax = Math.floor(30 / frac.den);
+					n = frac.den * randInt(multMin, multMax);
+					redCount = n * frac.num / frac.den;
+					taskStr = `In einer Urne liegen ${n} Kugeln. Die Wahrscheinlichkeit eine rote Kugel zu ziehen beträgt \\( \\frac{${frac.num}}{${frac.den}} \\). Wie viele rote Kugeln befinden sich in der Urne?`;
+					resStr = `${redCount} \\text{ rote Kugeln} \\quad ${n} \\cdot \\frac{${frac.num}}{${frac.den}} = ${redCount}`;
+				}
 			}
 
 			textDisplay = taskStr;

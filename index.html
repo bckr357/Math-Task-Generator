@@ -26,37 +26,41 @@
 
     <aside v-if="currentView !== 'home'" :class="['settings-drawer', { 'is-open': isSettingsSidebarOpen }]">
         <div class="settings-drawer-header">
-            <div>
-                <div class="settings-drawer-eyebrow">Konfiguration</div>
-                <h2 class="settings-drawer-title">Einstellungen</h2>
+            <div class="settings-drawer-heading">
+                <h2 class="settings-drawer-title">Aufgabenauswahl</h2>
             </div>
-            <button @click="closeSettingsSidebar" class="btn-ui btn-back">Schließen</button>
+            <button @click="closeSettingsSidebar" class="btn-ui btn-back settings-drawer-close">Schließen</button>
         </div>
 
         <div class="settings-drawer-section">
-            <h3 class="settings-drawer-section-title">Allgemein</h3>
-            <div class="settings-top-grid">
-                <label class="checkbox-label settings-inline-checkbox settings-grid-span-2">
+            <div class="settings-selection-bar">
+                <label class="checkbox-label settings-inline-checkbox">
                     <input type="checkbox" v-model="mentalMathMode">
-                    Quiz / Kopfaufgaben
+                    Einfache Aufgaben
                 </label>
-                <button @click="refreshCurrentView" class="btn-ui btn-primary settings-quick-generate settings-grid-span-2" :disabled="!hasSelectedTypes">
-                    {{ currentView === 'training' ? 'Training starten' : 'Aufgaben erzeugen' }}
-                </button>
-            </div>
-        </div>
-
-        <div class="settings-drawer-section">
-            <div class="settings-section-head">
-                <h3 class="settings-drawer-section-title">Aufgabentypen</h3>
-                <label class="settings-stack-label settings-grade-select">
-                    Klassenstufe
-                    <select v-model="selectedGrade" class="settings-input settings-select settings-input-wide">
+                <label class="settings-inline-field settings-inline-field--count">
+                    <span>Aufgaben-Anzahl</span>
+                    <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-count-input">
+                </label>
+                <label class="settings-inline-field settings-inline-field--arrangement">
+                    <span>Anordnung</span>
+                    <select v-model="taskArrangementMode" class="settings-input settings-select settings-arrangement-input">
+                        <option value="fully-random">Komplett zufaellig</option>
+                        <option value="block-random">Blockweise zufaellig</option>
+                        <option value="block-ordered">Blockweise in Reihenfolge</option>
+                    </select>
+                </label>
+                <label class="settings-grade-inline-label">
+                    <span>Klassenstufe</span>
+                    <select v-model="selectedGrade" class="settings-input settings-select settings-grade-input">
                         <option v-for="grade in gradeOptions" :key="grade" :value="grade">{{ grade }}</option>
                     </select>
                 </label>
-                <button @click="randomizeTypeSelection" class="btn-ui btn-export settings-section-btn">Zufaellige Auswahl</button>
-                <button @click="invertSelection" class="btn-ui btn-export settings-section-btn">Auswahl invertieren</button>
+                <button @click="invertSelection" class="btn-ui btn-export settings-section-btn settings-compact-btn">Invertieren</button>
+                <button @click="randomizeTypeSelection" class="btn-ui btn-export settings-section-btn settings-compact-btn">Zufaellig</button>
+                <button @click="refreshCurrentView" class="btn-ui btn-primary settings-quick-generate settings-compact-btn" :disabled="!hasSelectedTypes">
+                    {{ currentView === 'training' ? 'Starten' : 'Erzeugen' }}
+                </button>
             </div>
             <div class="type-grid settings-type-grid">
                 <div v-for="([key, label]) in visibleTypeEntries" :key="'drawer-'+key" class="type-option">
@@ -74,7 +78,7 @@
         <div class="home-hero">
             <div class="home-eyebrow">Mathe-Starter 2026</div>
             <h1 class="home-title">Modus wählen</h1>
-            <p class="home-copy">Wähle zuerst den Arbeitsmodus. Die eigentlichen Einstellungen bearbeitest du anschließend direkt in der jeweiligen Ansicht über die Seitenleiste.</p>
+            <p class="home-copy">Wähle zuerst den Arbeitsmodus. Die eigentliche Aufgabenauswahl bearbeitest du anschließend direkt in der jeweiligen Ansicht über die Seitenleiste.</p>
         </div>
 
         <div class="mode-grid">
@@ -101,7 +105,8 @@
     <div v-else-if="currentView === 'worksheet'" class="worksheet-view">
         <div class="worksheet-toolbar no-print">
             <div class="toolbar-main-controls">
-                <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Einstellungen</button>
+                <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl</button>
+                <h3 class="settings-drawer-section-title">Modul:</h3>
                 <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'worksheet-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
@@ -140,9 +145,9 @@
 
         <div v-if="!hasGeneratedTasks" class="empty-state">
             <h2>Noch keine Aufgaben erzeugt</h2>
-            <p>Öffne die Einstellungen, wähle Aufgabentypen aus und erzeuge anschließend das Arbeitsblatt.</p>
+            <p>Öffne die Aufgabenauswahl, wähle Aufgaben aus und erzeuge anschließend das Arbeitsblatt.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn-ui btn-export">Einstellungen öffnen</button>
+                <button @click="openSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl öffnen</button>
                 <button
                     @click="hasSelectedTypes ? generateWorksheet() : generateRandomWorksheet()"
                     class="btn-ui btn-primary"
@@ -216,7 +221,7 @@
     <div v-else-if="currentView === 'training'" class="training-view">
         <div class="training-top-bar">
             <div class="toolbar-main-controls">
-                <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Einstellungen</button>
+                <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl</button>
                 <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'training-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
@@ -232,9 +237,9 @@
 
         <div v-if="!currentTrainingTask" class="empty-state empty-state--training">
             <h2>Training ist bereit</h2>
-            <p>Wähle zuerst Aufgabentypen in den Einstellungen und starte dann das Training.</p>
+            <p>Wähle zuerst Aufgaben in der Aufgabenauswahl und starte dann das Training.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn-ui btn-export">Einstellungen öffnen</button>
+                <button @click="openSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl öffnen</button>
                 <button @click="startTraining" class="btn-ui btn-primary" :disabled="!hasSelectedTypes">Training starten</button>
             </div>
         </div>
@@ -259,7 +264,7 @@
     <div v-else :class="['presentation-view', { 'dark-mode': isDarkMode }]">
         <div class="top-bar">
             <div class="toolbar-main-controls">
-                <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Einstellungen</button>
+                <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl</button>
                 <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'presentation-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
@@ -295,9 +300,9 @@
 
         <div v-if="!hasGeneratedTasks" class="empty-state empty-state--presentation">
             <h2>Presentation ist bereit</h2>
-            <p>Öffne die Einstellungen, wähle deine Aufgabentypen und erzeuge dann die Ansicht.</p>
+            <p>Öffne die Aufgabenauswahl, wähle deine Aufgaben und erzeuge dann die Ansicht.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn-ui btn-export">Einstellungen öffnen</button>
+                <button @click="openSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl öffnen</button>
                 <button @click="generateAll" class="btn-ui btn-primary" :disabled="!hasSelectedTypes">Presentation erzeugen</button>
             </div>
         </div>

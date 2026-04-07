@@ -146,7 +146,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: min(620px, 96vw);
+    width: min(640px, 96vw);
     height: 100vh;
     background: #ffffff;
     border-right: 1px solid rgba(148, 163, 184, 0.28);
@@ -156,7 +156,7 @@ body {
     z-index: 80;
     display: flex;
     flex-direction: column;
-    padding: 24px 22px;
+    padding: 18px 18px 20px;
     box-sizing: border-box;
     overflow-y: auto;
 }
@@ -167,29 +167,34 @@ body {
 
 .settings-drawer-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 22px;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.settings-drawer-heading {
+    min-width: 0;
 }
 
 .settings-drawer-eyebrow {
-    font-size: 0.82rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 800;
     color: var(--primary);
-    margin-bottom: 6px;
+    margin-bottom: 2px;
 }
 
 .settings-drawer-title {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 1.35rem;
+    line-height: 1.1;
     color: var(--slate-800);
 }
 
 .settings-drawer-section {
-    margin-bottom: 22px;
+    margin-bottom: 14px;
 }
 
 .settings-drawer-section-title {
@@ -210,23 +215,21 @@ body {
 }
 
 .settings-inline-checkbox {
-    font-size: 1rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: var(--slate-500);
 }
 
-.settings-top-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.settings-grid-span-2 {
-    grid-column: 1 / -1;
+.settings-selection-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
 }
 
 .settings-quick-generate {
-    justify-self: stretch;
+    margin-left: auto;
 }
 
 .settings-input-wide {
@@ -262,24 +265,87 @@ body {
 }
 
 .settings-section-btn {
-    font-size: 0.88rem;
+    font-size: 0.8rem;
+}
+
+.settings-grade-inline-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--slate-500);
+    white-space: nowrap;
+}
+
+.settings-inline-field {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--slate-500);
+    white-space: nowrap;
+}
+
+.settings-inline-field span,
+.settings-grade-inline-label span {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.settings-inline-field--arrangement {
+    min-width: 0;
+}
+
+.settings-grade-input {
+    width: 50px;
+    min-width: 50px;
+    padding: 7px 6px;
+    font-size: 0.95rem;
+}
+
+.settings-count-input {
+    width: 50px;
+    padding: 7px 8px;
+    font-size: 0.95rem;
+}
+
+.settings-arrangement-input {
+    width: 180px;
+    min-width: 180px;
+    padding: 7px 10px;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.settings-drawer-close,
+.settings-compact-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 9px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    line-height: 1;
 }
 
 .settings-type-grid {
     margin-bottom: 0;
-    padding: 16px;
+    padding: 14px;
     column-gap: 12px;
-    row-gap: 12px;
+    row-gap: 10px;
 }
 
 .settings-type-grid .type-option {
-    align-items: flex-start;
+    align-items: center;
 }
 
 .settings-type-grid .type-label {
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.25;
 }
 
@@ -326,14 +392,15 @@ body {
 .settings-input {
     padding: 10px;
     font-size: 1.2rem;
-    width: 80px;
+    width: 55px;
     border: 1px solid var(--slate-300);
     border-radius: 8px;
     text-align: center;
+    line-height: 1.2;
 }
 
 .settings-select {
-    width: 240px;
+    width: 40px;
     text-align: left;
     font-size: 1rem;
 }
@@ -343,9 +410,9 @@ body {
 	grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     background: var(--slate-100);
-    padding: 30px;
+    padding: 22px;
     border-radius: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 @media (max-width: 900px) {
@@ -368,7 +435,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     cursor: pointer;
 }
 
@@ -412,11 +479,20 @@ body {
 }
 
 .btn-ui {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px 20px;
     border-radius: 15px;
     border: none;
     cursor: pointer;
     font-weight: bold;
+}
+
+@media (max-width: 900px) {
+    .settings-quick-generate {
+        margin-left: 0;
+    }
 }
 
 .btn-back { background: var(--slate-100); color: var(--slate-800); }
@@ -447,6 +523,13 @@ body {
     font-weight: 700;
     color: var(--slate-500);
     margin: 0;
+}
+
+.worksheet-gt-control,
+.toolbar-main-controls,
+.top-bar-actions,
+.header-task-settings {
+    align-items: center;
 }
 
 .header-settings-input {
