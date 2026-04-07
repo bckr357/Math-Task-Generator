@@ -37,7 +37,7 @@ createApp({
     setup() {
         const state = window.MTGStateModule.createState(Vue, typeLabels);
         const allTypes = Object.keys(typeLabels);
-        const selectedGrade = ref(5);
+        const selectedGrade = ref(10);
         const gradeOptions = [5, 6, 7, 8, 9, 10];
 
         const classConfig = (typeof taskTypesByGrade === 'object' && taskTypesByGrade)
@@ -98,9 +98,15 @@ createApp({
             startTraining: trainingMode.startTraining
         });
 
-        const invertSelection = () => {
-            const newSelection = visibleTypeKeys.value.filter(type => !state.selectedTypes.value.includes(type));
-            state.selectedTypes.value = newSelection;
+        const selectAllTypes = () => {
+            const allSelected = visibleTypeKeys.value.length === state.selectedTypes.value.length &&
+                               visibleTypeKeys.value.every(type => state.selectedTypes.value.includes(type));
+            
+            if (allSelected) {
+                state.selectedTypes.value = [];
+            } else {
+                state.selectedTypes.value = [...visibleTypeKeys.value];
+            }
         };
 
         const randomizeTypeSelection = () => {
@@ -212,7 +218,7 @@ createApp({
             selectedGrade,
             gradeOptions,
             visibleTypeEntries,
-            invertSelection,
+            selectAllTypes,
             randomizeTypeSelection,
             generateRandomWorksheet,
             refreshCurrentView,

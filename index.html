@@ -29,36 +29,35 @@
             <div class="settings-drawer-heading">
                 <h2 class="settings-drawer-title">Aufgabenauswahl</h2>
             </div>
-            <button @click="closeSettingsSidebar" class="btn-ui btn-back settings-drawer-close">Schließen</button>
+            <button @click="closeSettingsSidebar" class="btn btn--back settings-drawer-close">Schließen</button>
         </div>
 
         <div class="settings-drawer-section">
             <div class="settings-selection-bar">
-                <label class="checkbox-label settings-inline-checkbox">
-                    <input type="checkbox" v-model="mentalMathMode">
-                    Einfache Aufgaben
+                <label class="settings-topbar-label">
+                    <span>Easy-Mode</span>
+                    <input type="checkbox" v-model="mentalMathMode" class="settings-checkbox">
                 </label>
-                <label class="settings-inline-field settings-inline-field--count">
-                    <span>Aufgaben-Anzahl</span>
+                <label class="settings-topbar-label">
+                    <span>Anzahl</span>
                     <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-count-input">
                 </label>
-                <label class="settings-inline-field settings-inline-field--arrangement">
+                <label class="settings-topbar-label">
                     <span>Anordnung</span>
-                    <select v-model="taskArrangementMode" class="settings-input settings-select settings-arrangement-input">
-                        <option value="fully-random">Komplett zufaellig</option>
-                        <option value="block-random">Blockweise zufaellig</option>
-                        <option value="block-ordered">Blockweise in Reihenfolge</option>
+                    <select v-model="taskArrangementMode" class="settings-input settings-arrangement-input">
+                        <option value="random">zufällig</option>
+                        <option value="ordered">blockweise</option>
                     </select>
                 </label>
-                <label class="settings-grade-inline-label">
-                    <span>Klassenstufe</span>
-                    <select v-model="selectedGrade" class="settings-input settings-select settings-grade-input">
+                <label class="settings-topbar-label">
+                    <span>Klasse</span>
+                    <select v-model="selectedGrade" class="settings-input settings-grade-input">
                         <option v-for="grade in gradeOptions" :key="grade" :value="grade">{{ grade }}</option>
                     </select>
                 </label>
-                <button @click="invertSelection" class="btn-ui btn-export settings-section-btn settings-compact-btn">Invertieren</button>
-                <button @click="randomizeTypeSelection" class="btn-ui btn-export settings-section-btn settings-compact-btn">Zufaellig</button>
-                <button @click="refreshCurrentView" class="btn-ui btn-primary settings-quick-generate settings-compact-btn" :disabled="!hasSelectedTypes">
+                <button @click="selectAllTypes" class="btn btn--export settings-compact-btn">Alle</button>
+                <button @click="randomizeTypeSelection" class="btn btn--export settings-compact-btn">Zufall</button>
+                <button @click="refreshCurrentView" class="btn btn--primary settings-quick-generate settings-compact-btn" :disabled="!hasSelectedTypes">
                     {{ currentView === 'training' ? 'Starten' : 'Erzeugen' }}
                 </button>
             </div>
@@ -76,7 +75,7 @@
 
     <div v-if="currentView === 'home'" class="home-view">
         <div class="home-hero">
-            <div class="home-eyebrow">Mathe-Starter 2026</div>
+            <div class="home-eyebrow">Mathe-Aufgaben-Generator</div>
             <h1 class="home-title">Modus wählen</h1>
             <p class="home-copy">Wähle zuerst den Arbeitsmodus. Die eigentliche Aufgabenauswahl bearbeitest du anschließend direkt in der jeweiligen Ansicht über die Seitenleiste.</p>
         </div>
@@ -90,7 +89,7 @@
 
             <button @click="switchView('presentation')" class="mode-card mode-card--presentation">
                 <span class="mode-card-kicker">Anzeigen</span>
-                <strong>Presentation</strong>
+                <strong>Präsentation</strong>
                 <span>Große Darstellung für Projektion, Tafel und gemeinsame Besprechung.</span>
             </button>
 
@@ -105,7 +104,7 @@
     <div v-else-if="currentView === 'worksheet'" class="worksheet-view">
         <div class="worksheet-toolbar no-print">
             <div class="toolbar-main-controls">
-                <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl</button>
+                <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
                 <h3 class="settings-drawer-section-title">Modul:</h3>
                 <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'worksheet-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
@@ -115,31 +114,30 @@
                 <strong>Arbeitsblatt</strong>
                 <label class="worksheet-gt-control">
                     GT
-                    <input type="number" v-model.number="gtNumber" min="1" max="99" class="settings-input settings-input-small worksheet-gt-input">
+                    <input type="number" v-model.number="gtNumber" min="1" max="99" class="settings-input worksheet-gt-input">
                 </label>
-                <div class="header-task-settings">
-                    <label class="header-stack-label">
+                <div class="settings-topbar-settings">
+                    <label class="settings-topbar-label">
                         Aufgaben
-                        <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input header-settings-input">
+                        <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-topbar-input">
                     </label>
-                    <label class="header-stack-label">
+                    <label class="settings-topbar-label">
                         Anordnung
-                        <select v-model="taskArrangementMode" class="settings-input settings-select header-settings-select">
-                            <option value="fully-random">Komplett zufaellig</option>
-                            <option value="block-random">Blockweise zufaellig</option>
-                            <option value="block-ordered">Blockweise in Reihenfolge</option>
+                        <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
+                            <option value="random">Komplett zufaellig</option>
+                            <option value="ordered">Blockweise in Reihenfolge</option>
                         </select>
                     </label>
                 </div>
             </div>
             <div class="worksheet-toolbar-actions">
-                <button @click="toggleWorksheetSolutions" class="btn-ui btn-toggle">
+                <button @click="toggleWorksheetSolutions" class="btn btn--toggle">
                     {{ showWorksheetSolutions ? 'Aufgaben anzeigen' : 'Lösungen anzeigen' }}
                 </button>
-                <button @click="generateWorksheet" class="btn-ui btn-primary">Neue Aufgaben 🎲</button>
-                <button @click="exportWorksheetJSON" class="btn-ui btn-export">JSON Export</button>
-                <button @click="downloadWorksheetHTML" class="btn-ui btn-export">Datei speichern 💾</button>
-                <button @click="printWorksheet" class="btn-ui btn-primary">Drucken</button>
+                <button @click="generateWorksheet" class="btn btn--primary">Neue Aufgaben 🎲</button>
+                <button @click="exportWorksheetJSON" class="btn btn--export">JSON Export</button>
+                <button @click="downloadWorksheetHTML" class="btn btn--export">Datei speichern 💾</button>
+                <button @click="printWorksheet" class="btn btn--primary">Drucken</button>
             </div>
         </div>
 
@@ -147,10 +145,10 @@
             <h2>Noch keine Aufgaben erzeugt</h2>
             <p>Öffne die Aufgabenauswahl, wähle Aufgaben aus und erzeuge anschließend das Arbeitsblatt.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl öffnen</button>
+                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
                 <button
                     @click="hasSelectedTypes ? generateWorksheet() : generateRandomWorksheet()"
-                    class="btn-ui btn-primary"
+                    class="btn btn--primary"
                 >
                     {{ hasSelectedTypes ? 'Arbeitsblatt erzeugen' : 'Zufälliges Arbeitsblatt erzeugen' }}
                 </button>
@@ -221,15 +219,15 @@
     <div v-else-if="currentView === 'training'" class="training-view">
         <div class="training-top-bar">
             <div class="toolbar-main-controls">
-                <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl</button>
+                <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
                 <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'training-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
             </div>
             <div class="training-progress">Aufgabe {{ currentTrainingIndex + 1 }} – {{ typeDescriptions[currentTrainingTask?.type] ?? typeLabels[currentTrainingTask?.type] ?? currentTrainingTask?.type ?? 'Noch kein Training gestartet' }}</div>
             <div class="training-top-actions">
-                <button @click="startTraining" class="btn-ui btn-primary">Neu starten</button>
-                <button @click="toggleTrainingSolution" class="btn-ui btn-toggle" :disabled="!currentTrainingTask">
+                <button @click="startTraining" class="btn btn--primary">Neu starten</button>
+                <button @click="toggleTrainingSolution" class="btn btn--toggle" :disabled="!currentTrainingTask">
                     {{ showTrainingSolution ? 'Aufgabe anzeigen' : 'Lösung anzeigen' }}
                 </button>
             </div>
@@ -239,8 +237,8 @@
             <h2>Training ist bereit</h2>
             <p>Wähle zuerst Aufgaben in der Aufgabenauswahl und starte dann das Training.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl öffnen</button>
-                <button @click="startTraining" class="btn-ui btn-primary" :disabled="!hasSelectedTypes">Training starten</button>
+                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
+                <button @click="startTraining" class="btn btn--primary" :disabled="!hasSelectedTypes">Training starten</button>
             </div>
         </div>
 
@@ -264,35 +262,35 @@
     <div v-else :class="['presentation-view', { 'dark-mode': isDarkMode }]">
         <div class="top-bar">
             <div class="toolbar-main-controls">
-                <button @click="toggleSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl</button>
+                <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
                 <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'presentation-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
             </div>
 
-            <div class="header-task-settings">
-                <label class="header-stack-label">
+            <div class="settings-topbar-settings">
+                <label class="settings-topbar-label">
                     Aufgaben
-                    <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input header-settings-input">
+                    <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-topbar-input">
                 </label>
-                <label class="header-stack-label">
+                <label class="settings-topbar-label">
                     Anordnung
-                    <select v-model="taskArrangementMode" class="settings-input settings-select header-settings-select">
-                        <option value="fully-random">Komplett zufaellig</option>
-                        <option value="block-random">Blockweise zufaellig</option>
-                        <option value="block-ordered">Blockweise in Reihenfolge</option>
+                    <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
+                        <option value="random">Komplett zufaellig</option>
+                        <option value="ordered">Blockweise in Reihenfolge</option>
                     </select>
+                </label>
                 </label>
             </div>
             
             <div class="top-bar-actions">
-                <button @click="toggleDarkMode" class="btn-ui btn-theme">
+                <button @click="toggleDarkMode" class="btn btn--theme">
                     {{ isDarkMode ? 'Hellmodus' : 'Dunkelmodus' }}
                 </button>
-                <button @click="exportJSON" class="btn-ui btn-export">JSON Export</button>
-                <button @click="exportHTML" class="btn-ui btn-export">Drucken (HTML)</button>
-                <button @click="generateAll" class="btn-ui btn-primary">Neue Zahlen 🎲</button>
-                <button @click="toggleSolutions()" class="btn-ui btn-toggle" :disabled="!hasGeneratedTasks">
+                <button @click="exportJSON" class="btn btn--export">JSON Export</button>
+                <button @click="exportHTML" class="btn btn--export">Drucken (HTML)</button>
+                <button @click="generateAll" class="btn btn--primary">Neue Zahlen 🎲</button>
+                <button @click="toggleSolutions()" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
                     {{ showSolutions ? 'Lösungen ausblenden' : 'Lösungen anzeigen' }}
                 </button>
             </div>
@@ -302,8 +300,8 @@
             <h2>Presentation ist bereit</h2>
             <p>Öffne die Aufgabenauswahl, wähle deine Aufgaben und erzeuge dann die Ansicht.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn-ui btn-export">Aufgabenauswahl öffnen</button>
-                <button @click="generateAll" class="btn-ui btn-primary" :disabled="!hasSelectedTypes">Presentation erzeugen</button>
+                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
+                <button @click="generateAll" class="btn btn--primary" :disabled="!hasSelectedTypes">Presentation erzeugen</button>
             </div>
         </div>
 

@@ -46,7 +46,7 @@ window.MTGWorksheetModeModule = {
 				font-family: system-ui, -apple-system, sans-serif;
 			}
 
-			.btn-ui {
+			.btn {
 				padding: 10px 20px;
 				border-radius: 15px;
 				border: none;
@@ -54,9 +54,9 @@ window.MTGWorksheetModeModule = {
 				font-weight: bold;
 			}
 
-			.btn-toggle { background: var(--slate-800); color: white; min-width: 200px; }
-			.btn-primary { background: var(--primary); color: white; }
-			.btn-export { background: var(--slate-300); color: var(--slate-800); }
+			.btn--toggle { background: var(--slate-800); color: white; min-width: 200px; }
+			.btn--primary { background: var(--primary); color: white; }
+			.btn--export { background: var(--slate-300); color: var(--slate-800); }
 
 			.worksheet-view {
 				min-height: 100vh;
@@ -329,9 +329,9 @@ window.MTGWorksheetModeModule = {
 				<div class="worksheet-view">
 					<div class="worksheet-toolbar no-print">
 						<div class="worksheet-toolbar-actions">
-							<button class="btn-ui btn-toggle" onclick="toggleWorksheetSolutions()" id="toggleBtn">${toggleLabel}</button>
-							<button class="btn-ui btn-export" onclick="exportWorksheetJSON()">JSON Export</button>
-							<button class="btn-ui btn-primary" onclick="window.print()">Drucken</button>
+							<button class="btn btn--toggle" onclick="toggleWorksheetSolutions()" id="toggleBtn">${toggleLabel}</button>
+							<button class="btn btn--export" onclick="exportWorksheetJSON()">JSON Export</button>
+							<button class="btn btn--primary" onclick="window.print()">Drucken</button>
 						</div>
 					</div>
 

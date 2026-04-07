@@ -88,10 +88,10 @@ window.MTGPresentationModeModule = {
 						padding: 0 !important;
 					}
 
-					.btn-ui { padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; transition: opacity 0.2s; font-size: 0.9rem; }
+					.btn { padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; transition: opacity 0.2s; font-size: 0.9rem; }
 					.btn-blue { background: #2563eb; }
 					.btn-slate { background: #475569; }
-					.btn-ui:hover { opacity: 0.8; }
+					.btn:hover { opacity: 0.8; }
 
 					.mjx-display {
 						margin: 2px 0 !important;
@@ -115,8 +115,8 @@ window.MTGPresentationModeModule = {
 				<div class="header no-print">
 					<h1 id="title" style="margin:0; font-size: 1.3rem;">Aufgaben</h1>
 					<div style="display: flex; gap: 8px;">
-						<button class="btn-ui btn-blue" onclick="toggleView()" id="toggleBtn">Lösungen anzeigen</button>
-						<button class="btn-ui btn-slate" onclick="downloadFile()">Datei speichern 💾</button>
+						<button class="btn btn-blue" onclick="toggleView()" id="toggleBtn">Lösungen anzeigen</button>
+						<button class="btn btn-slate" onclick="downloadFile()">Datei speichern 💾</button>
 					</div>
 				</div>
 

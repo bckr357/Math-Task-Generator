@@ -177,15 +177,6 @@ body {
     min-width: 0;
 }
 
-.settings-drawer-eyebrow {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 800;
-    color: var(--primary);
-    margin-bottom: 2px;
-}
-
 .settings-drawer-title {
     margin: 0;
     font-size: 1.35rem;
@@ -204,26 +195,22 @@ body {
     color: var(--slate-800);
 }
 
-.settings-stack-label {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
-    font-size: 0.98rem;
-    font-weight: 700;
-    color: var(--slate-500);
-}
-
 .settings-inline-checkbox {
     font-size: 0.92rem;
     font-weight: 700;
     color: var(--slate-500);
 }
 
+.settings-checkbox {
+    width: auto;
+    cursor: pointer;
+    accent-color: var(--blue-500);
+    align-self: flex-start;
+}
+
 .settings-selection-bar {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    gap: 12px;
     flex-wrap: wrap;
     margin-bottom: 18px;
 }
@@ -232,52 +219,7 @@ body {
     margin-left: auto;
 }
 
-.settings-input-wide {
-    width: 100%;
-    box-sizing: border-box;
-    text-align: left;
-}
-
-.settings-input-small {
-    width: 96px;
-}
-
-.settings-section-head {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.settings-section-head .settings-drawer-section-title {
-    margin-right: auto;
-}
-
-.settings-grade-select {
-    min-width: 180px;
-    margin-bottom: 0;
-}
-
-.settings-grade-select .settings-input {
-    width: 100%;
-}
-
-.settings-section-btn {
-    font-size: 0.8rem;
-}
-
-.settings-grade-inline-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--slate-500);
-    white-space: nowrap;
-}
-
+.settings-grade-inline-label,
 .settings-inline-field {
     display: inline-flex;
     align-items: center;
@@ -301,21 +243,18 @@ body {
 
 .settings-grade-input {
     width: 50px;
-    min-width: 50px;
-    padding: 7px 6px;
-    font-size: 0.95rem;
+    padding: 4px;
 }
 
 .settings-count-input {
     width: 50px;
-    padding: 7px 8px;
-    font-size: 0.95rem;
+    padding: 4px;
 }
 
 .settings-arrangement-input {
-    width: 180px;
-    min-width: 180px;
-    padding: 7px 10px;
+    width: 100px;
+    min-width: 100px;
+    padding: 4px;
     font-size: 0.9rem;
     text-align: left;
 }
@@ -347,15 +286,6 @@ body {
     gap: 8px;
     font-size: 0.95rem;
     line-height: 1.25;
-}
-
-.settings-drawer-actions {
-    margin-top: auto;
-    padding-top: 12px;
-}
-
-.settings-apply-btn {
-    width: 100%;
 }
 
 .empty-state {
@@ -390,19 +320,11 @@ body {
 }
 
 .settings-input {
-    padding: 10px;
-    font-size: 1.2rem;
-    width: 55px;
     border: 1px solid var(--slate-300);
     border-radius: 8px;
-    text-align: center;
-    line-height: 1.2;
-}
-
-.settings-select {
-    width: 40px;
     text-align: left;
-    font-size: 1rem;
+    line-height: 1.2;
+    box-sizing: border-box;
 }
 
 .type-grid {
@@ -478,7 +400,7 @@ body {
     gap: 10px;
 }
 
-.btn-ui {
+.btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -495,11 +417,11 @@ body {
     }
 }
 
-.btn-back { background: var(--slate-100); color: var(--slate-800); }
-.btn-export { background: var(--slate-300); color: var(--slate-800); }
-.btn-toggle { background: var(--slate-800); color: white; min-width: 200px; }
-.btn-primary { background: var(--primary); color: white; }
-.btn-theme { background: #0f172a; color: white; }
+.btn--back { background: var(--slate-100); color: var(--slate-800); }
+.btn--export { background: var(--slate-300); color: var(--slate-800); }
+.btn--toggle { background: var(--slate-800); color: white; min-width: 200px; }
+.btn--primary { background: var(--primary); color: white; }
+.btn--theme { background: #0f172a; color: white; }
 
 .top-bar-actions {
     display: flex;
@@ -508,17 +430,17 @@ body {
     flex-wrap: wrap;
 }
 
-.header-task-settings {
+.settings-topbar-settings {
     display: flex;
     align-items: flex-end;
     gap: 10px;
     flex-wrap: wrap;
 }
 
-.header-stack-label {
+.settings-topbar-label {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 3px;
     font-size: 0.82rem;
     font-weight: 700;
     color: var(--slate-500);
@@ -528,18 +450,18 @@ body {
 .worksheet-gt-control,
 .toolbar-main-controls,
 .top-bar-actions,
-.header-task-settings {
+.settings-topbar-settings {
     align-items: center;
 }
 
-.header-settings-input {
+.settings-topbar-input {
     width: 84px;
     min-width: 84px;
     padding: 8px 10px;
     font-size: 1rem;
 }
 
-.header-settings-select {
+.settings-topbar-select {
     width: 210px;
     min-width: 210px;
     padding: 8px 10px;
@@ -550,10 +472,7 @@ body {
 .task-grid {
     flex-grow: 1;
     display: flex;
-    gap: 60px; 
-    grid-template-columns: 1fr 1fr;
-    column-gap: 60px;
-    row-gap: 10px;
+    gap: 60px;
     border-top: 2px solid var(--slate-100);
     margin-top: 10px;
 }
@@ -653,27 +572,27 @@ body {
     color: var(--primary-dark);
 }
 
-.presentation-view.dark-mode .btn-back {
+.presentation-view.dark-mode .btn--back {
     background: #1e293b;
     color: #e2e8f0;
 }
 
-.presentation-view.dark-mode .btn-export {
+.presentation-view.dark-mode .btn--export {
     background: #334155;
     color: #e2e8f0;
 }
 
-.presentation-view.dark-mode .btn-theme {
+.presentation-view.dark-mode .btn--theme {
     background: #e2e8f0;
     color: #0f172a;
 }
 
-.presentation-view.dark-mode .btn-toggle {
+.presentation-view.dark-mode .btn--toggle {
     background: #f8fafc;
     color: #0f172a;
 }
 
-.presentation-view.dark-mode .btn-primary {
+.presentation-view.dark-mode .btn--primary {
     background: var(--primary-dark);
     color: #052e16;
 }
@@ -746,13 +665,6 @@ body {
     gap: 20px;
 }
 
-.training-task-number {
-    font-size: 0.95rem;
-    color: var(--slate-500);
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
 .training-task-content {
     width: 100%;
     max-width: 100%;
@@ -812,7 +724,7 @@ body {
         width: 100%;
     }
 
-    .training-top-actions .btn-ui {
+    .training-top-actions .btn {
         flex: 1 1 180px;
         min-width: 0;
     }
@@ -1071,14 +983,6 @@ body {
 }
 
 @media (max-width: 960px) {
-    .settings-top-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .settings-grid-span-2 {
-        grid-column: auto;
-    }
-
     .toolbar-main-controls {
         width: 100%;
     }
@@ -1088,16 +992,16 @@ body {
         min-width: 0;
     }
 
-    .header-task-settings {
+    .settings-topbar-settings {
         width: 100%;
     }
 
-    .header-stack-label {
+    .settings-topbar-label {
         flex: 1 1 180px;
     }
 
-    .header-settings-input,
-    .header-settings-select {
+    .settings-topbar-input,
+    .settings-topbar-select {
         width: 100%;
         min-width: 0;
     }
@@ -1108,7 +1012,6 @@ body {
     }
 
     .worksheet-copy + .worksheet-copy {
-        border-left: none;
         padding-left: 0;
         padding-top: 12px;
     }

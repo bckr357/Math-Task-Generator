@@ -16,7 +16,7 @@ window.MTGStateModule = {
             Object.fromEntries(Object.keys(typeLabels).map(type => [type, 1]))
         );
         const taskCount = ref(10);
-        const taskArrangementMode = ref('fully-random');
+        const taskArrangementMode = ref('random');
         const gtNumber = ref(1);
         const mentalMathMode = ref(false);
 
