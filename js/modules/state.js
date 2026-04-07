@@ -18,10 +18,28 @@ window.MTGStateModule = {
         const taskCount = ref(10);
         const taskArrangementMode = ref('random');
         const gtNumber = ref(1);
+        const worksheetA5Pages = ref(2);
         const mentalMathMode = ref(false);
 
         const rowWiseFirstColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 0));
         const rowWiseSecondColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 1));
+        const worksheetTaskColumns = computed(() => {
+            if (worksheetA5Pages.value === 2) {
+                return {
+                    left: tasks.value.map((task, index) => ({ task, number: index + 1, key: `left-${index}` })),
+                    right: tasks.value.map((task, index) => ({ task, number: index + 1, key: `right-${index}` }))
+                };
+            }
+
+            const leftColumnSize = Math.ceil(tasks.value.length / 2);
+            const leftColumnTasks = tasks.value.slice(0, leftColumnSize);
+            const rightColumnTasks = tasks.value.slice(leftColumnSize);
+
+            return {
+                left: leftColumnTasks.map((task, index) => ({ task, number: index + 1, key: `left-${index}` })),
+                right: rightColumnTasks.map((task, index) => ({ task, number: index + 1, key: `right-${index}` }))
+            };
+        });
         const currentTrainingTask = computed(() => trainingHistory.value[currentTrainingIndex.value] ?? null);
         const hasGeneratedTasks = computed(() => tasks.value.length > 0);
         const hasSelectedTypes = computed(() => selectedTypes.value.length > 0);
@@ -47,9 +65,11 @@ window.MTGStateModule = {
             taskCount,
             taskArrangementMode,
             gtNumber,
+            worksheetA5Pages,
             mentalMathMode,
             rowWiseFirstColumnTasks,
             rowWiseSecondColumnTasks,
+            worksheetTaskColumns,
             currentTrainingTask,
             hasGeneratedTasks,
             hasSelectedTypes,

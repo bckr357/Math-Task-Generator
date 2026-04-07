@@ -145,8 +145,8 @@ function createTask(type, isMentalMode, grade = 5) {
 
 		case 'db_as': {
 			const allowNegativeDecimals = grade > 7;
-			v1 = allowNegativeDecimals ? trueDec(-20, 20) : trueDec(11, 20);
-			v2 = allowNegativeDecimals ? trueDec(-10, 10) : trueDec(0, 10);
+			v1 = allowNegativeDecimals ? trueDec(-20, 20) : trueDec(14, 30);
+			v2 = allowNegativeDecimals ? trueDec(-30, 30) : trueDec(0, 13);
 
 			if (Math.random() > 0.5) {
 				textDisplay = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`;

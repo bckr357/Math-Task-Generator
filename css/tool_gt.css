@@ -438,7 +438,7 @@ body {
 }
 
 .settings-topbar-select {
-    width: 110px;
+    width: 85px;
     padding: 4px;
     font-size: 0.95rem;
     text-align: left;
@@ -848,6 +848,17 @@ body {
     flex-direction: column;
 }
 
+.worksheet-list--columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.worksheet-column {
+    display: flex;
+    flex-direction: column;
+}
+
 .worksheet-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -863,8 +874,17 @@ body {
     align-items: start;
 }
 
-.worksheet-copy + .worksheet-copy {
+.worksheet-copy--empty .worksheet-num,
+.worksheet-copy--empty .worksheet-content {
+    visibility: hidden;
+}
+
+.worksheet-row > .worksheet-copy + .worksheet-copy {
     padding-left: 22px;
+}
+
+.worksheet-column .worksheet-copy {
+    padding: 10px 0;
 }
 
 .worksheet-num {
@@ -977,6 +997,11 @@ body {
         gap: 12px;
     }
 
+    .worksheet-list--columns {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
     .worksheet-copy + .worksheet-copy {
         padding-left: 0;
         padding-top: 12px;
@@ -1014,7 +1039,6 @@ body {
     html,
     body {
         width: 297mm;
-        height: 210mm;
         margin: 0;
         padding: 0;
         background: white;
@@ -1035,14 +1059,12 @@ body {
 
     .worksheet-view {
         width: 297mm;
-        min-height: 210mm;
         padding: 0;
         background: white;
     }
 
     .worksheet-sheet {
         width: 297mm;
-        min-height: 210mm;
         max-width: none;
         margin: 0;
         padding: 7mm 0 8mm;
@@ -1080,7 +1102,33 @@ body {
         align-items: start;
     }
 
-    .worksheet-copy + .worksheet-copy {
+    .worksheet-list--columns {
+        width: 297mm;
+        display: grid;
+        grid-template-columns: 148.5mm 148.5mm;
+        gap: 0;
+    }
+
+    .worksheet-column {
+        width: 148.5mm;
+    }
+
+    .worksheet-column .worksheet-copy {
+        width: 148.5mm;
+        grid-template-columns: 8mm 1fr;
+        gap: 3mm;
+        padding: 2.4mm 8mm 2.4mm 5mm;
+        box-sizing: border-box;
+        align-items: start;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .worksheet-column + .worksheet-column .worksheet-copy {
+        padding-left: 8mm;
+    }
+
+    .worksheet-row > .worksheet-copy + .worksheet-copy {
         margin-left: 0;
         padding-left: 8mm;
     }

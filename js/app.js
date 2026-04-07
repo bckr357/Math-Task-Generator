@@ -189,6 +189,15 @@ createApp({
             syncUrlWithView(view);
         }, { immediate: true });
 
+        watch(() => state.worksheetA5Pages.value, async () => {
+            if (state.currentView.value !== 'worksheet' || !state.hasGeneratedTasks.value) {
+                return;
+            }
+
+            await nextTick();
+            await typesetMathJax();
+        });
+
         const applyViewFromUrl = async () => {
             const urlView = getViewFromUrl();
 
