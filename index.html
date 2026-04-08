@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Mathe-Aufgaben-Generator</title>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script>
         window.MathJax = {
             tex: {
@@ -146,6 +146,9 @@
                 </div>
             </div>
             <div class="worksheet-toolbar-actions">
+                <button @click="toggleWorksheetLayoutMode" class="btn btn--export">
+                    {{ worksheetLayoutMode === 'presentation' ? 'Arbeitsblatt' : 'Präsentation' }}
+                </button>
                 <button @click="toggleWorksheetSolutions" class="btn btn--toggle">
                     {{ showWorksheetSolutions ? 'Aufgaben' : 'Lösungen' }}
                 </button>
@@ -170,67 +173,98 @@
             </div>
         </div>
 
-        <div v-else class="worksheet-sheet">
-            <template v-if="!showWorksheetSolutions">
-                <div class="worksheet-sheet-header">
-                    <div class="worksheet-header-copy">
-                        <span>Name:</span>
-                        <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
-                    </div>
-                    <div class="worksheet-header-copy">
-                        <span>Name:</span>
-                        <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
-                    </div>
-                </div>
-
-                <div class="worksheet-list worksheet-list--columns">
-                    <div class="worksheet-column">
-                        <div v-for="entry in worksheetTaskColumns.left" :key="entry.key" class="worksheet-copy">
-                            <div class="worksheet-num">{{ `${entry.number})` }}</div>
-                            <div class="worksheet-content">
-                                <div class="worksheet-math" v-html="entry.task.textPrint"></div>
-                            </div>
+        <div v-else :class="['worksheet-sheet', { 'worksheet-sheet--solutions': worksheetLayoutMode === 'presentation' }]">
+            <template v-if="worksheetLayoutMode === 'worksheet'">
+                <template v-if="!showWorksheetSolutions">
+                    <div class="worksheet-sheet-header">
+                        <div class="worksheet-header-copy">
+                            <span>Name:</span>
+                            <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
+                        </div>
+                        <div class="worksheet-header-copy">
+                            <span>Name:</span>
+                            <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
                         </div>
                     </div>
 
-                    <div class="worksheet-column">
-                        <div v-for="entry in worksheetTaskColumns.right" :key="entry.key" class="worksheet-copy">
-                            <div class="worksheet-num">{{ `${entry.number})` }}</div>
-                            <div class="worksheet-content">
-                                <div class="worksheet-math" v-html="entry.task.textPrint"></div>
+                    <div class="worksheet-list worksheet-list--columns">
+                        <div class="worksheet-column">
+                            <div v-for="entry in worksheetTaskColumns.left" :key="entry.key" class="worksheet-copy">
+                                <div class="worksheet-num">{{ `${entry.number})` }}</div>
+                                <div class="worksheet-content">
+                                    <div class="worksheet-math" v-html="entry.task.textPrint"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="worksheet-column">
+                            <div v-for="entry in worksheetTaskColumns.right" :key="entry.key" class="worksheet-copy">
+                                <div class="worksheet-num">{{ `${entry.number})` }}</div>
+                                <div class="worksheet-content">
+                                    <div class="worksheet-math" v-html="entry.task.textPrint"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </template>
+
+                <template v-else>
+                    <div class="worksheet-sheet-header">
+                        <div class="worksheet-header-copy">
+                            <span>Lösungen</span>
+                            <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
+                        </div>
+                        <div class="worksheet-header-copy">
+                            <span>Lösungen</span>
+                            <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
+                        </div>
+                    </div>
+
+                    <div class="worksheet-list worksheet-list--columns">
+                        <div class="worksheet-column">
+                            <div v-for="entry in worksheetTaskColumns.left" :key="'sol-left-'+entry.key" class="worksheet-copy">
+                                <div class="worksheet-num">{{ `${entry.number})` }}</div>
+                                <div class="worksheet-content">
+                                    <div class="worksheet-solution" v-html="entry.task.solution"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="worksheet-column">
+                            <div v-for="entry in worksheetTaskColumns.right" :key="'sol-right-'+entry.key" class="worksheet-copy">
+                                <div class="worksheet-num">{{ `${entry.number})` }}</div>
+                                <div class="worksheet-content">
+                                    <div class="worksheet-solution" v-html="entry.task.solution"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </template>
 
             <template v-else>
-                <div class="worksheet-sheet-header">
-                    <div class="worksheet-header-copy">
-                        <span>Lösungen</span>
-                        <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
-                    </div>
-                    <div class="worksheet-header-copy">
-                        <span>Lösungen</span>
-                        <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
-                    </div>
+                <div class="worksheet-solutions-header">
+                    <span>{{ showWorksheetSolutions ? 'Lösungen' : 'Aufgaben' }}</span>
+                    <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">GT {{ gtNumber }}</span>
                 </div>
 
-                <div class="worksheet-list worksheet-list--columns">
-                    <div class="worksheet-column">
-                        <div v-for="entry in worksheetTaskColumns.left" :key="'sol-left-'+entry.key" class="worksheet-copy">
-                            <div class="worksheet-num">{{ `${entry.number})` }}</div>
-                            <div class="worksheet-content">
-                                <div class="worksheet-solution" v-html="entry.task.solution"></div>
+                <div class="worksheet-solution-board task-grid">
+                    <div class="column-wrapper">
+                        <div v-for="(task, index) in rowWiseFirstColumnTasks" :key="'worksheet-presentation-col1-'+index" class="task-row">
+                            <div class="task-num">{{ (index * 2) + 1 }}</div>
+                            <div class="content">
+                                <div v-if="!showWorksheetSolutions" class="math-q" v-html="task.textDisplay"></div>
+                                <div v-else class="math-a" v-html="task.solution"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="worksheet-column">
-                        <div v-for="entry in worksheetTaskColumns.right" :key="'sol-right-'+entry.key" class="worksheet-copy">
-                            <div class="worksheet-num">{{ `${entry.number})` }}</div>
-                            <div class="worksheet-content">
-                                <div class="worksheet-solution" v-html="entry.task.solution"></div>
+                    <div class="column-wrapper">
+                        <div v-for="(task, index) in rowWiseSecondColumnTasks" :key="'worksheet-presentation-col2-'+index" class="task-row">
+                            <div class="task-num">{{ (index * 2) + 2 }}</div>
+                            <div class="content">
+                                <div v-if="!showWorksheetSolutions" class="math-q" v-html="task.textDisplay"></div>
+                                <div v-else class="math-a" v-html="task.solution"></div>
                             </div>
                         </div>
                     </div>

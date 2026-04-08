@@ -8,6 +8,7 @@ window.MTGStateModule = {
         const currentView = ref('home');
         const isSettingsSidebarOpen = ref(false);
         const showWorksheetSolutions = ref(false);
+        const worksheetLayoutMode = ref('worksheet');
         const showTrainingSolution = ref(false);
         const currentTrainingIndex = ref(0);
         const isDarkMode = ref(false);
@@ -58,6 +59,7 @@ window.MTGStateModule = {
             currentView,
             isSettingsSidebarOpen,
             showWorksheetSolutions,
+            worksheetLayoutMode,
             showTrainingSolution,
             currentTrainingIndex,
             isDarkMode,

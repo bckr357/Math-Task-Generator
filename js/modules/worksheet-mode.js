@@ -6,6 +6,14 @@ window.MTGWorksheetModeModule = {
             await typesetMathJax();
         };
 
+		const toggleWorksheetLayoutMode = async () => {
+			state.worksheetLayoutMode.value = state.worksheetLayoutMode.value === 'presentation'
+				? 'worksheet'
+				: 'presentation';
+			await nextTick();
+			await typesetMathJax();
+		};
+
         const printWorksheet = () => {
             window.print();
         };
@@ -270,11 +278,15 @@ window.MTGWorksheetModeModule = {
 			}
 
 			.worksheet-num {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				align-self: stretch;
 				font-size: 0.95rem;
 				font-weight: 400;
 				color: var(--slate-500);
-				text-align: right;
-				line-height: 1.6;
+				text-align: center;
+				line-height: 1;
 			}
 
 			.worksheet-content {
@@ -449,6 +461,13 @@ window.MTGWorksheetModeModule = {
 					padding: 0;
 					background: white;
 					overflow: visible;
+					font-family: 'Reddit Sans', sans-serif;
+					font-weight: 350;
+				}
+
+				mjx-container,
+				mjx-mtext {
+					font-weight: 350;
 				}
 
 				.no-print {
@@ -532,8 +551,13 @@ window.MTGWorksheetModeModule = {
 				}
 
 				.worksheet-num {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					align-self: stretch;
 					font-size: 0.78rem;
-					line-height: 1.45;
+					line-height: 1;
+					text-align: center;
 					color: #64748b;
 				}
 
@@ -575,8 +599,7 @@ window.MTGWorksheetModeModule = {
                         return cssText;
                     }
                 }
-            } catch (error) {
-                console.warn('Worksheet export CSS fallback used:', error);
+			} catch {
             }
 
             return getWorksheetExportFallbackStyles();
@@ -804,6 +827,7 @@ window.MTGWorksheetModeModule = {
 
         return {
             toggleWorksheetSolutions,
+			toggleWorksheetLayoutMode,
             printWorksheet,
             downloadWorksheetHTML,
             generateWorksheet,

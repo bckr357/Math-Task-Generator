@@ -136,6 +136,8 @@ function createTask(type, isMentalMode, grade = 5) {
 	let s = '';
 	let textDisplay = '', textPrint = '';
 
+	const blank = (cmWidth = 3) => `\\underline{\\hspace{${cmWidth}cm}}`;
+
 	// Beispiel für die Nutzung von isMentalMode:
 	// if (isMentalMode) { Z1 = rnd(2, 5); } else { Z1 = rnd(5, 20); }
 
@@ -145,8 +147,8 @@ function createTask(type, isMentalMode, grade = 5) {
 
 		case 'db_as': {
 			const allowNegativeDecimals = grade > 7;
-			v1 = allowNegativeDecimals ? trueDec(-20, 20) : trueDec(14, 30);
-			v2 = allowNegativeDecimals ? trueDec(-30, 30) : trueDec(0, 13);
+			v1 = allowNegativeDecimals ? trueDec(-15, 15) : trueDec(14, 30);
+			v2 = allowNegativeDecimals ? trueDec(-15, 15) : trueDec(0, 13);
 
 			if (Math.random() > 0.5) {
 				textDisplay = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`;
@@ -157,6 +159,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			}
 			break;
 		}
+
 		case 'db_md': {
 			const allowNegativeDecimals = grade > 7;
 			rd = Math.random();
@@ -183,23 +186,25 @@ function createTask(type, isMentalMode, grade = 5) {
 			}
 			break;
 		}
+
 		case 'z_as':
 			if (Math.random() > 0.5) {
 				do {
 					v1 = rnd(-20, 20);
-					v2 = rnd(-30, 30);
+					v2 = rnd(-20, 20);
 				} while (!(v1 < 0 || v2 < 0 || (v1 + v2) < 0));
 				textDisplay = `\\( ${v1} + ${fmt(v2)} =\\)`;
 				s = `\\( ${v1} + ${fmt(v2)} = ${v1 + v2} \\) `;
 			} else {
 				do {
 					v1 = rnd(-20, 20);
-					v2 = rnd(-30, 30);
+					v2 = rnd(-20, 20);
 				} while (!(v1 < 0 || v2 < 0 || (v1 - v2) < 0));
 				textDisplay = `\\( ${v1} - ${fmt(v2)} =\\)`;
 				s = `\\( ${v1} - ${fmt(v2)} = ${v1 - v2} \\)`;
 			}
 			break;
+		
 		case 'z_md':
 			if (Math.random() > 0.5) {
 				do {
@@ -215,15 +220,15 @@ function createTask(type, isMentalMode, grade = 5) {
 					v2 = rnd(-12, 12);
 				} while (v2 === 0 || !(res < 0 || v2 < 0 || (res * v2) < 0));
 				v1 = res * v2;
-				textDisplay = `\\( ${v1} : ${v2} = \\)`;
-				s = `\\( ${v1} : ${v2} = ${res} \\)`;
+				textDisplay = `\\( ${v1} : ${fmt(v2)} = \\)`;
+				s = `\\( ${v1} : ${fmt(v2)} = ${res} \\)`;
 			}
 			break;
 
 		case 'pow10': {
 			// Zehnerpotenzen: natürliche Zahl oder Dezimalbruch mit 10, 100 oder 1000
-			const powers = [10, 100, 1000];
-			const power = powers[rnd(0, 2)];
+			const powers = [10, 10, 100, 100, 1000];
+			const power = powers[randInt(0, 4)];
 			const isMult = Math.random() > 0.5;
 
 			// Operand: entweder natürliche Zahl oder Dezimalbruch (1-2 Stellen)
@@ -237,7 +242,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				if (isDec2) {
 					operand = rnd(10, 999) / 100; // 0,10 bis 9,99
 				} else {
-					operand = rnd(1, 99) / 10; // 0,1 bis 9,9
+					operand = rnd(2, 99) / 10; // 0,1 bis 9,9
 				}
 			} else {
 				// Natürliche Zahl
@@ -262,14 +267,14 @@ function createTask(type, isMentalMode, grade = 5) {
 			const operandStr = isDecimal ? comma(operand) : operand.toString();
 
 			// Aufgabe
-			textDisplay = `\\( ${operandStr} ${op} ${power} \\)`;
+			textDisplay = `\\( ${operandStr} ${op} ${power} =\\)`;
 
 			// Lösung mit Erklärung der Kommaverschiebung/Stellenwertverschiebung
 			const shiftCount = power === 10 ? 1 : power === 100 ? 2 : 3;
-			const shiftDirection = isMult ? 'nach rechts' : 'nach links';
-			const shiftDescription = `(Komma ${shiftCount} Stelle${shiftCount > 1 ? 'n' : ''} ${shiftDirection})`;
+			const shiftDirection = isMult ? '→' : '←';
+			const shiftDescription = `(Komma ${shiftCount} x ${shiftDirection})`;
 
-			s = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad ${shiftDescription}\\)`;
+			s = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad \\text{${shiftDescription}}\\)`;
 
 			break;
 		}
@@ -347,9 +352,9 @@ function createTask(type, isMentalMode, grade = 5) {
 						N1 = rnd(2, 9);
 						n = rnd(2, 9);
 					} else {
-						Z1 = rnd(6, 27);
-						N1 = rnd(6, 27);
-						n = rnd(3, 15);
+						Z1 = rnd(2, 13);
+						N1 = rnd(2, 13);
+						n = rnd(2, 13);
 					}
 				} while (getGcd(Z1, N1) > 1 || Z1 === N1);
 
@@ -435,12 +440,11 @@ function createTask(type, isMentalMode, grade = 5) {
 				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = \\]`;
 				s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${stepKehrwert}${midStep} = \\frac{${resZ}}{${resN}} \\]`;
 			}
-
 			break;
 		}
 
 		case 'frac_simplify': {
-			const factors = [3, 4, 5, 6, 7, 8, 9, 12, 14, 15, 18, 25];
+			const factors = isMentalMode ? [3, 4, 6, 8, 9, 12, 15, 20, 25] : [3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15, 18, 25];
 
 			const getGcd = mathUtils.getGcd;
 			const getPrimeFactors = mathUtils.getPrimeFactors;
@@ -493,7 +497,20 @@ function createTask(type, isMentalMode, grade = 5) {
 
 			// Erlaubte Nenner-Kombinationen (3 Nenner, LCM ≤ 60, kein Nenner doppelt)
 			// Wir ziehen per Zufall eine von mehreren vordefinierten Familien
-			const denominatorFamilies = [
+			const denominatorFamilies = isMentalMode ? [
+				[2, 3, 4],
+				[2, 3, 6],
+				[2, 4, 8],
+				[3, 4, 6],
+				[3, 4, 12],
+				[2, 5, 10],
+				[3, 5, 15],
+				[4, 5, 20],
+				[4, 6, 12],
+				[5, 10, 15],
+				[3, 7, 21],
+				[4, 8, 16],
+			] : [
 				[2, 3, 4],
 				[2, 3, 6],
 				[2, 4, 8],
@@ -519,38 +536,33 @@ function createTask(type, isMentalMode, grade = 5) {
 			const shuffled = [...denFamily].sort(() => Math.random() - 0.5);
 			const [d1, d2, d3] = shuffled;
 
-			// 20 % Chance: zwei Zähler sind bereits vor dem Erweitern gleich
-			const twinNumeratorCase = Math.random() < 0.20;
+			// 50 % Chance: alle drei Zähler sind bereits vor dem Erweitern gleich (1..9)
+			const tripleNumeratorCase = Math.random() < 0.50;
 
 			let f1, f2, f3;
 
-			if (twinNumeratorCase) {
-				// Wähle zufällig, welche zwei Brüche den gleichen Zähler bekommen
-				const pairs = [[0, 1], [0, 2], [1, 2]];
-				const pair = pairs[randInt(0, pairs.length - 1)];
-				const dens = [d1, d2, d3];
-				const denA = dens[pair[0]];
-				const denB = dens[pair[1]];
-
-				// Gemeinsamer Zähler muss zu beiden Nennern teilerfremd sein
-				const maxShared = Math.min(denA, denB) - 1;
+			if (tripleNumeratorCase) {
 				const sharedCandidates = [];
-				for (let n = 1; n <= maxShared; n++) {
-					if (getGcd(n, denA) === 1 && getGcd(n, denB) === 1) {
-						sharedCandidates.push(n);
+				for (let n = 1; n <= 9; n++) {
+					const validDens = [];
+					for (let d = 1; d <= 20; d++) {
+						if (d % n !== 0) {
+							validDens.push(d);
+						}
+					}
+					if (validDens.length >= 3) {
+						sharedCandidates.push({ n, validDens });
 					}
 				}
 
 				if (sharedCandidates.length > 0) {
-					const sharedNum = sharedCandidates[randInt(0, sharedCandidates.length - 1)];
-					const fr = [null, null, null];
-					fr[pair[0]] = [sharedNum, denA];
-					fr[pair[1]] = [sharedNum, denB];
+					const chosen = sharedCandidates[randInt(0, sharedCandidates.length - 1)];
+					const shuffledDens = [...chosen.validDens].sort(() => Math.random() - 0.5);
+					const [sd1, sd2, sd3] = shuffledDens;
 
-					const thirdIdx = [0, 1, 2].find(i => i !== pair[0] && i !== pair[1]);
-					fr[thirdIdx] = makeFracWithDen(dens[thirdIdx], [sharedNum]);
-
-					[f1, f2, f3] = fr;
+					f1 = [chosen.n, sd1];
+					f2 = [chosen.n, sd2];
+					f3 = [chosen.n, sd3];
 				} else {
 					// Fallback: normale zufällige Brüche
 					f1 = makeFracWithDen(d1);
@@ -600,18 +612,18 @@ function createTask(type, isMentalMode, grade = 5) {
 			const displayStr = displayOrder.map(f => fmtFrac(f.orig)).join(' \\quad ');
 
 			// Erweiterungsschritt für jeden Bruch
-			const extStep = fracs.map(f => {
+			const extStep = displayOrder.map(f => {
 				const factor = hn / f.orig[1];
 				if (factor === 1) return `\\dfrac{${f.orig[0]}}{${f.orig[1]}}`;
-				return `\\dfrac{${f.orig[0]} \\cdot ${factor}}{${f.orig[1]} \\cdot ${factor}} = \\dfrac{${f.ext}}{${hn}}`;
+				return `\\dfrac{${f.orig[0]}}{${f.orig[1]}} \\overset{${factor}}{=} \\dfrac{${f.ext}}{${hn}}`;
 			}).join(' \\qquad ');
 
 			// Sortierte Lösung
 			const sortedStr = sortedAsc.map(f => fmtFrac(f.orig)).join(' < ');
 
-			textDisplay = `Sortiere der Größe nach (von klein nach groß):<br>\\[ ${displayStr} \\]`;
-			s = `\\[ \\text{HN} = ${hn}: \\quad ${extStep} \\]` +
-				`\\[ ${sortedStr} \\]`;
+			textDisplay = `\\[\\text{Ordne von klein nach groß: } \\quad ${displayStr} \\]`;
+			tripleNumeratorCase ? 	s = `\\[ ${sortedStr} \\]` :
+									s = `\\[ ${sortedStr} \\quad \\left(${extStep}\\right) \\]`;
 			break;
 		}
 
@@ -624,7 +636,7 @@ function createTask(type, isMentalMode, grade = 5) {
 
 			// Erlaubte Nenner (garantieren saubere Zehnerpotenzen ohne Periode)
 
-			let allowedDenoms = isMentalMode ? [2, 4, 5, 10, 20, 25, 50] : [2, 4, 5, 20, 25, 50];
+			let allowedDenoms = [2, 4, 5, 20, 25, 50];
 
 			// Alle 10 expliziten Umwandlungspfade
 			const paths = [
@@ -666,7 +678,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					let mult = p10 / n;
 					let decStr = Number((z / n).toFixed(4)).toString().replace('.', ',');
 
-					textDisplay = `\\[ \\frac{${z}}{${n}} \\text{ als Dezimalbruch?}\\]`;
+					textDisplay = `Als Dezimalbruch: \\( \\dfrac{${z}}{${n}} = \\)`;
 
 					if (n === p10) {
 						s = `\\[ \\frac{${z}}{${n}} = ${decStr} \\]`;
@@ -709,7 +721,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					let z_p10 = z * mult;
 
 					// 3. Aufgabenstellung
-					textDisplay = `\\( ${decStr} \\) als max. gekürzter gem. Bruch?`;
+					textDisplay = ` Als max. gekürzter gem. Bruch: \\( ${decStr} = \\)`;
 
 					// 4. Lösungsweg (Rückwärts: Dezimal -> Zehnerbruch -> Kürzen -> Ergebnis)
 					if (n === p10) {
@@ -760,16 +772,16 @@ function createTask(type, isMentalMode, grade = 5) {
 					let mult = p10 / n; // Erweiterungsfaktor
 
 					// Da wir auf 100 erweitern, ist der neue Zähler direkt die Prozentzahl
-					let percStr = (z * mult).toString() + '\\,\\%';
+					let percStr = (z * mult).toString() + '\\,\\text{%}';
 
-					textDisplay = `\\[ \\frac{${z}}{${n}} \\text{ in Prozent?}\\]`;
+					textDisplay = `In Prozent: \\( \\dfrac{${z}}{${n}} = \\)`;
 					s = `\\[ \\frac{${z}}{${n}} \\overset{${mult}}{=} \\frac{${z * mult}}{100} = ${percStr} \\]`;
 
 					break;
 				}
 				case 'perc_to_frac': {
 					// 1. Spezialfälle: 100% und 200% (Wahrscheinlichkeit hier auf 10% = 0.1 eingestellt)
-					const probSpecial = 0.1;
+					const probSpecial = 0.3; // 30% Chance, in die Spezialfall-Logik zu gehen (kann angepasst werden)
 
 					if (Math.random() < probSpecial) {
 						// Mit 50/50 Chance entweder 100% oder 200% wählen
@@ -777,8 +789,8 @@ function createTask(type, isMentalMode, grade = 5) {
 						let percVal = is200 ? 200 : 100;
 						let resultVal = is200 ? 2 : 1; // Das gekürzte Ergebnis als ganze Zahl
 
-						textDisplay = `\\( ${percVal}\\,\\% \\) als max. gekürzter gem. Bruch?`;
-						s = `\\[ ${percVal}\\,\\% = \\frac{${percVal}}{100} = ${resultVal} \\]`;
+						textDisplay = ` Als max. gekürzter gem. Bruch: \\( ${percVal}\\,\\text{%} = \\)`;
+						s = `\\[ ${percVal}\\,\\text{%} = \\frac{${percVal}}{100} = ${resultVal} \\]`;
 
 						// Hinweis: Wenn dein System zwingend eine Bruch-Schreibweise als Lösung erwartet, 
 						// müsstest du resultVal auf "2/1" bzw. "1/1" ändern.
@@ -823,10 +835,10 @@ function createTask(type, isMentalMode, grade = 5) {
 
 					// Die Prozentzahl berechnet sich aus Zähler mal Erweiterungsfaktor
 					let percVal = z * mult;
-					let percStr = percVal.toString() + '\\,\\%';
+					let percStr = percVal.toString() + '\\,\\text{%}';
 
 					// 4. Strings für Aufgabe und Lösung bauen
-					textDisplay = `\\( ${percStr} \\) als max. gekürzter gem. Bruch?`;
+					textDisplay = `Als max. gekürzter gem. Bruch: \\( ${percStr} = \\)`;
 
 					if (n === p10) {
 						s = `\\[ ${percStr} = \\frac{${z}}{100} \\]`;
@@ -842,7 +854,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				// ---------------------------------------------------------
 				case 'frac_to_mixed': {
 					let n = allowedDenoms[Math.floor(Math.random() * allowedDenoms.length)];
-					let w = Math.floor(Math.random() * 3) + 1;
+					let w = Math.floor(Math.random() * 3) + 2;
 					let rem = Math.floor(Math.random() * (n - 1)) + 1;
 					let z = w * n + rem; // Garantiert unechter Bruch (>1)
 					let g = getGcd(z, n); z /= g; n /= g;
@@ -850,13 +862,13 @@ function createTask(type, isMentalMode, grade = 5) {
 					let w_simp = Math.floor(z / n);
 					let rem_simp = z % n;
 
-					textDisplay = `\\[ \\frac{${z}}{${n}} \\text{ in gemischter Schreibweise?}\\]`;
-					s = `\\[ \\frac{${z}}{${n}} = ${w_simp} \\frac{${rem_simp}}{${n}} \\]`;
+					textDisplay = `In gemischter Schreibweise: \\( \\dfrac{${z}}{${n}} = \\)`;
+					s = `\\[ \\frac{${z}}{${n}} = \\frac{${w_simp * n}}{${n}} + \\frac{${rem_simp}}{${n}} = ${w_simp} \\frac{${rem_simp}}{${n}} \\]`;
 					break;
 				}
 				case 'mixed_to_frac': {
 					let n = allowedDenoms[Math.floor(Math.random() * allowedDenoms.length)];
-					let w = Math.floor(Math.random() * 3) + 1;
+					let w = Math.floor(Math.random() * 3) + 2;
 					let rem = Math.floor(Math.random() * (n - 1)) + 1;
 					let z = w * n + rem;
 					let g = getGcd(z, n); z /= g; n /= g;
@@ -864,8 +876,8 @@ function createTask(type, isMentalMode, grade = 5) {
 					let w_simp = Math.floor(z / n);
 					let rem_simp = z % n;
 
-					textDisplay = `\\[ ${w_simp} \\frac{${rem_simp}}{${n}} \\text{ als gemeiner Bruch?}\\]`;
-					s = `\\[ ${w_simp} \\frac{${rem_simp}}{${n}} = \\frac{${w_simp} \\cdot ${n} + ${rem_simp}}{${n}} = \\frac{${z}}{${n}} \\]`;
+					textDisplay = `Als gemeiner Bruch: \\( ${w_simp} \\dfrac{${rem_simp}}{${n}} = \\)`;
+					s = `\\[ ${w_simp} \\frac{${rem_simp}}{${n}} = \\frac{${w_simp * n}}{${n}} + \\frac{${rem_simp}}{${n}} = \\frac{${z}}{${n}} \\]`;
 					break;
 				}
 
@@ -875,24 +887,26 @@ function createTask(type, isMentalMode, grade = 5) {
 				case 'dec_to_perc': {
 					let p = (Math.floor(Math.random() * 400) + 1) / 2; // Schritte von 0,5%
 					let decStr = Number((p / 100).toFixed(4)).toString().replace('.', ',');
-					let percStr = p.toString().replace('.', ',') + '\\,\\%';
+					let percStr = p.toString().replace('.', ',') + '\\,\\text{%}';
 
-					textDisplay = `\\( ${decStr} \\) in Prozent?`;
+					textDisplay = ` In Prozent: \\( ${decStr} = \\)`;
 					s = `\\( ${decStr} = ${percStr} \\)`;
 					break;
 				}
 				case 'perc_to_dec': {
 					let p = (Math.floor(Math.random() * 400) + 1) / 2;
 					let decStr = Number((p / 100).toFixed(4)).toString().replace('.', ',');
-					let percStr = p.toString().replace('.', ',') + '\\,\\%';
+					let percStr = p.toString().replace('.', ',') + '\\,\\text{%}';
 
-					textDisplay = `\\( ${percStr} \\) als Dezimalbruch?`;
+					textDisplay = `Als Dezimalbruch: \\( ${percStr} = \\)`;
 					s = `\\( ${percStr} = ${decStr} \\)`;
 					break;
 				}
 			}
 			break;
 		}
+
+// HIER
 
 		case 'percent':
 			let p, pVal;
@@ -901,13 +915,13 @@ function createTask(type, isMentalMode, grade = 5) {
 			if (rd > 0.67) {
 				pVal = rnd(2, 11) * 100;
 				p = [3, 4, 5, 6, 7, 8, 9, 11, 12, 20, 25, 30, 35, 40, 60, 70, 80, 90][randInt(0, 17)];
-				textDisplay = `\\( ${p} \\% \\text{ von } ${pVal} \\text{ ${einheit} sind ___}\\)`;
-				s = `\\( ${p} \\% \\text{ von } ${pVal} \\text{ ${einheit}} \\text{ sind } ${(pVal / 100 * p)} \\text{ ${einheit}}\\)`;
+				textDisplay = `${p} % von ${pVal} ${einheit} sind \\(${blank(3)}\\)`;
+				s = `\\( ${p} \\,\\text{%} \\text{ von } ${pVal} \\text{ ${einheit}} \\text{ sind } ${(pVal / 100 * p)} \\text{ ${einheit}}\\)`;
 			} else if (rd > 0.33) {
 				p = [20, 25, 30, 40, 50, 60, 70, 80, 90][randInt(0, 8)];
 				pVal = rnd(2, 9) * p;
-				textDisplay = `\\( ${p} \\% \\text{ sind } ${pVal} \\text{ ${einheit} von ___}\\)`;
-				s = `\\( ${p} \\% \\text{ sind } ${pVal} \\text{ ${einheit} von } ${pVal / p * 100} \\text{ ${einheit}}\\)`;
+				textDisplay = `${p} % sind ${pVal} ${einheit} von ${blank(3)}`;
+				s = `\\( ${p} \\,\\text{%} \\text{ sind } ${pVal} \\text{ ${einheit} von } ${pVal / p * 100} \\text{ ${einheit}}\\)`;
 			} else {
 				// 1. Wähle einen "schönen" Prozentsatz p (z.B. 5, 10, 20, 25, 50...)
 				const p_list = isMentalMode ? [2, 3, 5, 10, 20, 25, 50, 75, 80, 90] : [2, 3, 5, 10, 15, 20, 25, 40, 50, 75, 80, 90, 95];
@@ -923,30 +937,36 @@ function createTask(type, isMentalMode, grade = 5) {
 				const G = (W * 100) / p;
 
 				// Aufgabe: W und G sind gegeben, p ist gesucht
-				textDisplay = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind ___ } \\% \\)`;
+				textDisplay = ` ${comma(W)} ${einheit} von ${comma(G)} ${einheit} sind \\(${blank(2)}\\) % `;
 
 				// Lösung: Zeigt den Rechenweg oder das Ergebnis
-				s = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind } ${p} \\, \\% \\)`;
+				s = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind } ${p} \\, \\text{%} \\)`;
 			}
 			break;
 
 		case 'pv': {
 			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
-			let p = [3, 4, 5, 6, 7, 10, 20, 25, 50][randInt(0, 8)];
+			let p = [3, 4, 5, 6, 7, 10, 20, 25, 50][randInt(0, einheit.length - 1)];
 			let pVal = rnd(2, 11) * 100;
 			rd = Math.random();
-			if (rd > 0.75) {
-				textDisplay = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ erhöht sind ___}\\)`;
-				s = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ erhöht sind } ${pVal + (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
-			} else if (rd > 0.5) {
-				textDisplay = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ reduziert sind ___}\\)`;
-				s = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\% \\text{ reduziert sind } ${pVal - (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
-			} else if (rd > 0.25) {
-				textDisplay = `\\( ${pVal} \\text{ ${einheit} auf } ${100 + p} \\% \\text{ erhöht sind ___}\\)`;
-				s = `\\( ${pVal} \\text{ ${einheit} auf } ${100 + p} \\% \\text{ erhöht sind } ${pVal + (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
+			if (rd > 0.8) {
+				textDisplay = `${pVal} ${einheit} um ${p} % erhöht sind \\(${blank(3)}\\)`;
+				s = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\,\\text{%} \\text{ erhöht sind } ${pVal + (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
+			} else if (rd > 0.6) {
+				textDisplay = `${pVal} ${einheit} um ${p} % reduziert sind \\(${blank(3)}\\)`;
+				s = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\,\\text{%} \\text{ reduziert sind } ${pVal - (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
+			} else if (rd > 0.4) {
+				textDisplay = `${pVal} ${einheit} auf ${100 + p} % erhöht sind \\(${blank(3)}\\)`;
+				s = `\\( ${pVal} \\text{ ${einheit} auf } ${100 + p} \\,\\text{%} \\text{ erhöht sind } ${pVal + (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
+			} else if (rd > 0.2) {
+				textDisplay = `${pVal}  ${einheit} auf ${100 - p} % reduziert sind \\(${blank(3)}\\)`;
+				s = `\\( ${pVal} \\text{ ${einheit} auf } ${100 - p} \\,\\text{%} \\text{ reduziert sind } ${pVal - (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
 			} else {
-				textDisplay = `\\( ${pVal} \\text{ ${einheit} auf } ${100 - p} \\% \\text{ reduziert sind ___}\\)`;
-				s = `\\( ${pVal} \\text{ ${einheit} auf } ${100 - p} \\% \\text{ reduziert sind } ${pVal - (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
+				// Rabatt-Fall: Ein Artikel kostet normalerweise pVal, mit p% Rabatt kostet er ___
+				const originalPrice = pVal;
+				const discountedPrice = originalPrice - (originalPrice / 100 * p);
+				textDisplay = `${p} % Rabatt auf ${originalPrice} €. Neuer Preis: \\(${blank(3)}\\)`;
+				s = `\\( ${originalPrice} \\cdot \\bigl(1 - \\tfrac{${p}}{100}\\bigr) = ${discountedPrice}\\,\\text{${einheit}} \\)`;
 			}
 			break;
 		}
@@ -1789,7 +1809,7 @@ function createTask(type, isMentalMode, grade = 5) {
 
 				taskStr = `${sz.txt} ${gesamt} ${sz.einheit} ${treffer} ${sz.e}. Relative Häufigkeit?`;
 				let prozent = (treffer / gesamt) * 100;
-				resStr = `h = \\frac{${treffer}}{${gesamt}} = ${prozent.toFixed(0).replace('.', ',')}\\%`;
+				resStr = `h = \\frac{${treffer}}{${gesamt}} = ${prozent.toFixed(0).replace('.', ',')}\\text{%}`;
 
 			} else if (mode === 2) {
 				// --- TYP: 12-SEITIGER WÜRFEL (D12) ---

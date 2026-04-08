@@ -121,7 +121,8 @@ window.MTGPresentationModeModule = {
 
 					@media print {
 						.no-print { display: none !important; }
-						body { padding: 0; margin: 0; }
+						body { padding: 0; margin: 0; font-family: 'Reddit Sans', sans-serif; font-weight: 350; }
+						mjx-container, mjx-mtext { font-weight: 350; }
 						.grid { gap: 30px; }
 						@page { margin: 1.5cm 1cm; }
 					}

@@ -904,11 +904,15 @@ mjx-mtext {
 }
 
 .worksheet-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
     font-size: 11pt;
     font-weight: 400;
     color: var(--slate-500);
-    text-align: right;
-    line-height: 1.6;
+    text-align: center;
+    line-height: 1;
 }
 
 .worksheet-content {
@@ -995,9 +999,11 @@ mjx-mtext {
     padding-left: 16px;
 }
 
+.worksheet-view .worksheet-solution-board .math-q,
 .worksheet-view .worksheet-solution-board .math-a {
-    font-size: inherit;
-    line-height: inherit;
+    font-size: 2.5rem;
+    font-weight: 400;
+    line-height: 1.25;
 }
 
 .worksheet-view .worksheet-solution-board mjx-container[jax="CHTML"][display="true"] {
@@ -1058,8 +1064,9 @@ mjx-mtext {
         width: 62px;
     }
 
+    .worksheet-view .worksheet-solution-board .math-q,
     .worksheet-view .worksheet-solution-board .math-a {
-        font-size: inherit;
+        font-size: 2.25rem;
     }
 
     .mode-grid {
@@ -1177,8 +1184,13 @@ mjx-mtext {
     }
 
     .worksheet-num {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
         font-size: 9pt;
-        line-height: 1.45;
+        line-height: 1;
+        text-align: center;
         color: #64748b;
     }
 

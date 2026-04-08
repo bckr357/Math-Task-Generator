@@ -247,6 +247,7 @@ createApp({
             exportHTML: presentationMode.exportHTML,
             generateWorksheet: worksheetMode.generateWorksheet,
             toggleWorksheetSolutions: worksheetMode.toggleWorksheetSolutions,
+            toggleWorksheetLayoutMode: worksheetMode.toggleWorksheetLayoutMode,
             printWorksheet: worksheetMode.printWorksheet,
             exportWorksheetJSON: worksheetMode.exportWorksheetJSON,
             downloadWorksheetHTML: worksheetMode.downloadWorksheetHTML,
