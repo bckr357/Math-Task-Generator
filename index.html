@@ -2,20 +2,25 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Mathe-Starter 2026 - Final Fix</title>
+    <title>Mathe-Aufgaben-Generator</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['\\(', '\\)']] },
-            svg: { fontCache: 'global' },
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                packages: {'[-]': ['textmacros']}
+            },
             chtml: {
                 mtextInheritFont: true,
                 matchFontHeight: false,
                 scale: 1
+            }, 
+            output: {
+                font: 'mathjax-termes'
             }
         };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

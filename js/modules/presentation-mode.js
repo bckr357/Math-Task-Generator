@@ -34,13 +34,29 @@ window.MTGPresentationModeModule = {
 			<head>
 				<meta charset="UTF-8">
 				<title>Mathe_Starter_Export</title>
+				<link rel="preconnect" href="https://fonts.googleapis.com">
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+				<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,300..900;1,300..900&display=swap">
 				<script>
-					window.MathJax = { tex: { inlineMath: [['\\\\(', '\\\\)']] } };
+					window.MathJax = {
+						tex: {
+							inlineMath: [['\\\\(', '\\\\)']],
+							packages: {'[-]': ['textmacros']}
+						},
+						chtml: {
+							mtextInheritFont: true,
+							matchFontHeight: false,
+							scale: 1
+						},
+						output: {
+							font: 'mathjax-termes'
+						}
+					};
 				<\/script>
-				<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async><\/script>
+				<script src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js" defer><\/script>
 				<style>
 					body {
-						font-family: sans-serif;
+						font-family: 'Reddit Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 						padding: 30px;
 						margin: 0;
 						color: #1e293b;

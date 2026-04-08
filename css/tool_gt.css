@@ -939,8 +939,12 @@ mjx-mtext {
     line-height: inherit !important;
 }
 
+.worksheet-content mjx-container mjx-math {
+    font-size: 13pt !important;
+}
+
 .worksheet-content mjx-mtext {
-    font-size: inherit !important;
+    font-size: var(--worksheet-task-font-size) !important;
 }
 
 .worksheet-content mjx-container[jax="CHTML"][display="true"] {
@@ -1076,6 +1080,12 @@ mjx-mtext {
         padding: 0;
         background: white;
         overflow: visible;
+        font-weight: 350;
+    }
+
+    mjx-container,
+    mjx-mtext {
+        font-weight: 350;
     }
 
     #app {
@@ -1182,8 +1192,12 @@ mjx-mtext {
         font-size: 13pt !important;
     }
 
+    .worksheet-content mjx-container mjx-math {
+        font-size: 13pt !important;
+    }
+
     .worksheet-content mjx-mtext {
-        font-size: inherit !important;
+        font-size: var(--worksheet-task-font-size-print) !important;
     }
 
     .worksheet-view mjx-container[jax="CHTML"][display="true"] {

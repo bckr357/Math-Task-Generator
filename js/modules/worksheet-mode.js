@@ -49,18 +49,50 @@ window.MTGWorksheetModeModule = {
 
 		const buildWorksheetNormalSolutionRowsHTML = () => buildWorksheetColumnMarkup(task => `<div class="worksheet-solution">${task.solution}</div>`);
 
-        const getWorksheetSolutionColumns = () => state.tasks.value.reduce((columns, task, index) => {
-            const item = { task, index };
-            if (index % 2 === 0) {
-                columns.odd.push(item);
-            } else {
-                columns.even.push(item);
-            }
-            return columns;
-        }, { odd: [], even: [] });
+		const getWorksheetPresentationColumns = () => state.tasks.value.reduce((columns, task, index) => {
+			const item = { task, index };
+			if (index % 2 === 0) {
+				columns.odd.push(item);
+			} else {
+				columns.even.push(item);
+			}
+			return columns;
+		}, { odd: [], even: [] });
+
+		const buildWorksheetPresentationTasksHTML = () => {
+			const { odd, even } = getWorksheetPresentationColumns();
+
+			return `
+					<div class="worksheet-solutions-header">
+						<span>Aufgaben</span>
+						<span class="worksheet-header-gt">GT ${state.gtNumber.value}</span>
+					</div>
+
+					<div class="worksheet-solution-board task-grid">
+						<div class="column-wrapper">
+							${odd.map(({ task, index }) => `
+								<div class="task-row">
+									<div class="task-num">${index + 1}</div>
+									<div class="content">
+										<div class="math-q">${task.textDisplay ?? ''}</div>
+									</div>
+								</div>`).join('')}
+						</div>
+
+						<div class="column-wrapper">
+							${even.map(({ task, index }) => `
+								<div class="task-row">
+									<div class="task-num">${index + 1}</div>
+									<div class="content">
+										<div class="math-q">${task.textDisplay ?? ''}</div>
+									</div>
+								</div>`).join('')}
+						</div>
+					</div>`;
+		};
 
         const buildWorksheetPresentationSolutionsHTML = () => {
-            const { odd, even } = getWorksheetSolutionColumns();
+			const { odd, even } = getWorksheetPresentationColumns();
 
             return `
 					<div class="worksheet-solutions-header">
@@ -106,7 +138,7 @@ window.MTGWorksheetModeModule = {
 				padding: 0;
 				background: white;
 				color: var(--slate-800);
-				font-family: system-ui, -apple-system, sans-serif;
+				font-family: 'Reddit Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 			}
 
 			.btn {
@@ -247,17 +279,32 @@ window.MTGWorksheetModeModule = {
 
 			.worksheet-content {
 				min-width: 0;
+				font-size: 12pt;
+				line-height: 1.35;
 			}
 
 			.worksheet-math,
 			.worksheet-solution {
-				font-size: 1.25rem;
-				line-height: 1.35;
+				font-size: inherit;
+				line-height: inherit;
 				word-wrap: break-word;
 			}
 
 			.worksheet-solution {
 				color: var(--primary);
+			}
+
+			.worksheet-content mjx-container {
+				font-size: 13pt !important;
+				line-height: inherit !important;
+			}
+
+			.worksheet-content mjx-container mjx-math {
+				font-size: 13pt !important;
+			}
+
+			.worksheet-content mjx-mtext {
+				font-size: 12pt !important;
 			}
 
 			.worksheet-content p,
@@ -289,7 +336,7 @@ window.MTGWorksheetModeModule = {
 			.task-num {
 				font-size: 2.35rem;
 				font-weight: 900;
-				color: var(--slate-300);
+				color: var(--slate-500);
 				width: 72px;
 				text-align: center;
 				flex-shrink: 0;
@@ -306,10 +353,17 @@ window.MTGWorksheetModeModule = {
 			}
 
 			.math-a {
-				font-size: 2.9rem;
+				font-size: 2.5rem;
 				font-weight: 400;
 				line-height: 1.25;
 				color: var(--primary);
+			}
+
+			.math-q {
+				font-size: 2.5rem;
+				font-weight: 400;
+				line-height: 1.25;
+				color: var(--slate-800);
 			}
 
 			.worksheet-solutions-header {
@@ -339,7 +393,7 @@ window.MTGWorksheetModeModule = {
 
 			.worksheet-view mjx-container[jax="CHTML"][display="true"] {
 				margin: 6px 0 0 0 !important;
-				font-size: 100% !important;
+				text-align: left !important;
 			}
 
 			@media (max-width: 960px) {
@@ -374,6 +428,10 @@ window.MTGWorksheetModeModule = {
 				}
 
 				.math-a {
+					font-size: 2.25rem;
+				}
+
+				.math-q {
 					font-size: 2.25rem;
 				}
 			}
@@ -490,7 +548,15 @@ window.MTGWorksheetModeModule = {
 				}
 
 				.worksheet-content mjx-container {
-					font-size: 92% !important;
+					font-size: 13pt !important;
+				}
+
+				.worksheet-content mjx-container mjx-math {
+					font-size: 13pt !important;
+				}
+
+				.worksheet-content mjx-mtext {
+					font-size: 0.92rem !important;
 				}
 
 				.worksheet-view mjx-container[jax="CHTML"][display="true"] {
@@ -531,13 +597,29 @@ window.MTGWorksheetModeModule = {
 			<head>
 				<meta charset="UTF-8">
 				<title>Arbeitsblatt</title>
+				<link rel="preconnect" href="https://fonts.googleapis.com">
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+				<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,300..900;1,300..900&display=swap">
 				<script>
 					window.MathJax = {
-						tex: { inlineMath: [['\\\\(', '\\\\)']] },
-						svg: { fontCache: 'global' }
+						tex: {
+							inlineMath: [['\\\\(', '\\\\)']],
+							packages: {'[-]': ['textmacros']}
+						},
+						startup: {
+							typeset: false
+						},
+						chtml: {
+							mtextInheritFont: true,
+							matchFontHeight: false,
+							scale: 1
+						},
+						output: {
+							font: 'mathjax-termes'
+						}
 					};
 				<\/script>
-				<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async><\/script>
+				<script src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js" defer><\/script>
 				<style>${inlineStyles}</style>
 			</head>
 			<body>
@@ -545,7 +627,7 @@ window.MTGWorksheetModeModule = {
 					<div class="worksheet-toolbar no-print">
 						<div class="worksheet-toolbar-actions">
 							<button class="btn btn--toggle" onclick="toggleWorksheetSolutions()" id="toggleBtn">${toggleLabel}</button>
-							<button class="btn btn--export" onclick="togglePresentationSolutions()" id="presentBtn">Lösungen präsentieren</button>
+							<button class="btn btn--export" onclick="toggleLayoutMode()" id="layoutBtn">Präsentation anzeigen</button>
 							<button class="btn btn--export" onclick="exportWorksheetJSON()">JSON Export</button>
 							<button class="btn btn--primary" onclick="window.print()">Drucken</button>
 						</div>
@@ -563,6 +645,7 @@ window.MTGWorksheetModeModule = {
 							</div>
 						</div>
 						<div class="worksheet-list" id="worksheetTaskList" style="display: ${taskSectionDisplay};">${buildWorksheetTaskRowsHTML()}</div>
+						<div id="worksheetPresentationTasks" style="display: none;">${buildWorksheetPresentationTasksHTML()}</div>
 						<div id="worksheetNormalSolutions" style="display: ${normalSolutionsDisplay};">
 							<div class="worksheet-solutions-header">
 								<span>Lösungen</span>
@@ -577,28 +660,76 @@ window.MTGWorksheetModeModule = {
 				<script>
 					const worksheetData = ${worksheetData};
 					let showSolutions = ${state.showWorksheetSolutions.value};
-					let solutionViewMode = 'normal';
+					let layoutMode = 'worksheet';
 
-					function renderWorksheetLayout() {
+					async function ensureMathJaxReady(timeoutMs = 5000) {
+						const deadline = Date.now() + timeoutMs;
+
+						while (Date.now() < deadline) {
+							if (window.MathJax?.startup?.promise) {
+								try {
+									await window.MathJax.startup.promise;
+								} catch (error) {
+									console.warn('MathJax startup failed in export:', error);
+								}
+								return !!window.MathJax?.typesetPromise;
+							}
+
+							await new Promise(resolve => setTimeout(resolve, 50));
+						}
+
+						return !!window.MathJax?.typesetPromise;
+					}
+
+					function getVisibleTypesetTargets(taskList, presentationTasks, normalSolutions, presentationSolutions) {
+						const candidates = [taskList, presentationTasks, normalSolutions, presentationSolutions];
+						return candidates.filter(section => {
+							if (!section) return false;
+							if (section.style.display === 'none') return false;
+							return true;
+						});
+					}
+
+					async function typesetVisibleSections(taskList, presentationTasks, normalSolutions, presentationSolutions) {
+						const mathJaxReady = await ensureMathJaxReady();
+						if (!mathJaxReady) return;
+
+						const targets = getVisibleTypesetTargets(taskList, presentationTasks, normalSolutions, presentationSolutions);
+						if (!targets.length) return;
+
+						if (window.MathJax.typesetClear) {
+							window.MathJax.typesetClear(targets);
+						}
+						await window.MathJax.typesetPromise(targets);
+					}
+
+					async function renderWorksheetLayout() {
 						const taskHeader = document.getElementById('worksheetTaskHeader');
 						const taskList = document.getElementById('worksheetTaskList');
+						const presentationTasks = document.getElementById('worksheetPresentationTasks');
 						const normalSolutions = document.getElementById('worksheetNormalSolutions');
 						const presentationSolutions = document.getElementById('worksheetPresentationSolutions');
 						const worksheetSheet = document.getElementById('worksheetSheet');
 						const toggleButton = document.getElementById('toggleBtn');
-						const presentButton = document.getElementById('presentBtn');
+						const layoutButton = document.getElementById('layoutBtn');
 
 						if (!showSolutions) {
-							taskHeader.style.display = 'grid';
-							taskList.style.display = 'grid';
+							taskHeader.style.display = layoutMode === 'worksheet' ? 'grid' : 'none';
+							taskList.style.display = layoutMode === 'worksheet' ? 'block' : 'none';
+							presentationTasks.style.display = layoutMode === 'presentation' ? 'block' : 'none';
 							normalSolutions.style.display = 'none';
 							presentationSolutions.style.display = 'none';
-							worksheetSheet.classList.remove('worksheet-sheet--solutions');
+							if (layoutMode === 'presentation') {
+								worksheetSheet.classList.add('worksheet-sheet--solutions');
+							} else {
+								worksheetSheet.classList.remove('worksheet-sheet--solutions');
+							}
 						} else {
 							taskHeader.style.display = 'none';
 							taskList.style.display = 'none';
+							presentationTasks.style.display = 'none';
 
-							if (solutionViewMode === 'presentation') {
+							if (layoutMode === 'presentation') {
 								normalSolutions.style.display = 'none';
 								presentationSolutions.style.display = 'block';
 								worksheetSheet.classList.add('worksheet-sheet--solutions');
@@ -610,28 +741,21 @@ window.MTGWorksheetModeModule = {
 						}
 
 						toggleButton.innerText = showSolutions ? 'Aufgaben anzeigen' : 'Lösungen anzeigen';
-						presentButton.innerText = showSolutions && solutionViewMode === 'presentation'
-							? 'Lösungen normal anzeigen'
-							: 'Lösungen präsentieren';
+						layoutButton.innerText = layoutMode === 'presentation'
+							? 'Arbeitsblatt anzeigen'
+							: 'Präsentation anzeigen';
 
-						if (window.MathJax?.typesetPromise) {
-							window.MathJax.typesetPromise();
-						}
+						await typesetVisibleSections(taskList, presentationTasks, normalSolutions, presentationSolutions);
 					}
 
-					function toggleWorksheetSolutions() {
+					async function toggleWorksheetSolutions() {
 						showSolutions = !showSolutions;
-						renderWorksheetLayout();
+						await renderWorksheetLayout();
 					}
 
-					function togglePresentationSolutions() {
-						if (!showSolutions) {
-							showSolutions = true;
-							solutionViewMode = 'presentation';
-						} else {
-							solutionViewMode = solutionViewMode === 'presentation' ? 'normal' : 'presentation';
-						}
-						renderWorksheetLayout();
+					async function toggleLayoutMode() {
+						layoutMode = layoutMode === 'presentation' ? 'worksheet' : 'presentation';
+						await renderWorksheetLayout();
 					}
 
 					function exportWorksheetJSON() {
@@ -644,7 +768,9 @@ window.MTGWorksheetModeModule = {
 						URL.revokeObjectURL(url);
 					}
 
-					document.addEventListener('DOMContentLoaded', renderWorksheetLayout);
+					document.addEventListener('DOMContentLoaded', async () => {
+						await renderWorksheetLayout();
+					});
 				<\/script>
 			</body>
 			</html>`;
