@@ -29,8 +29,10 @@ window.MTGTaskGenerationModule = {
 
             const normalizedWeights = Object.fromEntries(state.selectedTypes.value.map(type => {
                 const rawWeight = Number(state.taskWeights.value[type]);
-                const weight = Number.isFinite(rawWeight)
-                    ? Math.max(1, Math.floor(rawWeight))
+                const weight = state.weights.value
+                    ? (Number.isFinite(rawWeight)
+                        ? Math.max(1, Math.floor(rawWeight))
+                        : 1)
                     : 1;
 
                 state.taskWeights.value[type] = weight;
@@ -115,8 +117,10 @@ window.MTGTaskGenerationModule = {
 
             const weightedTypes = state.selectedTypes.value.flatMap(type => {
                 const rawWeight = Number(state.taskWeights.value[type]);
-                const weight = Number.isFinite(rawWeight)
-                    ? Math.max(1, Math.floor(rawWeight))
+                const weight = state.weights.value
+                    ? (Number.isFinite(rawWeight)
+                        ? Math.max(1, Math.floor(rawWeight))
+                        : 1)
                     : 1;
                 return Array(weight).fill(type);
             });

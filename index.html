@@ -8,7 +8,11 @@
         window.MathJax = {
             tex: { inlineMath: [['\\(', '\\)']] },
             svg: { fontCache: 'global' },
-            chtml: { mtextInheritFont: true }   // ← neu
+            chtml: {
+                mtextInheritFont: true,
+                matchFontHeight: false,
+                scale: 1
+            }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -34,10 +38,10 @@
 
         <div class="settings-drawer-section">
             <div class="settings-selection-bar">
-                <label class="settings-topbar-label">
-                    <span>Easy-Mode</span>
-                    <input type="checkbox" v-model="mentalMathMode" class="settings-checkbox">
-                </label>
+                <div class="settings-topbar-label settings-checkbox-group">
+                    <label class="settings-checkbox-option"><input type="checkbox" v-model="mentalMathMode" class="settings-checkbox"><span>Easy-Mode</span></label>
+                    <label class="settings-checkbox-option"><input type="checkbox" v-model="weights" class="settings-checkbox"><span>Gewichtung</span></label>
+                </div>
                 <label class="settings-topbar-label">
                     <span>Anzahl</span>
                     <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-count-input">
@@ -65,7 +69,7 @@
                 <div v-for="([key, label]) in visibleTypeEntries" :key="'drawer-'+key" class="type-option">
                     <label class="checkbox-label type-label">
                         <input type="checkbox" v-model="selectedTypes" :value="key">
-                        <input type="number" v-model.number="taskWeights[key]" min="1" max="9" step="1" class="weight-input" title="Gewichtung">
+                        <input v-if="weights" type="number" v-model.number="taskWeights[key]" min="1" max="9" step="1" class="weight-input" title="Gewichtung">
                         <span>{{ label }}</span>
                     </label>
                 </div>

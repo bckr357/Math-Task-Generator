@@ -199,7 +199,21 @@ body {
     width: auto;
     cursor: pointer;
     accent-color: var(--blue-500);
-    align-self: flex-start;
+    align-self: center;
+    margin: 0;
+}
+
+.settings-checkbox-group {
+    gap: 8px !important;
+    justify-content: center;
+}
+
+.settings-checkbox-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    line-height: 1.2;
 }
 
 .settings-selection-bar {
@@ -346,11 +360,11 @@ body {
 }
 
 .weight-input {
-    width: 30px;
-    padding: 3px 2px;
+    width: 25px;
+    padding: 2px;
     border: 0.5px solid var(--slate-300);
     border-radius: 5px;
-    font-size: 1rem;
+    font-size: 0.8rem;
     text-align: center;
     background: white;
 }
@@ -493,10 +507,8 @@ body {
     text-align: center !important;
 }
 
-.worksheet-view mjx-container[jax="CHTML"][display="true"] {
-    margin: 10px 0 0 0 !important;
-    font-size: 100% !important;
-    text-align: left !important;
+mjx-mtext {
+    font-family: "Reddit Sans", system-ui, -apple-system, sans-serif !important;
 }
 
 .math-q { font-size: 2.5rem; font-weight: 400; }
@@ -756,6 +768,10 @@ body {
     background:
         linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     color: var(--slate-800);
+    --worksheet-task-font-size: 12pt;
+    --worksheet-task-line-height: 1.35;
+    --worksheet-task-font-size-print: 12pt;
+    --worksheet-task-line-height-print: 1.2;
 }
 
 .worksheet-toolbar {
@@ -784,7 +800,7 @@ body {
 
 .worksheet-toolbar-title strong {
     color: var(--slate-800);
-    font-size: 1.2rem;
+    font-size: 12pt;
 }
 
 .worksheet-toolbar-actions {
@@ -822,7 +838,7 @@ body {
     padding-bottom: 12px;
     margin-bottom: 12px;
     border-bottom: 2px solid var(--slate-100);
-    font-size: 0.95rem;
+    font-size: 11pt;
     font-weight: 400;
     color: var(--slate-500);
 }
@@ -888,7 +904,7 @@ body {
 }
 
 .worksheet-num {
-    font-size: 0.95rem;
+    font-size: 11pt;
     font-weight: 400;
     color: var(--slate-500);
     text-align: right;
@@ -897,17 +913,39 @@ body {
 
 .worksheet-content {
     min-width: 0;
+    font-size: var(--worksheet-task-font-size);
+    line-height: var(--worksheet-task-line-height);
 }
 
 .worksheet-math,
 .worksheet-solution {
-    font-size: 1.25rem;
-    line-height: 1.35;
+    font-size: inherit;
+    line-height: inherit;
     word-wrap: break-word;
 }
 
 .worksheet-solution {
     color: var(--primary);
+}
+
+.worksheet-content .math-q,
+.worksheet-content .math-a {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.worksheet-content mjx-container {
+    font-size: 13pt !important;
+    line-height: inherit !important;
+}
+
+.worksheet-content mjx-mtext {
+    font-size: inherit !important;
+}
+
+.worksheet-content mjx-container[jax="CHTML"][display="true"] {
+    margin: 6px 0 0 0 !important;
+    text-align: left !important;
 }
 
 .worksheet-content p,
@@ -925,7 +963,7 @@ body {
     padding-bottom: 12px;
     margin-bottom: 10px;
     border-bottom: 2px solid var(--slate-100);
-    font-size: 1.15rem;
+    font-size: 13pt;
     font-weight: 800;
     color: var(--slate-500);
 }
@@ -945,7 +983,7 @@ body {
 }
 
 .worksheet-view .worksheet-solution-board .task-num {
-    font-size: 2.35rem;
+    font-size: 28pt;
     width: 72px;
 }
 
@@ -954,18 +992,13 @@ body {
 }
 
 .worksheet-view .worksheet-solution-board .math-a {
-    font-size: 2.9rem;
-    line-height: 1.25;
+    font-size: inherit;
+    line-height: inherit;
 }
 
 .worksheet-view .worksheet-solution-board mjx-container[jax="CHTML"][display="true"] {
     margin: 8px 0 0 0 !important;
     text-align: center !important;
-}
-
-.worksheet-view mjx-container[jax="CHTML"][display="true"] {
-    margin: 6px 0 0 0 !important;
-    font-size: 100% !important;
 }
 
 @media (max-width: 960px) {
@@ -1017,12 +1050,12 @@ body {
     }
 
     .worksheet-view .worksheet-solution-board .task-num {
-        font-size: 1.9rem;
+        font-size: 23pt;
         width: 62px;
     }
 
     .worksheet-view .worksheet-solution-board .math-a {
-        font-size: 2.25rem;
+        font-size: inherit;
     }
 
     .mode-grid {
@@ -1080,7 +1113,7 @@ body {
         padding: 0 8mm 4mm;
         box-sizing: border-box;
         border-bottom: 0.3mm solid var(--slate-300);
-        font-size: 0.8rem;
+        font-size: 9pt;
     }
 
     .worksheet-row {
@@ -1134,23 +1167,23 @@ body {
     }
 
     .worksheet-num {
-        font-size: 0.78rem;
+        font-size: 9pt;
         line-height: 1.45;
         color: #64748b;
     }
 
-    .worksheet-math,
-    .worksheet-solution {
-        font-size: 0.92rem;
-        line-height: 1.2;
-    }
-
     .worksheet-content {
         min-width: 0;
+        font-size: var(--worksheet-task-font-size-print);
+        line-height: var(--worksheet-task-line-height-print);
     }
 
     .worksheet-content mjx-container {
-        font-size: 92% !important;
+        font-size: 13pt !important;
+    }
+
+    .worksheet-content mjx-mtext {
+        font-size: inherit !important;
     }
 
     .worksheet-view mjx-container[jax="CHTML"][display="true"] {

@@ -20,6 +20,7 @@ window.MTGStateModule = {
         const gtNumber = ref(1);
         const worksheetA5Pages = ref(2);
         const mentalMathMode = ref(false);
+        const weights = ref(false);
 
         const rowWiseFirstColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 0));
         const rowWiseSecondColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 1));
@@ -67,6 +68,7 @@ window.MTGStateModule = {
             gtNumber,
             worksheetA5Pages,
             mentalMathMode,
+            weights,
             rowWiseFirstColumnTasks,
             rowWiseSecondColumnTasks,
             worksheetTaskColumns,
