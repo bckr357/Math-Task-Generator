@@ -1117,7 +1117,7 @@ mjx-mtext {
         width: 297mm;
         max-width: none;
         margin: 0;
-        padding: 7mm 0 8mm;
+        padding: 0;
         box-sizing: border-box;
         border: none;
         border-radius: 0;

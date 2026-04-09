@@ -916,12 +916,12 @@ function createTask(type, isMentalMode, grade = 5) {
 				pVal = rnd(2, 11) * 100;
 				p = [3, 4, 5, 6, 7, 8, 9, 11, 12, 20, 25, 30, 35, 40, 60, 70, 80, 90][randInt(0, 17)];
 				textDisplay = `${p} % von ${pVal} ${einheit} sind \\(${blank(3)}\\)`;
-				s = `\\( ${p} \\,\\text{%} \\text{ von } ${pVal} \\text{ ${einheit}} \\text{ sind } ${(pVal / 100 * p)} \\text{ ${einheit}}\\)`;
+				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal / 100 * p} ${einheit} ≙ ${p} %`;
 			} else if (rd > 0.33) {
 				p = [20, 25, 30, 40, 50, 60, 70, 80, 90][randInt(0, 8)];
 				pVal = rnd(2, 9) * p;
-				textDisplay = `${p} % sind ${pVal} ${einheit} von ${blank(3)}`;
-				s = `\\( ${p} \\,\\text{%} \\text{ sind } ${pVal} \\text{ ${einheit} von } ${pVal / p * 100} \\text{ ${einheit}}\\)`;
+				textDisplay = `${p} % sind ${pVal} ${einheit} von \\(${blank(3)}\\)`;
+				s = `${p} % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / p} ${einheit}<br>100 % ≙ ${pVal / p * 100} ${einheit}`;
 			} else {
 				// 1. Wähle einen "schönen" Prozentsatz p (z.B. 5, 10, 20, 25, 50...)
 				const p_list = isMentalMode ? [2, 3, 5, 10, 20, 25, 50, 75, 80, 90] : [2, 3, 5, 10, 15, 20, 25, 40, 50, 75, 80, 90, 95];
@@ -940,42 +940,41 @@ function createTask(type, isMentalMode, grade = 5) {
 				textDisplay = ` ${comma(W)} ${einheit} von ${comma(G)} ${einheit} sind \\(${blank(2)}\\) % `;
 
 				// Lösung: Zeigt den Rechenweg oder das Ergebnis
-				s = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind } ${p} \\, \\text{%} \\)`;
+				s = `${comma(G)} ${einheit} ≙ 100 %<br>${comma(G / 100)} ${einheit} ≙ 1 %<br>${comma(W)} ${einheit} ≙ ${p} %`;
 			}
 			break;
 
 		case 'pv': {
 			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
-			let p = [3, 4, 5, 6, 7, 10, 20, 25, 50][randInt(0, einheit.length - 1)];
+			let p = [3, 4, 5, 6, 7, 10, 20, 25, 50][randInt(0, 8)];
 			let pVal = rnd(2, 11) * 100;
 			rd = Math.random();
 			if (rd > 0.8) {
 				textDisplay = `${pVal} ${einheit} um ${p} % erhöht sind \\(${blank(3)}\\)`;
-				s = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\,\\text{%} \\text{ erhöht sind } ${pVal + (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
+				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal + (pVal / 100 * p)} ${einheit} ≙ ${100 + p} %`;
 			} else if (rd > 0.6) {
 				textDisplay = `${pVal} ${einheit} um ${p} % reduziert sind \\(${blank(3)}\\)`;
-				s = `\\( ${pVal} \\text{ ${einheit} um } ${p} \\,\\text{%} \\text{ reduziert sind } ${pVal - (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
+				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal - (pVal / 100 * p)} ${einheit} ≙ ${100 - p} %`;
 			} else if (rd > 0.4) {
 				textDisplay = `${pVal} ${einheit} auf ${100 + p} % erhöht sind \\(${blank(3)}\\)`;
-				s = `\\( ${pVal} \\text{ ${einheit} auf } ${100 + p} \\,\\text{%} \\text{ erhöht sind } ${pVal + (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
+				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal + (pVal / 100 * p)} ${einheit} ≙ ${100 + p} %`;
 			} else if (rd > 0.2) {
 				textDisplay = `${pVal}  ${einheit} auf ${100 - p} % reduziert sind \\(${blank(3)}\\)`;
-				s = `\\( ${pVal} \\text{ ${einheit} auf } ${100 - p} \\,\\text{%} \\text{ reduziert sind } ${pVal - (pVal / 100 * p)} \\text{ ${einheit}} \\)`;
+				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal - (pVal / 100 * p)} ${einheit} ≙ ${100 - p} %`;
 			} else {
 				// Rabatt-Fall: Ein Artikel kostet normalerweise pVal, mit p% Rabatt kostet er ___
+				p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
 				const originalPrice = pVal;
 				const discountedPrice = originalPrice - (originalPrice / 100 * p);
 				textDisplay = `${p} % Rabatt auf ${originalPrice} €. Neuer Preis: \\(${blank(3)}\\)`;
-				s = `\\( ${originalPrice} \\cdot \\bigl(1 - \\tfrac{${p}}{100}\\bigr) = ${discountedPrice}\\,\\text{${einheit}} \\)`;
+				s = `${originalPrice} € ≙ 100 %<br>${originalPrice / 100} € ≙ 1 %<br>${discountedPrice} € ≙ ${100 - p} %`;
 			}
 			break;
 		}
 
 		case 'schriftlich': {
-			const op = rnd(2, 5) - 2; // 0: +, 1: -, 2: *, 3: /
+			const op = randInt(0, 3); // 0: +, 1: -, 2: *, 3: /
 			let v1, v2, res;
-			const isGrade5 = grade === 5;
-
 			// Hilfsfunktion für zufällige Nachkommastellen (0 bis 2)
 			const getDec = (val, places) => parseFloat(val.toFixed(places));
 
@@ -985,61 +984,44 @@ function createTask(type, isMentalMode, grade = 5) {
 					v1 = rnd(10000, 99999) / 1000;
 					v2 = rnd(100, 9999) / 10;
 					res = v1 + v2;
-					textDisplay = `Berechne schriftlich: \\( ${comma(v1)} + ${comma(v2)} \\)`;
-					s = `Berechne schriftlich: \\( ${comma(v1)} + ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
+					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(v1)} + ${comma(v2)} \\)`;
+					s = `\\( ${comma(v1)} + ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
 					break;
 
 				case 1: // SUBTRAKTION
 					v1 = trueDec(200, 500);
 					v2 = rnd(5555, 14444) / 100;
 					res = v1 - v2;
-					textDisplay = `Berechne schriftlich: \\( ${comma(v1)} - ${comma(v2)} \\)`;
-					s = `Berechne schriftlich: \\( ${comma(v1)} - ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
+					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(v1)} - ${comma(v2)} \\)`;
+					s = `\\( ${comma(v1)} - ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
 					break;
 
 				case 2: // MULTIPLIKATION
-					if (isGrade5) {
-						v1 = rnd(11, 99);
-						v2 = rnd(2, 19);
-						res = v1 * v2;
-						textDisplay = `Berechne schriftlich: \\( ${v1} \\cdot ${v2} \\)`;
-						s = `Berechne schriftlich: \\( ${v1} \\cdot ${v2} = ${res} \\)`;
-					} else {
-						// Faktor 1: 0-2 Stellen, Faktor 2: 0-2 Stellen
-						do {
-							const p1 = rnd(2, 4) - 1;
-							const p2 = rnd(2, 4) - 2;
-							v1 = rnd(11, 499) / Math.pow(10, p1);
-							v2 = rnd(11, 299) / Math.pow(10, p2);
-						} while (Number.isInteger(v1) && Number.isInteger(v2));
-						res = v1 * v2;
-						textDisplay = `Berechne schriftlich: \\( ${comma(v1)} \\cdot ${comma(v2)} \\)`;
-						// Bei Multiplikation können bis zu 4 Stellen entstehen (2+2)
-						s = `Berechne schriftlich: \\( ${comma(v1)} \\cdot ${comma(v2)} = ${comma(Number(res.toFixed(4)))} \\)`;
-					}
+					// Faktor 1: 0-2 Stellen, Faktor 2: 0-2 Stellen
+					do {
+						const p1 = rnd(2, 4) - 1;
+						const p2 = rnd(2, 4) - 2;
+						v1 = rnd(11, 499) / Math.pow(10, p1);
+						v2 = rnd(11, 299) / Math.pow(10, p2);
+					} while (Number.isInteger(v1) && Number.isInteger(v2));
+					res = v1 * v2;
+					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(v1)} \\cdot ${comma(v2)} \\)`;
+					// Bei Multiplikation können bis zu 4 Stellen entstehen (2+2)
+					s = `\\( ${comma(v1)} \\cdot ${comma(v2)} = ${comma(Number(res.toFixed(4)))} \\)`;
+					
 					break;
 
 				case 3: // DIVISION (durch ganze Zahl)
-					if (isGrade5) {
-						const divisor = rnd(3, 12);
-						const dividend = rnd(20, 240);
-						const quotient = Math.floor(dividend / divisor);
-						const remainder = dividend % divisor;
+					
+					const divisor = rnd(3, 9);
+					const p3 = rnd(2, 4) - 1;
+					// Wir würfeln das Ergebnis zuerst (max 2 Stellen), damit es aufgeht
+					const resultValue = rnd(111, 2999) / Math.pow(10, p3);
+					const dividend = (resultValue * divisor);
 
-						textDisplay = `Berechne schriftlich: \\( ${dividend} : ${divisor} \\)`;
-						s = remainder > 0
-							? `Berechne schriftlich: \\( ${dividend} : ${divisor} = ${quotient} \\, Rest \\, ${remainder} \\)`
-							: `Berechne schriftlich: \\( ${dividend} : ${divisor} = ${quotient} \\)`;
-					} else {
-						const divisor = rnd(3, 9);
-						const p3 = rnd(2, 4) - 1;
-						// Wir würfeln das Ergebnis zuerst (max 2 Stellen), damit es aufgeht
-						const resultValue = rnd(111, 2999) / Math.pow(10, p3);
-						const dividend = (resultValue * divisor);
-
-						textDisplay = `Berechne schriftlich: \\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)`;
-						s = `Berechne schriftlich: \\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} = ${comma(resultValue)} \\)`;
-					}
+					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)`;
+					s = `\\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} = ${comma(resultValue)} \\)`;
+					
 					break;
 			}
 			break;
@@ -1082,13 +1064,12 @@ function createTask(type, isMentalMode, grade = 5) {
 						// In nächstkleinere Einheit (Zahl wird größer)
 						toUnit = group.units[unitIndex - 1];
 						const f = group.factors[unitIndex - 1];
-						startValue = rnd(2, 10) / 2;
+						startValue = [0.1, 0.25, 0.5, 1.5, 2.25, 2.5, 2.75, 3.5, 4][randInt(0, 8)];
 						result = (startValue * f);
 					} else {
 						toUnit = group.units[unitIndex + 1];
 						const f = group.factors[unitIndex];
-						startValue = [1, 2, 2.5, 5, 10, 20, 25, 30, 35, 40, 50][rnd(2, 9) - 2]
-						startValue = startValue * (f / 10);
+						startValue = [0.1, 0.25, 0.5, 1.5, 2.25, 2.5, 2.75, 3.5, 4][randInt(0, 8)] * f;
 						result = comma(startValue / f);
 					}
 					break;
@@ -1115,8 +1096,8 @@ function createTask(type, isMentalMode, grade = 5) {
 					break;
 			}
 
-			textDisplay = `\\( ${toCleanString(startValue)} \\text{ ${fromUnit}} = \\text{__ ${toUnit}} \\)`;
-			s = `\\( ${toCleanString(startValue)} \\text{ ${fromUnit}} = ${result} \\text{ ${toUnit}} \\)`;
+			textDisplay = `${toCleanString(startValue)} ${fromUnit} = \\(${blank(3)}\\) ${toUnit}`;
+			s = `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`;
 			break;
 
 		case 'units_calc': {
