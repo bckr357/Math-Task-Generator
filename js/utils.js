@@ -35,7 +35,14 @@ const mathUtils = {
 const formatUtils = {
     comma: (val) => val.toString().replace('.', ','),
     
-    fmt: (num) => num < 0 ? `(${num})` : num,
+    fmt: (value) => {
+        if (typeof value === 'string') {
+            const trimmed = value.trim();
+            if (trimmed.startsWith('(') && trimmed.endsWith(')')) return value;
+            return trimmed.startsWith('-') ? `(${value})` : value;
+        }
+        return value < 0 ? `(${value})` : value;
+    },
     
     toCleanString: (val) => {
         let s = Number(val.toFixed(3)).toString();

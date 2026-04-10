@@ -6,7 +6,7 @@ const fmt = formatUtils.fmt;
 const comma = formatUtils.comma;
 
 const taskCategories = {
-	arithmetic: ['db_as', 'db_md', 'z_as', 'z_md', 'pow10', 'units_calc'],
+	arithmetic: ['db_as', 'db_md', 'z_as', 'z_md', 'pow10'],
 	fractions: ['frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order'],
 	algebra: ['terms', 'equations', 'equations_adv', 'formel_umstellen', 'vorrang'],
 	geometry: ['geometry', 'winkel', 'schraegbild', 'kongruenz'],
@@ -31,7 +31,7 @@ const taskTypesByGrade = {
 	klasse7: [
 		'z_as', 'z_md', 'db_as',
 		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order',
-		'percent', 'pv', 'anteile', 'units', 'units_calc',
+		'percent', 'pv', 'anteile', 'units',
 		'terme', 'equations', 'formel_umstellen', 'geometry', 'winkel', 'statistik',
 		'wkt', 'potenzen', 'teiler', 'primzahlen', 'round',
 		'prop', 'schriftlich', 'vorrang'
@@ -39,7 +39,7 @@ const taskTypesByGrade = {
 	klasse8: [
 		'z_as', 'z_md', 'db_as',
 		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order',
-		'percent', 'pv', 'anteile', 'units', 'units_calc',
+		'percent', 'pv', 'anteile', 'units', 
 		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'geometry', 'winkel',
 		'schraegbild', 'statistik', 'wkt', 'potenzen', 'teiler',
 		'primzahlen', 'round', 'prop', 'schriftlich', 'vorrang'
@@ -47,7 +47,7 @@ const taskTypesByGrade = {
 	klasse9: [
 		'z_as', 'z_md', 'db_as',
 		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify',
-		'frac_convert', 'frac_order', 'percent', 'pv', 'anteile', 'units', 'units_calc',
+		'frac_convert', 'frac_order', 'percent', 'pv', 'anteile', 'units', 
 		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'funktionen', 'geometry',
 		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt',
 		'potenzen', 'teiler', 'primzahlen', 'round', 'prop',
@@ -57,7 +57,7 @@ const taskTypesByGrade = {
 		'db_as', 'z_as', 'db_md', 'z_md', 'pow10',
 		'frac_simplify', 'frac_md', 'frac_as', 'schriftlich', 
 		'frac_convert', 'frac_order', 'anteile', 'vorrang', 'terme', 'percent', 
-		'units', 'units_calc', 'pv', 'round', 'equations', 'geometry', 
+		'units', 'pv', 'round', 'equations', 'geometry', 
 		'wkt', 'statistik', 'funktionen', 'teiler', 'primzahlen', 
 		'equations_adv', 'formel_umstellen', 'potenzen', 'prop', 'winkel', 'schraegbild', 'kongruenz'
 	]
@@ -116,7 +116,7 @@ const typeDefinitions = [
 	['schraegbild', 'Körperdarstellung', 'Schrägbilder von Körpern zeichnen und deuten'],
 	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren und begründen'],
 	['pow10', 'Zehnerpotenzen ×/÷', 'Natürliche Zahlen und Dezimalzahlen mit Zehnerpotenzen multiplizieren und dividieren'],
-	['units_calc', 'Einheiten rechnen +/-', 'Summen und Differenzen mit benachbarten Einheiten derselben Art berechnen'],
+	// ['units_calc', 'Einheiten rechnen +/-', 'Summen und Differenzen mit benachbarten Einheiten derselben Art berechnen'],
 	['formel_umstellen', 'Formel umstellen', 'Bekannte Formeln nach einer anderen Variablen in 2–3 Schritten umformen'],
 	['frac_order', 'Brüche ordnen', 'Drei gekürzte Brüche der Größe nach sortieren']
 ];
@@ -137,6 +137,7 @@ function createTask(type, isMentalMode, grade = 5) {
 	let textDisplay = '', textPrint = '';
 
 	const blank = (cmWidth = 3) => `\\underline{\\hspace{${cmWidth}cm}}`;
+	const space = (cmWidth = 1) => `<div style="margin-bottom: ${cmWidth}cm;"></div>`;
 
 	// Beispiel für die Nutzung von isMentalMode:
 	// if (isMentalMode) { Z1 = rnd(2, 5); } else { Z1 = rnd(5, 20); }
@@ -1027,7 +1028,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			break;
 		}
 
-		case 'units':
+		case 'units': 
 			// Hilfsfunktion für saubere Dezimal-Ausgabe
 			const toCleanString = formatUtils.toCleanString;
 
@@ -1094,126 +1095,14 @@ function createTask(type, isMentalMode, grade = 5) {
 						result = toCleanString(resNum);
 					}
 					break;
-			}
-
-			textDisplay = `${toCleanString(startValue)} ${fromUnit} = \\(${blank(3)}\\) ${toUnit}`;
-			s = `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`;
-			break;
-
-		case 'units_calc': {
-			const groups = [
-				{ units: ['mm', 'cm', 'dm', 'm', 'km'], factors: [10, 10, 10, 1000] },
-				{ units: ['mm²', 'cm²', 'dm²', 'm²', 'a', 'ha', 'km²'], factors: [100, 100, 100, 100, 100, 100] },
-				{ units: ['mm³', 'cm³', 'dm³', 'm³'], factors: [1000, 1000, 1000] },
-				{ units: ['mg', 'g', 'kg', 't'], factors: [1000, 1000, 1000] },
-				{ units: ['s', 'min', 'h'], factors: [60, 60] }
-			];
-
-			const g = groups[randInt(0, groups.length - 1)];
-			const isVolumeGroup = g.units[0] === 'mm³';
-			const termCount = isVolumeGroup ? 2 : (isMentalMode ? (Math.random() < 0.75 ? 2 : 3) : (Math.random() < 0.5 ? 2 : 3));
-
-			let termUnitIdx;
-			if (termCount === 2) {
-				const start = randInt(0, g.units.length - 2);
-				termUnitIdx = [start, start + 1];
-			} else {
-				const mid = randInt(1, g.units.length - 2);
-				termUnitIdx = [mid - 1, mid, mid + 1];
-			}
-
-			// Ziel-Einheit vorgeben: kleinste (2 Summanden) bzw. kleinste oder mittlere (3 Summanden)
-			let targetIdx;
-			if (termCount === 3) {
-				const sortedIdx = [...termUnitIdx].sort((a, b) => a - b);
-				targetIdx = Math.random() < 0.6 ? sortedIdx[0] : sortedIdx[1];
-			} else {
-				targetIdx = Math.min(...termUnitIdx);
-			}
-			const targetUnit = g.units[targetIdx];
-
-			// Skalenfaktoren auf kleinste Einheit der Gruppe
-			const scales = [1];
-			for (let i = 1; i < g.units.length; i++) {
-				scales[i] = scales[i - 1] * g.factors[i - 1];
-			}
-
-			const fmtNum = (num) => {
-				const rounded = Number((Math.round(num * 10) / 10).toFixed(1).replace(/\.0$/, ''));
-				return comma(rounded);
-			};
-
-			const pickSimpleValue = () => {
-				if (isMentalMode) {
-					if (Math.random() < 0.8) {
-						return randInt(1, 12); // bevorzugt ganze Zahlen
-					}
-					return randInt(2, 20) / 2; // sonst 0,5-Schritte
-				}
-				return randInt(5, 250) / 10; // max. eine Nachkommastelle
-			};
-
-			let terms;
-			let ops;
-			let converted;
-			let resultInTarget;
-
-			for (let attempts = 0; attempts < 200; attempts++) {
-				terms = termUnitIdx.map((idx) => ({
-					idx,
-					unit: g.units[idx],
-					value: pickSimpleValue()
-				}));
-
-				// Mindestens ein Summand als ganze Zahl (ohne Nachkommastelle)
-				if (!terms.some((t) => Number.isInteger(t.value))) {
-					continue;
 				}
 
-				if (termCount === 2) {
-					ops = [Math.random() < 0.5 ? '+' : '-'];
-				} else {
-					const patterns = [['+', '+'], ['+', '-'], ['-', '+'], ['-', '-']];
-					ops = patterns[randInt(0, patterns.length - 1)];
-				}
+				textDisplay = `${toCleanString(startValue)} ${fromUnit} = \\(${blank(3)}\\) ${toUnit}`;
+				s = `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`;
+				break;
 
-				converted = terms.map((t) => t.value * (scales[t.idx] / scales[targetIdx]));
-
-				resultInTarget = converted[0];
-				let hasNegativeIntermediate = resultInTarget < 0;
-				for (let i = 0; i < ops.length; i++) {
-					resultInTarget = ops[i] === '+' ? resultInTarget + converted[i + 1] : resultInTarget - converted[i + 1];
-					if (resultInTarget < 0) {
-						hasNegativeIntermediate = true;
-						break;
-					}
-				}
-
-				// Keine negativen Zwischenergebnisse und positives Endergebnis
-				if (!hasNegativeIntermediate && resultInTarget > 0) {
-					break;
-				}
-			}
-
-			const displayExprParts = [`${fmtNum(terms[0].value)} \\text{ ${terms[0].unit}}`];
-			for (let i = 1; i < terms.length; i++) {
-				displayExprParts.push(`${ops[i - 1]} ${fmtNum(terms[i].value)} \\text{ ${terms[i].unit}}`);
-			}
-
-			const targetExprParts = [`${fmtNum(converted[0])} \\text{ ${targetUnit}}`];
-			for (let i = 1; i < converted.length; i++) {
-				targetExprParts.push(`${ops[i - 1]} ${fmtNum(converted[i])} \\text{ ${targetUnit}}`);
-			}
-
-			const displayExpr = displayExprParts.join(' ');
-			const targetExpr = targetExprParts.join(' ');
-
-			textDisplay = `\\( Rechne \\text{ in } ${targetUnit}: ${displayExpr} = \\)`;
-			s = `\\[ ${displayExpr} = ${targetExpr} = ${fmtNum(resultInTarget)} \\text{ ${targetUnit}} \\]`;
-			break;
-		}
-
-		case 'geometry':
+			
+			case 'geometry':
 			const shapeType = randInt(0, grade > 6 ? 2 : 1);
 			const goal = Math.random() > 0.5 ? 'A' : 'u';
 			let sideA, sideB;
@@ -1240,22 +1129,15 @@ function createTask(type, isMentalMode, grade = 5) {
 				}
 			}
 			else { // DREIECK
-				if (goal === 'A') {
-					sideA = rnd(2, 12); sideB = rnd(3, 7);
-					textDisplay = `Dreieck mit Grundseite \\( g = ${sideA} \\text{ m} \\) und Höhe \\( h = ${sideB} \\text{ m} \\). Flächeninhalt?`;
-					s = `\\( A = \\frac{1}{2} \\cdot g \\cdot h = \\frac{1}{2} \\cdot ${sideA} \\cdot ${sideB} = ${(sideA * sideB) / 2} \\text{ m}^2 \\)`.replace('.', ',');
-				} else {
-					sideA = rnd(25, 45); sideB = rnd(61, 129);
-					textDisplay = `Dreieck mit Winkeln \\( \\alpha = ${sideA}° \\) und \\( \\beta = ${sideB}°\\). Winkel \\(\\gamma \\)?`;
-					s = `\\( \\gamma = 180° - ${sideA}° - ${sideB}° = ${180 - sideA - sideB}°\\)`;
-				}
+				sideA = rnd(2, 12); sideB = rnd(3, 7);
+				textDisplay = `Dreieck mit Grundseite \\( g = ${sideA} \\text{ m} \\) und Höhe \\( h = ${sideB} \\text{ m} \\). Flächeninhalt? <br>`;
+				s = `\\( A = \\frac{1}{2} \\cdot g \\cdot h = \\frac{1}{2} \\cdot ${sideA} \\cdot ${sideB} = ${(sideA * sideB) / 2} \\text{ m}^2 \\)`.replace('.', ',');
 			}
 			break;
-
+			
 		case 'potenzen':
-			v1 = rnd(3, 13);
 			rd = Math.random();
-			if (rd > 0.7) {
+			if (rd > 0.6) { 
 				v1 = rnd(-13, 13);
 				if (v1 < 0) {
 					textDisplay = `\\( (${v1})^2 = \\)`;
@@ -1265,7 +1147,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					s = `\\( ${v1}^2 = ${v1 * v1} \\)`;
 				}
 			} else if (rd > 0.40) {
-				v1 = rnd(3, 10);
+				v1 = rnd(3, 13);
 				textDisplay = `\\( \\sqrt{${v1 * v1}} = \\)`;
 				s = `\\( \\sqrt{${v1 * v1}} = ${v1} \\)`;
 			} else if (rd > 0.2) {
@@ -1275,9 +1157,13 @@ function createTask(type, isMentalMode, grade = 5) {
 			} else {
 				const staticTasks = [
 					{ t: `\\( 3^3 = \\)`, s: `\\( 3^3 = ${Math.pow(3, 3)} \\)` },
+					{ t: `\\( (-3)^3 = \\)`, s: `\\( (-3)^3 = ${Math.pow(-3, 3)} \\)` },
 					{ t: `\\( 3^4 = \\)`, s: `\\( 3^4 = ${Math.pow(3, 4)} \\)` },
+					{ t: `\\( (-3)^4 = \\)`, s: `\\( (-3)^4 = ${Math.pow(-3, 4)} \\)` },
 					{ t: `\\( 4^3 = \\)`, s: `\\( 4^3 = ${Math.pow(4, 3)} \\)` },
+					{ t: `\\( (-4)^3 = \\)`, s: `\\( (-4)^3 = ${Math.pow(-4, 3)} \\)` },
 					{ t: `\\( 5^3 = \\)`, s: `\\( 5^3 = ${Math.pow(5, 3)} \\)` },
+					{ t: `\\( (-5)^3 = \\)`, s: `\\( (-5)^3 = ${Math.pow(-5, 3)} \\)` },
 					{ t: `\\( 5^4 = \\)`, s: `\\( 5^4 = ${Math.pow(5, 4)} \\)` }
 				];
 				// Zufälligen Index bestimmen
@@ -1287,9 +1173,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			}
 
 			break;
-
-		// Funktionen: Argumente und Funktionswerte berechnen 
-
+				
 		case 'teiler': {
 			// 1. Pool an Zahlen mit interessanten Teilermengen 
 			const pool = isMentalMode ? [8, 10, 12, 13, 15, 16, 18, 19, 20, 25, 27, 28, 29, 30, 33, 35] : [12, 15, 16, 18, 20, 28, 30, 32, 33, 34, 35, 37, 40, 45, 50];
@@ -1309,25 +1193,25 @@ function createTask(type, isMentalMode, grade = 5) {
 
 		case 'round': {
 			const carryBias = 0.4; // Wahrscheinlichkeit für Übertrag (9 an der Rundungsstelle)
-
+			
 			rd = Math.random();
-
+			
 			let intPart = randInt(0, 9);
 			let d1, d2, d3;
-
+			
 			const useCarryCase = Math.random() < carryBias;
-
+			
 			if (rd > 0.8) {
 				d1 = randInt(2, 9); // Entscheidungsziffer (keine 0)
 				d2 = randInt(0, 9);
 				d3 = randInt(0, 9);
-
+				
 			} else if (rd > 0.4) {
 				// Rundung auf Zehntel → Rundungsstelle = d1
 				useCarryCase ? d1 = 9 : d1 = randInt(0, 9);
 				d2 = randInt(2, 9); // Entscheidungsziffer (keine 0)
 				d3 = randInt(1, 9);
-
+				
 			} else {
 				// Rundung auf Hundertstel → Rundungsstelle = d2
 				d1 = randInt(0, 9);
@@ -1336,9 +1220,9 @@ function createTask(type, isMentalMode, grade = 5) {
 			}
 
 			let v1 = intPart + (d1 * 100 + d2 * 10 + d3) / 1000;
-
+			
 			let target, result, digits;
-
+			
 			if (rd > 0.8) {
 				target = "Ganze";
 				result = Math.round(v1);
@@ -1357,281 +1241,235 @@ function createTask(type, isMentalMode, grade = 5) {
 			s = `\\( ${comma(v1.toFixed(3))} \\approx ${comma(result.toFixed(digits))} \\) (${target})`;
 			break;
 		}
-
+		
 		case 'equations': {
 			// 1. Bestimme die Lösung x (ein Vielfaches von 0,5)
 			// rnd(-20, 20) / 2 ergibt Werte wie -5, -4.5, -4, ..., 4.5, 5
 			const x = rnd(-13, 13);
-
+			
 			// 2. Bestimme Koeffizienten a und b (ganze Zahlen, a != 0)
 			let a = rnd(-12, 12);
 			const b = rnd(-30, 30);
-
+			
 			// 3. Berechne c (ax + b = c)
 			const c = a * x + b;
-
+			
 			// Formatierung für die Ausgabe (Vorzeichen von b beachten)
 			const bPart = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
-
-			textDisplay = `Löse die Gleichung:<br> \\( ${a}x ${bPart} = ${c} \\)`;
+			
+			textDisplay = `Löse die Gleichung schrittweise: <br> \\( ${a}x ${bPart} = ${c} \\)`;
+			textPrint = `Löse die Gleichung schrittweise: \\(\\quad ${a}x ${bPart} = ${c} \\qquad |\\)${space(1.5)}`;
 			s = `\\[ \\begin{aligned} 
-						${a}x ${bPart} &= ${c} &&| \\, ${b >= 0 ? '-' : '+'} ${Math.abs(b)} \\\\ 
-						${a}x &= ${c - b} &&| \\, : ${a >= 0 ? a : '(' + a + ')'} \\\\
-						x &= ${comma(x)} 
-						\\end{aligned} \\]`;
+			${a}x ${bPart} &= ${c} &&| \\, ${b >= 0 ? '-' : '+'} ${Math.abs(b)} \\\\ 
+			${a}x &= ${c - b} &&| \\, : ${a >= 0 ? a : '(' + a + ')'} \\\\
+			x &= ${comma(x)} 
+			\\end{aligned} \\]`;
 			break;
 		}
 
 		case 'equations_adv':
 			// 1. Bestimme die Lösung x (als ganze Zahl)
 			const x = rnd(-13, 13);
-
+			
 			// 2. Bestimme Koeffizient a
 			let a = rnd(-10, 10);
-
+			
 			// 3. Bestimme Koeffizient c so, dass |a - c| >= 2
 			let c;
 			do {
 				c = rnd(-10, 10);
 			} while (Math.abs(a - c) < 2 || c === 0);
 			// Die Schleife läuft, solange der Abstand zu klein ist oder c selbst 0 ist
-
+			
 			// 4. Bestimme Konstante b und berechne d
 			// Rechnung: ax + b = cx + d  => d = (a - c) * x + b
 			const b = rnd(-30, 30);
 			const d = (a - c) * x + b;
-
+			
 			// 5. Formatierung für die Ausgabe
 			const bPart = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
 			const dPart = d >= 0 ? `+ ${d}` : `- ${Math.abs(d)}`;
-
+			
 			// 6. Bausteine für den Rechenweg
 			const op1 = c >= 0 ? `- ${c}x` : `+ ${Math.abs(c)}x`;
 			const aMinusC = a - c;
 			const op2 = b >= 0 ? `- ${b}` : `+ ${Math.abs(b)}`;
 			const dMinusB = d - b;
-			const divOp = aMinusC >= 0 ? aMinusC : `(${aMinusC})`;
-
-			textDisplay = `Löse die Gleichung:<br>\\( ${a}x ${bPart} = ${c}x ${dPart} \\)`;
+			const divOp = fmt(aMinusC);
+			
+			textDisplay = `Löse die Gleichung schrittweise:<br>\\( ${a}x ${bPart} = ${c}x ${dPart} \\)`;
+			textPrint = `Löse die Gleichung schrittweise: \\(\\quad ${a}x ${bPart} = ${c}x ${dPart} \\qquad | \\)${space(2)}`;
 
 			s = `\\[ \\begin{aligned} 
-						${a}x ${bPart} &= ${c}x ${dPart} &&| \\, ${op1} \\\\ 
-						${aMinusC}x ${bPart} &= ${d} &&| \\, ${op2} \\\\ 
-						${aMinusC}x &= ${dMinusB} &&| \\, : ${divOp} \\\\
-						x &= ${comma(x)} 
-						\\end{aligned} \\]`;
+			${a}x ${bPart} &= ${c}x ${dPart} &&| \\, ${op1} \\\\ 
+			${aMinusC}x ${bPart} &= ${d} &&| \\, ${op2} \\\\ 
+			${aMinusC}x &= ${dMinusB} &&| \\, : ${divOp} \\\\
+			x &= ${comma(x)} 
+			\\end{aligned} \\]`;
 			break;
-
-		case 'formel_umstellen': {
-			const formeln = [
+			
+			case 'formel_umstellen': {
+				const formeln = [
 				// --- FLÄCHENINHALT DREIECK ---
 				{
-					task: `Forme nach \\( g \\) um: \\( A = \\frac{g \\cdot h}{2} \\) &nbsp; (Dreieck)`,
+					textPrint: `Stelle nach \\( g \\) um: \\( \\quad A = \\frac{1}{2} \\, g \\, h \\quad | \\) ${space(1.5)}`,
+					textDisplay: `Stelle nach \\( g \\) um: \\( \\quad A = \\frac{1}{2} \\, g \\, h \\)`,
 					steps: [
-						{ eq: `A &= \\dfrac{g \\cdot h}{2}`,   op: `\\cdot 2` },
-						{ eq: `2A &= g \\cdot h`,               op: `: h` },
-						{ eq: `g &= \\dfrac{2A}{h}`,            op: null }
+						{ eq: `A &= \\tfrac{1}{2} \\, g \\, h`,   op: `\\cdot 2` },
+						{ eq: `2\\,A &= g \\, h`,               op: `: h` },
+						{ eq: `2\\,A : h &= g`,            op: null }
 					]
 				},
 				{
-					task: `Forme nach \\( h \\) um: \\( A = \\frac{g \\cdot h}{2} \\) &nbsp; (Dreieck)`,
+					textPrint: `Stelle nach \\( h \\) um: \\( \\quad A = \\frac{1}{2} \\, g \\, h \\quad |\\) ${space(1.5)}`,
+					textDisplay: `Stelle nach \\( h \\) um: \\( \\quad A = \\frac{1}{2} \\, g \\, h \\)`,
 					steps: [
-						{ eq: `A &= \\dfrac{g \\cdot h}{2}`,   op: `\\cdot 2` },
-						{ eq: `2A &= g \\cdot h`,               op: `: g` },
-						{ eq: `h &= \\dfrac{2A}{g}`,            op: null }
+						{ eq: `A &= \\tfrac{1}{2} \\, g \\, h`,   op: `\\cdot 2` },
+						{ eq: `2\\,A &= g \\, h`,               op: `: g` },
+						{ eq: `2\\,A : g &= h`,            op: null }
 					]
 				},
 				// --- KREISFLÄCHE ---
 				{
-					task: `Forme nach \\( r \\) um: \\( A = \\pi \\cdot r^2 \\) &nbsp; (Kreisfläche)`,
+					textPrint: `Stelle nach \\( r \\) um: \\( \\quad A = \\pi \\cdot r^2 \\quad | \\) ${space(1.5)}`,
+					textDisplay: `Stelle nach \\( r \\) um: \\( \\quad A = \\pi \\cdot r^2 \\)`,
 					steps: [
 						{ eq: `A &= \\pi \\cdot r^2`,            op: `: \\pi` },
-						{ eq: `\\dfrac{A}{\\pi} &= r^2`,         op: `\\sqrt{\\phantom{0}}` },
-						{ eq: `r &= \\sqrt{\\dfrac{A}{\\pi}}`,   op: null }
+						{ eq: `A : \\pi &= r^2`,         op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `\\sqrt{A : \\pi} &= r`,   op: null }
 					]
 				},
 				// --- KREISUMFANG ---
 				{
-					task: `Forme nach \\( r \\) um: \\( u = 2 \\cdot \\pi \\cdot r \\) &nbsp; (Kreisumfang)`,
+					textPrint: `Stelle nach \\( r \\) um: \\( \\quad u = 2 \\cdot \\pi \\cdot r \\quad | \\) ${space(1.5)}`,
+					textDisplay: `Stelle nach \\( r \\) um: \\( \\quad u = 2 \\cdot \\pi \\cdot r \\)`,
 					steps: [
 						{ eq: `u &= 2 \\cdot \\pi \\cdot r`,    op: `: 2` },
 						{ eq: `\\dfrac{u}{2} &= \\pi \\cdot r`, op: `: \\pi` },
-						{ eq: `r &= \\dfrac{u}{2\\pi}`,          op: null }
+						{ eq: `\\dfrac{u}{2\\pi} &= r`,          op: null }
 					]
 				},
 				// --- TRAPEZ ---
 				{
-					task: `Forme nach \\( a \\) um: \\( A = \\frac{(a+c) \\cdot h}{2} \\) &nbsp; (Trapez)`,
+					textPrint: `Stelle nach \\( a \\) um: \\( \\quad A = \\frac{1}{2} (a+c) \\cdot h \\quad | \\) ${space(2)}`,
+					textDisplay: `Stelle nach \\( a \\) um: \\( \\quad A = \\frac{1}{2} (a+c) \\cdot h \\)`,
 					steps: [
-						{ eq: `A &= \\dfrac{(a + c) \\cdot h}{2}`, op: `\\cdot 2` },
-						{ eq: `2A &= (a + c) \\cdot h`,             op: `: h` },
-						{ eq: `\\dfrac{2A}{h} &= a + c`,            op: `- c` },
-						{ eq: `a &= \\dfrac{2A}{h} - c`,            op: null }
+						{ eq: `A &= \\tfrac{1}{2} (a+c) \\cdot h`, op: `\\cdot 2` },
+						{ eq: `2 \\, A &= (a + c) \\cdot h`,             op: `: h` },
+						{ eq: `2 \\, A : h &= a + c`,            op: `- c` },
+						{ eq: `2 \\, A : h - c &= a`,            op: null }
 					]
 				},
 				{
-					task: `Forme nach \\( c \\) um: \\( A = \\frac{(a+c) \\cdot h}{2} \\) &nbsp; (Trapez)`,
+					textPrint: `Stelle nach \\( h \\) um: \\( \\quad A = \\frac{1}{2} (a+c) \\cdot h \\quad | \\) ${space(1.5)}`,
+					textDisplay: `Stelle nach \\( h \\) um: \\( \\quad A = \\frac{1}{2} (a+c) \\cdot h \\)`,
 					steps: [
-						{ eq: `A &= \\dfrac{(a + c) \\cdot h}{2}`, op: `\\cdot 2` },
-						{ eq: `2A &= (a + c) \\cdot h`,             op: `: h` },
-						{ eq: `\\dfrac{2A}{h} &= a + c`,            op: `- a` },
-						{ eq: `c &= \\dfrac{2A}{h} - a`,            op: null }
-					]
-				},
-				// --- RAUTE ---
-				{
-					task: `Forme nach \\( d_1 \\) um: \\( A = \\frac{d_1 \\cdot d_2}{2} \\) &nbsp; (Raute)`,
-					steps: [
-						{ eq: `A &= \\dfrac{d_1 \\cdot d_2}{2}`, op: `\\cdot 2` },
-						{ eq: `2A &= d_1 \\cdot d_2`,             op: `: d_2` },
-						{ eq: `d_1 &= \\dfrac{2A}{d_2}`,          op: null }
+						{ eq: `A &= \\tfrac{1}{2} (a+c) \\cdot h`, op: `\\cdot 2` },
+						{ eq: `2 \\, A &= (a + c) \\cdot h`,       op: `: (a+c)` },
+						{ eq: `2 \\, A : (a+c) &= h`,              op: null }
 					]
 				},
 				// --- RECHTECKUMFANG ---
 				{
-					task: `Forme nach \\( a \\) um: \\( u = 2 \\cdot (a + b) \\) &nbsp; (Rechteck)`,
+					textPrint: `Stelle nach \\( a \\) um: \\( \\quad u = 2 \\, (a + b) \\quad | \\) ${space(1.5)}`,
+					textDisplay: `Stelle nach \\( a \\) um: \\( \\quad u = 2 \\, (a + b) \\)`,
 					steps: [
-						{ eq: `u &= 2 \\cdot (a + b)`,           op: `: 2` },
-						{ eq: `\\dfrac{u}{2} &= a + b`,          op: `- b` },
-						{ eq: `a &= \\dfrac{u}{2} - b`,          op: null }
+						{ eq: `u &= 2 \\, (a + b)`,           op: `: 2` },
+						{ eq: `u : 2 &= a + b`,          op: `- b` },
+						{ eq: `u : 2 - b &= a`,          op: null }
 					]
 				},
 				// --- KUGELOBERFLÄCHE ---
 				{
-					task: `Forme nach \\( r \\) um: \\( O = 4 \\cdot \\pi \\cdot r^2 \\) &nbsp; (Kugel)`,
+					textPrint: `Stelle nach \\( r \\) um: \\( \\quad A_O = 4 \\, \\pi \\, r^2 \\quad | \\) ${space(1.5)}`,
+					textDisplay: `Stelle nach \\( r \\) um: \\( \\quad A_O = 4 \\, \\pi \\, r^2 \\)`,
 					steps: [
-						{ eq: `O &= 4 \\cdot \\pi \\cdot r^2`,       op: `: (4\\pi)` },
-						{ eq: `\\dfrac{O}{4\\pi} &= r^2`,             op: `\\sqrt{\\phantom{0}}` },
-						{ eq: `r &= \\sqrt{\\dfrac{O}{4\\pi}}`,       op: null }
+						{ eq: `A_O &= 4 \\, \\pi \\, r^2`,       op: `: (4\\,\\pi)` },
+						{ eq: `A_O : (4\\,\\pi) &= r^2`,             op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `\\sqrt{A_O : (4\\,\\pi)} &= r`,       op: null }
 					]
 				},
 				// --- QUADERVOLUMEN ---
 				{
-					task: `Forme nach \\( l \\) um: \\( V = l \\cdot b \\cdot h \\) &nbsp; (Quader)`,
+					textPrint: `Stelle nach \\( a \\) um: \\( \\quad V = a \\cdot b \\cdot c \\quad | \\) ${space(1.5)}`,
+					textDisplay: `Stelle nach \\( a \\) um: \\( \\quad V = a \\cdot b \\cdot c \\)`,
 					steps: [
-						{ eq: `V &= l \\cdot b \\cdot h`,            op: `: b` },
-						{ eq: `\\dfrac{V}{b} &= l \\cdot h`,         op: `: h` },
-						{ eq: `l &= \\dfrac{V}{b \\cdot h}`,         op: null }
+						{ eq: `V &= a \\cdot b \\cdot c`,            op: `: b` },
+						{ eq: `V : b &= a \\cdot c`,         op: `: c` },
+						{ eq: `V : b : c &= a`,         op: null }
 					]
 				},
 				// --- ZYLINDERVOLUMEN nach h ---
 				{
-					task: `Forme nach \\( h \\) um: \\( V = \\pi \\cdot r^2 \\cdot h \\) &nbsp; (Zylinder)`,
+					textPrint: `Stelle nach \\( h \\) um: \\( \\quad V = \\pi \\cdot r^2 \\cdot h \\quad | \\) ${space(1.5)}`,
+					textDisplay: `Stelle nach \\( h \\) um: \\( \\quad V = \\pi \\cdot r^2 \\cdot h \\)`,
 					steps: [
 						{ eq: `V &= \\pi \\cdot r^2 \\cdot h`,       op: `: r^2` },
 						{ eq: `\\dfrac{V}{r^2} &= \\pi \\cdot h`,    op: `: \\pi` },
-						{ eq: `h &= \\dfrac{V}{\\pi r^2}`,            op: null }
-					]
-				},
-				// --- ZYLINDERVOLUMEN nach r ---
-				{
-					task: `Forme nach \\( r \\) um: \\( V = \\pi \\cdot r^2 \\cdot h \\) &nbsp; (Zylinder)`,
-					steps: [
-						{ eq: `V &= \\pi \\cdot r^2 \\cdot h`,       op: `: h` },
-						{ eq: `\\dfrac{V}{h} &= \\pi \\cdot r^2`,    op: `: \\pi` },
-						{ eq: `\\dfrac{V}{\\pi h} &= r^2`,            op: `\\sqrt{\\phantom{0}}` },
-						{ eq: `r &= \\sqrt{\\dfrac{V}{\\pi h}}`,      op: null }
-					]
-				},
-				// --- KEGELVOLUMEN nach h ---
-				{
-					task: `Forme nach \\( h \\) um: \\( V = \\frac{\\pi \\cdot r^2 \\cdot h}{3} \\) &nbsp; (Kegel)`,
-					steps: [
-						{ eq: `V &= \\dfrac{\\pi \\cdot r^2 \\cdot h}{3}`, op: `\\cdot 3` },
-						{ eq: `3V &= \\pi \\cdot r^2 \\cdot h`,             op: `: r^2` },
-						{ eq: `\\dfrac{3V}{r^2} &= \\pi \\cdot h`,          op: `: \\pi` },
-						{ eq: `h &= \\dfrac{3V}{\\pi r^2}`,                 op: null }
+						{ eq: `\\dfrac{V}{\\pi r^2} &= h`,            op: null }
 					]
 				},
 				// --- KEGELVOLUMEN nach r ---
 				{
-					task: `Forme nach \\( r \\) um: \\( V = \\frac{\\pi \\cdot r^2 \\cdot h}{3} \\) &nbsp; (Kegel)`,
+					textPrint: `Stelle nach \\( r \\) um: \\( \\quad V = \\tfrac{1}{3} \\, \\pi \\, r^2 \\, h \\quad | \\) ${space(2)}`,
+					textDisplay: `Stelle nach \\( r \\) um: \\( \\quad V = \\tfrac{1}{3} \\, \\pi \\, r^2 \\, h \\)`,
 					steps: [
-						{ eq: `V &= \\dfrac{\\pi \\cdot r^2 \\cdot h}{3}`, op: `\\cdot 3` },
-						{ eq: `3V &= \\pi \\cdot r^2 \\cdot h`,             op: `: (\\pi h)` },
-						{ eq: `r^2 &= \\dfrac{3V}{\\pi h}`,                 op: `\\sqrt{\\phantom{0}}` },
-						{ eq: `r &= \\sqrt{\\dfrac{3V}{\\pi h}}`,           op: null }
-					]
-				},
-				// --- ZYLINDERMANTEL ---
-				{
-					task: `Forme nach \\( r \\) um: \\( M = 2 \\cdot \\pi \\cdot r \\cdot h \\) &nbsp; (Zylinder)`,
-					steps: [
-						{ eq: `M &= 2 \\cdot \\pi \\cdot r \\cdot h`,  op: `: (2\\pi)` },
-						{ eq: `\\dfrac{M}{2\\pi} &= r \\cdot h`,        op: `: h` },
-						{ eq: `r &= \\dfrac{M}{2\\pi h}`,               op: null }
+						{ eq: `V &= \\tfrac{1}{3} \\, \\pi \\, r^2 \\, h`, op: `\\cdot 3` },
+						{ eq: `3 \\, V &= \\pi \\, r^2 \\, h`,             op: `: (\\pi \\, h)` },
+						{ eq: `3 \\, V : (\\pi \\, h) &= r^2`,                 op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `\\sqrt{3 \\, V : (\\pi \\, h)} &= r`,           op: null }
 					]
 				},
 				// --- PYTHAGORAS ---
 				{
-					task: `Forme nach \\( a \\) um: \\( c^2 = a^2 + b^2 \\) &nbsp; (Pythagoras)`,
+					textPrint: `Stelle nach \\( a \\) um: \\( \\quad a^2 + b^2 = c^2 \\quad |\\) ${space(1.4)}`,
+					textDisplay: `Stelle nach \\( a \\) um: \\( \\quad a^2 + b^2 = c^2 \\)`,
 					steps: [
-						{ eq: `c^2 &= a^2 + b^2`,                 op: `- b^2` },
-						{ eq: `c^2 - b^2 &= a^2`,                  op: `\\sqrt{\\phantom{0}}` },
-						{ eq: `a &= \\sqrt{c^2 - b^2}`,            op: null }
-					]
-				},
-				{
-					task: `Forme nach \\( b \\) um: \\( c^2 = a^2 + b^2 \\) &nbsp; (Pythagoras)`,
-					steps: [
-						{ eq: `c^2 &= a^2 + b^2`,                 op: `- a^2` },
-						{ eq: `c^2 - a^2 &= b^2`,                  op: `\\sqrt{\\phantom{0}}` },
-						{ eq: `b &= \\sqrt{c^2 - a^2}`,            op: null }
-					]
-				},
-				{
-					task: `Forme nach \\( a \\) um: \\( c = \\sqrt{a^2 + b^2} \\) &nbsp; (Pythagoras)`,
-					steps: [
-						{ eq: `c &= \\sqrt{a^2 + b^2}`,            op: `(\\,)^2` },
-						{ eq: `c^2 &= a^2 + b^2`,                  op: `- b^2` },
-						{ eq: `c^2 - b^2 &= a^2`,                  op: `\\sqrt{\\phantom{0}}` },
+						{ eq: `a^2 + b^2 &= c^2`,                 op: `- b^2` },
+						{ eq: `a^2 &= c^2 - b^2`,                  op: `\\sqrt{\\phantom{0}}` },
 						{ eq: `a &= \\sqrt{c^2 - b^2}`,            op: null }
 					]
 				},
 				// --- GESCHWINDIGKEIT ---
 				{
-					task: `Forme nach \\( t \\) um: \\( v = \\frac{s}{t} \\) &nbsp; (Geschwindigkeit)`,
+					textPrint: `Stelle nach \\( t \\) um: \\( \\quad v = \\frac{s}{t} \\quad | \\) ${space(1.4)}`,
+					textDisplay: `Stelle nach \\( t \\) um: \\( \\quad v = \\frac{s}{t} \\)`,
 					steps: [
 						{ eq: `v &= \\dfrac{s}{t}`,                op: `\\cdot t` },
 						{ eq: `v \\cdot t &= s`,                    op: `: v` },
-						{ eq: `t &= \\dfrac{s}{v}`,                 op: null }
+						{ eq: `\\dfrac{s}{v} &= t`,                 op: null }
 					]
 				},
 				// --- WEG-ZEIT-BESCHLEUNIGUNG ---
 				{
-					task: `Forme nach \\( a \\) um: \\( s = \\frac{1}{2} \\cdot a \\cdot t^2 \\) &nbsp; (Kinematik)`,
+					textPrint: `Stelle nach \\( a \\) um: \\( \\quad s = \\frac{1}{2} \\cdot a \\cdot t^2 \\quad | \\) ${space(1.4)}`,
+					textDisplay: `Stelle nach \\( a \\) um: \\( \\quad s = \\frac{1}{2} \\cdot a \\cdot t^2 \\)`,
 					steps: [
-						{ eq: `s &= \\dfrac{1}{2} \\cdot a \\cdot t^2`, op: `\\cdot 2` },
-						{ eq: `2s &= a \\cdot t^2`,                       op: `: t^2` },
-						{ eq: `a &= \\dfrac{2s}{t^2}`,                    op: null }
+						{ eq: `s &= \\tfrac{1}{2} \\cdot a \\cdot t^2`, op: `\\cdot 2` },
+						{ eq: `2\\,s &= a \\cdot t^2`,                       op: `: t^2` },
+						{ eq: `\\dfrac{2\\,s}{t^2} &= a`,                    op: null }
 					]
 				},
-				// --- DICHTE ---
+				// --- Sinus ---
 				{
-					task: `Forme nach \\( V \\) um: \\( \\rho = \\frac{m}{V} \\) &nbsp; (Dichte)`,
+					textPrint: `Stelle nach \\( \\beta \\) um: \\( \\quad a = \\dfrac{b}{\\sin \\beta} \\quad | \\) ${space(2)}`,
+					textDisplay: `Stelle nach \\( \\beta \\) um: \\( \\quad a = \\dfrac{b}{\\sin \\beta} \\)`,
 					steps: [
-						{ eq: `\\rho &= \\dfrac{m}{V}`,             op: `\\cdot V` },
-						{ eq: `\\rho \\cdot V &= m`,                 op: `: \\rho` },
-						{ eq: `V &= \\dfrac{m}{\\rho}`,              op: null }
+						{ eq: `a &= \\dfrac{b}{\\sin \\beta}`,          op: `\\cdot \\sin \\beta` },
+						{ eq: `a \\cdot \\sin \\beta &= b`,             op: `: a` },
+						{ eq: `\\sin \\beta &= \\dfrac{b}{a}`,          op: `\\sin^{-1}` },
+						{ eq: `\\sin^{-1} \\left( \\dfrac{b}{a} \\right) &= \\beta`, op: null }
 					]
 				},
-				// --- TEMPERATUR ---
+				// --- Kosinussatz ---
 				{
-					task: `Forme nach \\( C \\) um: \\( F = \\frac{9}{5} \\cdot C + 32 \\) &nbsp; (Temperatur)`,
+					textPrint: `Stelle nach \\( \\gamma \\) um: \\( \\quad c^2 = a^2 + b^2 - 2 \\, a \\, b \\, \\cos \\gamma \\quad | \\) ${space(2)}`,
+					textDisplay: `Stelle nach \\( \\gamma \\) um: \\( \\quad c^2 = a^2 + b^2 - 2 \\, a \\, b \\, \\cos \\gamma \\)`,
 					steps: [
-						{ eq: `F &= \\dfrac{9}{5} \\cdot C + 32`,         op: `- 32` },
-						{ eq: `F - 32 &= \\dfrac{9}{5} \\cdot C`,         op: `\\cdot \\dfrac{5}{9}` },
-						{ eq: `C &= \\dfrac{5}{9} \\cdot (F - 32)`,       op: null }
-					]
-				},
-				// --- KINETISCHE ENERGIE ---
-				{
-					task: `Forme nach \\( v \\) um: \\( E = \\frac{1}{2} \\cdot m \\cdot v^2 \\) &nbsp; (kin. Energie)`,
-					steps: [
-						{ eq: `E &= \\dfrac{1}{2} \\cdot m \\cdot v^2`, op: `\\cdot 2` },
-						{ eq: `2E &= m \\cdot v^2`,                       op: `: m` },
-						{ eq: `\\dfrac{2E}{m} &= v^2`,                    op: `\\sqrt{\\phantom{0}}` },
-						{ eq: `v &= \\sqrt{\\dfrac{2E}{m}}`,              op: null }
+						{ eq: `c^2 &= a^2 + b^2 - 2 \\, a \\, b \\, \\cos \\gamma`, op: `- a^2 -b^2` },
+						{ eq: `c^2 -a^2 - b^2 &= - 2 \\, a \\, b \\, \\cos \\gamma`, op: `: - (2 \\, a \\, b)` },
+						{ eq: `\\dfrac{c^2 -a^2 - b^2}{- (2 \\, a \\, b)} &= \\cos \\gamma`, op: `\\cos^{-1}` },
+						{ eq: `\\cos^{-1} \\left( \\dfrac{c^2 -a^2 - b^2}{- (2 \\, a \\, b)} \\right) &= \\gamma`, op: null }
 					]
 				}
 			];
@@ -1643,19 +1481,21 @@ function createTask(type, isMentalMode, grade = 5) {
 					: step.eq
 			).join(' \\\\\n\t\t\t\t');
 
-			textDisplay = `Stelle die Formel um:<br>${f.task}`;
+			textDisplay = f.textDisplay;
+			textPrint = f.textPrint;
+			
 			s = `\\[ \\begin{aligned}\n\t\t\t\t${alignLines}\n\t\t\t\\end{aligned} \\]`;
 			break;
 		}
-
+		
 		case 'terme': {
-			const vars = ['x', 'y', 'a', 'b'];
+			const vars = ['x', 'y', 'z', 'a', 'b'];
 			let selectedVars = [...vars].sort(() => 0.5 - Math.random()).slice(0, 2);
 			if (Math.random() < 0.5) selectedVars[1] = '';
-
+			
 			let mode = randInt(0, 1);
 			let taskStr, resStr;
-
+			
 			if (mode === 0) {
 				// --- TYP: ZUSAMMENFASSEN ---
 				const numGlieder = randInt(4, 5); // Mind. 4 Glieder für echtes Zusammenfassen
@@ -1669,7 +1509,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					if (i === 0 || i === 1) v = selectedVars[0]; // Typ A (muss zusammengefasst werden)
 					else if (i === 2) v = selectedVars[1];       // Typ B (muss vorkommen)
 					else v = selectedVars[randInt(0, 1)];        // Rest zufällig
-
+					
 					let val, combo;
 					do {
 						let coef = randInt(1, 12);
@@ -1680,7 +1520,7 @@ function createTask(type, isMentalMode, grade = 5) {
 
 					usedCombinations.add(combo);
 					counts[v] += val;
-
+					
 					// Wir speichern hier nur die Rohdaten, das Vorzeichen-Handling 
 					// machen wir nach dem Mischen für das erste Glied neu.
 					let absCoef = Math.abs(val);
@@ -1714,28 +1554,70 @@ function createTask(type, isMentalMode, grade = 5) {
 					}
 				});
 				resStr = resParts.length === 0 ? '0' : resParts.join(' ').trim();
-				textDisplay = `Vereinfache den Term: \\[ ${taskStr} \\]`;
+				textDisplay = `Vereinfache den Term: <br>\\( ${taskStr} \\)`;
+				textPrint = `Vereinfache den Term: \\(\\quad ${taskStr} \\) ${space(0.7)}`;
 
 			} else {
 				// --- TYP: KLAMMER AUFLÖSEN ---
-				let factor = randInt(2, 8) * (Math.random() < 0.5 ? 1 : -1);
 				let v = selectedVars[0] || 'x';
-				let cVarCoef = randInt(2, 9) * (Math.random() < 0.5 ? 1 : -1);
-				let cNum = randInt(2, 12) * (Math.random() < 0.5 ? 1 : -1);
+				let cVarCoef = rnd(-9, 9);
+				let cNum = rnd(-12, 12);
 
-				let fDisplay = factor < 0 ? `(${factor})` : factor;
+				// Mit 50% Chance ist der Faktor selbst eine Variable (z.B. 3x), sonst eine Zahl
+				const useVarFactor = v !== '' && Math.random() < 0.5;
+				const fmtFactorVar = (coef, variable) => {
+					if (coef === 1) return variable;
+					if (coef === -1) return fmt(`-${variable}`);
+					return fmt(`${coef}${variable}`);
+				};
+				const fmtProductFactor = (factorText, termText) => `${fmt(termText)} \\cdot ${fmt(factorText)}`;
+
+				let factorCoef, fDisplay;
+				if (useVarFactor) {
+					factorCoef = rnd(-5, 5);
+					while (factorCoef === 0) factorCoef = rnd(-5, 5);
+					fDisplay = fmtFactorVar(factorCoef, v);
+				} else {
+					factorCoef = rnd(-7, 7);
+					while (factorCoef === 0) factorCoef = rnd(-7, 7);
+					fDisplay = fmt(factorCoef);
+				}
+
 				taskStr = `${fDisplay} \\cdot (${cVarCoef}${v} ${cNum > 0 ? '+' : '-'} ${Math.abs(cNum)})`;
 
-				let resV = factor * cVarCoef;
-				let resN = factor * cNum;
+				if (useVarFactor) {
+					// Ergebnis enthält v² und v
+					const resVV = factorCoef * cVarCoef;
+					const resV  = factorCoef * cNum;
+					const term1 = fmtProductFactor(fDisplay, `${cVarCoef}${v}`);
+					const term2 = fmtProductFactor(fDisplay, Math.abs(cNum));
 
-				let p1 = (resV === 1) ? v : (resV === -1 ? `-${v}` : `${resV}${v}`);
-				let p2 = resN > 0 ? `+ ${resN}` : `- ${Math.abs(resN)}`;
-				resStr = `${p1} ${p2}`;
-				textDisplay = `Löse die Klammer auf: \\[ ${taskStr} \\]`;
+					let p1 = resVV === 1  ? `${v}^2`
+					       : resVV === -1 ? `-${v}^2`
+					       :               `${resVV}${v}^2`;
+					let p2 = resV === 0   ? ''
+					       : resV > 0     ? ` + ${resV}${v}`
+					       :               ` - ${Math.abs(resV)}${v}`;
+					const step = cNum > 0 ? `${term1} + ${term2}` : `${term1} - ${term2}`;
+					resStr = `${step} \\\\ = ${p1}${p2}`;
+				} else {
+					const resV = factorCoef * cVarCoef;
+					const resN = factorCoef * cNum;
+					const term1 = fmtProductFactor(fDisplay, `${cVarCoef}${v}`);
+					const term2 = fmtProductFactor(fDisplay, Math.abs(cNum));
+					let p1 = resV === 1  ? v
+					       : resV === -1 ? `-${v}`
+					       :              `${resV}${v}`;
+					let p2 = resN > 0 ? `+ ${resN}` : `- ${Math.abs(resN)}`;
+					const step = cNum > 0 ? `${term1} + ${term2}` : `${term1} - ${term2}`;
+					resStr = `${step} \\\\ = ${p1} ${p2}`;
+				}
+
+				textDisplay = `Löse die Klammer auf: <br>\\( ${taskStr} \\)`;
+				textPrint = `Löse die Klammer auf: \\(\\quad ${taskStr} \\) ${space(0.7)}`;
 			}
 
-			s = `\\[ ${taskStr} = ${resStr} \\]`;
+			s = `\\( ${taskStr} = ${resStr} \\)`;
 			break;
 		}
 
@@ -1744,22 +1626,22 @@ function createTask(type, isMentalMode, grade = 5) {
 
 			// --- TYP: BEREICH ABSUCHEN ---
 			let start = randInt(0, 40);
-
+			
 			let prims = [];
 			for (let i = start; i <= start + 10; i++) {
 				if (isPrim(i)) prims.push(i);
 			}
 
 			textDisplay = `Nenne alle Primzahlen von ${start} bis ${start + 10}.`;
-			s = `\\( ${prims.join(', ')} \\quad \\) (${start} - ${start + 10})`;
-
+			s = `Primzahlen ${start} - ${start + 10}: \\( \\quad ${prims.join(', ')}\\)`;
+			
 			break;
 		}
 
 		case 'wkt': {
 			let mode = randInt(0, 4); // 0: Urne (3 Farben), 1: Rel. Häufigkeit, 2: 12-seitiger Würfel, 3: Glücksrad, 4: Urne rückwärts
 			let taskStr, resStr;
-
+			
 			if (mode === 0) {
 				// --- TYP: LAPLACE URNE (3 FARBEN) ---
 				const farben = ['roten', 'blauen', 'grünen', 'gelben', 'weißen'];
@@ -1768,12 +1650,12 @@ function createTask(type, isMentalMode, grade = 5) {
 				let n2 = randInt(3, 9);
 				let n3 = randInt(3, 9);
 				let gesamt = n1 + n2 + n3;
-
+				
 				// Grammatik-Fix: "rote" -> "Rot", "grüne" -> "Grün"
 				let farbeSubst = w[0].charAt(0).toUpperCase() + w[0].slice(1, -1);
-
+				
 				taskStr = `Urne mit ${n1} ${w[0]}, ${n2} ${w[1]} und ${n3} ${w[2]} Kugeln. Wahrscheinlichkeit, eine ${w[0].slice(0, -1)} Kugel zu ziehen?`;
-
+				
 				// In der Lösung nutzen wir jetzt die substantivierte Form
 				resStr = `P(\\text{${farbeSubst}}) = \\frac{${n1}}{${gesamt}}`;
 			} else if (mode === 1) {
@@ -1787,16 +1669,16 @@ function createTask(type, isMentalMode, grade = 5) {
 				const sz = szenarien[randInt(0, szenarien.length - 1)];
 				let gesamt = [10, 20, 25, 40, 50][randInt(0, 4)];
 				let treffer = Math.floor(gesamt * (randInt(2, 9) / 10));
-
+				
 				taskStr = `${sz.txt} ${gesamt} ${sz.einheit} ${treffer} ${sz.e}. Relative Häufigkeit?`;
 				let prozent = (treffer / gesamt) * 100;
 				resStr = `h = \\frac{${treffer}}{${gesamt}} = ${prozent.toFixed(0).replace('.', ',')}\\text{%}`;
-
+				
 			} else if (mode === 2) {
 				// --- TYP: 12-SEITIGER WÜRFEL (D12) ---
 				let subMode = randInt(0, 2);
 				let ereignis, guenstige;
-
+				
 				if (subMode === 0) {
 					ereignis = "eine Primzahl";
 					taskStr = `Wahrscheinlichkeit für ${ereignis} bei einem 12-seitigen Spielwürfel?`;
@@ -1811,7 +1693,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					// Würfeln: Teilbarkeit durch 3, 4 oder 5
 					let auswahl = [3, 4, 5][randInt(0, 2)];
 					let treffer, gekuerzt;
-
+					
 					if (auswahl === 3) {
 						treffer = 4; // {3, 6, 9, 12}
 						gekuerzt = "\\frac{1}{3}";
@@ -1834,28 +1716,28 @@ function createTask(type, isMentalMode, grade = 5) {
 				let w = [...farben].sort(() => 0.5 - Math.random());
 				let f1 = w[0]; // Die gesuchte Farbe (z.B. "rote")
 				let f2 = w[1]; // Die andere Farbe
-
+				
 				let n1 = randInt(2, 5); // Felder Farbe 1
 				let n2 = randInt(2, 5); // Felder Farbe 2
 				let gesamt = n1 + n2;
-
+				
 				// Grammatik-Anpassung für die Farbe im Satz (Substantiviert)
 				let f1Subst = f1.charAt(0).toUpperCase() + f1.slice(1, -2); // "rote" -> "Rot"
-
+				
 				taskStr = `Glücksrad mit ${n1} ${f1} und ${n2} ${f2} gleich großen Feldern. Wahrscheinlichkeit, dass zweimal nacheinander ${f1Subst} gedreht wird?`;
-
+				
 				// Berechnung: (n1/gesamt) * (n1/gesamt)
 				let zaehler = n1 * n1;
 				let nenner = gesamt * gesamt;
-
+				
 				// Lösungsweg mit Pfadregel
 				resStr = `P(\\text{${f1Subst}, ${f1Subst}}) = \\frac{${n1}}{${gesamt}} \\cdot \\frac{${n1}}{${gesamt}} = \\frac{${zaehler}}{${nenner}}`;
-
+				
 			} else {
 				// --- TYP: URNE RÜCKWÄRTS (ANZAHL ROTER KUGELN BERECHNEN) ---
 				const usePct = Math.random() < 0.5;
 				let n, redCount;
-
+				
 				if (usePct) {
 					const pctCandidates = [
 						{ pct: 10, simpNum: 1, simpDen: 10 },
@@ -1899,20 +1781,20 @@ function createTask(type, isMentalMode, grade = 5) {
 
 		case 'funktionen': {
 			let subType = randInt(0, 6);
-
+			
 			// Hilfsvariablen für die Funktionserstellung
 			let isLinear = randInt(0, 1) === 0;
 			let m = randInt(-4, 4);
 			if (m === 0) m = 2; // Steigung 0 vermeiden
 			let b = randInt(-5, 5);
-
+			
 			let funcStr = "";
 			let calcF = (x) => 0;
-
+			
 			// Funktion generieren (Linear oder Quadratisch)
 			if (isLinear) {
 				calcF = (x) => m * x + b;
-				let mStr = m === 1 ? "" : (m === -1 ? "-" : m);
+				let mStr = m === 1 ? "" : (m === -1 ? "-" : fmt(m));
 				let bStr = b > 0 ? ` + ${b}` : (b < 0 ? ` - ${Math.abs(b)}` : "");
 				funcStr = `f(x) = ${mStr}x${bStr}`;
 			} else {
@@ -1929,16 +1811,16 @@ function createTask(type, isMentalMode, grade = 5) {
 					funcStr = `f(x) = ${a}x^2`;
 				}
 			}
-
+			
 			// 7 Teilaufgabentypen
 			switch (subType) {
 				case 0: // Funktionswert berechnen
-					let xVal = randInt(-4, 4);
+				let xVal = randInt(-4, 4);
 					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Berechne den Funktionswert an der Stelle \\( x = ${xVal} \\).`;
 					s = `\\( f(${xVal}) = ${calcF(xVal)} \\)`;
 					break;
-
-				case 1: // Argument berechnen
+					
+					case 1: // Argument berechnen
 					let targetX = randInt(-3, 3);
 					let targetY = calcF(targetX);
 					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Bestimme das Argument \\( x \\), für das der Funktionswert \\( y = ${targetY} \\) ist.`;
@@ -1948,13 +1830,13 @@ function createTask(type, isMentalMode, grade = 5) {
 						s = `\\( x = ${targetX} \\)`;
 					}
 					break;
-
-				case 2: // Nullstelle berechnen (erzwingt glatte Ergebnisse)
+					
+					case 2: // Nullstelle berechnen (erzwingt glatte Ergebnisse)
 					if (isLinear) {
 						let root = randInt(-4, 4);
 						let myM = randInt(1, 3) * (randInt(0, 1) === 0 ? 1 : -1);
 						let myB = -myM * root;
-						let mStr = myM === 1 ? "" : (myM === -1 ? "-" : myM);
+						let mStr = myM === 1 ? "" : (myM === -1 ? "-" : fmt(myM));
 						let bStr = myB > 0 ? ` + ${myB}` : (myB < 0 ? ` - ${Math.abs(myB)}` : "");
 						funcStr = `f(x) = ${mStr}x${bStr}`;
 						textDisplay = `Berechne die Nullstelle der Funktion \\( ${funcStr} \\).`;
@@ -1968,7 +1850,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					}
 					break;
 
-				case 3: // Fehlende Koordinate
+					case 3: // Fehlende Koordinate
 					let px = randInt(-4, 4);
 					let py = calcF(px);
 					if (randInt(0, 1) === 0) {
@@ -1984,26 +1866,26 @@ function createTask(type, isMentalMode, grade = 5) {
 					}
 					break;
 
-				case 4: // Wertetabelle erstellen
+					case 4: // Wertetabelle erstellen
 					textDisplay = `Gegeben ist \\( ${funcStr} \\).<br>Erstelle eine Wertetabelle für \\( x \\in \\{-2; -1; 0; 1; 2\\} \\).`;
 					s = `\\( x = -2 \\Rightarrow y = ${calcF(-2)} \\)<br>` +
-						`\\( x = -1 \\Rightarrow y = ${calcF(-1)} \\)<br>` +
-						`\\( x = 0 \\Rightarrow y = ${calcF(0)} \\)<br>` +
-						`\\( x = 1 \\Rightarrow y = ${calcF(1)} \\)<br>` +
-						`\\( x = 2 \\Rightarrow y = ${calcF(2)} \\)`;
+					`\\( x = -1 \\Rightarrow y = ${calcF(-1)} \\)<br>` +
+					`\\( x = 0 \\Rightarrow y = ${calcF(0)} \\)<br>` +
+					`\\( x = 1 \\Rightarrow y = ${calcF(1)} \\)<br>` +
+					`\\( x = 2 \\Rightarrow y = ${calcF(2)} \\)`;
 					break;
-
-				case 5: // Graph zeichnen
+					
+					case 5: // Graph zeichnen
 					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Zeichne den zugehörigen Funktionsgraphen.`;
 					s = `Kontrolle:<br>Der Graph verläuft u.a. durch die Punkte \\( P(0 | ${calcF(0)}) \\) und \\( Q(1 | ${calcF(1)}) \\).`;
 					break;
-
-				case 6: // Punktprobe
+					
+					case 6: // Punktprobe
 					let testX = randInt(-3, 3);
 					let isTrue = randInt(0, 1) === 0;
 					// Wenn isTrue false ist, addiere einen kleinen Störwert auf das echte y
 					let testY = isTrue ? calcF(testX) : calcF(testX) + randInt(1, 3) * (randInt(0, 1) === 0 ? 1 : -1);
-
+					
 					textDisplay = `Führe eine Punktprobe durch:<br>Liegt der Punkt \\( P(${testX} | ${testY}) \\) auf dem Graphen von \\( ${funcStr} \\)?`;
 					if (isTrue) {
 						s = `Ja, denn \\( f(${testX}) = ${testY} \\) ist eine wahre Aussage.`;
@@ -2018,17 +1900,17 @@ function createTask(type, isMentalMode, grade = 5) {
 		case 'statistik': {
 			let n = randInt(6, 7);
 			let data, sum, mean, modeVal;
-
+			
 			// Hocheffiziente Generierung ohne langes Würfeln
 			do {
 				data = [];
 				let used = new Set();
-
+				
 				// 1. Modalwert festlegen (kommt genau 2x vor)
 				modeVal = randInt(1, 9);
 				data.push(modeVal, modeVal);
 				used.add(modeVal);
-
+				
 				// 2. n-3 eindeutige Zufallszahlen hinzufügen
 				while (data.length < n - 1) {
 					let num = randInt(1, 12);
@@ -2041,21 +1923,21 @@ function createTask(type, isMentalMode, grade = 5) {
 				// 3. Den letzten Wert berechnen (Ziel: Rest 0 oder bei n=6 auch Rest 3)
 				let currentSum = data.reduce((a, b) => a + b, 0);
 				let targetRemainder = (n === 6 && Math.random() < 0.5) ? 3 : 0;
-
+				
 				// Diff berechnen, um auf den targetRemainder zu kommen
 				let diff = (targetRemainder - (currentSum % n) + n) % n;
 				let lastVal = diff;
-
+				
 				// lastVal erhöhen, bis er nicht mehr in 'used' ist und > 0
 				while (used.has(lastVal) || lastVal === 0) {
 					lastVal += n;
 				}
-
+				
 				// Wichtig: Erst hier wird das Array auf die volle Länge n gebracht!
 				data.push(lastVal);
 				sum = currentSum + lastVal;
 				mean = (sum / n).toString().replace('.', ',');
-
+				
 				if (lastVal <= 13) {
 					sum = currentSum + lastVal;
 					// Prüfe: Entweder glatt teilbar ODER (bei n=6) Rest ist 3
@@ -2078,39 +1960,39 @@ function createTask(type, isMentalMode, grade = 5) {
 			// Bestimmung der einen gesuchten Kenngröße
 			let taskType = randInt(0, 3);
 			let taskName, loesung;
-
+			
 			switch (taskType) {
 				case 0:
 					taskName = "das arithmetische Mittel";
 					// Nutze hier das oben formatierte mean
 					loesung = `${sortedData.join(' + ')} = ${sum}<br>arithmetische Mittel = ${sum} : ${n} = ${mean}`;
 					break;
-				case 1:
-					taskName = "den Zentralwert (Median)";
+					case 1:
+						taskName = "den Zentralwert (Median)";
 					if (n === 7) {
 						// Bei 7 Daten: Genau der 4. Wert
 						let median = sortedData[3];
 						loesung = isMentalMode ?
-							`${displayData.join(', ')}<br>Zentralwert (Median) = ${median}.` :
-							`${sortedData.join(', ')}<br>Zentralwert (Median) = ${median}`;
+						`${displayData.join(', ')}<br>Zentralwert (Median) = ${median}.` :
+						`${sortedData.join(', ')}<br>Zentralwert (Median) = ${median}`;
 					} else {
 						// Bei 6 Daten: Mittelwert aus dem 3. und 4. Wert
 						let m1 = sortedData[2];
 						let m2 = sortedData[3];
 						let median = (m1 + m2) / 2;
 						let medianStr = median.toString().replace('.', ',');
-
+						
 						loesung = isMentalMode ?
 							`${sortedData.join(', ')}<br>Zentralwert = (${m1} + ${m2}) : 2 = ${medianStr}` :
 							`geordnete Liste: ${sortedData.join(', ')}<br>Zentralwert = (${m1} + ${m2}) : 2 = ${medianStr}`;
-					}
+						}
 					break;
 				case 2:
 					taskName = "den Modalwert";
 					loesung = `${displayData.join(', ')}<br>Modalwert = ${modeVal}`;
 					break;
-				case 3:
-					taskName = "die Spannweite";
+					case 3:
+						taskName = "die Spannweite";
 					let spannweite = sortedData[n - 1] - sortedData[0];
 					loesung = `${displayData.join(', ')}<br>Spannweite = ${sortedData[n - 1]} - ${sortedData[0]} = ${spannweite}`;
 					break;
@@ -2122,31 +2004,30 @@ function createTask(type, isMentalMode, grade = 5) {
 		}
 
 		case 'winkel': {
-			let mode = randInt(0, 3); // 0: Uhrzeit, 1: Speichen, 2: Kreisdiagramm, 3: Winkelarten, 4: Zeichnen
-
+			let mode = randInt(0, 5); // 0: Uhrzeit, 1: Kreisdiagramm, 2: Winkel zeichnen (versch. Typen), 3: Winkel zeichnen (10°-350°), 4: Dreieckswinkel berechnen, 5: Dreieckstyp zeichnen
+			
 			if (mode === 0) {
-				// --- TYP 1: Uhrzeit ---
+				// --- Uhrzeit ---
 				let displayHour = randInt(0, 23);
 				let hourOnClock = displayHour % 12;
 				let stepCount = Math.min(hourOnClock, 12 - hourOnClock);
 				let smallerAngle = stepCount * 30;
 				let largerAngle = 360 - smallerAngle;
-
-				textDisplay = `Welchen Winkel bilden die Uhr-Zeiger um ${String(displayHour)}:00 Uhr?`;
+				
+				textDisplay = `Welche Winkel bilden die Uhr-Zeiger um ${String(displayHour)}:00 Uhr?`;
 				s = `${String(displayHour)}:00 Uhr ➝ ${smallerAngle}° und ${largerAngle}°`;
-
+				
 			} else if (mode === 1) {
-				// --- TYP 3: Kreisdiagramm ---
+				// --- Kreisdiagramm ---
 				const prozentListe = [5, 10, 20, 25, 30, 40, 50, 60, 75, 80];
 				let p = prozentListe[randInt(0, prozentListe.length - 1)];
 				let result = (p / 100) * 360;
-
+				
 				textDisplay = `Welchem Winkel entsprechen ${p} % in einem Kreisdiagramm?`;
 				s = `10 % ≙ 36° ⭢ ${p} % ≙ ${result}°`;
-
-
+				
 			} else if (mode === 2) {
-				// --- TYP 4: Winkelarten bestimmen ---
+				// --- Winkel zeichnen ---
 				// Wir wählen gezielt Werte aus verschiedenen Bereichen
 				const pools = [
 					{ min: 1, max: 89, name: "spitzer Winkel" },
@@ -2156,22 +2037,45 @@ function createTask(type, isMentalMode, grade = 5) {
 					{ min: 181, max: 359, name: "überstumpfer Winkel" }
 				];
 				let pick = pools[randInt(0, pools.length - 1)];
-				let grad = pick.val !== undefined ? pick.val : randInt(pick.min, pick.max);
-
-				textDisplay = `Welche Winkelart liegt bei ${grad}° vor?`;
-				s = `${grad}° ➝ ${pick.name}.`;
-
-			} else {
-				// --- TYP 5: Zeichenbefehl (Ohne Grafik) ---
+				
+				textDisplay = `Zeichne einen ${pick.name}.`;
+				s = pick.val !== undefined ? `${pick.name}: ${pick.val}°` : `${pick.name}: ${pick.min}° bis ${pick.max}°`;
+				
+			} else if (mode === 3) {
 				// Winkel zwischen 10° und 350°, bevorzugt 5er Schritte für die Zeichenbarkeit
 				let grad = randInt(15, 250);
-
 				textDisplay = `Zeichne den Winkel \\(\\alpha\\) = ${grad}°.`;
 				s = `Zeichne den Winkel \\(\\alpha\\) = ${grad}°.`;
+
+			} else if (mode === 4) {
+				let a = rnd(25, 45), b = rnd(61, 129);
+				textDisplay = `Dreieck mit Winkeln \\( \\alpha = ${a}° \\) und \\( \\beta = ${b}°\\). Winkel \\(\\gamma \\)?`;
+				s = `\\( \\gamma = 180° - ${a}° - ${b}° = ${180 - a - b}°\\)`;
+
+			} else {
+				const triangleTypes = ['spitzwinkliges', 'stumpfwinkliges', 'gleichschenkliges', 'gleichseitiges'];
+				const type = triangleTypes[randInt(0, triangleTypes.length - 1)];
+				textDisplay = `Zeichne ein ${type} Dreieck.`;
+				let definition;
+				switch (type) {
+					case 'spitzwinkliges':
+						definition = 'Alle Winkel kleiner als 90°.';
+						break;
+					case 'stumpfwinkliges':
+						definition = 'Ein Winkel größer als 90°.';
+						break;
+					case 'gleichschenkliges':
+						definition = 'Zwei Seiten gleich lang.';
+						break;
+					case 'gleichseitiges':
+						definition = 'Alle Seiten gleich lang.';
+						break;
+				}
+				s = `Kontrolle: ${definition}`;
 			}
 			break;
 		}
-
+		
 		case 'schraegbild': {
 			let type = randInt(0, 4); // 0: Quader, 1: Pyramide, 2: Prisma, 3: Zylinder, 4: Kegel
 
@@ -2188,14 +2092,14 @@ function createTask(type, isMentalMode, grade = 5) {
 				let c = randInt(3, 8);
 				textDisplay = `Zeichne das Schrägbild eines Quaders in Kavalierperspektive ${pers}.<br><br>Gegeben sind die Breite \\( a = ${a} \\text{ cm} \\), die Tiefe (nach hinten) \\( b = ${b} \\text{ cm} \\) und die Höhe \\( c = ${c} \\text{ cm} \\).`;
 				s = `Kontrolle: Die vordere Fläche ist ein Rechteck (\\( ${a} \\text{ cm} \\times ${c} \\text{ cm} \\)). Die nach hinten verlaufenden Kanten müssen im Heft genau \\( ${fmt(b / 2)} \\text{ cm} \\) lang gezeichnet werden.`;
-
+				
 			} else if (type === 1) {
 				// --- PYRAMIDE ---
 				let a = randInt(4, 8);
 				let h = randInt(5, 9);
 				textDisplay = `Zeichne das Schrägbild einer geraden Pyramide mit quadratischer Grundfläche in Kavalierperspektive ${pers}.<br><br>Gegeben sind die Grundkante \\( a = ${a} \\text{ cm} \\) und die Körperhöhe \\( h = ${h} \\text{ cm} \\).`;
 				s = `Kontrolle: Die vordere Grundkante ist \\( ${a} \\text{ cm} \\) lang, die nach hinten gezeichnete Kante \\( ${fmt(a / 2)} \\text{ cm} \\). Der Höhenfußpunkt liegt genau im Schnittpunkt der beiden Diagonalen der Grundfläche.`;
-
+				
 			} else if (type === 2) {
 				// --- PRISMA (DREIECKIG) ---
 				let a = randInt(3, 6);
@@ -2203,14 +2107,14 @@ function createTask(type, isMentalMode, grade = 5) {
 				let hk = randInt(4, 9);
 				textDisplay = `Zeichne das Schrägbild eines geraden Prismas in Kavalierperspektive ${pers}.<br><br>Die Grundfläche ist ein rechtwinkliges Dreieck, das parallel zur Zeichenebene liegt (vordere Fläche). Die Katheten sind \\( a = ${a} \\text{ cm} \\) und \\( b = ${b} \\text{ cm} \\). Die Körperhöhe (nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
 				s = `Kontrolle: Das rechtwinklige Dreieck wird in wahrer Größe (\\( ${a} \\text{ cm} \\) und \\( ${b} \\text{ cm} \\)) gezeichnet. Die nach hinten verlaufenden Kanten sind im Heft genau \\( ${fmt(hk / 2)} \\text{ cm} \\) lang.`;
-
+				
 			} else if (type === 3) {
 				// --- ZYLINDER ---
 				let r = randInt(2, 4);
 				let hk = randInt(4, 9);
 				textDisplay = `Zeichne das Schrägbild eines Zylinders in Kavalierperspektive ${pers}.<br><br>Damit es einfach zu zeichnen ist, "liegt" der Zylinder: Die kreisförmige Grundfläche mit dem Radius \\( r = ${r} \\text{ cm} \\) ist parallel zur Zeichenebene (vordere Fläche). Die Körperhöhe (nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
 				s = `Kontrolle: Der vordere Kreis wird in wahrer Größe mit dem Zirkel gezeichnet. Der Mittelpunkt für den hinteren Kreis wird vom vorderen Mittelpunkt im 45°-Winkel um \\( ${fmt(hk / 2)} \\text{ cm} \\) verschoben.`;
-
+				
 			} else if (type === 4) {
 				// --- KREISKEGEL ---
 				let r = randInt(2, 4);
@@ -2234,7 +2138,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			const aNames = ['\\alpha', '\\beta', '\\gamma'];
 			const sn1 = sNames[p[0]], sn2 = sNames[p[1]], sn3 = sNames[p[2]];
 			const an1 = aNames[p[0]], an2 = aNames[p[1]], an3 = aNames[p[2]];
-
+			
 			const type = randInt(0, 3); // 0: SSS, 1: SWS, 2: WSW, 3: SsW
 			const kongruenzsatz = ['SSS', 'SWS', 'WSW', 'SsW'][type];
 			const cm = (x) => x.toFixed(1).replace('.', ',');
@@ -2248,7 +2152,7 @@ function createTask(type, isMentalMode, grade = 5) {
 
 			let givenStr = '';
 			let s1, s2, s3, a1, a2, a3;
-
+			
 			if (type === 0) {
 				// SSS
 				do {
@@ -2259,9 +2163,9 @@ function createTask(type, isMentalMode, grade = 5) {
 					const minS3Tenths = Math.ceil(minS3 * 10);
 					const maxS3Tenths = Math.floor(maxS3 * 10);
 					if (minS3Tenths > maxS3Tenths) continue;
-
+					
 					s3 = pickDecNoZeroTenth(minS3Tenths, maxS3Tenths);
-
+					
 					a1 = Math.round(Math.acos((s2 * s2 + s3 * s3 - s1 * s1) / (2 * s2 * s3)) * 180 / Math.PI);
 					a2 = Math.round(Math.acos((s1 * s1 + s3 * s3 - s2 * s2) / (2 * s1 * s3)) * 180 / Math.PI);
 					a3 = 180 - a1 - a2;
@@ -2274,7 +2178,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					s1 = pickDecNoZeroTenth(41, 99);
 					s2 = pickDecNoZeroTenth(41, 99);
 					a3 = randInt(35, 125);
-
+					
 					s3 = Math.sqrt(s1 * s1 + s2 * s2 - 2 * s1 * s2 * Math.cos(a3 * Math.PI / 180));
 					a1 = Math.round(Math.acos((s2 * s2 + s3 * s3 - s1 * s1) / (2 * s2 * s3)) * 180 / Math.PI);
 					s3 = Math.round(s3 * 10) / 10;
@@ -2289,7 +2193,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					a1 = randInt(35, 80);
 					a2 = randInt(35, 80);
 					a3 = 180 - a1 - a2;
-
+					
 					s1 = Math.round((s3 * Math.sin(a1 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
 					s2 = Math.round((s3 * Math.sin(a2 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
 				} while (a3 <= 0 || Math.max(s1, s2, s3) > 10);
@@ -2301,7 +2205,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					s1 = pickDecNoZeroTenth(71, 99);
 					s2 = pickDecNoZeroTenth(41, 69);
 					a1 = randInt(45, 110);
-
+					
 					const sinA2 = (s2 * Math.sin(a1 * Math.PI / 180)) / s1;
 					if (sinA2 >= 1 || sinA2 <= -1) {
 						a2 = NaN;
@@ -2321,7 +2225,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			const resS = [], resA = [];
 			resS[p[0]] = s1; resS[p[1]] = s2; resS[p[2]] = s3;
 			resA[p[0]] = a1; resA[p[1]] = a2; resA[p[2]] = a3;
-
+			
 			textDisplay = `Fertige eine Planfigur an und zeichne das Dreieck:<br>${givenStr}`;
 			s = `Kongruenzsatz ${kongruenzsatz}, alle Maße:<br>\\(a=${cm(resS[0])}\\,cm; \\quad b=${cm(resS[1])}\\,cm; \\quad c=${cm(resS[2])}\\,cm\\)<br>\\(\\alpha=${resA[0]}^\\circ; \\quad \\beta=${resA[1]}^\\circ; \\quad \\gamma=${resA[2]}^\\circ\\)`;
 			break;
@@ -2336,12 +2240,12 @@ function createTask(type, isMentalMode, grade = 5) {
 				{ z: 2, n: 3 }, { z: 3, n: 4 }, { z: 2, n: 5 }, { z: 3, n: 5 }, { z: 4, n: 5 },
 				{ z: 5, n: 6 }, { z: 3, n: 8 }, { z: 3, n: 10 }, { z: 7, n: 10 }, { z: 9, n: 10 }
 			];
-
+			
 			// Wähle einen zufälligen Bruch aus dem Pool
 			let frac = fractions[randInt(0, fractions.length - 1)];
 			let z = frac.z;
 			let n = frac.n;
-
+			
 			if (rd > 0.67) {
 				// TYP 1: Anteil berechnen (Bruch von Ganzem)
 				// Damit es glatt aufgeht, muss das Ganze ein Vielfaches des Nenners sein.
@@ -2352,7 +2256,7 @@ function createTask(type, isMentalMode, grade = 5) {
 
 				textDisplay = `\\( \\frac{${z}}{${n}} \\text{ von } ${comma(G)} \\text{ ${einheit} sind ___}\\)`;
 				s = `\\( \\frac{${z}}{${n}} \\text{ von } ${comma(G)} \\text{ ${einheit}} \\text{ sind } ${comma(W)} \\text{ ${einheit}}\\)<br>
-							 \\((${comma(G)} : ${n} \\cdot ${z} = ${comma(W)})\\)`;
+				\\((${comma(G)} : ${n} \\cdot ${z} = ${comma(W)})\\)`;
 
 			} else if (rd > 0.33) {
 				// TYP 2: Ganzes berechnen (Bruch sind Anteil von...)
@@ -2361,25 +2265,25 @@ function createTask(type, isMentalMode, grade = 5) {
 				let multiplier = isMentalMode ? rnd(2, 9) : rnd(3, 13);
 				let W = z * multiplier * scale; // Der Anteil
 				let G = (W / z) * n;            // Das Ganze
-
+				
 				textDisplay = `\\( \\frac{${z}}{${n}} \\text{ sind } ${comma(W)} \\text{ ${einheit} von ___}\\)`;
 				s = `\\( \\frac{${z}}{${n}} \\text{ sind } ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit}}\\)<br>
-							 \\((${comma(W)} : ${z} \\cdot ${n} = ${comma(G)})\\)`;
+				\\((${comma(W)} : ${z} \\cdot ${n} = ${comma(G)})\\)`;
 
 			} else {
 				// TYP 3: Bruch berechnen (Anteil von Ganzem sind...)
 				// Wir nehmen den generierten Bruch und erzeugen dazu passende glatte Werte.
 				let multiplier = isMentalMode ? rnd(2, 9) : rnd(3, 13);
-
+				
 				let W = z * multiplier;
 				let G = n * multiplier;
-
+				
 				textDisplay = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind ___ } \\)`;
 				s = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind } \\frac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\frac{${z}}{${n}} \\)`;
 			}
 			break;
 		}
-
+		
 		case 'prop': {
 			const szenarien = [
 				{ einheit1: 'kg Äpfel', einheit2: '€', objekt: 'Äpfel', type: 'food' },
@@ -2390,7 +2294,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			];
 
 			const sz = szenarien[randInt(0, szenarien.length - 1)];
-
+			
 			// Hilfsfunktion für deutsches Zahlenformat
 			const de = (num) => {
 				if (sz.type === 'food' || sz.type === 'job') return num.toFixed(2).replace('.', ',');
@@ -2403,7 +2307,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				menge2 = menge1 + randInt(1, 6);
 			} while (menge2 % menge1 === 0);
 			let einzelwert;
-
+			
 			// Realistische Werte je nach Typ festlegen
 			if (isMentalMode) {
 				if (sz.type === 'print') {
@@ -2428,10 +2332,10 @@ function createTask(type, isMentalMode, grade = 5) {
 
 			// 50% Chance, dass die Aufgabe umgedreht wird (Geld/Seiten -> Menge/Zeit)
 			let reverseQuestion = Math.random() < 0.3;
-
+			
 			let s1, s2, sFrage, sStep, sRes;
 			let einheitSingular = sz.einheit1.replace('en', 'e'); // Aus "Stunden" wird "Stunde"
-
+			
 			if (!reverseQuestion) {
 				// --- STANDARD-FRAGE: Nach dem Ziel-Wert (z.B. Preis) fragen ---
 				if (sz.type === 'job') {
@@ -2494,11 +2398,11 @@ function createTask(type, isMentalMode, grade = 5) {
 			nums.sort((x, y) => x - y);
 			// Jetzt gilt: n[0] < n[1] < n[2] < n[3]
 			const n = nums;
-
-			const f = (n) => n < 0 ? `(${n})` : n;
+			
+			const f = fmt;
 			let type = randInt(0, 3);
 			let taskStr, step1, res;
-
+			
 			switch (type) {
 				case 0:
 					// Typ: Klein - (Mittel * Groß) 
@@ -2506,37 +2410,186 @@ function createTask(type, isMentalMode, grade = 5) {
 					step1 = `${n[0]} - ${n[1] * n[2]}`;
 					res = n[0] - (n[1] * n[2]);
 					break;
-
-				case 1:
-					// Typ: Mittel^2 - (Klein * Groß)
+					
+					case 1:
+						// Typ: Mittel^2 - (Klein * Groß)
 					taskStr = `${n[1]}^2 - ${n[0]} \\cdot ${n[2]}`;
 					step1 = `${n[1] * n[1]} - ${n[0] * n[2]}`;
 					res = (n[1] * n[1]) - (n[0] * n[2]);
 					break;
 
-				case 2:
-					// Typ: Klein * (Mittel^2 - Groß)
+					case 2:
+						// Typ: Klein * (Mittel^2 - Groß)
 					taskStr = `${n[0]} \\cdot (${n[1]}^2 - ${n[2]})`;
 					step1 = `${n[0]} \\cdot ${f(n[1] * n[1] - n[2])}`;
 					res = n[0] * (n[1] * n[1] - n[2]);
 					break;
 
-				case 3:
-					// Typ: (Klein * Mittel) - (Groß * Extra)
-					taskStr = `${n[0]} \\cdot ${n[1]} - ${n[2]} \\cdot ${n[3]}`;
-					step1 = `${n[0] * n[1]} - ${n[2] * n[3]}`;
-					res = (n[0] * n[1]) - (n[2] * n[3]);
+					case 3:
+						// Typ: (Klein * Mittel) - (Groß * Extra)
+						taskStr = `${n[0]} \\cdot ${n[1]} - ${n[2]} \\cdot ${n[3]}`;
+						step1 = `${n[0] * n[1]} - ${n[2] * n[3]}`;
+						res = (n[0] * n[1]) - (n[2] * n[3]);
+						break;
+					}
+					
+					textDisplay = `\\[ ${taskStr} \\]`;
+					s = `\\[ ${taskStr} = ${step1} = ${res} \\]`;
+				}
+				
+				case 'units_calc': {
+					const groups = [
+						{ units: ['mm', 'cm', 'dm', 'm', 'km'], factors: [10, 10, 10, 1000] },
+						{ units: ['mm²', 'cm²', 'dm²', 'm²', 'a', 'ha', 'km²'], factors: [100, 100, 100, 100, 100, 100] },
+						{ units: ['mm³', 'cm³', 'dm³', 'm³'], factors: [1000, 1000, 1000] },
+						{ units: ['mg', 'g', 'kg', 't'], factors: [1000, 1000, 1000] },
+						{ units: ['s', 'min', 'h'], factors: [60, 60] }
+					];
+				
+					const g = groups[randInt(0, groups.length - 1)];
+					const isTimeGroup = g.units[0] === 's';
+					const is1000Group = g.units[0] === 'mm³' || g.units[0] === 'mg';
+					const termCount = is1000Group ? 2 : 3; // Bei 1000er-Faktoren nur 2 Summanden
+				
+					let termUnitIdx;
+					if (termCount === 2) {
+						const start = randInt(0, g.units.length - 2);
+						termUnitIdx = [start, start + 1];
+					} else {
+						const mid = randInt(1, g.units.length - 2);
+						termUnitIdx = [mid - 1, mid, mid + 1];
+					}
+				
+					// Ziel-Einheit vorgeben: immer die kleinste Einheit im Term-Set.
+					// Ausnahme: bei Zeit mit 3 Summanden (s/min/h) ist 'min' das Ziel,
+					// damit s÷60 und h×60 sinnvolle Werte ergeben.
+					let targetIdx;
+					if (termCount === 3) {
+						const sortedIdx = [...termUnitIdx].sort((a, b) => a - b);
+						targetIdx = isTimeGroup ? sortedIdx[1] : sortedIdx[0];
+					} else {
+						targetIdx = Math.min(...termUnitIdx);
+					}
+					const targetUnit = g.units[targetIdx];
+				
+					// Skalenfaktoren auf kleinste Einheit der Gruppe
+					const scales = [1];
+					for (let i = 1; i < g.units.length; i++) {
+						scales[i] = scales[i - 1] * g.factors[i - 1];
+					}
+				
+					const timeTargetLimits = { s: 300, min: 150, h: 3 };
+					const timeValuePools = {
+						s: Array.from({ length: 20 }, (_, i) => (i + 1) * 15),
+						min: [0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10, 15, 20, 30, 45, 60, 90, 120, 150],
+						h: [0.5, 1, 1.5, 2, 2.5, 3]
+					};
+				
+					const fmtNum = (num) => {
+						const rounded = Number((Math.round(num * 10) / 10).toFixed(1).replace(/\.0$/, ''));
+						return comma(rounded);
+					};
+				
+					const pickSimpleValue = () => {
+						if (isMentalMode) {
+							if (Math.random() < 0.8) {
+								return randInt(1, 12); // bevorzugt ganze Zahlen
+							}
+							return randInt(2, 20) / 2; // sonst 0,5-Schritte
+						}
+						return randInt(5, 250) / 10; // max. eine Nachkommastelle
+					};
+				
+					const pickTimeValue = (idx) => {
+						const unit = g.units[idx];
+						const factorToTarget = scales[idx] / scales[targetIdx];
+						const maxSourceValue = timeTargetLimits[targetUnit] / factorToTarget;
+						const candidates = timeValuePools[unit].filter((value) => value <= maxSourceValue);
+						if (candidates.length === 0) {
+							return null;
+						}
+						return candidates[randInt(0, candidates.length - 1)];
+					};
+				
+					let terms;
+					let ops;
+					let converted;
+					let resultInTarget;
+					const maxTargetValue = isTimeGroup ? timeTargetLimits[targetUnit] : Infinity;
+				
+					for (let attempts = 0; attempts < 200; attempts++) {
+						const values = termUnitIdx.map((idx) => isTimeGroup ? pickTimeValue(idx) : pickSimpleValue());
+						if (values.some((value) => value === null)) {
+							continue;
+						}
+				
+						terms = termUnitIdx.map((idx, index) => ({
+							idx,
+							unit: g.units[idx],
+							value: values[index]
+						}));
+				
+						// Mindestens ein Summand als ganze Zahl (ohne Nachkommastelle)
+						if (!isTimeGroup && !terms.some((t) => Number.isInteger(t.value))) {
+							continue;
+						}
+				
+						if (termCount === 2) {
+							ops = [Math.random() < 0.5 ? '+' : '-'];
+						} else {
+							const patterns = [['+', '+'], ['+', '-'], ['-', '+'], ['-', '-']];
+							ops = patterns[randInt(0, patterns.length - 1)];
+						}
+				
+						converted = terms.map((t) => t.value * (scales[t.idx] / scales[targetIdx]));
+						if (converted.some((value) => value > maxTargetValue)) {
+							continue;
+						}
+						// Alle umgerechneten Summanden müssen max. 1 Nachkommastelle haben
+						if (converted.some((v) => Math.abs(v * 10 - Math.round(v * 10)) > 1e-9)) {
+							continue;
+						}
+				
+						resultInTarget = converted[0];
+						let hasNegativeIntermediate = resultInTarget < 0;
+						for (let i = 0; i < ops.length; i++) {
+							resultInTarget = ops[i] === '+' ? resultInTarget + converted[i + 1] : resultInTarget - converted[i + 1];
+							if (resultInTarget < 0) {
+								hasNegativeIntermediate = true;
+								break;
+							}
+						}
+				
+						// Keine negativen Zwischenergebnisse und positives Endergebnis
+						if (!hasNegativeIntermediate && resultInTarget > 0 && resultInTarget <= maxTargetValue) {
+							break;
+						}
+					}
+				
+					const displayExprParts = [`${fmtNum(terms[0].value)} ${terms[0].unit}`];
+					for (let i = 1; i < terms.length; i++) {
+						displayExprParts.push(`${ops[i - 1]} ${fmtNum(terms[i].value)} ${terms[i].unit}`);
+					}
+				
+					const targetExprParts = [`${fmtNum(converted[0])} ${targetUnit}`];
+					for (let i = 1; i < converted.length; i++) {
+						targetExprParts.push(`${ops[i - 1]} ${fmtNum(converted[i])} ${targetUnit}`);
+					}
+				
+					const displayExpr = displayExprParts.join(' ');
+					const targetExpr = targetExprParts.join(' ');
+				
+					textDisplay = `${displayExpr} = \\( ${blank(3)} \\) ${targetUnit}`;
+					s = `${displayExpr} <br>= ${targetExpr} = ${fmtNum(resultInTarget)} ${targetUnit}`;
 					break;
-			}
-
-			textDisplay = `\\[ ${taskStr} \\]`;
-			s = `\\[ ${taskStr} = ${step1} = ${res} \\]`;
-		}
-
+				}
 	}
-
+	
 	if (!textPrint) {
 		textPrint = textDisplay;
+	}
+	if (!textDisplay) {
+		textDisplay = textPrint;
 	}
 
 	return {
