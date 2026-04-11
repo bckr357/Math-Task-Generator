@@ -39,7 +39,7 @@ window.MTGStateModule = {
 
             return {
                 left: leftColumnTasks.map((task, index) => ({ task, number: index + 1, key: `left-${index}` })),
-                right: rightColumnTasks.map((task, index) => ({ task, number: index + 1, key: `right-${index}` }))
+                right: rightColumnTasks.map((task, index) => ({ task, number: leftColumnSize + index + 1, key: `right-${index}` }))
             };
         });
         const currentTrainingTask = computed(() => trainingHistory.value[currentTrainingIndex.value] ?? null);

@@ -14,6 +14,13 @@ body {
     overflow-x: hidden;
 }
 
+button,
+select,
+input,
+textarea {
+    font-family: 'Reddit Sans', system-ui, -apple-system, sans-serif;
+}
+
 .home-view {
     min-height: 100vh;
     padding: 48px 28px 56px;
@@ -238,8 +245,8 @@ body {
 }
 
 .settings-arrangement-input {
-    width: 100px;
-    min-width: 100px;
+    width: 110px;
+    min-width: 110px;
     padding: 4px;
     font-size: 0.9rem;
     text-align: left;
@@ -452,7 +459,7 @@ body {
 }
 
 .settings-topbar-select {
-    width: 85px;
+    width: 100px;
     padding: 4px;
     font-size: 0.95rem;
     text-align: left;
@@ -532,8 +539,7 @@ mjx-mtext {
     border-collapse: collapse;
     table-layout: fixed;
     background: rgba(255, 255, 255, 0.9);
-    border: 2px solid rgba(148, 163, 184, 0.35);
-    border-radius: 14px;
+    border: none;
     overflow: hidden;
 }
 
@@ -545,6 +551,26 @@ mjx-mtext {
     vertical-align: middle;
     font-size: 12pt;
     line-height: 1.25;
+}
+
+.op-table tr:first-child th,
+.op-table tr:first-child td {
+    border-top: none;
+}
+
+.op-table th:first-child,
+.op-table td:first-child {
+    border-left: none;
+}
+
+.op-table th:last-child,
+.op-table td:last-child {
+    border-right: none;
+}
+
+.op-table tr:last-child th,
+.op-table tr:last-child td {
+    border-bottom: none;
 }
 
 .op-table th {
@@ -577,6 +603,64 @@ mjx-mtext {
 .op-table--terms td,
 .op-table--terms th {
     padding: 12px 10px;
+}
+
+/* Tabellen-Lösungen in der Präsentation an .math-a angleichen */
+.presentation-view .math-a .op-table-wrap,
+.worksheet-sheet--solutions .math-a .op-table-wrap {
+    max-width: 1000px;
+}
+
+.presentation-view .math-a .op-table th,
+.presentation-view .math-a .op-table td,
+.worksheet-sheet--solutions .math-a .op-table th,
+.worksheet-sheet--solutions .math-a .op-table td {
+    font-size: 35px;
+    line-height: 1.2;
+    padding: 0.46em 0.4em;
+}
+
+.presentation-view .math-a .op-table th:first-child,
+.presentation-view .math-a .op-table td:first-child,
+.worksheet-sheet--solutions .math-a .op-table th:first-child,
+.worksheet-sheet--solutions .math-a .op-table td:first-child {
+    width: 3.1em;
+    min-width: 3.1em;
+    max-width: 3.4em;
+}
+
+.presentation-view .math-a .op-table mjx-container,
+.worksheet-sheet--solutions .math-a .op-table mjx-container {
+    font-size: 105% !important;
+}
+
+/* Gleiche Darstellung auch für die Aufgaben (math-q) in der Präsentation */
+.presentation-view .math-q .op-table-wrap,
+.worksheet-sheet--solutions .math-q .op-table-wrap {
+    max-width: 1000px;
+}
+
+.presentation-view .math-q .op-table th,
+.presentation-view .math-q .op-table td,
+.worksheet-sheet--solutions .math-q .op-table th,
+.worksheet-sheet--solutions .math-q .op-table td {
+    font-size: 35px;
+    line-height: 1.2;
+    padding: 0.46em 0.4em;
+}
+
+.presentation-view .math-q .op-table th:first-child,
+.presentation-view .math-q .op-table td:first-child,
+.worksheet-sheet--solutions .math-q .op-table th:first-child,
+.worksheet-sheet--solutions .math-q .op-table td:first-child {
+    width: 3.1em;
+    min-width: 3.1em;
+    max-width: 3.4em;
+}
+
+.presentation-view .math-q .op-table mjx-container,
+.worksheet-sheet--solutions .math-q .op-table mjx-container {
+    font-size: 105% !important;
 }
 
 .presentation-view.dark-mode {
@@ -851,7 +935,7 @@ mjx-mtext {
     }
 
     .training-arrow-text {
-        display: none;
+        display: none !important;
     }
 
     .training-solution-btn {
@@ -896,7 +980,7 @@ mjx-mtext {
     --worksheet-task-font-size: 12pt;
     --worksheet-task-line-height: 1.35;
     --worksheet-task-font-size-print: 12pt;
-    --worksheet-task-line-height-print: 1.2;
+    --worksheet-task-line-height-print: 1.35;
 }
 
 .worksheet-toolbar {
@@ -959,7 +1043,7 @@ mjx-mtext {
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    gap: 22px;
+    gap: 20mm;
     padding-bottom: 12px;
     margin-bottom: 12px;
     border-bottom: 2px solid var(--slate-100);
@@ -981,7 +1065,7 @@ mjx-mtext {
 }
 
 .worksheet-header-copy + .worksheet-header-copy {
-    padding-left: 22px;
+    padding-left: 0;
 }
 
 .worksheet-list {
@@ -1029,15 +1113,15 @@ mjx-mtext {
 }
 
 .worksheet-num {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: stretch;
-    font-size: 11pt;
-    font-weight: 400;
-    color: var(--slate-500);
-    text-align: center;
-    line-height: 1;
+        display: flex;
+        align-items: flex-start;
+        justify-content: right;
+        align-self: stretch;
+        font-size: 10pt;
+        padding-top: 4px;
+        line-height: 1;
+        text-align: center;
+        color: #64748b;
 }
 
 .worksheet-content {
@@ -1290,9 +1374,9 @@ mjx-mtext {
 
     .worksheet-column .worksheet-copy {
         width: 148.5mm;
-        grid-template-columns: 8mm 1fr;
+        grid-template-columns: 6mm 1fr;
         gap: 3mm;
-        padding: 2.4mm 8mm 2.4mm 1mm;
+        padding: 2.5mm 10mm 2.5mm 0.5mm;
         box-sizing: border-box;
         align-items: start;
         break-inside: avoid;
@@ -1300,7 +1384,7 @@ mjx-mtext {
     }
 
     .worksheet-column + .worksheet-column .worksheet-copy {
-        padding-left: 1mm; /* linker Rand rechts */
+        padding-right: -10mm;  /* rechte Spalte */ 
     }
 
     .worksheet-row > .worksheet-copy + .worksheet-copy {
@@ -1310,10 +1394,11 @@ mjx-mtext {
 
     .worksheet-num {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        align-items: flex-start;
+        justify-content: right;
         align-self: stretch;
-        font-size: 9pt;
+        font-size: 10pt;
+        padding-top: 4px;
         line-height: 1;
         text-align: center;
         color: #64748b;
@@ -1357,18 +1442,45 @@ mjx-mtext {
         width: 100% !important;
         min-width: 0 !important;
         table-layout: fixed; /* verhindert horizontales Aufweiten */
-        border-width: 0.25mm;
+        border: none;
         background: transparent;
         border-collapse: collapse;
     }
 
-    .op-table th,
+    .op-table th {
+        font-size: 10pt;
+        font-weight: 400;
+        padding: 1.2mm 1.0mm;
+        border: 0.2mm solid #475569;
+        word-break: break-word;
+    }
+
     .op-table td {
-        font-size: 9pt;
+        font-size: 10pt;
         font-weight: 350;
         padding: 1.2mm 1.0mm;
-        border-width: 0.25mm;
+        border: 0.2mm solid #475569;
         word-break: break-word;
+    }
+
+    .op-table tr:first-child th,
+    .op-table tr:first-child td {
+        border-top: none;
+    }
+
+    .op-table th:first-child,
+    .op-table td:first-child {
+        border-left: none;
+    }
+
+    .op-table th:last-child,
+    .op-table td:last-child {
+        border-right: none;
+    }
+
+    .op-table tr:last-child th,
+    .op-table tr:last-child td {
+        border-bottom: none;
     }
 
     /* Erste Spalte schmal, ausreichend für Headerwert */

@@ -6,7 +6,7 @@ const fmt = formatUtils.fmt;
 const comma = formatUtils.comma;
 
 const taskCategories = {
-	arithmetic: ['db_as', 'db_md', 'z_as', 'z_md', 'pow10', 'table_add', 'table_mul'],
+	arithmetic: ['db_as', 'db_md', 'z_as', 'z_md', 'pow10', 'table_add', 'table_mul', 'table_sub'],
 	fractions: ['frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order'],
 	algebra: ['terms', 'equations', 'equations_adv', 'formel_umstellen', 'vorrang', 'table_terms'],
 	geometry: ['geometry', 'winkel', 'schraegbild', 'kongruenz'],
@@ -19,19 +19,19 @@ const taskCategories = {
 const taskTypesByGrade = {
 	klasse5: [
 		'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'frac_as',
-		'frac_md', 'frac_simplify', 'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_terms', 'geometry', 'winkel',
+		'frac_md', 'frac_simplify', 'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_sub', 'table_terms', 'geometry', 'winkel',
 		'statistik', 'teiler', 'primzahlen', 'round', 'schriftlich', 'vorrang'
 	],
 	klasse6: [
 		'z_as', 'z_md', 'db_as', 'db_md', 'pow10',
-		'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_terms', 'percent', 
+		'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_sub', 'table_terms', 'percent', 
 		'anteile', 'geometry', 'winkel', 'statistik', 'wkt', 
 		'teiler', 'primzahlen', 'round', 'schriftlich', 'vorrang'
 	],
 	klasse7: [
 		'z_as', 'z_md', 'db_as',
 		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order',
-		'table_add', 'table_mul', 'table_terms', 'percent', 'pv', 'anteile', 'units',
+		'table_add', 'table_mul', 'table_sub', 'table_terms', 'percent', 'pv', 'anteile', 'units',
 		'terme', 'equations', 'formel_umstellen', 'geometry', 'winkel', 'statistik',
 		'wkt', 'potenzen', 'teiler', 'primzahlen', 'round',
 		'prop', 'schriftlich', 'vorrang'
@@ -39,7 +39,7 @@ const taskTypesByGrade = {
 	klasse8: [
 		'z_as', 'z_md', 'db_as',
 		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order',
-		'table_add', 'table_mul', 'table_terms', 'percent', 'pv', 'anteile', 'units', 
+		'table_add', 'table_mul', 'table_sub', 'table_terms', 'percent', 'pv', 'anteile', 'units', 
 		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'geometry', 'winkel',
 		'schraegbild', 'statistik', 'wkt', 'potenzen', 'teiler',
 		'primzahlen', 'round', 'prop', 'schriftlich', 'vorrang'
@@ -47,7 +47,7 @@ const taskTypesByGrade = {
 	klasse9: [
 		'z_as', 'z_md', 'db_as',
 		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify',
-		'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_terms', 'percent', 'pv', 'anteile', 'units', 
+		'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_sub', 'table_terms', 'percent', 'pv', 'anteile', 'units', 
 		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'funktionen', 'geometry',
 		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt',
 		'potenzen', 'teiler', 'primzahlen', 'round', 'prop',
@@ -56,7 +56,7 @@ const taskTypesByGrade = {
 	klasse10: [
 		'db_as', 'z_as', 'db_md', 'z_md', 'pow10',
 		'frac_simplify', 'frac_md', 'frac_as', 'schriftlich', 
-		'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_terms', 'anteile', 'vorrang', 'terme', 'percent', 
+		'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_sub', 'table_terms', 'anteile', 'vorrang', 'terme', 'percent', 
 		'units', 'pv', 'round', 'equations', 'geometry', 
 		'wkt', 'statistik', 'funktionen', 'teiler', 'primzahlen', 
 		'equations_adv', 'formel_umstellen', 'potenzen', 'prop', 'winkel', 'schraegbild', 'kongruenz'
@@ -119,6 +119,7 @@ const typeDefinitions = [
 	['pow10', 'Zehnerpotenzen ×/÷', 'Natürliche Zahlen und Dezimalzahlen mit Zehnerpotenzen multiplizieren und dividieren'],
 	['table_add', 'Additionstabelle', 'Tabellenaufgaben mit Summen und rückwärts erschlossenen Kopfwerten'],
 	['table_mul', 'Multiplikationstabelle', 'Tabellenaufgaben mit Produkten und rückwärts erschlossenen Kopfwerten'],
+	['table_sub', 'Subtraktionstabelle', 'Tabellenaufgaben mit Differenzen und rückwärts erschlossenen Kopfwerten'],
 	['table_terms', 'Termtabelle', 'Terme für vorgegebene x-Werte tabellarisch auswerten'],
 	// ['units_calc', 'Einheiten rechnen +/-', 'Summen und Differenzen mit benachbarten Einheiten derselben Art berechnen'],
 	['formel_umstellen', 'Formel umstellen', 'Bekannte Formeln nach einer anderen Variablen in 2–3 Schritten umformen'],
@@ -140,13 +141,13 @@ function createTask(type, isMentalMode, grade = 5) {
 	let s = '';
 	let textDisplay = '', textPrint = '';
 
-	const blank = (cmWidth = 3) => `\\underline{\\hspace{${cmWidth}cm}}`;
+	const blank = (cmWidth = 3) => `\\(\\underline{\\hspace{${cmWidth}cm}}\\)`;
 	const space = (cmWidth = 1) => `<div style="margin-bottom: ${cmWidth}cm;"></div>`;
 
 	const pickDistinctIntegers = (min, max, count) => {
 		const values = new Set();
 		while (values.size < count) {
-			values.add(randInt(min, max));
+			values.add(rnd(min, max));
 		}
 		return [...values];
 	};
@@ -204,19 +205,19 @@ function createTask(type, isMentalMode, grade = 5) {
 			const isAdd = type === 'table_add';
 			const min = isAdd ? -20 : -13;
 			const max = isAdd ? 20 : 13;
-			const allValues = pickDistinctIntegers(min, max, 6);
+			const allValues = pickDistinctIntegers(min, max, 7);
 			const rowHeaders = allValues.slice(0, 2);
 			const colHeaders = allValues.slice(2);
 
 			const cellValues = rowHeaders.map(r => colHeaders.map(c => isAdd ? r + c : r * c));
 
-			const hiddenRowIndex = randInt(0, 1);
-			const hiddenColIndex = randInt(0, 3);
+			const hiddenRowIndex = 1;
+			const hiddenColIndex = randInt(2, 4);
 			const clueColIndex = hiddenColIndex === 0 ? 1 : 0;
 			const clueRowIndex = hiddenRowIndex === 0 ? 1 : 0;
 
 			const givenRowHeader = [true, true];
-			const givenColHeader = [true, true, true, true];
+			const givenColHeader = [true, true, true, true, true];
 			givenRowHeader[hiddenRowIndex] = false;
 			givenColHeader[hiddenColIndex] = false;
 
@@ -226,7 +227,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			};
 
 			const operationName = isAdd ? 'Additionstabelle' : 'Multiplikationstabelle';
-			const opSymbol = isAdd ? '+' : '\\cdot';
+			const opSymbol = isAdd ? '+' : '×';
 
 			textDisplay = buildOpTableHTML({
 				colHeaders,
@@ -241,7 +242,60 @@ function createTask(type, isMentalMode, grade = 5) {
 			const solvedTableRows = rowHeaders.map((rowVal, rowIndex) => {
 				const rowCells = colHeaders.map((colVal, colIndex) => {
 					const result = cellValues[rowIndex][colIndex];
-					return `<td>${fmt(rowVal)} ${opSymbol} ${fmt(colVal)} = ${fmt(result)}</td>`;
+					return `<td>${result}</td>`;
+				}).join('');
+				return `<tr><th>${rowVal}</th>${rowCells}</tr>`;
+			}).join('');
+
+			s = `
+				<div class="op-table-wrap">
+					<table class="op-table op-table--solution">
+						<tr><th class="op-corner">${opSymbol}</th>${colHeaders.map(c => `<th>${c}</th>`).join('')}</tr>
+						${solvedTableRows}
+					</table>
+				</div>
+			`;
+			break;
+		}
+
+		case 'table_sub': {
+			const min = -20, max = 20;
+			const allValues = pickDistinctIntegers(min, max, 7);
+			const rowHeaders = allValues.slice(0, 2);
+			const colHeaders = allValues.slice(2);
+
+			const cellValues = rowHeaders.map(r => colHeaders.map(c => r - c));
+
+			const hiddenRowIndex = 1;
+			const hiddenColIndex = randInt(2, 4);
+			const clueColIndex = hiddenColIndex === 0 ? 1 : 0;
+			const clueRowIndex = hiddenRowIndex === 0 ? 1 : 0;
+
+			const givenRowHeader = [true, true];
+			const givenColHeader = [true, true, true, true, true];
+			givenRowHeader[hiddenRowIndex] = false;
+			givenColHeader[hiddenColIndex] = false;
+
+			const givenCells = {
+				[`${hiddenRowIndex}-${clueColIndex}`]: true,
+				[`${clueRowIndex}-${hiddenColIndex}`]: true
+			};
+
+			const opSymbol = '-';
+			textDisplay = buildOpTableHTML({
+				colHeaders,
+				rowHeaders,
+				cellValues,
+				givenColHeader,
+				givenRowHeader,
+				givenCells,
+				opSymbol,
+			});
+
+			const solvedTableRows = rowHeaders.map((rowVal, rowIndex) => {
+				const rowCells = colHeaders.map((colVal, colIndex) => {
+					const result = cellValues[rowIndex][colIndex];
+					return `<td>${result}</td>`;
 				}).join('');
 				return `<tr><th>${rowVal}</th>${rowCells}</tr>`;
 			}).join('');
@@ -301,7 +355,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				term2 = createTermDescriptor();
 			}
 
-			const xValues = pickDistinctIntegers(-6, 6, 2);
+			const xValues = [rnd(2,7),rnd(-5,-2)];
 			const rawResults = [
 				[term1.evalFn(xValues[0]), term2.evalFn(xValues[0])],
 				[term1.evalFn(xValues[1]), term2.evalFn(xValues[1])]
@@ -317,15 +371,15 @@ function createTask(type, isMentalMode, grade = 5) {
 							<th>\\( ${term1.expr} \\)</th>
 							<th>\\( ${term2.expr} \\)</th>
 						</tr>
-									<tr>
-										<th>${xValues[0]}</th>
-							<td>\\( \\underline{\\hspace{1.4cm}} \\)</td>
-							<td>\\( \\underline{\\hspace{1.4cm}} \\)</td>
+						<tr>
+							<th>${xValues[0]}</th>
+							<td> </td>
+							<td> </td>
 						</tr>
 						<tr>
-										<th>${xValues[1]}</th>
-							<td>\\( \\underline{\\hspace{1.4cm}} \\)</td>
-							<td>\\( \\underline{\\hspace{1.4cm}} \\)</td>
+							<th>${xValues[1]}</th>
+							<td> </td>
+							<td> </td>
 						</tr>
 					</table>
 				</div>
@@ -1123,12 +1177,12 @@ function createTask(type, isMentalMode, grade = 5) {
 			if (rd > 0.67) {
 				pVal = rnd(2, 11) * 100;
 				p = [3, 4, 5, 6, 7, 8, 9, 11, 12, 20, 25, 30, 35, 40, 60, 70, 80, 90][randInt(0, 17)];
-				textDisplay = `${p} % von ${pVal} ${einheit} sind \\(${blank(3)}\\)`;
+				textDisplay = `${p} % von ${pVal} ${einheit} sind ${blank(3)}`;
 				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal / 100 * p} ${einheit} ≙ ${p} %`;
 			} else if (rd > 0.33) {
 				p = [20, 25, 30, 40, 50, 60, 70, 80, 90][randInt(0, 8)];
 				pVal = rnd(2, 9) * p;
-				textDisplay = `${p} % sind ${pVal} ${einheit} von \\(${blank(3)}\\)`;
+				textDisplay = `${p} % sind ${pVal} ${einheit} von ${blank(3)}`;
 				s = `${p} % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / p} ${einheit}<br>100 % ≙ ${pVal / p * 100} ${einheit}`;
 			} else {
 				// 1. Wähle einen "schönen" Prozentsatz p (z.B. 5, 10, 20, 25, 50...)
@@ -1145,7 +1199,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				const G = (W * 100) / p;
 
 				// Aufgabe: W und G sind gegeben, p ist gesucht
-				textDisplay = ` ${comma(W)} ${einheit} von ${comma(G)} ${einheit} sind \\(${blank(2)}\\) % `;
+				textDisplay = ` ${comma(W)} ${einheit} von ${comma(G)} ${einheit} sind ${blank(2)} % `;
 
 				// Lösung: Zeigt den Rechenweg oder das Ergebnis
 				s = `${comma(G)} ${einheit} ≙ 100 %<br>${comma(G / 100)} ${einheit} ≙ 1 %<br>${comma(W)} ${einheit} ≙ ${p} %`;
@@ -1158,23 +1212,23 @@ function createTask(type, isMentalMode, grade = 5) {
 			let pVal = rnd(2, 11) * 100;
 			rd = Math.random();
 			if (rd > 0.8) {
-				textDisplay = `${pVal} ${einheit} um ${p} % erhöht sind \\(${blank(3)}\\)`;
+				textDisplay = `${pVal} ${einheit} um ${p} % erhöht sind ${blank(3)}`;
 				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal + (pVal / 100 * p)} ${einheit} ≙ ${100 + p} %`;
 			} else if (rd > 0.6) {
-				textDisplay = `${pVal} ${einheit} um ${p} % reduziert sind \\(${blank(3)}\\)`;
+				textDisplay = `${pVal} ${einheit} um ${p} % reduziert sind ${blank(3)}`;
 				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal - (pVal / 100 * p)} ${einheit} ≙ ${100 - p} %`;
 			} else if (rd > 0.4) {
-				textDisplay = `${pVal} ${einheit} auf ${100 + p} % erhöht sind \\(${blank(3)}\\)`;
+				textDisplay = `${pVal} ${einheit} auf ${100 + p} % erhöht sind ${blank(3)}`;
 				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal + (pVal / 100 * p)} ${einheit} ≙ ${100 + p} %`;
 			} else if (rd > 0.2) {
-				textDisplay = `${pVal}  ${einheit} auf ${100 - p} % reduziert sind \\(${blank(3)}\\)`;
+				textDisplay = `${pVal}  ${einheit} auf ${100 - p} % reduziert sind ${blank(3)}`;
 				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal - (pVal / 100 * p)} ${einheit} ≙ ${100 - p} %`;
 			} else {
 				// Rabatt-Fall: Ein Artikel kostet normalerweise pVal, mit p% Rabatt kostet er ___
 				p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
 				const originalPrice = pVal;
 				const discountedPrice = originalPrice - (originalPrice / 100 * p);
-				textDisplay = `${p} % Rabatt auf ${originalPrice} €. Neuer Preis: \\(${blank(3)}\\)`;
+				textDisplay = `${p} % Rabatt auf ${originalPrice} €. Neuer Preis: ${blank(3)}`;
 				s = `${originalPrice} € ≙ 100 %<br>${originalPrice / 100} € ≙ 1 %<br>${discountedPrice} € ≙ ${100 - p} %`;
 			}
 			break;
@@ -1304,7 +1358,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					break;
 				}
 
-				textDisplay = `${toCleanString(startValue)} ${fromUnit} = \\(${blank(3)}\\) ${toUnit}`;
+				textDisplay = `${toCleanString(startValue)} ${fromUnit} = ${blank(3)} ${toUnit}`;
 				s = `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`;
 				break;
 
@@ -1700,7 +1754,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			let selectedVars = [...vars].sort(() => 0.5 - Math.random()).slice(0, 2);
 			if (Math.random() < 0.5) selectedVars[1] = '';
 			
-			let mode = randInt(0, 1);
+			let mode = grade > 9 ? randInt(0, 1) : 0;
 			let taskStr, resStr;
 			
 			if (mode === 0) {
@@ -2241,17 +2295,17 @@ function createTask(type, isMentalMode, grade = 5) {
 				// --- Winkel zeichnen ---
 				// Wir wählen gezielt Werte aus verschiedenen Bereichen
 				const pools = [
-					{ min: 1, max: 89, name: "spitzer Winkel" },
-					{ val: 90, name: "rechter Winkel" },
-					{ min: 91, max: 179, name: "stumpfer Winkel" },
-					{ val: 180, name: "gestreckter Winkel" },
-					{ min: 181, max: 359, name: "überstumpfer Winkel" }
+					{ min: 1, max: 89, name: "spitzen Winkel" },
+					{ val: 90, name: "rechten Winkel" },
+					{ min: 91, max: 179, name: "stumpfen Winkel" },
+					{ val: 180, name: "gestreckten Winkel" },
+					{ min: 181, max: 359, name: "überstumpfen Winkel" }
 				];
 				let pick = pools[randInt(0, pools.length - 1)];
 				
 				textDisplay = `Zeichne einen ${pick.name}.`;
 				textPrint = `Zeichne einen ${pick.name}.${space(3)}`;
-				s = pick.val !== undefined ? `${pick.name}: ${pick.val}°` : `${pick.name}: ${pick.min}° bis ${pick.max}°`;
+				s = pick.val !== undefined ? `${pick.name.replace('en', 'er')}: ${pick.val}°` : `${pick.name.replace('en', 'er')}: ${pick.min}° bis ${pick.max}°`;
 				
 			} else if (mode === 3) {
 				let grad = randInt(15, 250);
@@ -2261,7 +2315,7 @@ function createTask(type, isMentalMode, grade = 5) {
 
 			} else if (mode === 4) {
 				let a = rnd(25, 45), b = rnd(61, 129);
-				textPrint = `Dreieck mit Winkeln \\( \\alpha = ${a}° \\) und \\( \\beta = ${b}°. \\quad \\gamma = ${blank(1.5)} \\)`;
+				textPrint = `Dreieck mit Winkeln \\( \\alpha = ${a}° \\) und \\( \\beta = ${b}°. \\quad \\gamma = \\) ${blank(1.5)} `;
 				textDisplay = `Dreieck mit Winkeln \\( \\alpha = ${a}° \\) und \\( \\beta = ${b}°\\). Winkel \\(\\gamma \\)?`;
 				s = `\\( \\gamma \\) = 180° - ${a}° - ${b}\° = ${180 - a - b}°`;
 
@@ -2320,8 +2374,8 @@ function createTask(type, isMentalMode, grade = 5) {
 			if (type === 0) {
 				// SSS
 				do {
-					s1 = pickDecNoZeroTenth(51, 99);
-					s2 = pickDecNoZeroTenth(51, 99);
+					s1 = pickDecNoZeroTenth(31, 69);
+					s2 = pickDecNoZeroTenth(31, 69);
 					const minS3 = Math.abs(s1 - s2) + 1.5;
 					const maxS3 = Math.min(s1 + s2 - 1.5, 10);
 					const minS3Tenths = Math.ceil(minS3 * 10);
@@ -2335,13 +2389,13 @@ function createTask(type, isMentalMode, grade = 5) {
 					a3 = 180 - a1 - a2;
 				} while (Math.max(s1, s2, s3) > 10);
 
-				givenStr = `\\( ${sn1}=${cm(s1)}\\,cm; \\quad ${sn2}=${cm(s2)}\\,cm; \\quad ${sn3}=${cm(s3)}\\,cm \\)`;
+				givenStr = `\\( ${sn1}=${cm(s1)}\\,cm; \\; ${sn2}=${cm(s2)}\\,cm; \\; ${sn3}=${cm(s3)}\\,cm \\)`;
 			} else if (type === 1) {
 				// SWS
 				do {
-					s1 = pickDecNoZeroTenth(41, 99);
-					s2 = pickDecNoZeroTenth(41, 99);
-					a3 = randInt(35, 125);
+					s1 = pickDecNoZeroTenth(31, 69);
+					s2 = pickDecNoZeroTenth(31, 69);
+					a3 = randInt(25, 125);
 					
 					s3 = Math.sqrt(s1 * s1 + s2 * s2 - 2 * s1 * s2 * Math.cos(a3 * Math.PI / 180));
 					a1 = Math.round(Math.acos((s2 * s2 + s3 * s3 - s1 * s1) / (2 * s2 * s3)) * 180 / Math.PI);
@@ -2349,26 +2403,26 @@ function createTask(type, isMentalMode, grade = 5) {
 					a2 = 180 - a3 - a1;
 				} while (Math.max(s1, s2, s3) > 10 || a2 <= 0);
 
-				givenStr = `\\( ${sn1}=${cm(s1)}\\,cm; \\quad ${sn2}=${cm(s2)}\\,cm; \\quad ${an3}=${a3}^\\circ \\)`;
+				givenStr = `\\( ${sn1}=${cm(s1)}\\,cm; \\; ${sn2}=${cm(s2)}\\,cm; \\; ${an3}=${a3}^\\circ \\)`;
 			} else if (type === 2) {
 				// WSW
 				do {
-					s3 = pickDecNoZeroTenth(51, 99);
-					a1 = randInt(35, 80);
-					a2 = randInt(35, 80);
+					s3 = pickDecNoZeroTenth(31, 69);
+					a1 = randInt(25, 50);
+					a2 = randInt(90, 120);
 					a3 = 180 - a1 - a2;
 					
 					s1 = Math.round((s3 * Math.sin(a1 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
 					s2 = Math.round((s3 * Math.sin(a2 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
 				} while (a3 <= 0 || Math.max(s1, s2, s3) > 10);
 
-				givenStr = `\\( ${sn3}=${cm(s3)}\\,cm; \\quad ${an1}=${a1}^\\circ; \\quad ${an2}=${a2}^\\circ \\)`;
+				givenStr = `\\( ${sn3}=${cm(s3)}\\,cm; \\; ${an1}=${a1}^\\circ; \\; ${an2}=${a2}^\\circ \\)`;
 			} else {
 				// SsW
 				do {
-					s1 = pickDecNoZeroTenth(71, 99);
-					s2 = pickDecNoZeroTenth(41, 69);
-					a1 = randInt(45, 110);
+					s1 = pickDecNoZeroTenth(51, 69);
+					s2 = pickDecNoZeroTenth(31, 49);
+					a1 = randInt(25, 110);
 					
 					const sinA2 = (s2 * Math.sin(a1 * Math.PI / 180)) / s1;
 					if (sinA2 >= 1 || sinA2 <= -1) {
@@ -2383,14 +2437,25 @@ function createTask(type, isMentalMode, grade = 5) {
 					s3 = Math.round((s1 * Math.sin(a3 * Math.PI / 180) / Math.sin(a1 * Math.PI / 180)) * 10) / 10;
 				} while (!Number.isFinite(s3) || a3 <= 0 || Math.max(s1, s2, s3) > 10);
 
-				givenStr = `\\( ${sn1}=${cm(s1)}\\,cm; \\quad ${sn2}=${cm(s2)}\\,cm; \\quad ${an1}=${a1}^\\circ \\)`;
+				givenStr = `\\( ${sn1}=${cm(s1)}\\,cm; \\; ${sn2}=${cm(s2)}\\,cm; \\; ${an1}=${a1}^\\circ \\)`;
 			}
 
 			const resS = [], resA = [];
 			resS[p[0]] = s1; resS[p[1]] = s2; resS[p[2]] = s3;
 			resA[p[0]] = a1; resA[p[1]] = a2; resA[p[2]] = a3;
+
+			// Höhe des zu zeichnenden Dreiecks berechnen (bei größter Seite als Grundseite).
+			// Über Heron: A = sqrt(u(u-a)(u-b)(u-c)), dann h = 2A/g.
+			const sideA = resS[0], sideB = resS[1], sideC = resS[2];
+			const base = Math.max(sideA, sideB, sideC);
+			const semi = (sideA + sideB + sideC) / 2;
+			const areaSq = semi * (semi - sideA) * (semi - sideB) * (semi - sideC);
+			const area = Math.sqrt(Math.max(0, areaSq));
+			const triangleHeight = base > 0 ? (2 * area) / base : 0;
+			const reservedHeight = Number(Math.max(2, triangleHeight + 0.5).toFixed(1));
 			
-			textDisplay = `Fertige eine Planfigur an und zeichne das Dreieck:<br>${givenStr}`;
+			textDisplay = `Fertige eine Planfigur an, zeichne das Dreieck und beschrifte es korrekt: <br>${givenStr}`;
+			textPrint = `Zeichne das Dreieck (mit Planfigur und Beschriftung):<br>${givenStr}${space(reservedHeight)}`;
 			s = `Kongruenzsatz ${kongruenzsatz}, alle Maße:<br>\\(a=${cm(resS[0])}\\,cm; \\quad b=${cm(resS[1])}\\,cm; \\quad c=${cm(resS[2])}\\,cm\\)<br>\\(\\alpha=${resA[0]}^\\circ; \\quad \\beta=${resA[1]}^\\circ; \\quad \\gamma=${resA[2]}^\\circ\\)`;
 			break;
 		}
@@ -2401,52 +2466,51 @@ function createTask(type, isMentalMode, grade = 5) {
 			// Hilfsfunktion für Kommas bei Dezimalzahlen (z.B. 2.5 -> 2,5)
 			let fmt = (num) => num.toString().replace('.', ',');
 
-			// Standardangabe für Kavalierperspektive
-			let pers = "\\( \\alpha = 45^\\circ, q = \\frac{1}{2} \\)";
+			let pers = "";
 
 			if (type === 0) {
 				// --- QUADER ---
 				let a = randInt(4, 8);
 				let b = randInt(4, 8); // Tiefe
 				let c = randInt(3, 8);
-				textDisplay = `Zeichne das Schrägbild eines Quaders in Kavalierperspektive ${pers}.<br><br>Gegeben sind die Breite \\( a = ${a} \\text{ cm} \\), die Tiefe (nach hinten) \\( b = ${b} \\text{ cm} \\) und die Höhe \\( c = ${c} \\text{ cm} \\).`;
-				s = `Kontrolle: Die vordere Fläche ist ein Rechteck (\\( ${a} \\text{ cm} \\times ${c} \\text{ cm} \\)). Die nach hinten verlaufenden Kanten müssen im Heft genau \\( ${fmt(b / 2)} \\text{ cm} \\) lang gezeichnet werden.`;
+				textDisplay = `Zeichne das Schrägbild eines Quaders. Gegeben: a = ${a} cm, b = ${b} cm, c = ${c} cm.`;
+				s = `Kontrolle: Vorderfläche = ${a}×${c} cm, Tiefe hinten = ${fmt(b / 2)} cm.`;
 				
 			} else if (type === 1) {
 				// --- PYRAMIDE ---
 				let a = randInt(4, 8);
 				let h = randInt(5, 9);
-				textDisplay = `Zeichne das Schrägbild einer geraden Pyramide mit quadratischer Grundfläche in Kavalierperspektive ${pers}.<br><br>Gegeben sind die Grundkante \\( a = ${a} \\text{ cm} \\) und die Körperhöhe \\( h = ${h} \\text{ cm} \\).`;
-				s = `Kontrolle: Die vordere Grundkante ist \\( ${a} \\text{ cm} \\) lang, die nach hinten gezeichnete Kante \\( ${fmt(a / 2)} \\text{ cm} \\). Der Höhenfußpunkt liegt genau im Schnittpunkt der beiden Diagonalen der Grundfläche.`;
+				textDisplay = `Zeichne das Schrägbild einer Pyramide. Gegeben: a = ${a} cm, h = ${h} cm.`;
+				s = `Kontrolle: Grundkante = ${a} cm, hintere Kante = ${fmt(a / 2)} cm.`;
 				
 			} else if (type === 2) {
 				// --- PRISMA (DREIECKIG) ---
 				let a = randInt(3, 6);
 				let b = randInt(3, 7);
 				let hk = randInt(4, 9);
-				textDisplay = `Zeichne das Schrägbild eines geraden Prismas in Kavalierperspektive ${pers}.<br><br>Die Grundfläche ist ein rechtwinkliges Dreieck, das parallel zur Zeichenebene liegt (vordere Fläche). Die Katheten sind \\( a = ${a} \\text{ cm} \\) und \\( b = ${b} \\text{ cm} \\). Die Körperhöhe (nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
-				s = `Kontrolle: Das rechtwinklige Dreieck wird in wahrer Größe (\\( ${a} \\text{ cm} \\) und \\( ${b} \\text{ cm} \\)) gezeichnet. Die nach hinten verlaufenden Kanten sind im Heft genau \\( ${fmt(hk / 2)} \\text{ cm} \\) lang.`;
+				textDisplay = `Zeichne das Schrägbild eines Prismas. Gegeben: a = ${a} cm, b = ${b} cm, h_k = ${hk} cm.`;
+				s = `Kontrolle: Dreieckseiten = ${a} cm, ${b} cm, hintere Kanten = ${fmt(hk / 2)} cm.`;
 				
 			} else if (type === 3) {
 				// --- ZYLINDER ---
 				let r = randInt(2, 4);
 				let hk = randInt(4, 9);
-				textDisplay = `Zeichne das Schrägbild eines Zylinders in Kavalierperspektive ${pers}.<br><br>Damit es einfach zu zeichnen ist, "liegt" der Zylinder: Die kreisförmige Grundfläche mit dem Radius \\( r = ${r} \\text{ cm} \\) ist parallel zur Zeichenebene (vordere Fläche). Die Körperhöhe (nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
-				s = `Kontrolle: Der vordere Kreis wird in wahrer Größe mit dem Zirkel gezeichnet. Der Mittelpunkt für den hinteren Kreis wird vom vorderen Mittelpunkt im 45°-Winkel um \\( ${fmt(hk / 2)} \\text{ cm} \\) verschoben.`;
+				textDisplay = `Zeichne das Schrägbild eines Zylinders. Gegeben: r = ${r} cm, h_k = ${hk} cm.`;
+				s = `Kontrolle: Vorderer Kreis radius = ${r} cm, hinterer Kreis versetzt um ${fmt(hk / 2)} cm.`;
 				
 			} else if (type === 4) {
 				// --- KREISKEGEL ---
 				let r = randInt(2, 4);
 				let hk = randInt(5, 9);
-				textDisplay = `Zeichne das Schrägbild eines Kreiskegels in Kavalierperspektive ${pers}.<br><br>Auch hier "liegt" der Kegel: Die kreisförmige Grundfläche mit dem Radius \\( r = ${r} \\text{ cm} \\) ist parallel zur Zeichenebene (vordere Fläche). Die Körperhöhe (Strecke vom Kreismittelpunkt zur Spitze nach hinten) beträgt \\( h_k = ${hk} \\text{ cm} \\).`;
-				s = `Kontrolle: Der Kreis wird in wahrer Größe gezeichnet. Die Spitze liegt vom Kreismittelpunkt aus im 45°-Winkel genau \\( ${fmt(hk / 2)} \\text{ cm} \\) nach hinten versetzt. Verbinde die Spitze tangential mit dem Kreis.`;
+				textDisplay = `Zeichne das Schrägbild eines Kegels. Gegeben: r = ${r} cm, h_k = ${hk} cm.`;
+				s = `Kontrolle: Kreisradius = ${r} cm, Spitze versetzt um ${fmt(hk / 2)} cm.`;
 			}
 
 			break;
 		}
 
 		case 'anteile': {
-			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][rnd(2, 11) - 2];
+			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
 			let rd = Math.random();
 
 			// 1. Definition "schöner" Brüche (Zähler z, Nenner n)
@@ -2468,8 +2532,8 @@ function createTask(type, isMentalMode, grade = 5) {
 				let G = n * multiplier * scale; // Das Ganze (Grundwert)
 				let W = (G / n) * z;            // Der Anteil (Prozentwert)
 
-				textDisplay = `\\( \\frac{${z}}{${n}} \\text{ von } ${comma(G)} \\text{ ${einheit} sind ___}\\)`;
-				s = `\\( \\frac{${z}}{${n}} \\text{ von } ${comma(G)} \\text{ ${einheit}} \\text{ sind } ${comma(W)} \\text{ ${einheit}}\\)<br>
+				textDisplay = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)} ${einheit} sind ${blank(3)}`;
+				s = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)}  ${einheit} sind  ${comma(W)} ${einheit}<br>
 				\\((${comma(G)} : ${n} \\cdot ${z} = ${comma(W)})\\)`;
 
 			} else if (rd > 0.33) {
@@ -2480,7 +2544,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				let W = z * multiplier * scale; // Der Anteil
 				let G = (W / z) * n;            // Das Ganze
 				
-				textDisplay = `\\( \\frac{${z}}{${n}} \\text{ sind } ${comma(W)} \\text{ ${einheit} von ___}\\)`;
+				textDisplay = `\\( \\frac{${z}}{${n}} \\)  sind ${comma(W)} ${einheit} von ${blank(3)}`;
 				s = `\\( \\frac{${z}}{${n}} \\text{ sind } ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit}}\\)<br>
 				\\((${comma(W)} : ${z} \\cdot ${n} = ${comma(G)})\\)`;
 
@@ -2492,8 +2556,8 @@ function createTask(type, isMentalMode, grade = 5) {
 				let W = z * multiplier;
 				let G = n * multiplier;
 				
-				textDisplay = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind ___ } \\)`;
-				s = `\\( ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit} sind } \\frac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\frac{${z}}{${n}} \\)`;
+				textDisplay = `${comma(W)} ${einheit} von ${comma(G)}  ${einheit} sind ${blank(3)}`;
+				s = `${comma(W)}  ${einheit} von  ${comma(G)}  ${einheit} sind  \\(\\dfrac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\dfrac{${z}}{${n}} \\)`;
 			}
 			break;
 		}
@@ -2596,7 +2660,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				}
 			}
 
-			textDisplay = `${s1}. ${sFrage}`;
+			textDisplay = `${s1}.<br> ${sFrage}`;
 			// Einfache Zeilenumbrüche (<br>) ohne die vorherigen Worte (Gegeben, Zielwert etc.)
 			s = `${s2}<br>${sStep}<br>${sRes}`;
 			break;
@@ -2647,7 +2711,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					break;
 			}
 
-			textDisplay = `\\[ ${taskStr} \\]`;
+			textDisplay = `\\( ${taskStr} = \\)`;
 			s = `\\[ ${taskStr} = ${step1} = ${res} \\]`;
 
 			break;
@@ -2795,7 +2859,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			const displayExpr = displayExprParts.join(' ');
 			const targetExpr = targetExprParts.join(' ');
 		
-			textDisplay = `${displayExpr} = \\( ${blank(3)} \\) ${targetUnit}`;
+			textDisplay = `${displayExpr} = ${blank(3)} ${targetUnit}`;
 			s = `${displayExpr} <br>= ${targetExpr} = ${fmtNum(resultInTarget)} ${targetUnit}`;
 			break;
 		}

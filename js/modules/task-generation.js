@@ -66,7 +66,7 @@ window.MTGTaskGenerationModule = {
                 return counts;
             };
 
-            if (arrangementMode === 'ordered') {
+            if (arrangementMode === 'ordered' || arrangementMode === 'random-ordered') {
                 const typeCounts = getTypeCounts();
                 const labelOrder = Object.keys(typeLabels);
                 const selectedSet = new Set(state.selectedTypes.value);
@@ -76,6 +76,13 @@ window.MTGTaskGenerationModule = {
                 ].filter(type => typeCounts[type] > 0);
 
                 const blocks = orderedTypes.map(type => Array(typeCounts[type]).fill(type));
+                if (arrangementMode === 'random-ordered') {
+                    for (let index = blocks.length - 1; index > 0; index--) {
+                        const swapIndex = Math.floor(Math.random() * (index + 1));
+                        [blocks[index], blocks[swapIndex]] = [blocks[swapIndex], blocks[index]];
+                    }
+                }
+
                 typePool = blocks.flat();
             } else {
                 while (typePool.length + types.length <= targetTotal) {

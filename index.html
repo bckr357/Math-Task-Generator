@@ -56,6 +56,7 @@
                     <select v-model="taskArrangementMode" class="settings-input settings-arrangement-input">
                         <option value="random">zufällig</option>
                         <option value="ordered">blockweise</option>
+                        <option value="random-ordered">blockw. zuf.</option>
                     </select>
                 </label>
                 <label class="settings-topbar-label">
@@ -134,6 +135,7 @@
                         <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
                             <option value="random">zufällig</option>
                             <option value="ordered">blockweise</option>
+                            <option value="random-ordered">blockw. zuf.</option>
                         </select>
                     </label>
                     <label class="settings-topbar-label">
@@ -176,13 +178,13 @@
         <div v-else :class="['worksheet-sheet', { 'worksheet-sheet--solutions': worksheetLayoutMode === 'presentation' }]">
             <template v-if="worksheetLayoutMode === 'worksheet'">
                 <template v-if="!showWorksheetSolutions">
-                    <div class="worksheet-sheet-header">
+                    <div v-if="worksheetA5Pages !== 1" class="worksheet-sheet-header">
                         <div class="worksheet-header-copy">
-                            <span>Name:</span>
+                            <span v-if="worksheetA5Pages !== 1">Name:</span>
                             <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
                         </div>
                         <div class="worksheet-header-copy">
-                            <span>Name:</span>
+                            <span v-if="worksheetA5Pages !== 1">Name:</span>
                             <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
                         </div>
                     </div>
@@ -209,7 +211,7 @@
                 </template>
 
                 <template v-else>
-                    <div class="worksheet-sheet-header">
+                    <div v-if="worksheetA5Pages !== 1" class="worksheet-sheet-header">
                         <div class="worksheet-header-copy">
                             <span>Lösungen</span>
                             <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
@@ -339,6 +341,7 @@
                         <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
                             <option value="random">zufällig</option>
                             <option value="ordered">blockweise</option>
+                            <option value="random-ordered">blockw. zuf.</option>
                         </select>
                     </label>
                 </div>
