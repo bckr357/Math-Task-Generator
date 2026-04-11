@@ -514,6 +514,71 @@ mjx-mtext {
 .math-q { font-size: 2.5rem; font-weight: 400; }
 .math-a { font-size: 2.5rem; font-weight: 400; color: var(--primary); }
 
+.op-table-wrap {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.op-table-title {
+    font-size: clamp(1rem, 2.1vw, 1.35rem);
+    font-weight: 800;
+    color: var(--slate-500);
+    margin-bottom: 10px;
+}
+
+.op-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(148, 163, 184, 0.35);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.op-table th,
+.op-table td {
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    padding: 10px 8px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12pt;
+    line-height: 1.25;
+}
+
+.op-table th {
+    background: rgba(241, 245, 249, 0.95);
+    font-weight: 400;
+}
+
+.op-table .op-corner {
+    background: rgba(226, 232, 240, 0.9);
+}
+
+.op-blank {
+    display: inline-block;
+    height: 1.05em;
+    border-bottom: 2px solid #64748b;
+    vertical-align: middle;
+}
+
+.op-table th:first-child,
+.op-table td:first-child {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+.op-table--solution td {
+    text-align: center;
+}
+
+.op-table--terms td,
+.op-table--terms th {
+    padding: 12px 10px;
+}
+
 .presentation-view.dark-mode {
     background:
         radial-gradient(circle at top right, rgba(74, 222, 128, 0.14), transparent 32%),
@@ -646,7 +711,8 @@ mjx-mtext {
     max-width: 900px;
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    align-items: stretch;
+    gap: 14px;
 }
 
 .training-task-content {
@@ -656,10 +722,10 @@ mjx-mtext {
 }
 
 .training-arrow {
-    padding: 16px 32px;
+    padding: 14px 20px;
     border-radius: 12px;
     border: none;
-    font-size: 1.1rem;
+    font-size: 1.08rem;
     font-weight: 700;
     cursor: pointer;
     color: white;
@@ -669,9 +735,23 @@ mjx-mtext {
     align-items: center;
     gap: 8px;
     white-space: nowrap;
-    flex: 1;
+    flex: 1 1 0;
     justify-content: center;
-    min-width: 180px;
+    min-width: 0;
+}
+
+.training-arrow-icon {
+    font-size: 1.35em;
+    line-height: 1;
+}
+
+.training-solution-btn {
+    flex: 0 0 auto;
+    min-width: 220px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    border-radius: 12px;
+    padding: 14px 18px;
 }
 
 .training-arrow:hover:not(:disabled) {
@@ -709,8 +789,10 @@ mjx-mtext {
     }
 
     .training-top-actions .btn {
-        flex: 1 1 180px;
+        flex: 1 1 220px;
         min-width: 0;
+        font-size: 1rem;
+        padding: 12px 14px;
     }
 
     .training-main {
@@ -719,45 +801,88 @@ mjx-mtext {
 
     .training-buttons {
         width: 100%;
-        gap: 12px;
+        gap: 10px;
     }
 
     .training-task-card {
-        min-height: 52vh;
-        padding: 24px 16px;
+        min-height: 56vh;
+        padding: 26px 16px;
     }
 
     .training-view .math-q,
     .training-view .math-a {
-        font-size: clamp(1.6rem, 6vw, 2.3rem);
+        font-size: clamp(2rem, 7.8vw, 2.8rem);
         line-height: 1.25;
+    }
+
+    .training-view .training-task-content mjx-container[jax="CHTML"][display="true"] {
+        font-size: 125% !important;
+    }
+
+    .op-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .op-table {
+        min-width: 560px;
     }
 }
 
 @media (max-width: 560px) {
     .training-view {
         padding: 10px;
+        gap: 12px;
     }
 
-    .training-buttons {
-        flex-direction: column;
+    .training-progress {
+        font-size: 1.02rem;
+    }
+
+    .training-top-actions .btn {
+        font-size: 1.02rem;
+        padding: 13px 14px;
     }
 
     .training-arrow {
-        width: 100%;
+        padding: 14px 10px;
+        font-size: 1.18rem;
+        min-height: 54px;
+    }
+
+    .training-arrow-text {
+        display: none;
+    }
+
+    .training-solution-btn {
         min-width: 0;
-        padding: 14px 16px;
+        flex: 1.2 1 0;
+        padding: 14px 12px;
         font-size: 1rem;
+        line-height: 1.2;
     }
 
     .training-task-card {
-        min-height: 48vh;
+        min-height: 54vh;
         padding: 16px 12px;
         border-radius: 18px;
     }
 
     .training-task-content {
-        font-size: 1rem;
+        font-size: 1.08rem;
+    }
+
+    .training-view .math-q,
+    .training-view .math-a {
+        font-size: clamp(2.35rem, 10.2vw, 3.2rem);
+    }
+
+    .training-view .training-task-content mjx-container[jax="CHTML"][display="true"] {
+        font-size: 148% !important;
+    }
+
+    .op-table {
+        min-width: 500px;
     }
 }
 
@@ -1215,5 +1340,42 @@ mjx-mtext {
     .worksheet-view mjx-container[jax="CHTML"][display="true"] {
         margin-top: 1.2mm !important;
         margin-bottom: 0 !important;
+    }
+
+    /* Druck-optimierte Tabellen für A5-Doppelseite: passen in Spaltenbreite
+       Ursache: Bildschirm-Responsive Regeln setzten min-width/auto, deshalb
+       mussten wir hier фиксieren: volle Spaltenbreite, table-layout fixed
+       und kleinere Schrift/Paddings. */
+    .op-table-wrap {
+        width: 100%;
+        max-width: 148.5mm; /* eine A5-Spalte in A4-Landschaft */
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .op-table {
+        width: 100% !important;
+        min-width: 0 !important;
+        table-layout: fixed; /* verhindert horizontales Aufweiten */
+        border-width: 0.25mm;
+        background: transparent;
+        border-collapse: collapse;
+    }
+
+    .op-table th,
+    .op-table td {
+        font-size: 9pt;
+        font-weight: 350;
+        padding: 1.2mm 1.0mm;
+        border-width: 0.25mm;
+        word-break: break-word;
+    }
+
+    /* Erste Spalte schmal, ausreichend für Headerwert */
+    .op-table th:first-child,
+    .op-table td:first-child {
+        width: 8mm;
+        min-width: 8mm;
+        max-width: 10mm;
     }
 }

@@ -284,9 +284,6 @@
             <div class="training-progress">Aufgabe {{ currentTrainingIndex + 1 }} – {{ typeDescriptions[currentTrainingTask?.type] ?? typeLabels[currentTrainingTask?.type] ?? currentTrainingTask?.type ?? 'Noch kein Training gestartet' }}</div>
             <div class="training-top-actions">
                 <button @click="startTraining" class="btn btn--primary">Neu starten</button>
-                <button @click="toggleTrainingSolution" class="btn btn--toggle" :disabled="!currentTrainingTask">
-                    {{ showTrainingSolution ? 'Aufgabe anzeigen' : 'Lösung anzeigen' }}
-                </button>
             </div>
         </div>
 
@@ -307,10 +304,15 @@
 
             <div class="training-buttons">
                 <button @click="goToPreviousTrainingTask" class="training-arrow" :disabled="currentTrainingIndex === 0" aria-label="Vorherige Aufgabe">
-                    ← Letzte Aufgabe
+                    <span class="training-arrow-icon" aria-hidden="true">&#x2190;</span>
+                    <span class="training-arrow-text">Letzte Aufgabe</span>
+                </button>
+                <button @click="toggleTrainingSolution" class="btn btn--toggle training-solution-btn" :disabled="!currentTrainingTask">
+                    {{ showTrainingSolution ? 'Aufgabe anzeigen' : 'Lösung anzeigen' }}
                 </button>
                 <button @click="goToNextTrainingTask" class="training-arrow" aria-label="Nächste Aufgabe">
-                    Nächste Aufgabe →
+                    <span class="training-arrow-text">Nächste Aufgabe</span>
+                    <span class="training-arrow-icon" aria-hidden="true">&#x2192;</span>
                 </button>
             </div>
         </div>
