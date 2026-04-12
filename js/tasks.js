@@ -488,14 +488,24 @@ function createTask(type, isMentalMode, grade = 5) {
 					v2 = rnd(-20, 20);
 				} while (!(v1 < 0 || v2 < 0 || (v1 + v2) < 0));
 				textDisplay = `\\( ${v1} + ${fmt(v2)} =\\)`;
-				s = `\\( ${v1} + ${fmt(v2)} = ${v1 + v2} \\) `;
+				const sum = v1 + v2;
+				if (v2 < 0) {
+					s = `\\( ${v1} + ${fmt(v2)} = ${v1} - ${Math.abs(v2)} = ${sum} \\)`;
+				} else {
+					s = `\\( ${v1} + ${fmt(v2)} = ${sum} \\)`;
+				}
 			} else {
 				do {
 					v1 = rnd(-20, 20);
 					v2 = rnd(-20, 20);
 				} while (!(v1 < 0 || v2 < 0 || (v1 - v2) < 0));
 				textDisplay = `\\( ${v1} - ${fmt(v2)} =\\)`;
-				s = `\\( ${v1} - ${fmt(v2)} = ${v1 - v2} \\)`;
+				const diff = v1 - v2;
+				if (v2 < 0) {
+					s = `\\( ${v1} - ${fmt(v2)} = ${v1} + ${Math.abs(v2)} = ${diff} \\)`;
+				} else {
+					s = `\\( ${v1} - ${fmt(v2)} = ${diff} \\)`;
+				}
 			}
 			break;
 		
@@ -565,7 +575,7 @@ function createTask(type, isMentalMode, grade = 5) {
 
 			// Lösung mit Erklärung der Kommaverschiebung/Stellenwertverschiebung
 			const shiftCount = power === 10 ? 1 : power === 100 ? 2 : 3;
-			const shiftDirection = isMult ? '→' : '←';
+			const shiftDirection = isMult ? '&#x2192;' : '&#x2190;';
 			const shiftDescription = `(Komma ${shiftCount} x ${shiftDirection})`;
 
 			s = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad \\text{${shiftDescription}}\\)`;
@@ -659,7 +669,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					? `\\frac{${Z1}}{${N1}} \\cdot \\frac{${n}}{1}`
 					: `\\frac{${Z1}}{${N1}} \\cdot \\frac{1}{${n}}`;
 
-				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} ${n} \\]`;
+				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} ${n} = \\]`;
 				s = `\\[ \\frac{${Z1}}{${N1}} ${op} ${n} = ${step1} = \\frac{${resZ}}{${resN}} \\]`;
 				break;
 			}
@@ -683,7 +693,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				const finalN = isMult ? N1 * N2 : N1 * Z2;
 				const step1 = isMult ? '' : `\\frac{${Z1}}{${N1}} \\cdot \\frac{${N2}}{${Z2}} = `;
 
-				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} \\]`;
+				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = \\]`;
 				s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${step1} \\frac{${finalZ}}{${finalN}} \\]`;
 			} else {
 				do {
@@ -1915,7 +1925,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				textPrint = `Löse die Klammer auf: \\(\\quad ${taskStr} \\) ${space(0.7)}`;
 			}
 
-			s = `\\( ${taskStr} = ${resStr} \\)`;
+			s = `\\[ ${taskStr} = ${resStr} \\]`;
 			break;
 		}
 
@@ -2326,7 +2336,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				let result = (p / 100) * 360;
 				
 				textDisplay = `Welchem Winkel entsprechen ${p} % in einem Kreisdiagramm?`;
-				s = `10 % ≙ 36° ⭢ ${p} % ≙ ${result}°`;
+				s = `10 % ≙ 36° &#x2192; ${p} % ≙ ${result}°`;
 				
 			} else if (mode === 2) {
 				// --- Winkel zeichnen ---
