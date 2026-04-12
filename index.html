@@ -76,7 +76,7 @@
                 <div v-for="([key, label]) in visibleTypeEntries" :key="'drawer-'+key" class="type-option">
                     <label class="checkbox-label type-label">
                         <input type="checkbox" v-model="selectedTypes" :value="key">
-                        <input v-if="weights" type="number" v-model.number="taskWeights[key]" min="1" max="9" step="1" class="weight-input" title="Gewichtung">
+                        <input v-if="weights" type="number" v-model.number="taskWeights[key]" min="0" max="9" step="1" class="weight-input" title="Gewichtung (0 = einmal pro Satz)">
                         <span>{{ label }}</span>
                     </label>
                 </div>

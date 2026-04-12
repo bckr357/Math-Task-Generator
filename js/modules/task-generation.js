@@ -31,7 +31,7 @@ window.MTGTaskGenerationModule = {
                 const rawWeight = Number(state.taskWeights.value[type]);
                 const weight = state.weights.value
                     ? (Number.isFinite(rawWeight)
-                        ? Math.max(1, Math.floor(rawWeight))
+                        ? Math.max(0, Math.floor(rawWeight))
                         : 1)
                     : 1;
 
@@ -39,8 +39,12 @@ window.MTGTaskGenerationModule = {
                 return [type, weight];
             }));
 
+            const singleOccurrenceTypes = new Set(
+                state.selectedTypes.value.filter(type => normalizedWeights[type] === 0)
+            );
+
             const weightedTypes = state.selectedTypes.value.flatMap(type => Array(normalizedWeights[type]).fill(type));
-            if (weightedTypes.length === 0) return false;
+            if (weightedTypes.length === 0 && singleOccurrenceTypes.size === 0) return false;
 
             const types = [...weightedTypes];
             const targetTotal = state.taskCount.value;
@@ -49,16 +53,40 @@ window.MTGTaskGenerationModule = {
 
             const getTypeCounts = () => {
                 const counts = Object.fromEntries(state.selectedTypes.value.map(type => [type, 0]));
-                const fullSets = Math.floor(targetTotal / types.length);
+                const singleTypes = state.selectedTypes.value.filter(type => singleOccurrenceTypes.has(type));
+                const repeatTypes = state.selectedTypes.value.filter(type => !singleOccurrenceTypes.has(type));
+                const repeatWeightedTypes = repeatTypes.flatMap(type => Array(normalizedWeights[type]).fill(type));
 
-                state.selectedTypes.value.forEach(type => {
-                    counts[type] += fullSets * normalizedWeights[type];
-                });
+                let usedSlots = 0;
+                for (const type of singleTypes) {
+                    if (usedSlots < targetTotal) {
+                        counts[type] = 1;
+                        usedSlots += 1;
+                    }
+                }
 
-                const remainingCount = targetTotal - (fullSets * types.length);
-                if (remainingCount > 0) {
-                    const finalShuffle = [...types].sort(() => Math.random() - 0.5);
-                    for (let index = 0; index < remainingCount; index++) {
+                const remainingTarget = Math.max(0, targetTotal - usedSlots);
+                if (repeatWeightedTypes.length > 0 && remainingTarget > 0) {
+                    const fullSets = Math.floor(remainingTarget / repeatWeightedTypes.length);
+
+                    repeatTypes.forEach(type => {
+                        counts[type] += fullSets * normalizedWeights[type];
+                    });
+
+                    const remainingCount = remainingTarget - (fullSets * repeatWeightedTypes.length);
+                    if (remainingCount > 0) {
+                        const finalShuffle = [...repeatWeightedTypes].sort(() => Math.random() - 0.5);
+                        for (let index = 0; index < remainingCount; index++) {
+                            counts[finalShuffle[index]] += 1;
+                        }
+                    }
+                } else if (remainingTarget > 0 && singleTypes.length > 0) {
+                    const repeatPool = [...singleTypes];
+                    const finalShuffle = [];
+                    while (finalShuffle.length < remainingTarget) {
+                        finalShuffle.push(...repeatPool.sort(() => Math.random() - 0.5));
+                    }
+                    for (let index = 0; index < remainingTarget; index++) {
                         counts[finalShuffle[index]] += 1;
                     }
                 }
@@ -85,14 +113,21 @@ window.MTGTaskGenerationModule = {
 
                 typePool = blocks.flat();
             } else {
-                while (typePool.length + types.length <= targetTotal) {
-                    const shuffledSet = [...types].sort(() => Math.random() - 0.5);
+                const singleTypes = [...new Set(state.selectedTypes.value.filter(type => singleOccurrenceTypes.has(type)))];
+                const normalWeightedTypes = weightedTypes.filter(type => !singleOccurrenceTypes.has(type));
+
+                const singleTypesToUse = singleTypes.slice(0, targetTotal);
+                typePool = [...singleTypesToUse];
+
+                const fillTypes = normalWeightedTypes.length > 0 ? normalWeightedTypes : singleTypesToUse;
+                while (typePool.length + fillTypes.length <= targetTotal) {
+                    const shuffledSet = [...fillTypes].sort(() => Math.random() - 0.5);
                     typePool = [...typePool, ...shuffledSet];
                 }
 
                 if (typePool.length < targetTotal) {
                     const remainingCount = targetTotal - typePool.length;
-                    const finalShuffle = [...types].sort(() => Math.random() - 0.5);
+                    const finalShuffle = [...fillTypes].sort(() => Math.random() - 0.5);
                     for (let index = 0; index < remainingCount; index++) {
                         typePool.push(finalShuffle[index]);
                     }
@@ -126,10 +161,11 @@ window.MTGTaskGenerationModule = {
                 const rawWeight = Number(state.taskWeights.value[type]);
                 const weight = state.weights.value
                     ? (Number.isFinite(rawWeight)
-                        ? Math.max(1, Math.floor(rawWeight))
+                        ? Math.max(0, Math.floor(rawWeight))
                         : 1)
                     : 1;
-                return Array(weight).fill(type);
+                // Für Training: Gewicht 0 soll den Typ nicht ausschließen.
+                return Array(Math.max(1, weight)).fill(type);
             });
 
             if (weightedTypes.length === 0) return null;

@@ -45,14 +45,14 @@ const taskTypesByGrade = {
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
 		'anteile', 'prop', 'percent', 'pv', 'units',
 		'terme', 'equations', 'equations_adv', 'formel_umstellen',
-		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'funktionen', 'statistik', 'wkt'
+		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse9: [
 		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
 		'anteile', 'prop', 'percent', 'pv', 'units',
-		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'funktionen',
+		'terme', 'equations', 'equations_adv', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse10: [
@@ -62,22 +62,16 @@ const taskTypesByGrade = {
 		'anteile', 'prop', 'percent', 'pv', 'units',
 		'terme', 'equations', 'equations_adv', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz',
-		'funktionen', 'statistik', 'wkt'
+		'statistik', 'wkt'
 	]
 };
 
 /* TODO / Roadmap 
  - rechten Rand so vergrößern, dass immer eine kurze Lösung hin passt 
- - Winkel fixen 
  - neue cases einbauen und validieren 
- - Druck-Modus 
- - Brüche ordnen 
- - Zeichnungen von Körpern 
- - Kongruenzsätze 
  - Grafik-Modus 
  - Bild für Geradenkreuzung oder IWS einbinden 
- - Nutzereingabe mit Kontrolle ermöglichen 
- - Nutzereingaben an Nutzer-Code binden 
+ - Funktionen einbauen  
  - Berechnungen an Körpern etc. auf einer Website (excel sheet ersetzen) 
  - Aufgaben mit Hilfsmitteln einbauen (z. B. Berechnungen an Flächen und Körpern, Funktionen)
  - Funktionen (Fktswert, Arguemnt, Punktprobe, fehlende Koordninaten berechnen, Wertetaeblle, Graoh zeichnen, Nullstellen usw.) 
@@ -134,7 +128,7 @@ const typeDefinitions = [
 	// Geometrie
 	['geometry', 'A und u ebener Figuren', 'Flächeninhalte und Umfänge berechnen'],
 	['winkel', 'Winkel', 'Winkel zeichnen und berechnen'],
-	['schraegbild', 'Körperdarstellung', 'Schrägbilder von Körpern zeichnen'],
+	['schraegbild', 'Schrägbilder', 'Schrägbilder von Körpern zeichnen'],
 	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren'],
 
 	// Funktionen, Statistik & Wahrscheinlichkeiten
@@ -840,8 +834,8 @@ function createTask(type, isMentalMode, grade = 5) {
 			const shuffled = [...denFamily].sort(() => Math.random() - 0.5);
 			const [d1, d2, d3] = shuffled;
 
-			// 50 % Chance: alle drei Zähler sind bereits vor dem Erweitern gleich (1..9)
-			const tripleNumeratorCase = Math.random() < 0.50;
+			// 35 % Chance: alle drei Zähler sind bereits vor dem Erweitern gleich (1..9)
+			const tripleNumeratorCase = Math.random() < 0.35;
 
 			let f1, f2, f3;
 
@@ -2436,7 +2430,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					a3 = 180 - a1 - a2;
 				} while (Math.max(s1, s2, s3) > 10);
 
-				givenStr = `\\( ${sn1}=${cm(s1)}\\,cm; \\; ${sn2}=${cm(s2)}\\,cm; \\; ${sn3}=${cm(s3)}\\,cm \\)`;
+				givenStr = `\\( \\; ${sn1}=${cm(s1)}\\,\\text{cm}; \\; ${sn2}=${cm(s2)}\\,\\text{cm}; \\; ${sn3}=${cm(s3)}\\,\\text{cm} \\)`;
 			} else if (type === 1) {
 				// SWS
 				do {
@@ -2450,7 +2444,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					a2 = 180 - a3 - a1;
 				} while (Math.max(s1, s2, s3) > 10 || a2 <= 0);
 
-				givenStr = `\\( ${sn1}=${cm(s1)}\\,cm; \\; ${sn2}=${cm(s2)}\\,cm; \\; ${an3}=${a3}^\\circ \\)`;
+				givenStr = `\\( \\; ${sn1}=${cm(s1)}\\,\\text{cm}; \\; ${sn2}=${cm(s2)}\\,\\text{cm}; \\; ${an3}=${a3}^\\circ \\)`;
 			} else if (type === 2) {
 				// WSW
 				do {
@@ -2463,7 +2457,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					s2 = Math.round((s3 * Math.sin(a2 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
 				} while (a3 <= 0 || Math.max(s1, s2, s3) > 10);
 
-				givenStr = `\\( ${sn3}=${cm(s3)}\\,cm; \\; ${an1}=${a1}^\\circ; \\; ${an2}=${a2}^\\circ \\)`;
+				givenStr = `\\( \\; ${sn3}=${cm(s3)}\\,\\text{cm}; \\; ${an1}=${a1}^\\circ; \\; ${an2}=${a2}^\\circ \\)`;
 			} else {
 				// SsW
 				do {
@@ -2484,7 +2478,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					s3 = Math.round((s1 * Math.sin(a3 * Math.PI / 180) / Math.sin(a1 * Math.PI / 180)) * 10) / 10;
 				} while (!Number.isFinite(s3) || a3 <= 0 || Math.max(s1, s2, s3) > 10);
 
-				givenStr = `\\( ${sn1}=${cm(s1)}\\,cm; \\; ${sn2}=${cm(s2)}\\,cm; \\; ${an1}=${a1}^\\circ \\)`;
+				givenStr = `\\( \\; ${sn1}=${cm(s1)}\\,\\text{cm}; \\; ${sn2}=${cm(s2)}\\,\\text{cm}; \\; ${an1}=${a1}^\\circ \\)`;
 			}
 
 			const resS = [], resA = [];
@@ -2501,51 +2495,52 @@ function createTask(type, isMentalMode, grade = 5) {
 			const triangleHeight = base > 0 ? (2 * area) / base : 0;
 			const reservedHeight = Number(Math.max(2, triangleHeight + 0.5).toFixed(1));
 			
-			textDisplay = `Fertige eine Planfigur an, zeichne das Dreieck und beschrifte es korrekt: <br>${givenStr}`;
-			textPrint = `Zeichne das Dreieck (mit Planfigur und Beschriftung):<br>${givenStr}${space(reservedHeight)}`;
-			s = `Kongruenzsatz ${kongruenzsatz}, alle Maße:<br>\\(a=${cm(resS[0])}\\,cm; \\quad b=${cm(resS[1])}\\,cm; \\quad c=${cm(resS[2])}\\,cm\\)<br>\\(\\alpha=${resA[0]}^\\circ; \\quad \\beta=${resA[1]}^\\circ; \\quad \\gamma=${resA[2]}^\\circ\\)`;
+			textDisplay = `Zeichne eine Planfigur, nenne den Kongruenzsatz, konstruiere das Dreieck und miss die übrigen Größen:<br>${givenStr}`;
+			textPrint = `Zeichne eine Planfigur, nenne den Kongruenzsatz, konstruiere das Dreieck und miss die übrigen Größen: ${givenStr}${space(reservedHeight)}`;
+			s = `Kongruenzsatz ${kongruenzsatz}, alle Maße:<br>\\[ \\begin{aligned}
+				a &= ${cm(resS[0])}\\,\\text{cm}; &\\quad b &= ${cm(resS[1])}\\,\\text{cm}; &\\quad c &= ${cm(resS[2])}\\,\\text{cm} \\\\ \\alpha &= ${resA[0]}^\\circ; &\\quad \\beta &= ${resA[1]}^\\circ; &\\quad \\gamma &= ${resA[2]}^\\circ
+			\\end{aligned} \\]`;
 			break;
 		}
 
 		case 'schraegbild': {
 			let type = randInt(0, 3); // 0: Quader, 1: Pyramide, 2: Zylinder, 3: Kegel 
 
-			// Hilfsfunktion für Kommas bei Dezimalzahlen (z.B. 2.5 -> 2,5)
-			let fmt = (num) => num.toString().replace('.', ',');
-
-			let pers = "";
-
 			if (type === 0) {
 				// --- QUADER ---
 				let a = randInt(2, 5);
 				let b = randInt(2, 4); 
 				let c = randInt(2, 6);
-				textDisplay = `Zeichne das Schrägbild eines Quaders. Gegeben: a = ${a} cm, b = ${b} cm, c = ${c} cm. ${space(a+1)}`;
-				s = `Kontrolle: Vorderfläche = ${a}×${c} cm, Tiefe hinten = ${fmt(b / 2)} cm.`;
+				textDisplay = `Zeichne das Schrägbild eines Quaders mit<br> a = ${a} cm, b = ${b} cm, c = ${c} cm.`;
+				textPrint = `Zeichne das Schrägbild eines Quaders mit a = ${a} cm, b = ${b} cm, c = ${c} cm. ${space(a + 1)}`;
+				s = `<img src="img/schraegbild_quader.png" alt="Quader" style="max-width:40%; height:auto;">`;
+				//s = `${space(5)}`;
 				
 			} else if (type === 1) {
 				// --- PYRAMIDE ---
-				let a = randInt(4, 8);
-				let h = randInt(5, 9);
-				textDisplay = `Zeichne das Schrägbild einer Pyramide. Gegeben: a = ${a} cm, h = ${h} cm.`;
-				s = `Kontrolle: Grundkante = ${a} cm, hintere Kante = ${fmt(a / 2)} cm.`;
-				
+				let a = randInt(2, 5);
+				let b = randInt(2, 6); 
+				let h = randInt(3, 6);
+				textDisplay = `Zeichne das Schrägbild einer Pyramide mit<br> a = ${a} cm, b = ${b} cm, h = ${h} cm.`;
+				textPrint = `Zeichne das Schrägbild einer Pyramide mit a = ${a} cm, b = ${b} cm, h = ${h} cm. ${space(b / 2 + h + 1)}`;
+				s = `${space(5)}`;
+
 			} else if (type === 2) {
 				// --- ZYLINDER ---
-				let r = randInt(2, 4);
-				let hk = randInt(4, 9);
-				textDisplay = `Zeichne das Schrägbild eines Zylinders. Gegeben: r = ${r} cm, h_k = ${hk} cm.`;
-				s = `Kontrolle: Vorderer Kreis radius = ${r} cm, hinterer Kreis versetzt um ${fmt(hk / 2)} cm.`;
+				let r = randInt(1, 2);
+				let h = randInt(3, 5);
+				textDisplay = `Zeichne das Schrägbild eines Zylinders mit<br> r = ${r} cm, h = ${h} cm.`;
+				textPrint = `Zeichne das Schrägbild eines Zylinders mit r = ${r} cm, h = ${h} cm. ${space(r + 1)}`;
+				s = `${space(5)}`;
 				
 			} else if (type === 3) {
 				// --- KREISKEGEL ---
-				let r = randInt(2, 4);
-				let hk = randInt(5, 9);
-				textDisplay = `Zeichne das Schrägbild eines Kegels. Gegeben: r = ${r} cm, h_k = ${hk} cm.`;
-				s = `Kontrolle: Kreisradius = ${r} cm, Spitze versetzt um ${fmt(hk / 2)} cm.`;
-				
+				let r = randInt(1, 3);
+				let h = randInt(2, 4);
+				textDisplay = `Zeichne das Schrägbild eines Kegels mit<br> r = ${r} cm, h = ${h} cm.`;
+				textPrint = `Zeichne das Schrägbild eines Kegels mit r = ${r} cm, h = ${h} cm. ${space(r + h)}`;
+				s = `${space(5)}`;
 			} 
-
 			break;
 		}
 
