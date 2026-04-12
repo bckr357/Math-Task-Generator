@@ -1483,7 +1483,7 @@ mjx-container[jax="CHTML"][display="true"] {
     }
 
     .worksheet-copy {
-        width: 148.5mm;
+        width: 141.5mm;
         grid-template-columns: 8mm 1fr;
         gap: 3mm;
         padding: 0 8mm 0 5mm;
@@ -1494,19 +1494,19 @@ mjx-container[jax="CHTML"][display="true"] {
     .worksheet-list--columns {
         width: 297mm;
         display: grid;
-        grid-template-columns: 148.5mm 148.5mm;
-        gap: 0;
+        grid-template-columns: 141.5mm 141.5mm;
+        gap: 14mm;
     }
 
     .worksheet-column {
-        width: 148.5mm;
+        width: 141.5mm;
     }
 
     .worksheet-column .worksheet-copy {
         width: 148.5mm;
         grid-template-columns: 6mm 1fr;
         gap: 3mm;
-        padding: 2.5mm 10mm 2.5mm 0.5mm;
+        padding: 2mm 5mm 2mm 0.5mm;
         box-sizing: border-box;
         align-items: start;
         break-inside: avoid;
@@ -1514,7 +1514,7 @@ mjx-container[jax="CHTML"][display="true"] {
     }
 
     .worksheet-column + .worksheet-column .worksheet-copy {
-        padding-right: -10mm;  /* rechte Spalte */ 
+         padding-right: 5mm;  /* rechte Spalte */
     }
 
     .worksheet-row > .worksheet-copy + .worksheet-copy {
