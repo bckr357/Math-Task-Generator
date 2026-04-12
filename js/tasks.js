@@ -87,43 +87,57 @@ const taskTypesByGrade = {
 
 // Dreiteilige Typ-Definition: [key, Label fuer Einstellungen, Beschreibung fuer Training]
 const typeDefinitions = [
-	['teiler', 'Teiler', 'Teiler einer Zahl bestimmen'],
-	['primzahlen', 'Primzahlen', 'Primzahlen in Zahlenbereichen erkennen'],
-	['geometry', 'A und u ebener Figuren', 'Flächeninhalte und Umfänge in der Geometrie berechnen'],
+	// Arithmetik: Ganze Zahlen, Dezimalbrüche, Stellenwerte
+	['z_as', 'Ganze Zahlen +/-', 'Ganze Zahlen addieren und subtrahieren'],
+	['z_md', 'Ganze Zahlen ×/÷', 'Ganze Zahlen multiplizieren und dividieren'],
 	['potenzen', 'Potenzen und Wurzeln', 'Potenzen und Wurzeln berechnen'],
 	['schriftlich', 'schriftlich rechnen', 'Schriftliche Rechenverfahren'],
 	['db_as', 'Dezimalbrüche +/-', 'Dezimalbrüche addieren und subtrahieren'],
-	['units', 'Einheiten', 'Größen in verschiedene Einheiten umrechnen'],
 	['db_md', 'Dezimalbrüche ×/÷', 'Dezimalbrüche multiplizieren und dividieren'],
-	['z_as', 'Ganze Zahlen +/-', 'Ganze Zahlen addieren und subtrahieren'],
-	['z_md', 'Ganze Zahlen ×/÷', 'Ganze Zahlen multiplizieren und dividieren'],
-	['frac_as', 'Brüche +/-', 'Brüche addieren und subtrahieren'],
-	['frac_simplify', 'Brüche kürzen', 'Brüche vollständig kürzen'],
-	['frac_md', 'Brüche ×/÷', 'Brüche multiplizieren und dividieren'],
-	['frac_convert', 'Brüche Darstellungsformen', 'Brüche, Dezimalzahlen und Prozentwerte umwandeln'],
-	['anteile', 'Anteile berechnen', 'Anteile als Brüche eines Ganzen berechnen'],
-	['vorrang', 'Vorrangregeln', 'Terme mit Vorrangregeln korrekt berechnen'],
-	['percent', 'Prozentrechnung', 'Prozentwert, Grundwert und Prozentsatz berechnen'],
-	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
-	['pv', 'Prozentuale Veränderung', 'Prozentuale Zu- und Abnahmen berechnen'],
-	['round', 'Dezimalbrüche runden', 'Dezimalbrüche auf Ganze, Zehntel oder Hundertstel runden'],
-	['equations', 'ax + b = c', 'Lineare Gleichung der Form ax + b = c lösen'],
-	['equations_adv', 'ax + b = cx + d', 'Lineare Gleichung der Form ax + b = cx + d lösen'],
-	['wkt', 'Wahrscheinlichkeiten', 'Einfache Wahrscheinlichkeiten bestimmen'],
-	['statistik', 'Statistik', 'Lageparameter und Spannweite in Datensätzen bestimmen'],
-	['winkel', 'Winkel', 'Winkelarten erkennen und Winkel berechnen'],
-	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
-	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität lösen'],
-	['schraegbild', 'Körperdarstellung', 'Schrägbilder von Körpern zeichnen und deuten'],
-	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren und begründen'],
 	['pow10', 'Zehnerpotenzen ×/÷', 'Natürliche Zahlen und Dezimalzahlen mit Zehnerpotenzen multiplizieren und dividieren'],
+	['round', 'Dezimalbrüche runden', 'Dezimalbrüche auf Ganze, Zehntel oder Hundertstel runden'],
+	['vorrang', 'Vorrangregeln', 'Terme mit Vorrangregeln korrekt berechnen'],
+	
+	// Tabellen / Kopfrechnen
 	['table_add', 'Additionstabelle', 'Tabellenaufgaben mit Summen und rückwärts erschlossenen Kopfwerten'],
 	['table_mul', 'Multiplikationstabelle', 'Tabellenaufgaben mit Produkten und rückwärts erschlossenen Kopfwerten'],
 	['table_sub', 'Subtraktionstabelle', 'Tabellenaufgaben mit Differenzen und rückwärts erschlossenen Kopfwerten'],
 	['table_terms', 'Termtabelle', 'Terme für vorgegebene x-Werte tabellarisch auswerten'],
-	// ['units_calc', 'Einheiten rechnen +/-', 'Summen und Differenzen mit benachbarten Einheiten derselben Art berechnen'],
-	['formel_umstellen', 'Formel umstellen', 'Bekannte Formeln nach einer anderen Variablen in 2–3 Schritten umformen'],
-	['frac_order', 'Brüche ordnen', 'Drei gekürzte Brüche der Größe nach sortieren']
+
+	// Brüche
+	['frac_as', 'Brüche +/-', 'Brüche addieren und subtrahnen'],
+	['frac_md', 'Brüche ×/÷', 'Brüche multiplizieren und dividieren'],
+	['frac_simplify', 'Brüche kürzen', 'Brüche vollständig kürzen'],
+	['frac_convert', 'Brüche Darstellungsformen', 'Brüche, Dezimalzahlen und Prozentwerte umwandeln'],
+	['frac_order', 'Brüche ordnen', 'Drei gekürzte Brüche der Größe nach sortieren'],
+
+	// Prozent / Proportionalität / Maßeinheiten
+	['anteile', 'Anteile berechnen', 'Anteile als Brüche eines Ganzen berechnen'],
+	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität lösen'],
+	['percent', 'Prozentrechnung', 'Prozentwert, Grundwert und Prozentsatz berechnen'],
+	['pv', 'Prozentuale Veränderung', 'Prozentuale Zu- und Abnahmen berechnen'],
+	['units', 'Einheiten', 'Größen in verschiedene Einheiten umrechnen'],
+
+	// Algebra / Terme / Gleichungen
+	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
+	['equations', 'ax + b = c', 'Lineare Gleichung der Form ax + b = c lösen'],
+	['equations_adv', 'ax + b = cx + d', 'Lineare Gleichung der Form ax + b = cx + d lösen'],
+	['formel_umstellen', 'Formel umstellen', 'Formeln nach einer anderen Variablen umstellen'],
+
+	// Geometrie
+	['geometry', 'A und u ebener Figuren', 'Flächeninhalte und Umfänge in der Geometrie berechnen'],
+	['winkel', 'Winkel', 'Winkelarten erkennen und Winkel berechnen'],
+	['schraegbild', 'Körperdarstellung', 'Schrägbilder von Körpern zeichnen und deuten'],
+	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren und begründen'],
+
+	// Funktionen, Statistik & Wahrscheinlichkeiten
+	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
+	['statistik', 'Statistik', 'Lageparameter und Spannweite in Datensätzen bestimmen'],
+	['wkt', 'Wahrscheinlichkeiten', 'Einfache Wahrscheinlichkeiten bestimmen'],
+
+	// Zahlentheorie / fortgeschrittene Themen
+	['teiler', 'Teiler', 'Teiler einer Zahl bestimmen'],
+	['primzahlen', 'Primzahlen', 'Primzahlen in Zahlenbereichen erkennen']
 ];
 
 const typeLabels = Object.fromEntries(typeDefinitions.map(([key, label]) => [key, label]));
@@ -725,7 +739,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				N = n_base * k;
 			} while (Z === N || getGcd(z_base, n_base) > 1 || Z % N === 0 || N % Z === 0);
 
-			textDisplay = `\\[ \\text{Kürze vollständig: } \\frac{${Z}}{${N}} = \\]`;
+			textDisplay = `Kürze vollständig: \\( \\dfrac{${Z}}{${N}} = \\)`;
 
 			// Lösungsweg mit \underset unter dem Gleichheitszeichen
 			let solutionSteps = `\\frac{${Z}}{${N}}`;
@@ -885,7 +899,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			// Sortierte Lösung
 			const sortedStr = sortedAsc.map(f => fmtFrac(f.orig)).join(' < ');
 
-			textDisplay = `\\[\\text{Ordne von klein nach groß: } \\quad ${displayStr} \\]`;
+			textDisplay = `Ordne von klein nach groß: \\( \\quad ${displayStr} \\)`;
 			tripleNumeratorCase ? 	s = `\\[ ${sortedStr} \\]` :
 									s = `\\[ ${sortedStr} \\quad \\left(${extStep}\\right) \\]`;
 			break;
@@ -2545,7 +2559,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				let G = (W / z) * n;            // Das Ganze
 				
 				textDisplay = `\\( \\frac{${z}}{${n}} \\)  sind ${comma(W)} ${einheit} von ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\text{ sind } ${comma(W)} \\text{ ${einheit} von } ${comma(G)} \\text{ ${einheit}}\\)<br>
+				s = `\\( \\frac{${z}}{${n}} \\) sind ${comma(W)} ${einheit} von ${comma(G)} ${einheit}<br>
 				\\((${comma(W)} : ${z} \\cdot ${n} = ${comma(G)})\\)`;
 
 			} else {

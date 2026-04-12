@@ -230,6 +230,66 @@ textarea {
     margin-bottom: 18px;
 }
 
+/* In training mode keep selection bar elements side-by-side */
+.settings-drawer.mode-training .settings-selection-bar {
+    flex-wrap: nowrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.settings-drawer.mode-training .settings-selection-bar > * {
+    flex: 0 1 auto;
+}
+
+@media (max-width: 520px) {
+    /* On very small screens allow wrapping again to avoid overflow */
+    .settings-drawer.mode-training .settings-selection-bar {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+
+/* Compact controls in training mode: reduce padding and font-size */
+.settings-drawer.mode-training .settings-selection-bar .btn {
+    padding: 8px 10px;
+    font-size: 0.92rem;
+}
+
+.settings-drawer.mode-training .settings-selection-bar .settings-compact-btn {
+    padding: 6px 8px;
+}
+
+.settings-drawer.mode-training .settings-selection-bar input,
+.settings-drawer.mode-training .settings-selection-bar select,
+.settings-drawer.mode-training .settings-selection-bar .settings-topbar-label {
+    font-size: 0.92rem;
+}
+
+/* Ensure task card math and text wrap to avoid overflow */
+.training-task-card .training-task-content,
+.training-task-card .math-q,
+.training-task-card .math-a,
+.training-task-card mjx-container[jax="CHTML"] {
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    hyphens: auto;
+    box-sizing: border-box;
+}
+
+.training-task-content mjx-container[jax="CHTML"][display="true"] {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+@media (max-width: 520px) {
+    .settings-drawer.mode-training .settings-selection-bar .btn {
+        padding: 7px 8px;
+        font-size: 0.98rem;
+    }
+}
+
 .settings-quick-generate {
     margin-left: auto;
 }
@@ -743,6 +803,13 @@ mjx-mtext {
     color: var(--slate-800);
 }
 
+/* Slightly smaller math text in training mode (base) */
+.training-view .math-q,
+.training-view .math-a {
+    font-size: 2.15rem;
+    line-height: 1.18;
+}
+
 .training-top-bar {
     display: flex;
     align-items: center;
@@ -895,8 +962,8 @@ mjx-mtext {
 
     .training-view .math-q,
     .training-view .math-a {
-        font-size: clamp(2rem, 7.8vw, 2.8rem);
-        line-height: 1.25;
+        font-size: clamp(1.8rem, 6.5vw, 2.2rem);
+        line-height: 1.2;
     }
 
     .training-view .training-task-content mjx-container[jax="CHTML"][display="true"] {
@@ -958,7 +1025,7 @@ mjx-mtext {
 
     .training-view .math-q,
     .training-view .math-a {
-        font-size: clamp(2.35rem, 10.2vw, 3.2rem);
+        font-size: clamp(1.9rem, 8.5vw, 2.6rem);
     }
 
     .training-view .training-task-content mjx-container[jax="CHTML"][display="true"] {
@@ -1164,6 +1231,25 @@ mjx-mtext {
     margin: 6px 0 0 0 !important;
     text-align: left !important;
 }
+
+/* Prevent line breaks inside MathJax expressions to avoid splits like `3<br>+4=` */
+mjx-container[jax="CHTML"] mjx-math,
+mjx-container[jax="CHTML"] mjx-mrow,
+mjx-container[jax="CHTML"] mjx-mi,
+mjx-container[jax="CHTML"] mjx-mo,
+mjx-container[jax="CHTML"] mjx-mn,
+mjx-container[jax="CHTML"] mjx-mtext {
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    display: inline-block !important;
+}
+
+/* For display-mode MathJax containers allow the outer container to span full width but keep inner math unbroken */
+mjx-container[jax="CHTML"][display="true"] {
+    width: 100% !important;
+}
+
 
 .worksheet-content p,
 .worksheet-content ul,

@@ -34,7 +34,7 @@
 
     <div v-if="currentView !== 'home'" :class="['settings-drawer-overlay', { 'is-open': isSettingsSidebarOpen }]" @click="closeSettingsSidebar"></div>
 
-    <aside v-if="currentView !== 'home'" :class="['settings-drawer', { 'is-open': isSettingsSidebarOpen }]">
+    <aside v-if="currentView !== 'home'" :class="['settings-drawer', { 'is-open': isSettingsSidebarOpen, 'mode-training': currentView === 'training' }]">
         <div class="settings-drawer-header">
             <div class="settings-drawer-heading">
                 <h2 class="settings-drawer-title">Aufgabenauswahl</h2>
@@ -48,11 +48,11 @@
                     <label class="settings-checkbox-option"><input type="checkbox" v-model="mentalMathMode" class="settings-checkbox"><span>Easy-Mode</span></label>
                     <label class="settings-checkbox-option"><input type="checkbox" v-model="weights" class="settings-checkbox"><span>Gewichtung</span></label>
                 </div>
-                <label class="settings-topbar-label">
+                <label v-if="currentView !== 'training'" class="settings-topbar-label">
                     <span>Anzahl</span>
                     <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-count-input">
                 </label>
-                <label class="settings-topbar-label">
+                <label v-if="currentView !== 'training'" class="settings-topbar-label">
                     <span>Anordnung</span>
                     <select v-model="taskArrangementMode" class="settings-input settings-arrangement-input">
                         <option value="random">zufällig</option>
