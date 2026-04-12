@@ -104,9 +104,71 @@ window.MTGPresentationModeModule = {
 						padding: 0 !important;
 					}
 
-					.btn { padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; transition: opacity 0.2s; font-size: 0.9rem; }
-					.btn-blue { background: #2563eb; }
-					.btn-slate { background: #475569; }
+						.op-table-wrap {
+							width: 100%;
+							max-width: 900px;
+							margin: 0 auto;
+						}
+
+						.op-table {
+							width: 100%;
+							border-collapse: collapse;
+							table-layout: fixed;
+							background: rgba(255, 255, 255, 0.9);
+							border: none;
+							overflow: hidden;
+						}
+
+						.op-table th,
+						.op-table td {
+							border: 1px solid rgba(148, 163, 184, 0.35);
+							padding: 10px 8px;
+							text-align: center;
+							vertical-align: middle;
+							font-size: 1rem;
+							line-height: 1.25;
+						}
+
+						.op-table tr:first-child th,
+						.op-table tr:first-child td {
+							border-top: none;
+						}
+
+						.op-table th:first-child,
+						.op-table td:first-child {
+							border-left: none;
+							width: 50px;
+							min-width: 50px;
+							max-width: 50px;
+						}
+
+						.op-table th:last-child,
+						.op-table td:last-child {
+							border-right: none;
+						}
+
+						.op-table tr:last-child th,
+						.op-table tr:last-child td {
+							border-bottom: none;
+						}
+
+						.op-table th {
+							background: rgba(241, 245, 249, 0.95);
+							font-weight: 400;
+						}
+
+						.op-table .op-corner {
+							background: rgba(226, 232, 240, 0.9);
+						}
+
+						.op-table--solution td {
+							text-align: center;
+						}
+
+						.op-table--terms td,
+						.op-table--terms th {
+							padding: 12px 10px;
+						}
 					.btn:hover { opacity: 0.8; }
 
 					.mjx-display {

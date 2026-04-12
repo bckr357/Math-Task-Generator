@@ -1541,11 +1541,11 @@ mjx-container[jax="CHTML"][display="true"] {
     }
 
     .worksheet-content mjx-container {
-        font-size: 13pt !important;
+        font-size: 12pt !important;
     }
 
     .worksheet-content mjx-container mjx-math {
-        font-size: 13pt !important;
+        font-size: 12pt !important;
     }
 
     .worksheet-content mjx-mtext {

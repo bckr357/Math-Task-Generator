@@ -14,7 +14,7 @@ window.MTGStateModule = {
         const isDarkMode = ref(false);
         const selectedTypes = ref([]);
         const taskWeights = ref(
-            Object.fromEntries(Object.keys(typeLabels).map(type => [type, 1]))
+            Object.fromEntries(Object.keys(typeLabels).map(type => [type, 2]))
         );
         const taskCount = ref(10);
         const taskArrangementMode = ref('random');
