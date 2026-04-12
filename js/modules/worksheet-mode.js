@@ -22,8 +22,7 @@ window.MTGWorksheetModeModule = {
 						}
 
 						const styles = getWorksheetExportFallbackStyles();
-						const pageStyle = `@page { size: A4 landscape; size: 297mm 210mm; margin: 10mm; }`;
-
+			const pageStyle = `@page { size: A4 landscape; size: 297mm 210mm; margin: 7mm; }`;
 						const html = `
 								<!doctype html>
 								<html>
@@ -69,14 +68,20 @@ window.MTGWorksheetModeModule = {
 				};
 			}
 
-			const leftColumnSize = Math.ceil(state.tasks.value.length / 2);
-			const leftColumnTasks = state.tasks.value.slice(0, leftColumnSize);
-			const rightColumnTasks = state.tasks.value.slice(leftColumnSize);
+			const left = [];
+			const right = [];
 
-			return {
-				left: leftColumnTasks.map((task, index) => ({ task, number: index + 1 })),
-				right: rightColumnTasks.map((task, index) => ({ task, number: index + 1 }))
-			};
+			state.tasks.value.forEach((task, index) => {
+				const entry = { task, number: index + 1 };
+
+				if (index % 2 === 0) {
+					left.push(entry);
+				} else {
+					right.push(entry);
+				}
+			});
+
+			return { left, right };
 		};
 
 		const buildWorksheetColumnMarkup = renderTask => {

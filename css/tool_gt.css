@@ -920,6 +920,10 @@ mjx-mtext {
         gap: 14px;
     }
 
+    .training-arrow-text {
+        display: none !important;
+    }
+
     .training-top-bar {
         flex-direction: column;
         align-items: stretch;
@@ -962,12 +966,12 @@ mjx-mtext {
 
     .training-view .math-q,
     .training-view .math-a {
-        font-size: clamp(1.8rem, 6.5vw, 2.2rem);
-        line-height: 1.2;
+        font-size: 1.8rem;
+        line-height: 1.22;
     }
 
     .training-view .training-task-content mjx-container[jax="CHTML"][display="true"] {
-        font-size: 125% !important;
+        font-size: 105% !important;
     }
 
     .op-table-wrap {
@@ -1001,10 +1005,6 @@ mjx-mtext {
         min-height: 54px;
     }
 
-    .training-arrow-text {
-        display: none !important;
-    }
-
     .training-solution-btn {
         min-width: 0;
         flex: 1.2 1 0;
@@ -1025,7 +1025,8 @@ mjx-mtext {
 
     .training-view .math-q,
     .training-view .math-a {
-        font-size: 1rem;
+        font-size: 1.15rem;
+        line-height: 1.3;
     }
 
     .training-view .training-task-content mjx-container[jax="CHTML"][display="true"] {
@@ -1395,19 +1396,20 @@ mjx-container[jax="CHTML"][display="true"] {
 
 @page {
     size: A4 landscape;
-    size: 297mm 210mm; 
-    margin: 0;
+    size: 297mm 210mm;
+    margin: 7mm;
 }
 
 @media print {
     @page {
         size: A4 landscape;
-        margin: 0;
+        margin: 7mm;
     }
 
     html,
     body {
-        width: 297mm;
+        width: auto;
+        max-width: 100%;
         margin: 0;
         padding: 0;
         background: white;

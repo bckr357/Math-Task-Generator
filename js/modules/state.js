@@ -33,14 +33,20 @@ window.MTGStateModule = {
                 };
             }
 
-            const leftColumnSize = Math.ceil(tasks.value.length / 2);
-            const leftColumnTasks = tasks.value.slice(0, leftColumnSize);
-            const rightColumnTasks = tasks.value.slice(leftColumnSize);
+            const left = [];
+            const right = [];
 
-            return {
-                left: leftColumnTasks.map((task, index) => ({ task, number: index + 1, key: `left-${index}` })),
-                right: rightColumnTasks.map((task, index) => ({ task, number: leftColumnSize + index + 1, key: `right-${index}` }))
-            };
+            tasks.value.forEach((task, index) => {
+                const entry = { task, number: index + 1, key: `col-${index}` };
+
+                if (index % 2 === 0) {
+                    left.push(entry);
+                } else {
+                    right.push(entry);
+                }
+            });
+
+            return { left, right };
         });
         const currentTrainingTask = computed(() => trainingHistory.value[currentTrainingIndex.value] ?? null);
         const hasGeneratedTasks = computed(() => tasks.value.length > 0);

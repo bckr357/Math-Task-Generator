@@ -2498,7 +2498,7 @@ function createTask(type, isMentalMode, grade = 5) {
 		}
 
 		case 'schraegbild': {
-			let type = randInt(0, 4); // 0: Quader, 1: Pyramide, 2: Prisma, 3: Zylinder, 4: Kegel
+			let type = randInt(0, 3); // 0: Quader, 1: Pyramide, 2: Zylinder, 3: Kegel 
 
 			// Hilfsfunktion für Kommas bei Dezimalzahlen (z.B. 2.5 -> 2,5)
 			let fmt = (num) => num.toString().replace('.', ',');
@@ -2507,10 +2507,10 @@ function createTask(type, isMentalMode, grade = 5) {
 
 			if (type === 0) {
 				// --- QUADER ---
-				let a = randInt(4, 8);
-				let b = randInt(4, 8); // Tiefe
-				let c = randInt(3, 8);
-				textDisplay = `Zeichne das Schrägbild eines Quaders. Gegeben: a = ${a} cm, b = ${b} cm, c = ${c} cm.`;
+				let a = randInt(2, 5);
+				let b = randInt(2, 4); 
+				let c = randInt(2, 6);
+				textDisplay = `Zeichne das Schrägbild eines Quaders. Gegeben: a = ${a} cm, b = ${b} cm, c = ${c} cm. ${space(a+1)}`;
 				s = `Kontrolle: Vorderfläche = ${a}×${c} cm, Tiefe hinten = ${fmt(b / 2)} cm.`;
 				
 			} else if (type === 1) {
@@ -2521,27 +2521,20 @@ function createTask(type, isMentalMode, grade = 5) {
 				s = `Kontrolle: Grundkante = ${a} cm, hintere Kante = ${fmt(a / 2)} cm.`;
 				
 			} else if (type === 2) {
-				// --- PRISMA (DREIECKIG) ---
-				let a = randInt(3, 6);
-				let b = randInt(3, 7);
-				let hk = randInt(4, 9);
-				textDisplay = `Zeichne das Schrägbild eines Prismas. Gegeben: a = ${a} cm, b = ${b} cm, h_k = ${hk} cm.`;
-				s = `Kontrolle: Dreieckseiten = ${a} cm, ${b} cm, hintere Kanten = ${fmt(hk / 2)} cm.`;
-				
-			} else if (type === 3) {
 				// --- ZYLINDER ---
 				let r = randInt(2, 4);
 				let hk = randInt(4, 9);
 				textDisplay = `Zeichne das Schrägbild eines Zylinders. Gegeben: r = ${r} cm, h_k = ${hk} cm.`;
 				s = `Kontrolle: Vorderer Kreis radius = ${r} cm, hinterer Kreis versetzt um ${fmt(hk / 2)} cm.`;
 				
-			} else if (type === 4) {
+			} else if (type === 3) {
 				// --- KREISKEGEL ---
 				let r = randInt(2, 4);
 				let hk = randInt(5, 9);
 				textDisplay = `Zeichne das Schrägbild eines Kegels. Gegeben: r = ${r} cm, h_k = ${hk} cm.`;
 				s = `Kontrolle: Kreisradius = ${r} cm, Spitze versetzt um ${fmt(hk / 2)} cm.`;
-			}
+				
+			} 
 
 			break;
 		}
