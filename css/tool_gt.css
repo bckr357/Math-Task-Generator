@@ -987,17 +987,17 @@ mjx-mtext {
     }
 
     .training-progress {
-        font-size: 1.02rem;
+        font-size: 1.0rem;
     }
 
     .training-top-actions .btn {
-        font-size: 1.02rem;
+        font-size: 1.0rem;
         padding: 13px 14px;
     }
 
     .training-arrow {
         padding: 14px 10px;
-        font-size: 1.18rem;
+        font-size: 1rem;
         min-height: 54px;
     }
 
@@ -1020,16 +1020,16 @@ mjx-mtext {
     }
 
     .training-task-content {
-        font-size: 1.08rem;
+        font-size: 1rem;
     }
 
     .training-view .math-q,
     .training-view .math-a {
-        font-size: clamp(1.9rem, 8.5vw, 2.6rem);
+        font-size: 1rem;
     }
 
     .training-view .training-task-content mjx-container[jax="CHTML"][display="true"] {
-        font-size: 148% !important;
+        font-size: 105% !important;
     }
 
     .op-table {
@@ -1258,6 +1258,30 @@ mjx-container[jax="CHTML"][display="true"] {
     padding: 0 !important;
 }
 
+.karo-placeholder {
+    --karo-rows: 4;
+    --karo-cols: 10;
+    --karo-size: 0.5cm;
+    margin-top: 0.2cm;
+    display: inline-table;
+    border-collapse: collapse;
+    border-spacing: 0;
+    /* outer border: same thickness as inner cell borders */
+    border: 0.2mm solid #64748b;
+}
+.karo-placeholder table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.karo-placeholder td {
+    width: var(--karo-size);
+    height: var(--karo-size);
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    border: 0.1mm solid rgb(150, 150, 150);
+}
+
 .worksheet-solutions-header {
     display: flex;
     justify-content: space-between;
@@ -1367,6 +1391,12 @@ mjx-container[jax="CHTML"][display="true"] {
     .mode-grid {
         grid-template-columns: 1fr;
     }
+}
+
+@page {
+    size: A4 landscape;
+    size: 297mm 210mm; 
+    margin: 0;
 }
 
 @media print {

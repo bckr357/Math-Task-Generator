@@ -6,60 +6,63 @@ const fmt = formatUtils.fmt;
 const comma = formatUtils.comma;
 
 const taskCategories = {
-	arithmetic: ['db_as', 'db_md', 'z_as', 'z_md', 'pow10', 'table_add', 'table_mul', 'table_sub'],
+	arithmetic: ['z_as', 'z_md', 'potenzen', 'schriftlich', 'db_as', 'db_md', 'pow10', 'round', 'vorrang'],
+	tables: ['table_add', 'table_mul', 'table_sub', 'table_terms'],
 	fractions: ['frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order'],
-	algebra: ['terms', 'equations', 'equations_adv', 'formel_umstellen', 'vorrang', 'table_terms'],
+	percent: ['anteile', 'prop', 'percent', 'pv', 'units'],
+	algebra: ['terme', 'equations', 'equations_adv', 'formel_umstellen'],
 	geometry: ['geometry', 'winkel', 'schraegbild', 'kongruenz'],
 	functions: ['funktionen'],
 	statistics: ['statistik', 'wkt'],
-	advanced: ['potenzen', 'teiler', 'primzahlen', 'units', 'percent', 'pv', 'round', 'anteile', 'prop', 'schriftlich']
+	advanced: ['teiler', 'primzahlen']
 };
 
 // Sichtbare Aufgabentypen je Klassenstufe (wird vom UI-Dropdown genutzt)
 const taskTypesByGrade = {
 	klasse5: [
-		'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'frac_as',
-		'frac_md', 'frac_simplify', 'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_sub', 'table_terms', 'geometry', 'winkel',
-		'statistik', 'teiler', 'primzahlen', 'round', 'schriftlich', 'vorrang'
+		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add',  'table_sub', 'table_mul','table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'geometry', 'winkel', 'schraegbild', 'statistik', 'units'
 	],
 	klasse6: [
-		'z_as', 'z_md', 'db_as', 'db_md', 'pow10',
-		'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_sub', 'table_terms', 'percent', 
-		'anteile', 'geometry', 'winkel', 'statistik', 'wkt', 
-		'teiler', 'primzahlen', 'round', 'schriftlich', 'vorrang'
+		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add',  'table_sub', 'table_mul','table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'anteile', 'percent', 'units', 'geometry', 'winkel', 'schraegbild', 'statistik', 'wkt'
 	],
 	klasse7: [
-		'z_as', 'z_md', 'db_as',
-		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order',
-		'table_add', 'table_mul', 'table_sub', 'table_terms', 'percent', 'pv', 'anteile', 'units',
-		'terme', 'equations', 'formel_umstellen', 'geometry', 'winkel', 'statistik',
-		'wkt', 'potenzen', 'teiler', 'primzahlen', 'round',
-		'prop', 'schriftlich', 'vorrang'
+		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add', 'table_sub', 'table_mul', 'table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
+		'anteile', 'prop', 'percent', 'pv', 'units',
+		'terme', 'equations', 'formel_umstellen',
+		'round', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse8: [
-		'z_as', 'z_md', 'db_as',
-		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order',
-		'table_add', 'table_mul', 'table_sub', 'table_terms', 'percent', 'pv', 'anteile', 'units', 
-		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'geometry', 'winkel',
-		'schraegbild', 'statistik', 'wkt', 'potenzen', 'teiler',
-		'primzahlen', 'round', 'prop', 'schriftlich', 'vorrang'
+		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add', 'table_sub', 'table_mul', 'table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'anteile', 'prop', 'percent', 'pv', 'units',
+		'terme', 'equations', 'equations_adv', 'formel_umstellen',
+		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'funktionen', 'statistik', 'wkt'
 	],
 	klasse9: [
-		'z_as', 'z_md', 'db_as',
-		'db_md', 'pow10', 'frac_as', 'frac_md', 'frac_simplify',
-		'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_sub', 'table_terms', 'percent', 'pv', 'anteile', 'units', 
-		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'funktionen', 'geometry',
-		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt',
-		'potenzen', 'teiler', 'primzahlen', 'round', 'prop',
-		'schriftlich', 'vorrang'
+		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add', 'table_sub', 'table_mul', 'table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'anteile', 'prop', 'percent', 'pv', 'units',
+		'terme', 'equations', 'equations_adv', 'formel_umstellen', 'funktionen',
+		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse10: [
-		'db_as', 'z_as', 'db_md', 'z_md', 'pow10',
-		'frac_simplify', 'frac_md', 'frac_as', 'schriftlich', 
-		'frac_convert', 'frac_order', 'table_add', 'table_mul', 'table_sub', 'table_terms', 'anteile', 'vorrang', 'terme', 'percent', 
-		'units', 'pv', 'round', 'equations', 'geometry', 
-		'wkt', 'statistik', 'funktionen', 'teiler', 'primzahlen', 
-		'equations_adv', 'formel_umstellen', 'potenzen', 'prop', 'winkel', 'schraegbild', 'kongruenz'
+		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add', 'table_sub', 'table_mul', 'table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'anteile', 'prop', 'percent', 'pv', 'units',
+		'terme', 'equations', 'equations_adv', 'formel_umstellen',
+		'geometry', 'winkel', 'schraegbild', 'kongruenz',
+		'funktionen', 'statistik', 'wkt'
 	]
 };
 
@@ -87,57 +90,57 @@ const taskTypesByGrade = {
 
 // Dreiteilige Typ-Definition: [key, Label fuer Einstellungen, Beschreibung fuer Training]
 const typeDefinitions = [
+	// Zahlentheorie / fortgeschrittene Themen
+	['teiler', 'Teiler', 'Teiler einer Zahl bestimmen'],
+	['primzahlen', 'Primzahlen', 'Primzahlen finden'], 
+
 	// Arithmetik: Ganze Zahlen, Dezimalbrüche, Stellenwerte
-	['z_as', 'Ganze Zahlen +/-', 'Ganze Zahlen addieren und subtrahieren'],
-	['z_md', 'Ganze Zahlen ×/÷', 'Ganze Zahlen multiplizieren und dividieren'],
 	['potenzen', 'Potenzen und Wurzeln', 'Potenzen und Wurzeln berechnen'],
 	['schriftlich', 'schriftlich rechnen', 'Schriftliche Rechenverfahren'],
+	['z_as', 'Ganze Zahlen +/-', 'Ganze Zahlen addieren und subtrahieren'],
+	['z_md', 'Ganze Zahlen ×/÷', 'Ganze Zahlen multiplizieren und dividieren'],
 	['db_as', 'Dezimalbrüche +/-', 'Dezimalbrüche addieren und subtrahieren'],
 	['db_md', 'Dezimalbrüche ×/÷', 'Dezimalbrüche multiplizieren und dividieren'],
-	['pow10', 'Zehnerpotenzen ×/÷', 'Natürliche Zahlen und Dezimalzahlen mit Zehnerpotenzen multiplizieren und dividieren'],
-	['round', 'Dezimalbrüche runden', 'Dezimalbrüche auf Ganze, Zehntel oder Hundertstel runden'],
-	['vorrang', 'Vorrangregeln', 'Terme mit Vorrangregeln korrekt berechnen'],
+	['pow10', 'Zehnerpotenzen ×/÷', 'Multiplikation und Division mit Zehnerpotenzen'],
+	['vorrang', 'Vorrangregeln', 'Terme mit Vorrangregeln berechnen'],
 	
 	// Tabellen / Kopfrechnen
-	['table_add', 'Additionstabelle', 'Tabellenaufgaben mit Summen und rückwärts erschlossenen Kopfwerten'],
-	['table_mul', 'Multiplikationstabelle', 'Tabellenaufgaben mit Produkten und rückwärts erschlossenen Kopfwerten'],
-	['table_sub', 'Subtraktionstabelle', 'Tabellenaufgaben mit Differenzen und rückwärts erschlossenen Kopfwerten'],
-	['table_terms', 'Termtabelle', 'Terme für vorgegebene x-Werte tabellarisch auswerten'],
-
+	['table_add', 'Additionstabelle', 'Tabellenaufgaben mit Summen'],
+	['table_sub', 'Subtraktionstabelle', 'Tabellenaufgaben mit Differenzen'],
+	['table_mul', 'Multiplikationstabelle', 'Tabellenaufgaben mit Produkten'],
+	['table_terms', 'Termtabelle', 'Terme mit Variablen'],
+	
 	// Brüche
-	['frac_as', 'Brüche +/-', 'Brüche addieren und subtrahnen'],
-	['frac_md', 'Brüche ×/÷', 'Brüche multiplizieren und dividieren'],
 	['frac_simplify', 'Brüche kürzen', 'Brüche vollständig kürzen'],
 	['frac_convert', 'Brüche Darstellungsformen', 'Brüche, Dezimalzahlen und Prozentwerte umwandeln'],
-	['frac_order', 'Brüche ordnen', 'Drei gekürzte Brüche der Größe nach sortieren'],
-
+	['frac_as', 'Brüche +/-', 'Brüche addieren und subtrahieren'],
+	['frac_md', 'Brüche ×/÷', 'Brüche multiplizieren und dividieren'],
+	['frac_order', 'Brüche ordnen', 'Brüche der Größe nach sortieren'],
+	['round', 'Dezimalbrüche runden', 'Dezimalbrüche runden'],
+	
 	// Prozent / Proportionalität / Maßeinheiten
-	['anteile', 'Anteile berechnen', 'Anteile als Brüche eines Ganzen berechnen'],
-	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität lösen'],
+	['anteile', 'Anteile berechnen', 'Anteile berechnen'],
+	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität'],
 	['percent', 'Prozentrechnung', 'Prozentwert, Grundwert und Prozentsatz berechnen'],
 	['pv', 'Prozentuale Veränderung', 'Prozentuale Zu- und Abnahmen berechnen'],
 	['units', 'Einheiten', 'Größen in verschiedene Einheiten umrechnen'],
 
 	// Algebra / Terme / Gleichungen
 	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
-	['equations', 'ax + b = c', 'Lineare Gleichung der Form ax + b = c lösen'],
-	['equations_adv', 'ax + b = cx + d', 'Lineare Gleichung der Form ax + b = cx + d lösen'],
+	['equations', 'Gleichungen ax+b = c', 'Lineare Gleichung der Form ax + b = c lösen'],
+	['equations_adv', 'Gleichungen ax+b = cx+d', 'Lineare Gleichung der Form ax + b = cx + d lösen'],
 	['formel_umstellen', 'Formel umstellen', 'Formeln nach einer anderen Variablen umstellen'],
 
 	// Geometrie
-	['geometry', 'A und u ebener Figuren', 'Flächeninhalte und Umfänge in der Geometrie berechnen'],
-	['winkel', 'Winkel', 'Winkelarten erkennen und Winkel berechnen'],
-	['schraegbild', 'Körperdarstellung', 'Schrägbilder von Körpern zeichnen und deuten'],
-	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren und begründen'],
+	['geometry', 'A und u ebener Figuren', 'Flächeninhalte und Umfänge berechnen'],
+	['winkel', 'Winkel', 'Winkel zeichnen und berechnen'],
+	['schraegbild', 'Körperdarstellung', 'Schrägbilder von Körpern zeichnen'],
+	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren'],
 
 	// Funktionen, Statistik & Wahrscheinlichkeiten
 	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
-	['statistik', 'Statistik', 'Lageparameter und Spannweite in Datensätzen bestimmen'],
-	['wkt', 'Wahrscheinlichkeiten', 'Einfache Wahrscheinlichkeiten bestimmen'],
-
-	// Zahlentheorie / fortgeschrittene Themen
-	['teiler', 'Teiler', 'Teiler einer Zahl bestimmen'],
-	['primzahlen', 'Primzahlen', 'Primzahlen in Zahlenbereichen erkennen']
+	['statistik', 'Statistik', 'Kenngrößen der Statistik bestimmen'],
+	['wkt', 'Wahrscheinlichkeiten', 'Wahrscheinlichkeiten bestimmen']
 ];
 
 const typeLabels = Object.fromEntries(typeDefinitions.map(([key, label]) => [key, label]));
@@ -157,6 +160,19 @@ function createTask(type, isMentalMode, grade = 5) {
 
 	const blank = (cmWidth = 3) => `\\(\\underline{\\hspace{${cmWidth}cm}}\\)`;
 	const space = (cmWidth = 1) => `<div style="margin-bottom: ${cmWidth}cm;"></div>`;
+	const karo = (rows = 4, cols = 10, cellSizeCm = 0.5) => {
+		let rowsHtml = '';
+		for (let r = 0; r < rows; r++) {
+			rowsHtml += '<tr>';
+			for (let c = 0; c < cols; c++) {
+				rowsHtml += '<td></td>';
+			}
+			rowsHtml += '</tr>';
+		}
+
+		return `<table class="karo-placeholder" style="--karo-rows:${rows}; --karo-cols:${cols}; --karo-size:${cellSizeCm}cm;">` +
+			`<tbody>${rowsHtml}</tbody></table>`;
+	};
 
 	const pickDistinctIntegers = (min, max, count) => {
 		const values = new Set();
@@ -1251,8 +1267,7 @@ function createTask(type, isMentalMode, grade = 5) {
 		case 'schriftlich': {
 			const op = randInt(0, 3); // 0: +, 1: -, 2: *, 3: /
 			let v1, v2, res;
-			// Hilfsfunktion für zufällige Nachkommastellen (0 bis 2)
-			const getDec = (val, places) => parseFloat(val.toFixed(places));
+			const countDigits = (value) => Math.max(1, String(value).replace(/[^0-9]/g, '').length);
 
 			switch (op) {
 				case 0: // ADDITION
@@ -1261,6 +1276,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					v2 = rnd(100, 9999) / 10;
 					res = v1 + v2;
 					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(v1)} + ${comma(v2)} \\)`;
+					textPrint = `Berechne schriftlich: \\( \\quad ${comma(v1)} + ${comma(v2)} \\)<br>${karo(4, 12)}`;
 					s = `\\( ${comma(v1)} + ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
 					break;
 
@@ -1269,6 +1285,7 @@ function createTask(type, isMentalMode, grade = 5) {
 					v2 = rnd(5555, 14444) / 100;
 					res = v1 - v2;
 					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(v1)} - ${comma(v2)} \\)`;
+					textPrint = `Berechne schriftlich: \\( \\quad ${comma(v1)} - ${comma(v2)} \\)<br>${karo(4, 12)}`;
 					s = `\\( ${comma(v1)} - ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
 					break;
 
@@ -1281,7 +1298,10 @@ function createTask(type, isMentalMode, grade = 5) {
 						v2 = rnd(11, 299) / Math.pow(10, p2);
 					} while (Number.isInteger(v1) && Number.isInteger(v2));
 					res = v1 * v2;
+					const factor2Digits = countDigits(comma(v2));
+					const mulRows = factor2Digits + 3;
 					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(v1)} \\cdot ${comma(v2)} \\)`;
+					textPrint = `Berechne schriftlich: \\( \\quad ${comma(v1)} \\cdot ${comma(v2)} \\)<br>${karo(mulRows, 16)}`;
 					// Bei Multiplikation können bis zu 4 Stellen entstehen (2+2)
 					s = `\\( ${comma(v1)} \\cdot ${comma(v2)} = ${comma(Number(res.toFixed(4)))} \\)`;
 					
@@ -1294,8 +1314,11 @@ function createTask(type, isMentalMode, grade = 5) {
 					// Wir würfeln das Ergebnis zuerst (max 2 Stellen), damit es aufgeht
 					const resultValue = rnd(111, 2999) / Math.pow(10, p3);
 					const dividend = (resultValue * divisor);
+					const resultDigits = countDigits(comma(resultValue));
+					const divRows = Math.max(4, resultDigits * 2 + 3);
 
 					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)`;
+					textPrint = `Berechne schriftlich: \\( \\quad ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)<br>${karo(divRows, 16)}`;
 					s = `\\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} = ${comma(resultValue)} \\)`;
 					
 					break;

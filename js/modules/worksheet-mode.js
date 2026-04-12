@@ -14,9 +14,52 @@ window.MTGWorksheetModeModule = {
 			await typesetMathJax();
 		};
 
-        const printWorksheet = () => {
-            window.print();
-        };
+				const printWorksheet = () => {
+						const sheetEl = document.querySelector('.worksheet-sheet');
+						if (!sheetEl) {
+								window.print();
+								return;
+						}
+
+						const styles = getWorksheetExportFallbackStyles();
+						const pageStyle = `@page { size: A4 landscape; size: 297mm 210mm; margin: 10mm; }`;
+
+						const html = `
+								<!doctype html>
+								<html>
+								<head>
+									<meta charset="utf-8">
+									<title>Arbeitsblatt - Druck</title>
+									<style>${styles}\n@media print { ${pageStyle} }</style>
+								</head>
+								<body>
+									<div class="worksheet-view">${sheetEl.outerHTML}</div>
+									<script>
+										function doPrint() {
+											try {
+												window.focus();
+												window.print();
+											} catch (e) {
+												console.warn('Druck fehlgeschlagen', e);
+											}
+										}
+										// Give browser a moment to layout fonts/images
+										setTimeout(doPrint, 250);
+									<\/script>
+								</body>
+								</html>`;
+
+						const w = window.open('', '_blank');
+						if (!w) {
+								// Popup blocked — fallback to normal print
+								window.print();
+								return;
+						}
+
+						w.document.open();
+						w.document.write(html);
+						w.document.close();
+				};
 
 		const buildWorksheetColumns = () => {
 			if (state.worksheetA5Pages.value === 2) {
