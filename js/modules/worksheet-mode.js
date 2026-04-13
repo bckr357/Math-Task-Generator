@@ -565,17 +565,17 @@ const buildWorksheetTaskRowsHTML = () => buildWorksheetColumnMarkup(task => `<di
 			@media print {
 				@page {
 					size: A4 landscape;
-					margin: 0;
+					margin: 10mm 12mm 10mm 14mm;
 				}
 
 				html,
 				body {
-					width: 297mm;
+					width: auto;
+					max-width: 100%;
 					margin: 0;
 					padding: 0;
 					background: white;
 					overflow: visible;
-					font-family: 'Reddit Sans', sans-serif;
 					font-weight: 350;
 				}
 
@@ -584,21 +584,23 @@ const buildWorksheetTaskRowsHTML = () => buildWorksheetColumnMarkup(task => `<di
 					font-weight: 350;
 				}
 
-				.no-print {
+				.no-print,
+				.home-view,
+				.presentation-view,
+				.settings-drawer,
+				.settings-drawer-overlay {
 					display: none !important;
 				}
 
 				.worksheet-view {
-					width: 297mm;
 					padding: 0;
 					background: white;
 				}
 
 				.worksheet-sheet {
-					width: 297mm;
-					max-width: none;
-					margin: 0;
-					padding: 7mm 0 8mm;
+					width: 271mm;
+					margin: 10mm 12mm 10mm 14mm;
+					padding: 0;
 					box-sizing: border-box;
 					border: none;
 					border-radius: 0;
@@ -606,100 +608,61 @@ const buildWorksheetTaskRowsHTML = () => buildWorksheetColumnMarkup(task => `<di
 				}
 
 				.worksheet-sheet-header {
-					width: 297mm;
-					margin: 0 0 4mm 0;
-					padding: 0 8mm 4mm;
-					box-sizing: border-box;
-					border-bottom: 0.3mm solid var(--slate-300);
-					font-size: 0.8rem;
-				}
-
-				.worksheet-row {
-					width: 297mm;
-					grid-template-columns: 148.5mm 148.5mm;
-					gap: 0;
-					padding: 2.4mm 0;
-					box-sizing: border-box;
-					break-inside: avoid;
-					page-break-inside: avoid;
+					grid-template-columns: 122mm 122mm;
+					gap: 27mm;
+					width: 271mm;
+					border: none;
+					font-size: 9pt;
 				}
 
 				.worksheet-copy {
-					width: 148.5mm;
-					grid-template-columns: 8mm 1fr;
+					grid-template-columns: 5mm 1fr;
 					gap: 3mm;
-					padding: 0 8mm 0 5mm;
 					box-sizing: border-box;
 					align-items: start;
-				}
-
-				.worksheet-list--columns {
-					width: 297mm;
-					display: grid;
-					grid-template-columns: 148.5mm 148.5mm;
-					gap: 0;
-				}
-
-				.worksheet-column {
-					width: 148.5mm;
-				}
-
-				.worksheet-column .worksheet-copy {
-					width: 148.5mm;
-					grid-template-columns: 8mm 1fr;
-					gap: 3mm;
-					padding: 2.4mm 8mm 2.4mm 5mm;
-					box-sizing: border-box;
-					align-items: start;
+					padding: 2mm 0mm 2mm 0mm;
 					break-inside: avoid;
 					page-break-inside: avoid;
 				}
 
-				.worksheet-column + .worksheet-column .worksheet-copy {
-					padding-left: 8mm;
-				}
-
-				.worksheet-row > .worksheet-copy + .worksheet-copy {
-					margin-left: 0;
-					padding-left: 8mm;
+				.worksheet-list--columns {
+					grid-template-columns: 122mm 122mm;
+					gap: 27mm;
 				}
 
 				.worksheet-num {
 					display: flex;
-					align-items: center;
-					justify-content: center;
+					align-items: flex-start;
+					justify-content: right;
 					align-self: stretch;
-					font-size: 0.78rem;
+					font-size: 9pt;
+					padding-top: 5px;
 					line-height: 1;
 					text-align: center;
 					color: #64748b;
 				}
 
-				.worksheet-math,
-				.worksheet-solution {
-					font-size: 0.92rem;
-					line-height: 1.2;
-				}
-
 				.worksheet-content {
 					min-width: 0;
+					font-size: var(--worksheet-task-font-size-print);
+					line-height: var(--worksheet-task-line-height-print);
 				}
 
 				.worksheet-content mjx-container {
-					font-size: 13pt !important;
+					font-size: 12pt !important;
 				}
 
 				.worksheet-content mjx-container mjx-math {
-					font-size: 13pt !important;
+					font-size: 12pt !important;
 				}
 
 				.worksheet-content mjx-mtext {
-					font-size: 0.92rem !important;
+					font-size: var(--worksheet-task-font-size-print) !important;
 				}
 
 				.worksheet-view mjx-container[jax="CHTML"][display="true"] {
-					margin-top: 1.2mm !important;
-					margin-bottom: 0 !important;
+					margin: 0 !important;
+					padding: 0 !important;
 				}
 			}
 		`;

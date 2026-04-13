@@ -6,7 +6,7 @@ const fmt = formatUtils.fmt;
 const comma = formatUtils.comma;
 
 const taskCategories = {
-	arithmetic: ['z_as', 'z_md', 'potenzen', 'schriftlich', 'db_as', 'db_md', 'pow10', 'round', 'vorrang'],
+	arithmetic: ['z_as', 'z_md', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'db_as', 'db_md', 'pow10', 'round', 'vorrang'],
 	tables: ['table_add', 'table_mul', 'table_sub', 'table_terms'],
 	fractions: ['frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order'],
 	percent: ['anteile', 'prop', 'percent', 'pv', 'units'],
@@ -20,46 +20,46 @@ const taskCategories = {
 // Sichtbare Aufgabentypen je Klassenstufe (wird vom UI-Dropdown genutzt)
 const taskTypesByGrade = {
 	klasse5: [
-		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
-		'geometry', 'winkel', 'schraegbild', 'statistik', 'units'
+		'geometry', 'winkel', 'schraegbild', 'statistik'
 	],
 	klasse6: [
-		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
-		'anteile', 'percent', 'units', 'geometry', 'winkel', 'schraegbild', 'statistik', 'wkt'
+		'anteile', 'percent', 'geometry', 'winkel', 'schraegbild', 'statistik', 'wkt'
 	],
 	klasse7: [
-		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
-		'anteile', 'prop', 'percent', 'pv', 'units',
+		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'equations', 'formel_umstellen',
 		'round', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse8: [
-		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
-		'anteile', 'prop', 'percent', 'pv', 'units',
+		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'equations', 'equations_adv', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse9: [
-		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
-		'anteile', 'prop', 'percent', 'pv', 'units',
+		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'equations', 'equations_adv', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse10: [
-		'teiler', 'primzahlen', 'potenzen', 'schriftlich', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
-		'anteile', 'prop', 'percent', 'pv', 'units',
+		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'equations', 'equations_adv', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz',
 		'statistik', 'wkt'
@@ -87,10 +87,12 @@ const typeDefinitions = [
 	// Zahlentheorie / fortgeschrittene Themen
 	['teiler', 'Teiler', 'Teiler einer Zahl bestimmen'],
 	['primzahlen', 'Primzahlen', 'Primzahlen finden'], 
-
+	['units', 'Einheiten', 'Größen in verschiedene Einheiten umrechnen'],
+	
 	// Arithmetik: Ganze Zahlen, Dezimalbrüche, Stellenwerte
 	['potenzen', 'Potenzen und Wurzeln', 'Potenzen und Wurzeln berechnen'],
-	['schriftlich', 'schriftlich rechnen', 'Schriftliche Rechenverfahren'],
+	['schriftlich_as', 'schriftlich rechnen +/-', 'Schriftliche Addition und Subtraktion'],
+	['schriftlich_md', 'schriftlich rechnen ×/÷', 'Schriftliche Multiplikation und Division'],
 	['z_as', 'Ganze Zahlen +/-', 'Ganze Zahlen addieren und subtrahieren'],
 	['z_md', 'Ganze Zahlen ×/÷', 'Ganze Zahlen multiplizieren und dividieren'],
 	['db_as', 'Dezimalbrüche +/-', 'Dezimalbrüche addieren und subtrahieren'],
@@ -117,7 +119,6 @@ const typeDefinitions = [
 	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität'],
 	['percent', 'Prozentrechnung', 'Prozentwert, Grundwert und Prozentsatz berechnen'],
 	['pv', 'Prozentuale Veränderung', 'Prozentuale Zu- und Abnahmen berechnen'],
-	['units', 'Einheiten', 'Größen in verschiedene Einheiten umrechnen'],
 
 	// Algebra / Terme / Gleichungen
 	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
@@ -215,6 +216,14 @@ function createTask(type, isMentalMode, grade = 5) {
 				</table>
 			</div>
 		`;
+	};
+
+	const buildTwoColumnTaskTable = (cells) => {
+		const cellHtml = cells.map(cell =>
+			`<td style="width:50%;text-align:left;border:none;vertical-align:top;padding:0">${cell}</td>`
+		).join('');
+
+		return `<table style="width:100%;border-collapse:collapse;border:none;"><tr>${cellHtml}</tr></table>`;
 	};
 
 	// Beispiel für die Nutzung von isMentalMode:
@@ -435,96 +444,137 @@ function createTask(type, isMentalMode, grade = 5) {
 
 		case 'db_as': {
 			const allowNegativeDecimals = grade > 7;
-			v1 = allowNegativeDecimals ? trueDec(-15, 15) : trueDec(14, 30);
-			v2 = allowNegativeDecimals ? trueDec(-15, 15) : trueDec(0, 13);
 
-			if (Math.random() > 0.5) {
-				textDisplay = `\\( ${comma(v1)} + ${comma(fmt(v2))} =\\)`;
-				s = `\\( ${comma(v1)} + ${comma(fmt(v2))} = ${comma((v1 + v2).toFixed(1))} \\)`;
-			} else {
-				textDisplay = `\\( ${comma(v1)} - ${comma(fmt(v2))} = \\)`;
-				s = `\\( ${comma(v1)} - ${comma(fmt(v2))} = ${comma((v1 - v2).toFixed(1))} \\)`;
-			}
+			const createDbAsEntry = () => {
+				let expr;
+				let solution;
+				let a = allowNegativeDecimals ? trueDec(-15, 15) : trueDec(14, 30);
+				let b = allowNegativeDecimals ? trueDec(-15, 15) : trueDec(0, 13);
+
+				if (Math.random() > 0.5) {
+					expr = `\\( ${comma(a)} + ${comma(fmt(b))} =\\)`;
+					solution = `\\( ${comma(a)} + ${comma(fmt(b))} = ${comma((a + b).toFixed(1))} \\)`;
+				} else {
+					expr = `\\( ${comma(a)} - ${comma(fmt(b))} = \\)`;
+					solution = `\\( ${comma(a)} - ${comma(fmt(b))} = ${comma((a - b).toFixed(1))} \\)`;
+				}
+				return { expr, solution };
+			};
+
+			const entries = [createDbAsEntry(), createDbAsEntry()];
+			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
 			break;
 		}
 
 		case 'db_md': {
 			const allowNegativeDecimals = grade > 7;
-			rd = Math.random();
 
-			if (rd > 0.7) {
-				v1 = allowNegativeDecimals ? trueDec(-9, 9) : trueDec(0, 9);
-				v2 = allowNegativeDecimals ? rnd(-7, 7) : rnd(2, 7);
-				textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`;
-				s = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(1))} \\)`;
-			} else if (rd > 0.4) {
-				v1 = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
-				v2 = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
-				textDisplay = `\\( ${comma(v1)} \\cdot ${comma(fmt(v2))} =\\)`;
-				s = `\\(${comma(v1)} \\cdot ${comma(fmt(v2))} = ${comma((v1 * v2).toFixed(2))} \\)`;
-			} else {
-				const res = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
-				v2 = allowNegativeDecimals ? rnd(-9, 9) : rnd(2, 9);
-				while (v2 === 0) {
-					v2 = allowNegativeDecimals ? rnd(-9, 9) : rnd(2, 9);
+			const createDbMdEntry = () => {
+				let expr;
+				let solution;
+				const rdLocal = Math.random();
+
+				if (rdLocal > 0.7) {
+					const a = allowNegativeDecimals ? trueDec(-9, 9) : trueDec(0, 9);
+					const b = allowNegativeDecimals ? rnd(-7, 7) : rnd(2, 7);
+					expr = `\\( ${comma(a)} \\cdot ${comma(fmt(b))} =\\)`;
+					solution = `\\( ${comma(a)} \\cdot ${comma(fmt(b))} = ${comma((a * b).toFixed(1))} \\)`;
+				} else if (rdLocal > 0.4) {
+					const a = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
+					const b = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
+					expr = `\\( ${comma(a)} \\cdot ${comma(fmt(b))} =\\)`;
+					solution = `\\(${comma(a)} \\cdot ${comma(fmt(b))} = ${comma((a * b).toFixed(2))} \\)`;
+				} else {
+					const res = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
+					let b = allowNegativeDecimals ? rnd(-9, 9) : rnd(2, 9);
+					while (b === 0) {
+						b = allowNegativeDecimals ? rnd(-9, 9) : rnd(2, 9);
+					}
+					const a = res * b;
+					expr = `\\( ${comma(a.toFixed(1))} : ${comma(fmt(b))} =\\)`;
+					solution = `\\(${comma(a.toFixed(1))} : ${comma(fmt(b))} = ${comma(res.toFixed(1))} \\)`;
 				}
-				v1 = res * v2;
-				textDisplay = `\\( ${comma(v1.toFixed(1))} : ${comma(fmt(v2))} =\\)`;
-				s = `\\(${comma(v1.toFixed(1))} : ${comma(fmt(v2))} = ${comma(res.toFixed(1))} \\)`;
-			}
+				return { expr, solution };
+			};
+
+			const entries = [createDbMdEntry(), createDbMdEntry()];
+			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
 			break;
 		}
 
-		case 'z_as':
-			if (Math.random() > 0.5) {
-				do {
-					v1 = rnd(-20, 20);
-					v2 = rnd(-20, 20);
-				} while (!(v1 < 0 || v2 < 0 || (v1 + v2) < 0));
-				textDisplay = `\\( ${v1} + ${fmt(v2)} =\\)`;
-				const sum = v1 + v2;
-				if (v2 < 0) {
-					s = `\\( ${v1} + ${fmt(v2)} = ${v1} - ${Math.abs(v2)} = ${sum} \\)`;
+		case 'z_as': {
+			const createZAsEntry = () => {
+				let expr;
+				let solution;
+				if (Math.random() > 0.5) {
+					do {
+						v1 = rnd(-20, 20);
+						v2 = rnd(-20, 20);
+					} while (!(v1 < 0 || v2 < 0 || (v1 + v2) < 0));
+					expr = `\\( ${v1} + ${fmt(v2)} =\\)`;
+					const sum = v1 + v2;
+					if (v2 < 0) {
+						solution = `\\( ${v1} + ${fmt(v2)} = ${v1} - ${Math.abs(v2)} = ${sum} \\)`;
+					} else {
+						solution = `\\( ${v1} + ${fmt(v2)} = ${sum} \\)`;
+					}
 				} else {
-					s = `\\( ${v1} + ${fmt(v2)} = ${sum} \\)`;
+					do {
+						v1 = rnd(-20, 20);
+						v2 = rnd(-20, 20);
+					} while (!(v1 < 0 || v2 < 0 || (v1 - v2) < 0));
+					expr = `\\( ${v1} - ${fmt(v2)} =\\)`;
+					const diff = v1 - v2;
+					if (v2 < 0) {
+						solution = `\\( ${v1} - ${fmt(v2)} = ${v1} + ${Math.abs(v2)} = ${diff} \\)`;
+					} else {
+						solution = `\\( ${v1} - ${fmt(v2)} = ${diff} \\)`;
+					}
 				}
-			} else {
-				do {
-					v1 = rnd(-20, 20);
-					v2 = rnd(-20, 20);
-				} while (!(v1 < 0 || v2 < 0 || (v1 - v2) < 0));
-				textDisplay = `\\( ${v1} - ${fmt(v2)} =\\)`;
-				const diff = v1 - v2;
-				if (v2 < 0) {
-					s = `\\( ${v1} - ${fmt(v2)} = ${v1} + ${Math.abs(v2)} = ${diff} \\)`;
+				return { expr, solution };
+			};
+
+			const entries = [createZAsEntry(), createZAsEntry()];
+			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			break;
+		}
+
+		case 'z_md': {
+			const createZMdEntry = () => {
+				let expr;
+				let solution;
+				if (Math.random() > 0.5) {
+					do {
+						v1 = rnd(-15, 15);
+						v2 = rnd(-9, 9);
+					} while (!(v1 < 0 || v2 < 0 || (v1 * v2) < 0));
+					expr = `\\( ${v1} \\cdot ${fmt(v2)} = \\)`;
+					solution = `\\( ${v1} \\cdot ${fmt(v2)} = ${v1 * v2} \\)`;
 				} else {
-					s = `\\( ${v1} - ${fmt(v2)} = ${diff} \\)`;
+					let res;
+					do {
+						res = rnd(-9, 9);
+						v2 = rnd(-12, 12);
+					} while (v2 === 0 || !(res < 0 || v2 < 0 || (res * v2) < 0));
+					v1 = res * v2;
+					expr = `\\( ${v1} : ${fmt(v2)} = \\)`;
+					solution = `\\( ${v1} : ${fmt(v2)} = ${res} \\)`;
 				}
-			}
+				return { expr, solution };
+			};
+
+			const entries = [createZMdEntry(), createZMdEntry()];
+			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
 			break;
-		
-		case 'z_md':
-			if (Math.random() > 0.5) {
-				do {
-					v1 = rnd(-15, 15);
-					v2 = rnd(-9, 9);
-				} while (!(v1 < 0 || v2 < 0 || (v1 * v2) < 0));
-				textDisplay = `\\( ${v1} \\cdot ${fmt(v2)} = \\)`;
-				s = `\\( ${v1} \\cdot ${fmt(v2)} = ${v1 * v2} \\)`;
-			} else {
-				let res;
-				do {
-					res = rnd(-9, 9);
-					v2 = rnd(-12, 12);
-				} while (v2 === 0 || !(res < 0 || v2 < 0 || (res * v2) < 0));
-				v1 = res * v2;
-				textDisplay = `\\( ${v1} : ${fmt(v2)} = \\)`;
-				s = `\\( ${v1} : ${fmt(v2)} = ${res} \\)`;
-			}
-			break;
+		}
 
 		case 'pow10': {
-			// Zehnerpotenzen: natürliche Zahl oder Dezimalbruch mit 10, 100 oder 1000
+			const createPow10Entry = () => {
+				// Zehnerpotenzen: natürliche Zahl oder Dezimalbruch mit 10, 100 oder 1000
 			const powers = [10, 10, 100, 100, 1000];
 			const power = powers[randInt(0, 4)];
 			const isMult = Math.random() > 0.5;
@@ -565,15 +615,20 @@ function createTask(type, isMentalMode, grade = 5) {
 			const operandStr = isDecimal ? comma(operand) : operand.toString();
 
 			// Aufgabe
-			textDisplay = `\\( ${operandStr} ${op} ${power} =\\)`;
+			const expr = `\\( ${operandStr} ${op} ${power} =\\)`;
 
 			// Lösung mit Erklärung der Kommaverschiebung/Stellenwertverschiebung
 			const shiftCount = power === 10 ? 1 : power === 100 ? 2 : 3;
 			const shiftDirection = isMult ? '&#x2192;' : '&#x2190;';
 			const shiftDescription = `(Komma ${shiftCount} x ${shiftDirection})`;
 
-			s = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad \\text{${shiftDescription}}\\)`;
+			const solution = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad \\text{${shiftDescription}}\\)`;
+			return { expr, solution };
+			};
 
+			const entries = [createPow10Entry(), createPow10Entry()];
+			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
 			break;
 		}
 
@@ -1268,8 +1323,8 @@ function createTask(type, isMentalMode, grade = 5) {
 			break;
 		}
 
-		case 'schriftlich': {
-			const op = randInt(0, 3); // 0: +, 1: -, 2: *, 3: /
+		case 'schriftlich_as': {
+			const op = randInt(0, 1); // 0: +, 1: -, 2: *, 3: /
 			let v1, v2, res;
 			const countDigits = (value) => Math.max(1, String(value).replace(/[^0-9]/g, '').length);
 
@@ -1292,6 +1347,16 @@ function createTask(type, isMentalMode, grade = 5) {
 					textPrint = `Berechne schriftlich: \\( \\quad ${comma(v1)} - ${comma(v2)} \\)<br>${karo(4, 12)}`;
 					s = `\\( ${comma(v1)} - ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
 					break;
+			}
+			break;
+		}
+
+		case 'schriftlich_md': {
+			const op = randInt(2, 3); // 0: +, 1: -, 2: *, 3: /
+			let v1, v2, res;
+			const countDigits = (value) => Math.max(1, String(value).replace(/[^0-9]/g, '').length);
+
+			switch (op) {
 
 				case 2: // MULTIPLIKATION
 					// Faktor 1: 0-2 Stellen, Faktor 2: 0-2 Stellen
@@ -1539,7 +1604,7 @@ function createTask(type, isMentalMode, grade = 5) {
 				digits = 2;
 			}
 
-			textDisplay = `Runde \\( ${comma(v1.toFixed(3))} \\) auf ${target}.`;
+			textDisplay = `Runde auf ${target}: \\( ${comma(v1.toFixed(3))} \\approx \\) ${blank(2)}`;
 			s = `\\( ${comma(v1.toFixed(3))} \\approx ${comma(result.toFixed(digits))} \\) (${target})`;
 			break;
 		}
@@ -2497,6 +2562,7 @@ function createTask(type, isMentalMode, grade = 5) {
 			
 			textDisplay = `Zeichne eine Planfigur, nenne den Kongruenzsatz, konstruiere das Dreieck und miss die übrigen Größen:<br>${givenStr}`;
 			textPrint = `Zeichne eine Planfigur, nenne den Kongruenzsatz, konstruiere das Dreieck und miss die übrigen Größen: ${givenStr}${space(reservedHeight)}`;
+			textPrint = `Nenne den Kongruenzsatz, zeichne das Dreieck und miss alle Größen: ${givenStr}${space(reservedHeight)}`;
 			s = `Kongruenzsatz ${kongruenzsatz}, alle Maße:<br>\\[ \\begin{aligned}
 				a &= ${cm(resS[0])}\\,\\text{cm}; &\\quad b &= ${cm(resS[1])}\\,\\text{cm}; &\\quad c &= ${cm(resS[2])}\\,\\text{cm} \\\\ \\alpha &= ${resA[0]}^\\circ; &\\quad \\beta &= ${resA[1]}^\\circ; &\\quad \\gamma &= ${resA[2]}^\\circ
 			\\end{aligned} \\]`;
