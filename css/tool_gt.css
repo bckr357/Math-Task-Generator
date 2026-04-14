@@ -1122,8 +1122,8 @@ mjx-mtext {
     grid-template-columns: 1fr 1fr;
     align-items: center;
     gap: 27mm;
-    padding-bottom: 12px;
-    margin-bottom: 12px;
+    padding-bottom: 0;
+    margin-bottom: 0;
     border: none;
     font-size: 11pt;
     font-weight: 400;

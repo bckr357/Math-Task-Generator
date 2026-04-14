@@ -260,7 +260,6 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				[`${clueRowIndex}-${hiddenColIndex}`]: true
 			};
 
-			const operationName = isAdd ? 'Additionstabelle' : 'Multiplikationstabelle';
 			const opSymbol = isAdd ? '+' : '×';
 
 			textDisplay = buildOpTableHTML({
@@ -346,11 +345,11 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'table_terms': {
-			const createTermDescriptor = () => {
+			const createTermDescriptor = (patternIndex = null) => {
 				const patterns = [
 					() => {
-						const a = rnd(-6, 6);
-						const b = rnd(-9, 9);
+						const a = rnd(-4, 4);
+						const b = rnd(-20, 20);
 						const expr = `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
 						return {
 							expr,
@@ -359,8 +358,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						};
 					},
 					() => {
-						const a = rnd(-4, 4);
-						const b = rnd(-6, 6);
+						const a = rnd(-6, 6);
+						const b = rnd(-20, 20);
 						const expr = `${a}x^2 ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
 						return {
 							expr,
@@ -370,7 +369,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					},
 					() => {
 						const a = rnd(-5, 5);
-						const b = rnd(-5, 5);
+						const b = rnd(-4, 4);
 						const expr = `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}x^2`;
 						return {
 							expr,
@@ -380,16 +379,20 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					}
 				];
 
-				return patterns[randInt(0, patterns.length - 1)]();
+				if (patternIndex === null) {
+					patternIndex = randInt(0, patterns.length - 1);
+				}
+
+				return patterns[patternIndex]();
 			};
 
-			let term1 = createTermDescriptor();
-			let term2 = createTermDescriptor();
+			const term1 = createTermDescriptor(0);
+			let term2 = createTermDescriptor(randInt(1, 2));
 			while (term1.expr === term2.expr) {
-				term2 = createTermDescriptor();
+				term2 = createTermDescriptor(randInt(1, 2));
 			}
 
-			const xValues = [rnd(2,7),rnd(-5,-2)];
+			const xValues = [rnd(2,5),rnd(-5,-2)];
 			const rawResults = [
 				[term1.evalFn(xValues[0]), term2.evalFn(xValues[0])],
 				[term1.evalFn(xValues[1]), term2.evalFn(xValues[1])]
@@ -845,7 +848,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				N = n_base * k;
 			} while (Z === N || getGcd(z_base, n_base) > 1 || Z % N === 0 || N % Z === 0);
 
-			textDisplay = `Kürze vollständig: \\( \\dfrac{${Z}}{${N}} = \\)`;
+			textDisplay = `Kürze vollständig: \\( \\quad\\dfrac{${Z}}{${N}} = \\)`;
 
 			// Lösungsweg mit \underset unter dem Gleichheitszeichen
 			let solutionSteps = `\\frac{${Z}}{${N}}`;
@@ -1496,14 +1499,20 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				}
 
 				return {
-					expr: `${toCleanString(startValue)} ${fromUnit} = ${blank(3)} ${toUnit}`,
+					expr: `${toCleanString(startValue)} ${fromUnit} = ${blank(2.5)} ${toUnit}`,
 					solution: `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`
 				};
 			};
 
-			const entries = [createUnitsEntry(), createUnitsEntry()];
-			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
-			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			if (isTraining) {
+				const entry = createUnitsEntry();
+				textDisplay = entry.expr;
+				s = entry.solution;
+			} else {
+				const entries = [createUnitsEntry(), createUnitsEntry()];
+				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			}
 			break;
 		}
 
@@ -1540,45 +1549,62 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			}
 			break;
 			
-		case 'potenzen':
-			rd = Math.random();
-			if (rd > 0.6) { 
-				v1 = rnd(-13, 13);
-				if (v1 < 0) {
-					textDisplay = `\\( (${v1})^2 = \\)`;
-					s = `\\( (${v1})^2 = ${v1 * v1} \\)`;
+		case 'potenzen': {
+			const createPotenzenEntry = () => {
+				let expr;
+				let solution;
+				const rdLocal = Math.random();
+
+				if (rdLocal > 0.6) {
+					v1 = rnd(-13, 13);
+					if (v1 < 0) {
+						expr = `\\( (${v1})^2 = \\)`;
+						solution = `\\( (${v1})^2 = ${v1 * v1} \\)`;
+					} else {
+						expr = `\\( ${v1}^2 = \\)`;
+						solution = `\\( ${v1}^2 = ${v1 * v1} \\)`;
+					}
+				} else if (rdLocal > 0.40) {
+					v1 = rnd(3, 13);
+					expr = `\\( \\sqrt{${v1 * v1}} = \\)`;
+					solution = `\\( \\sqrt{${v1 * v1}} = ${v1} \\)`;
+				} else if (rdLocal > 0.2) {
+					v1 = rnd(3, 9);
+					expr = `\\( 2^${v1} = \\)`;
+					solution = `\\( 2^${v1} = ${Math.pow(2, v1)} \\)`;
 				} else {
-					textDisplay = `\\( ${v1}^2 = \\)`;
-					s = `\\( ${v1}^2 = ${v1 * v1} \\)`;
+					const staticTasks = [
+						{ t: `\\( 3^3 = \\)`, s: `\\( 3^3 = ${Math.pow(3, 3)} \\)` },
+						{ t: `\\( (-3)^3 = \\)`, s: `\\( (-3)^3 = ${Math.pow(-3, 3)} \\)` },
+						{ t: `\\( 3^4 = \\)`, s: `\\( 3^4 = ${Math.pow(3, 4)} \\)` },
+						{ t: `\\( (-3)^4 = \\)`, s: `\\( (-3)^4 = ${Math.pow(-3, 4)} \\)` },
+						{ t: `\\( 4^3 = \\)`, s: `\\( 4^3 = ${Math.pow(4, 3)} \\)` },
+						{ t: `\\( (-4)^3 = \\)`, s: `\\( (-4)^3 = ${Math.pow(-4, 3)} \\)` },
+						{ t: `\\( 5^3 = \\)`, s: `\\( 5^3 = ${Math.pow(5, 3)} \\)` },
+						{ t: `\\( (-5)^3 = \\)`, s: `\\( (-5)^3 = ${Math.pow(-5, 3)} \\)` },
+						{ t: `\\( 5^4 = \\)`, s: `\\( 5^4 = ${Math.pow(5, 4)} \\)` }
+					];
+					const randomIndex = Math.floor(Math.random() * staticTasks.length);
+					expr = staticTasks[randomIndex].t;
+					solution = staticTasks[randomIndex].s;
 				}
-			} else if (rd > 0.40) {
-				v1 = rnd(3, 13);
-				textDisplay = `\\( \\sqrt{${v1 * v1}} = \\)`;
-				s = `\\( \\sqrt{${v1 * v1}} = ${v1} \\)`;
-			} else if (rd > 0.2) {
-				v1 = rnd(3, 9);
-				textDisplay = `\\( 2^${v1} = \\)`;
-				s = `\\( 2^${v1} = ${Math.pow(2, v1)} \\)`;
+
+				return { expr, solution };
+			};
+
+			if (isTraining) {
+				const entry = createPotenzenEntry();
+				textDisplay = entry.expr;
+				s = entry.solution;
 			} else {
-				const staticTasks = [
-					{ t: `\\( 3^3 = \\)`, s: `\\( 3^3 = ${Math.pow(3, 3)} \\)` },
-					{ t: `\\( (-3)^3 = \\)`, s: `\\( (-3)^3 = ${Math.pow(-3, 3)} \\)` },
-					{ t: `\\( 3^4 = \\)`, s: `\\( 3^4 = ${Math.pow(3, 4)} \\)` },
-					{ t: `\\( (-3)^4 = \\)`, s: `\\( (-3)^4 = ${Math.pow(-3, 4)} \\)` },
-					{ t: `\\( 4^3 = \\)`, s: `\\( 4^3 = ${Math.pow(4, 3)} \\)` },
-					{ t: `\\( (-4)^3 = \\)`, s: `\\( (-4)^3 = ${Math.pow(-4, 3)} \\)` },
-					{ t: `\\( 5^3 = \\)`, s: `\\( 5^3 = ${Math.pow(5, 3)} \\)` },
-					{ t: `\\( (-5)^3 = \\)`, s: `\\( (-5)^3 = ${Math.pow(-5, 3)} \\)` },
-					{ t: `\\( 5^4 = \\)`, s: `\\( 5^4 = ${Math.pow(5, 4)} \\)` }
-				];
-				// Zufälligen Index bestimmen
-				const randomIndex = Math.floor(Math.random() * staticTasks.length);
-				textDisplay = staticTasks[randomIndex].t;
-				s = staticTasks[randomIndex].s;
+				const entries = [createPotenzenEntry(), createPotenzenEntry()];
+				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
 			}
 
 			break;
-				
+		}
+
 		case 'teiler': {
 			// 1. Pool an Zahlen mit interessanten Teilermengen 
 			const pool = isMentalMode ? [8, 10, 12, 13, 15, 16, 18, 19, 20, 25, 27, 28, 29, 30, 33, 35] : [12, 15, 16, 18, 20, 28, 30, 32, 33, 34, 35, 37, 40, 45, 50];
@@ -1642,7 +1668,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				digits = 2;
 			}
 
-			textDisplay = `Runde auf ${target}: \\( ${comma(v1.toFixed(3))} \\approx \\) ${blank(2)}`;
+			textDisplay = `Runde auf ${target}: \\( \\quad ${comma(v1.toFixed(3))} \\approx \\) ${blank(2)}`;
 			s = `\\( ${comma(v1.toFixed(3))} \\approx ${comma(result.toFixed(digits))} \\) (${target})`;
 			break;
 		}
@@ -1650,11 +1676,11 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		case 'equations': {
 			// 1. Bestimme die Lösung x (ein Vielfaches von 0,5)
 			// rnd(-20, 20) / 2 ergibt Werte wie -5, -4.5, -4, ..., 4.5, 5
-			const x = rnd(-13, 13);
+			const x = rnd(-12, 12);
 			
 			// 2. Bestimme Koeffizienten a und b (ganze Zahlen, a != 0)
 			let a = rnd(-12, 12);
-			const b = rnd(-30, 30);
+			const b = rnd(-20, 20);
 			
 			// 3. Berechne c (ax + b = c)
 			const c = a * x + b;
@@ -2809,7 +2835,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			// 1. Vier eindeutige Zahlen generieren und aufsteigend sortieren
 			let nums = [];
 			while (nums.length < 4) {
-				let r = randInt(2, 11); // Etwas größerer Bereich für schönere Differenzen
+				let r = randInt(2, 13); // Etwas größerer Bereich für schönere Differenzen
 				if (!nums.includes(r)) nums.push(r);
 			}
 			nums.sort((x, y) => x - y);
