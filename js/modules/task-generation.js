@@ -172,7 +172,7 @@ window.MTGTaskGenerationModule = {
 
             const randomIndex = Math.floor(Math.random() * weightedTypes.length);
             const selectedType = weightedTypes[randomIndex];
-            const generated = createTask(selectedType, state.mentalMathMode.value, getNumericGrade());
+            const generated = createTask(selectedType, state.mentalMathMode.value, getNumericGrade(), { training: true });
 
             return {
                 type: selectedType,

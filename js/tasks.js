@@ -145,11 +145,12 @@ const typeDescriptions = Object.fromEntries(typeDefinitions.map(([key, , descrip
 // AUFGABEN-GENERATOR
 // ============================================================
 
-function createTask(type, isMentalMode, grade = 5) {
+function createTask(type, isMentalMode, grade = 5, options = {}) {
 	if (!Number.isFinite(grade)) {
 		grade = 5;
 	}
 
+	const isTraining = Boolean(options.training);
 	let s = '';
 	let textDisplay = '', textPrint = '';
 
@@ -461,9 +462,15 @@ function createTask(type, isMentalMode, grade = 5) {
 				return { expr, solution };
 			};
 
-			const entries = [createDbAsEntry(), createDbAsEntry()];
-			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
-			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			if (isTraining) {
+				const entry = createDbAsEntry();
+				textDisplay = entry.expr;
+				s = entry.solution;
+			} else {
+				const entries = [createDbAsEntry(), createDbAsEntry()];
+				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			}
 			break;
 		}
 
@@ -498,9 +505,15 @@ function createTask(type, isMentalMode, grade = 5) {
 				return { expr, solution };
 			};
 
-			const entries = [createDbMdEntry(), createDbMdEntry()];
-			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
-			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			if (isTraining) {
+				const entry = createDbMdEntry();
+				textDisplay = entry.expr;
+				s = entry.solution;
+			} else {
+				const entries = [createDbMdEntry(), createDbMdEntry()];
+				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			}
 			break;
 		}
 
@@ -536,9 +549,15 @@ function createTask(type, isMentalMode, grade = 5) {
 				return { expr, solution };
 			};
 
-			const entries = [createZAsEntry(), createZAsEntry()];
-			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
-			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			if (isTraining) {
+				const entry = createZAsEntry();
+				textDisplay = entry.expr;
+				s = entry.solution;
+			} else {
+				const entries = [createZAsEntry(), createZAsEntry()];
+				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			}
 			break;
 		}
 
@@ -566,17 +585,23 @@ function createTask(type, isMentalMode, grade = 5) {
 				return { expr, solution };
 			};
 
-			const entries = [createZMdEntry(), createZMdEntry()];
-			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
-			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			if (isTraining) {
+				const entry = createZMdEntry();
+				textDisplay = entry.expr;
+				s = entry.solution;
+			} else {
+				const entries = [createZMdEntry(), createZMdEntry()];
+				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			}
 			break;
 		}
 
 		case 'pow10': {
 			const createPow10Entry = () => {
 				// Zehnerpotenzen: natürliche Zahl oder Dezimalbruch mit 10, 100 oder 1000
-			const powers = [10, 10, 100, 100, 1000];
-			const power = powers[randInt(0, 4)];
+				const powers = [10, 10, 100, 100, 1000];
+				const power = powers[randInt(0, 4)];
 			const isMult = Math.random() > 0.5;
 
 			// Operand: entweder natürliche Zahl oder Dezimalbruch (1-2 Stellen)
@@ -626,9 +651,15 @@ function createTask(type, isMentalMode, grade = 5) {
 			return { expr, solution };
 			};
 
-			const entries = [createPow10Entry(), createPow10Entry()];
-			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
-			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			if (isTraining) {
+				const entry = createPow10Entry();
+				textDisplay = entry.expr;
+				s = entry.solution;
+			} else {
+				const entries = [createPow10Entry(), createPow10Entry()];
+				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			}
 			break;
 		}
 
@@ -1395,11 +1426,11 @@ function createTask(type, isMentalMode, grade = 5) {
 			break;
 		}
 
-		case 'units': 
-			// Hilfsfunktion für saubere Dezimal-Ausgabe
+		case 'units': {
 			const toCleanString = formatUtils.toCleanString;
+			const createUnitsEntry = () => {
 
-			// 1. Definition der Einheiten-Ketten (geordnet von klein nach groß)
+				// 1. Definition der Einheiten-Ketten (geordnet von klein nach groß)
 			const unitGroups = [
 				{ units: ['mm', 'cm', 'dm', 'm', 'km'], factors: [10, 10, 10, 1000], type: 'Länge' },
 				{ units: ['mm²', 'cm²', 'dm²', 'm²', 'a', 'ha', 'km²'], factors: [100, 100, 100, 100, 100, 100], type: 'Fläche' },
@@ -1464,12 +1495,19 @@ function createTask(type, isMentalMode, grade = 5) {
 					break;
 				}
 
-				textDisplay = `${toCleanString(startValue)} ${fromUnit} = ${blank(3)} ${toUnit}`;
-				s = `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`;
-				break;
+				return {
+					expr: `${toCleanString(startValue)} ${fromUnit} = ${blank(3)} ${toUnit}`,
+					solution: `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`
+				};
+			};
 
-			
-			case 'geometry':
+			const entries = [createUnitsEntry(), createUnitsEntry()];
+			textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
+			s = buildTwoColumnTaskTable(entries.map(item => item.solution));
+			break;
+		}
+
+		case 'geometry':
 			const shapeType = randInt(0, grade > 6 ? 2 : 1);
 			const goal = Math.random() > 0.5 ? 'A' : 'u';
 			let sideA, sideB;
