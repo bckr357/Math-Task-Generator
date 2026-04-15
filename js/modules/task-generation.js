@@ -1,5 +1,23 @@
 window.MTGTaskGenerationModule = {
     createTaskGenerationModule({ state, createTask, selectedGrade }) {
+        const getScopeConfig = (scope = 'default') => {
+            if (scope === 'quiz') {
+                return {
+                    selectedTypes: state.quizSelectedTypes.value,
+                    taskWeights: state.quizTaskWeights.value,
+                    mentalMathMode: state.quizMentalMathMode.value,
+                    weightsEnabled: false
+                };
+            }
+
+            return {
+                selectedTypes: state.selectedTypes.value,
+                taskWeights: state.taskWeights.value,
+                mentalMathMode: state.mentalMathMode.value,
+                weightsEnabled: state.weights.value
+            };
+        };
+
         const getNumericGrade = () => Number.isFinite(selectedGrade?.value)
             ? selectedGrade.value
             : 5;
@@ -24,26 +42,28 @@ window.MTGTaskGenerationModule = {
             URL.revokeObjectURL(url);
         };
 
-        const buildTasks = () => {
-            if (state.selectedTypes.value.length === 0) return false;
+        const buildTasks = (scope = 'default', taskOptions = {}) => {
+            const config = getScopeConfig(scope);
 
-            const normalizedWeights = Object.fromEntries(state.selectedTypes.value.map(type => {
-                const rawWeight = Number(state.taskWeights.value[type]);
-                const weight = state.weights.value
+            if (config.selectedTypes.length === 0) return false;
+
+            const normalizedWeights = Object.fromEntries(config.selectedTypes.map(type => {
+                const rawWeight = Number(config.taskWeights[type]);
+                const weight = config.weightsEnabled
                     ? (Number.isFinite(rawWeight)
                         ? Math.max(0, Math.floor(rawWeight))
                         : 1)
                     : 1;
 
-                state.taskWeights.value[type] = weight;
+                config.taskWeights[type] = weight;
                 return [type, weight];
             }));
 
             const singleOccurrenceTypes = new Set(
-                state.selectedTypes.value.filter(type => normalizedWeights[type] === 0)
+                config.selectedTypes.filter(type => normalizedWeights[type] === 0)
             );
 
-            const weightedTypes = state.selectedTypes.value.flatMap(type => Array(normalizedWeights[type]).fill(type));
+            const weightedTypes = config.selectedTypes.flatMap(type => Array(normalizedWeights[type]).fill(type));
             if (weightedTypes.length === 0 && singleOccurrenceTypes.size === 0) return false;
 
             const types = [...weightedTypes];
@@ -52,9 +72,9 @@ window.MTGTaskGenerationModule = {
             const arrangementMode = state.taskArrangementMode.value;
 
             const getTypeCounts = () => {
-                const counts = Object.fromEntries(state.selectedTypes.value.map(type => [type, 0]));
-                const singleTypes = state.selectedTypes.value.filter(type => singleOccurrenceTypes.has(type));
-                const repeatTypes = state.selectedTypes.value.filter(type => !singleOccurrenceTypes.has(type));
+                const counts = Object.fromEntries(config.selectedTypes.map(type => [type, 0]));
+                const singleTypes = config.selectedTypes.filter(type => singleOccurrenceTypes.has(type));
+                const repeatTypes = config.selectedTypes.filter(type => !singleOccurrenceTypes.has(type));
                 const repeatWeightedTypes = repeatTypes.flatMap(type => Array(normalizedWeights[type]).fill(type));
 
                 let usedSlots = 0;
@@ -97,10 +117,10 @@ window.MTGTaskGenerationModule = {
             if (arrangementMode === 'ordered' || arrangementMode === 'random-ordered') {
                 const typeCounts = getTypeCounts();
                 const labelOrder = Object.keys(typeLabels);
-                const selectedSet = new Set(state.selectedTypes.value);
+                const selectedSet = new Set(config.selectedTypes);
                 const orderedTypes = [
                     ...labelOrder.filter(type => selectedSet.has(type)),
-                    ...state.selectedTypes.value.filter(type => !labelOrder.includes(type))
+                    ...config.selectedTypes.filter(type => !labelOrder.includes(type))
                 ].filter(type => typeCounts[type] > 0);
 
                 const blocks = orderedTypes.map(type => Array(typeCounts[type]).fill(type));
@@ -113,7 +133,7 @@ window.MTGTaskGenerationModule = {
 
                 typePool = blocks.flat();
             } else {
-                const singleTypes = [...new Set(state.selectedTypes.value.filter(type => singleOccurrenceTypes.has(type)))];
+                const singleTypes = [...new Set(config.selectedTypes.filter(type => singleOccurrenceTypes.has(type)))];
                 const normalWeightedTypes = weightedTypes.filter(type => !singleOccurrenceTypes.has(type));
 
                 const singleTypesToUse = singleTypes.slice(0, targetTotal);
@@ -140,7 +160,7 @@ window.MTGTaskGenerationModule = {
             }
 
             state.tasks.value = typePool.map(type => {
-                const generated = createTask(type, state.mentalMathMode.value, getNumericGrade());
+                const generated = createTask(type, config.mentalMathMode, getNumericGrade(), taskOptions);
                 return {
                     type,
                     textDisplay: generated.textDisplay ?? '',
@@ -154,12 +174,14 @@ window.MTGTaskGenerationModule = {
             return true;
         };
 
-        const generateSingleTrainingTask = () => {
-            if (state.selectedTypes.value.length === 0) return null;
+        const generateSingleTask = (scope = 'default', options = {}) => {
+            const config = getScopeConfig(scope);
 
-            const weightedTypes = state.selectedTypes.value.flatMap(type => {
-                const rawWeight = Number(state.taskWeights.value[type]);
-                const weight = state.weights.value
+            if (config.selectedTypes.length === 0) return null;
+
+            const weightedTypes = config.selectedTypes.flatMap(type => {
+                const rawWeight = Number(config.taskWeights[type]);
+                const weight = config.weightsEnabled
                     ? (Number.isFinite(rawWeight)
                         ? Math.max(0, Math.floor(rawWeight))
                         : 1)
@@ -172,7 +194,7 @@ window.MTGTaskGenerationModule = {
 
             const randomIndex = Math.floor(Math.random() * weightedTypes.length);
             const selectedType = weightedTypes[randomIndex];
-            const generated = createTask(selectedType, state.mentalMathMode.value, getNumericGrade(), { training: true });
+            const generated = createTask(selectedType, config.mentalMathMode, getNumericGrade(), options);
 
             return {
                 type: selectedType,
@@ -182,11 +204,15 @@ window.MTGTaskGenerationModule = {
             };
         };
 
+        const generateSingleTrainingTask = () => generateSingleTask('default', { training: true });
+        const generateSingleQuizTask = () => generateSingleTask('quiz', { training: true, quiz: true });
+
         return {
             getTaskExportData,
             downloadJSONFile,
             buildTasks,
-            generateSingleTrainingTask
+            generateSingleTrainingTask,
+            generateSingleQuizTask
         };
     }
 };

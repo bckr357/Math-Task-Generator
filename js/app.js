@@ -43,6 +43,9 @@ createApp({
         const classConfig = (typeof taskTypesByGrade === 'object' && taskTypesByGrade)
             ? taskTypesByGrade
             : {};
+        const quizClassConfig = (typeof quizTaskTypesByGrade === 'object' && quizTaskTypesByGrade)
+            ? quizTaskTypesByGrade
+            : {};
 
         const visibleTypeKeys = computed(() => {
             const configured = classConfig[`klasse${selectedGrade.value}`];
@@ -56,11 +59,26 @@ createApp({
         });
 
         const visibleTypeEntries = computed(() => visibleTypeKeys.value.map(key => [key, typeLabels[key]]));
+        const quizVisibleTypeKeys = computed(() => {
+            const configured = quizClassConfig[`klasse${selectedGrade.value}`];
 
-        watch(visibleTypeKeys, (keys) => {
-            const allowed = new Set(keys);
-            state.selectedTypes.value = state.selectedTypes.value.filter(type => allowed.has(type));
-        }, { immediate: true });
+            if (!Array.isArray(configured)) {
+                return allTypes;
+            }
+
+            const validKeys = configured.filter(type => Object.prototype.hasOwnProperty.call(typeLabels, type));
+            return validKeys.length > 0 ? validKeys : allTypes;
+        });
+
+        const quizVisibleTypeEntries = computed(() => quizVisibleTypeKeys.value.map(key => [key, typeLabels[key]]));
+        const activeVisibleTypeEntries = computed(() => state.currentView.value === 'quiz' ? quizVisibleTypeEntries.value : visibleTypeEntries.value);
+        const activeVisibleTypeKeys = computed(() => state.currentView.value === 'quiz' ? quizVisibleTypeKeys.value : visibleTypeKeys.value);
+ 
+         watch(visibleTypeKeys, (keys) => {
+             const allowed = new Set(keys);
+             state.selectedTypes.value = state.selectedTypes.value.filter(type => allowed.has(type));
+             state.quizSelectedTypes.value = state.quizSelectedTypes.value.filter(type => allowed.has(type));
+         }, { immediate: true });
 
         const taskGeneration = window.MTGTaskGenerationModule.createTaskGenerationModule({
             state,
@@ -91,6 +109,45 @@ createApp({
             typesetMathJax
         });
 
+        const quizMode = window.MTGQuizModeModule.createQuizMode({
+            state,
+            taskGeneration,
+            nextTick,
+            typesetMathJax
+        });
+
+        const activeSelectedTypes = computed({
+            get: () => state.currentView.value === 'quiz'
+                ? state.quizSelectedTypes.value
+                : state.selectedTypes.value,
+            set: value => {
+                if (state.currentView.value === 'quiz') {
+                    state.quizSelectedTypes.value = value;
+                    return;
+                }
+
+                state.selectedTypes.value = value;
+            }
+        });
+
+        const activeMentalMathMode = computed({
+            get: () => state.currentView.value === 'quiz'
+                ? state.quizMentalMathMode.value
+                : state.mentalMathMode.value,
+            set: value => {
+                if (state.currentView.value === 'quiz') {
+                    state.quizMentalMathMode.value = value;
+                    return;
+                }
+
+                state.mentalMathMode.value = value;
+            }
+        });
+
+        const activeTaskWeights = computed(() => state.currentView.value === 'quiz'
+            ? state.quizTaskWeights.value
+            : state.taskWeights.value);
+
         const navigation = window.MTGNavigationModule.createNavigationModule({
             state,
             nextTick,
@@ -98,27 +155,38 @@ createApp({
             startTraining: trainingMode.startTraining
         });
 
+        const getActiveSelectedTypesRef = () => state.currentView.value === 'quiz'
+            ? state.quizSelectedTypes
+            : state.selectedTypes;
+
+        const getActiveTaskWeightsRef = () => state.currentView.value === 'quiz'
+            ? state.quizTaskWeights
+            : state.taskWeights;
+
         const selectAllTypes = () => {
-            const allSelected = visibleTypeKeys.value.length === state.selectedTypes.value.length &&
-                               visibleTypeKeys.value.every(type => state.selectedTypes.value.includes(type));
+            const selectedTypesRef = getActiveSelectedTypesRef();
+            const allSelected = activeVisibleTypeKeys.value.length === selectedTypesRef.value.length &&
+                               activeVisibleTypeKeys.value.every(type => selectedTypesRef.value.includes(type));
             
             if (allSelected) {
-                state.selectedTypes.value = [];
+                selectedTypesRef.value = [];
             } else {
-                state.selectedTypes.value = [...visibleTypeKeys.value];
+                selectedTypesRef.value = [...activeVisibleTypeKeys.value];
             }
         };
 
         const randomizeTypeSelection = () => {
-            const classTypes = visibleTypeKeys.value;
+            const classTypes = activeVisibleTypeKeys.value;
+            const selectedTypesRef = getActiveSelectedTypesRef();
+            const taskWeightsRef = getActiveTaskWeightsRef();
             const randomized = classTypes.filter(() => Math.random() > 0.5);
 
-            state.selectedTypes.value = randomized.length > 0
+            selectedTypesRef.value = randomized.length > 0
                 ? randomized
                 : [classTypes[Math.floor(Math.random() * classTypes.length)]];
 
             allTypes.forEach(type => {
-                state.taskWeights.value[type] = 1;
+                taskWeightsRef.value[type] = 1;
             });
         };
 
@@ -140,6 +208,11 @@ createApp({
 
             if (state.currentView.value === 'training') {
                 await trainingMode.startTraining();
+                return;
+            }
+
+            if (state.currentView.value === 'quiz') {
+                await quizMode.generateQuiz();
             }
         };
 
@@ -227,6 +300,10 @@ createApp({
             selectedGrade,
             gradeOptions,
             visibleTypeEntries,
+            activeVisibleTypeEntries,
+            activeSelectedTypes,
+            activeMentalMathMode,
+            activeTaskWeights,
             selectAllTypes,
             randomizeTypeSelection,
             generateRandomWorksheet,
@@ -251,6 +328,10 @@ createApp({
             printWorksheet: worksheetMode.printWorksheet,
             exportWorksheetJSON: worksheetMode.exportWorksheetJSON,
             downloadWorksheetHTML: worksheetMode.downloadWorksheetHTML,
+            showQuizSolutions: quizMode.showQuizSolutions,
+            quizColumns: quizMode.quizColumns,
+            generateQuiz: quizMode.generateQuiz,
+            toggleQuizSolutions: quizMode.toggleQuizSolutions,
             typeLabels,
             typeDescriptions
         };

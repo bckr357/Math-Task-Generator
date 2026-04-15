@@ -66,6 +66,8 @@ const taskTypesByGrade = {
 	]
 };
 
+const quizTaskTypesByGrade = { ...taskTypesByGrade };
+
 /* TODO / Roadmap 
  - rechten Rand so vergrößern, dass immer eine kurze Lösung hin passt 
  - neue cases einbauen und validieren 
@@ -221,10 +223,10 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 	const buildTwoColumnTaskTable = (cells) => {
 		const cellHtml = cells.map(cell =>
-			`<td style="width:50%;text-align:left;border:none;vertical-align:top;padding:0">${cell}</td>`
+			`<td class="two-column-task-cell">${cell}</td>`
 		).join('');
 
-		return `<table style="width:100%;border-collapse:collapse;border:none;"><tr>${cellHtml}</tr></table>`;
+		return `<table class="two-column-task"><tr>${cellHtml}</tr></table>`;
 	};
 
 	// Beispiel für die Nutzung von isMentalMode:
@@ -447,7 +449,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'db_as': {
-			const allowNegativeDecimals = grade > 7;
+			const allowNegativeDecimals = grade >= 7;
 
 			const createDbAsEntry = () => {
 				let expr;
@@ -478,7 +480,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'db_md': {
-			const allowNegativeDecimals = grade > 7;
+			const allowNegativeDecimals = grade >= 7;
 
 			const createDbMdEntry = () => {
 				let expr;
@@ -1499,7 +1501,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				}
 
 				return {
-					expr: `${toCleanString(startValue)} ${fromUnit} = ${blank(2.5)} ${toUnit}`,
+					expr: `${toCleanString(startValue)} ${fromUnit} = ${blank(2.2)} ${toUnit}`,
 					solution: `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`
 				};
 			};
@@ -1517,7 +1519,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'geometry':
-			const shapeType = randInt(0, grade > 6 ? 2 : 1);
+			const shapeType = randInt(0, grade >= 7 ? 2 : 1);
 			const goal = Math.random() > 0.5 ? 'A' : 'u';
 			let sideA, sideB;
 
@@ -1924,7 +1926,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			let selectedVars = [...vars].sort(() => 0.5 - Math.random()).slice(0, 2);
 			if (Math.random() < 0.5) selectedVars[1] = '';
 			
-			let mode = grade > 9 ? randInt(0, 1) : 0;
+			let mode = grade >= 8 ? randInt(0, 2) : 0;
 			let taskStr, resStr;
 			
 			if (mode === 0) {
@@ -1986,9 +1988,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				});
 				resStr = resParts.length === 0 ? '0' : resParts.join(' ').trim();
 				textDisplay = `Vereinfache den Term: <br>\\( ${taskStr} \\)`;
-				textPrint = `Vereinfache den Term: \\(\\quad ${taskStr} \\) ${space(0.7)}`;
+				textPrint = `Vereinfache den Term: \\(\\quad ${taskStr} \\) ${space(0.5)}`;
 
-			} else {
+			} else if (mode === 1) {
 				// --- TYP: KLAMMER AUFLÖSEN ---
 				let v = selectedVars[0] || 'x';
 				let cVarCoef = rnd(-9, 9);
@@ -2014,7 +2016,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					fDisplay = fmt(factorCoef);
 				}
 
-				taskStr = `${fDisplay} \\cdot (${cVarCoef}${v} ${cNum > 0 ? '+' : '-'} ${Math.abs(cNum)})`;
+				taskStr = `${fDisplay} (${cVarCoef}${v} ${cNum > 0 ? '+' : '-'} ${Math.abs(cNum)})`;
 
 				if (useVarFactor) {
 					// Ergebnis enthält v² und v
@@ -2045,7 +2047,49 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				}
 
 				textDisplay = `Löse die Klammer auf: <br>\\( ${taskStr} \\)`;
-				textPrint = `Löse die Klammer auf: \\(\\quad ${taskStr} \\) ${space(0.7)}`;
+				textPrint = `Löse die Klammer auf: \\(\\quad ${taskStr} = \\)`;
+			} else {
+				// --- TYP: AUSKLAMMERN ---
+				let v = selectedVars[0] || 'x';
+				let w = selectedVars[1] || '';
+				const getGcd = mathUtils.getGcd;
+				const commonCoef = rnd(2, 6);
+				let a, b;
+				do {
+					a = rnd(2, 9);
+					b = rnd(2, 9);
+				} while (getGcd(a, b) !== 1);
+				const sign = Math.random() < 0.5 ? 1 : -1;
+				const commonFactorHasVar = w !== '' && Math.random() < 0.5;
+				const extraInFirst = w !== '' && Math.random() < 0.5;
+
+				const term1Vars = commonFactorHasVar
+					? v + (extraInFirst ? w : '')
+					: (w !== '' ? v + (extraInFirst ? w : '') : v);
+				const term2Vars = commonFactorHasVar
+					? v + (!extraInFirst ? w : '')
+					: (w !== '' ? (!extraInFirst ? v + w : v) : '');
+				const term1Coef = commonCoef * a;
+				const term2Coef = commonCoef * b;
+
+				const fmtInner = (coef, variable) => {
+					if (variable === '') return `${coef}`;
+					if (coef === 1) return variable;
+					return `${coef}${variable}`;
+				};
+
+				const term1Text = `${fmt(term1Coef)}${term1Vars}`;
+				const term2Text = `${fmt(term2Coef)}${term2Vars}`;
+				taskStr = `${term1Text} ${sign === 1 ? '+' : '-'} ${term2Text}`;
+
+				const commonFactorText = commonFactorHasVar ? `${fmt(commonCoef)}${v}` : fmt(commonCoef);
+				const inner1 = fmtInner(a, commonFactorHasVar ? (extraInFirst ? w : '') : term1Vars);
+				const inner2 = fmtInner(b, commonFactorHasVar ? (!extraInFirst ? w : '') : term2Vars);
+				const innerSign = sign === 1 ? '+' : '-';
+				resStr = `${commonFactorText}(${inner1} ${innerSign} ${inner2})`;
+
+				textDisplay = `Klammere vollständig aus: <br>\\( ${taskStr} \\)`;
+				textPrint = `Klammere vollständig aus: \\(\\quad ${taskStr} = \\)`;
 			}
 
 			s = `\\[ ${taskStr} = ${resStr} \\]`;

@@ -440,6 +440,42 @@ const buildWorksheetTaskRowsHTML = () => buildWorksheetColumnMarkup(task => `<di
 				padding: 12px 10px;
 			}
 
+			.two-column-task {
+				width: 100%;
+				border-collapse: collapse;
+				border: none;
+			}
+
+			.two-column-task-cell {
+				width: 50%;
+				text-align: left;
+				vertical-align: top;
+				padding: 0;
+				border: none;
+			}
+
+			#worksheetPresentationTasks .two-column-task,
+			#worksheetPresentationSolutions .two-column-task {
+				display: block;
+				width: 100% !important;
+				border: none !important;
+			}
+
+			#worksheetPresentationTasks .two-column-task tr,
+			#worksheetPresentationSolutions .two-column-task tr {
+				display: block;
+			}
+
+			#worksheetPresentationTasks .two-column-task td,
+			#worksheetPresentationSolutions .two-column-task td {
+				display: block;
+				width: auto !important;
+				border: none !important;
+				padding: 0;
+				margin-bottom: 1rem;
+				text-align: left;
+			}
+
 			.task-grid {
 				display: flex;
 				gap: 42px;

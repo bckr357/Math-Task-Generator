@@ -80,6 +80,7 @@ textarea {
     flex-direction: column;
     gap: 12px;
     color: inherit;
+    text-decoration: none;
 }
 
 .mode-card:hover {
@@ -112,8 +113,16 @@ textarea {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(239, 246, 255, 0.96) 100%);
 }
 
+.mode-card--import {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 247, 237, 0.96) 100%);
+}
+
 .mode-card--training {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.96) 100%);
+}
+
+.mode-card--quiz {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(236, 253, 245, 0.96) 100%);
 }
 
 .toolbar-main-controls {
@@ -234,6 +243,10 @@ textarea {
 .settings-drawer.mode-training .settings-selection-bar {
     flex-wrap: nowrap;
     gap: 10px;
+    align-items: center;
+}
+
+.settings-drawer.mode-quiz .settings-selection-bar {
     align-items: center;
 }
 
@@ -1321,6 +1334,84 @@ mjx-container[jax="CHTML"][display="true"] {
     gap: 42px;
 }
 
+.two-column-task {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+}
+
+.two-column-task-cell {
+    width: 50%;
+    text-align: left;
+    vertical-align: top;
+    padding: 0;
+    border: none;
+}
+
+#worksheetPresentationTasks .two-column-task,
+#worksheetPresentationSolutions .two-column-task {
+    display: block;
+    width: 100%;
+    border: none;
+}
+
+#worksheetPresentationTasks .two-column-task tr,
+#worksheetPresentationSolutions .two-column-task tr {
+    display: block;
+}
+
+#worksheetPresentationTasks .two-column-task td,
+#worksheetPresentationSolutions .two-column-task td {
+    display: block;
+    width: auto;
+    border: none;
+    padding: 0;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+#worksheetPresentationTasks .two-column-task td:last-child,
+#worksheetPresentationSolutions .two-column-task td:last-child {
+    margin-bottom: 0;
+}
+
+.worksheet-view .worksheet-solution-board .two-column-task {
+    display: block;
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+}
+
+.worksheet-view .worksheet-solution-board .two-column-task tr {
+    display: block;
+}
+
+.worksheet-view .worksheet-solution-board .two-column-task td {
+    display: block;
+    width: auto;
+    border: none;
+    padding: 0;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.worksheet-view .worksheet-solution-board .two-column-task td:last-child {
+    margin-bottom: 0;
+}
+
+.worksheet-view .worksheet-solution-board .two-column-task td {
+    display: block;
+    width: auto;
+    border: none;
+    padding: 0;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.worksheet-view .worksheet-solution-board .two-column-task td:last-child {
+    margin-bottom: 0;
+}
+
 .worksheet-view .worksheet-solution-board .task-row {
     min-height: 86px;
     padding: 16px 0;
@@ -1346,6 +1437,102 @@ mjx-container[jax="CHTML"][display="true"] {
     margin: 0 !important;
     padding: 0 !important;
     text-align: center !important;
+}
+
+/* --- QUIZ GENERIEREN --- */
+.quiz-view {
+    min-height: 100vh;
+    padding: 20px;
+    background:
+        radial-gradient(circle at 15% 8%, rgba(34, 197, 94, 0.12), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    color: var(--slate-800);
+}
+
+.quiz-top-bar {
+    margin-bottom: 14px;
+}
+
+.quiz-sheet {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 22px 24px;
+    border-radius: 24px;
+    border: 1px solid rgba(203, 213, 225, 0.74);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+}
+
+.quiz-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 2px solid var(--slate-100);
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--slate-500);
+}
+
+.quiz-columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.quiz-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.quiz-row {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--slate-100);
+}
+
+.quiz-num {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    font-size: 0.9rem;
+    color: var(--slate-500);
+    padding-top: 3px;
+    text-align: right;
+}
+
+.quiz-content {
+    min-width: 0;
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.quiz-math,
+.quiz-solution {
+    font-size: inherit;
+    line-height: inherit;
+    word-wrap: break-word;
+}
+
+.quiz-solution {
+    color: var(--primary);
+}
+
+.quiz-content .math-q,
+.quiz-content .math-a {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.quiz-content mjx-container[jax="CHTML"][display="true"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
 }
 
 @media (max-width: 960px) {
@@ -1408,6 +1595,26 @@ mjx-container[jax="CHTML"][display="true"] {
     }
 
     .mode-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quiz-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+}
+
+@media (max-width: 640px) {
+    .quiz-view {
+        padding: 14px;
+    }
+
+    .quiz-sheet {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .quiz-columns {
         grid-template-columns: 1fr;
     }
 }
