@@ -1140,7 +1140,7 @@ mjx-mtext {
     border: none;
     font-size: 11pt;
     font-weight: 400;
-    color: var(--slate-500);
+    color: var(--slate-800);
 }
 
 .worksheet-header-copy {
@@ -1151,7 +1151,7 @@ mjx-mtext {
     margin: 0 0 3mm 0;
     padding: 0 0mm 3mm 0mm;
     box-sizing: border-box;
-    border-bottom: 0.3mm solid var(--slate-300);
+    border-bottom: 0.3mm solid var(--slate-500);
 }
 
 .worksheet-header-gt {
@@ -1491,18 +1491,16 @@ mjx-container[jax="CHTML"][display="true"] {
     display: grid;
     grid-template-columns: 34px 1fr;
     gap: 12px;
-    align-items: start;
-    padding: 10px 0;
+    padding: 5px 0;
     border-bottom: 1px solid var(--slate-100);
 }
 
 .quiz-num {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-end;
     font-size: 0.9rem;
     color: var(--slate-500);
-    padding-top: 3px;
     text-align: right;
 }
 
@@ -1619,12 +1617,13 @@ mjx-container[jax="CHTML"][display="true"] {
     }
 }
 
-@page {
-    size: A4 landscape;
-    margin: 10mm 12mm 10mm 14mm;
-}
 
 @media print {
+
+    @page {
+        size: A4 landscape;
+        margin: 7mm 12mm 7mm 16mm;
+    }
 
     html,
     body {
@@ -1660,8 +1659,8 @@ mjx-container[jax="CHTML"][display="true"] {
     }
 
     .worksheet-sheet {
-        width: 271mm;
-        margin: 10mm 12mm 10mm 14mm;
+        width: 269mm;
+        /* margin: 7mm 12mm 7mm 16mm; */
         padding: 0;
         box-sizing: border-box;
         border: none;
@@ -1670,9 +1669,10 @@ mjx-container[jax="CHTML"][display="true"] {
     }
 
     .worksheet-sheet-header {
-        grid-template-columns: 122mm 122mm;
+        padding-top: 5mm;
+        grid-template-columns: 121mm 121mm;
         gap: 27mm;
-        width: 271mm;
+        width: 269mm;
         border: none;
         font-size: 9pt;
     }
@@ -1698,7 +1698,7 @@ mjx-container[jax="CHTML"][display="true"] {
     }
 
     .worksheet-list--columns {
-        grid-template-columns: 122mm 122mm;
+        grid-template-columns: 121mm 121mm;
         gap: 27mm;
     }
 
@@ -1761,13 +1761,54 @@ mjx-container[jax="CHTML"][display="true"] {
         padding: 0 !important;
     }
 
+    .quiz-view {
+        padding: 0;
+        background: white;
+        font-size: 10pt;
+    }
+
+    .quiz-sheet {
+        width: 287mm;
+        max-width: none;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+    }
+
+    .quiz-columns {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8mm;
+    }
+
+    .quiz-num {
+        font-size: 9pt;
+        padding-top: 2mm;
+    }
+
+    .quiz-row {
+        padding: 3mm 0;
+        gap: 6px;
+    }
+
+    .quiz-content {
+        font-size: 10pt !important;
+        line-height: 1.25;
+    }
+
+    .quiz-content mjx-container[jax="CHTML"][display="true"] {
+        font-size: 10pt !important;
+        line-height: 1.25 !important;
+    }
+
     /* Druck-optimierte Tabellen für A5-Doppelseite: passen in Spaltenbreite
        Ursache: Bildschirm-Responsive Regeln setzten min-width/auto, deshalb
        mussten wir hier фиксieren: volle Spaltenbreite, table-layout fixed
        und kleinere Schrift/Paddings. */
     .op-table-wrap {
         width: 100%;
-        max-width: 148.5mm; /* eine A5-Spalte in A4-Landschaft */
+        max-width: 100mm; /* eine A5-Spalte in A4-Landschaft */
         margin: 0;
         box-sizing: border-box;
     }
@@ -1785,7 +1826,7 @@ mjx-container[jax="CHTML"][display="true"] {
         font-size: 10pt;
         font-weight: 400;
         padding: 1.2mm 1.0mm;
-        border: 0.2mm solid #475569;
+        border: 0.2mm solid #5c6775;
         word-break: break-word;
     }
 
@@ -1793,7 +1834,7 @@ mjx-container[jax="CHTML"][display="true"] {
         font-size: 10pt;
         font-weight: 350;
         padding: 1.2mm 1.0mm;
-        border: 0.2mm solid #475569;
+        border: 0.2mm solid #5c6775;
         word-break: break-word;
     }
 

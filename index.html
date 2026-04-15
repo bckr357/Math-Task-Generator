@@ -137,10 +137,6 @@
             <div class="worksheet-toolbar-title">
                 <div class="settings-topbar-settings">
                     <label class="settings-topbar-label">
-                        AB-Nr.
-                        <input type="number" v-model.number="gtNumber" min="1" max="99" class="settings-input worksheet-gt-input">
-                    </label>
-                    <label class="settings-topbar-label">
                         Aufgaben
                         <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-topbar-input">
                     </label>
@@ -195,11 +191,9 @@
                     <div v-if="worksheetA5Pages !== 1" class="worksheet-sheet-header">
                         <div class="worksheet-header-copy">
                             <span v-if="worksheetA5Pages !== 1">Name:</span>
-                            <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
                         </div>
                         <div class="worksheet-header-copy">
                             <span v-if="worksheetA5Pages !== 1">Name:</span>
-                            <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
                         </div>
                     </div>
 
@@ -228,11 +222,9 @@
                     <div v-if="worksheetA5Pages !== 1" class="worksheet-sheet-header">
                         <div class="worksheet-header-copy">
                             <span>Lösungen</span>
-                            <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
                         </div>
                         <div class="worksheet-header-copy">
                             <span>Lösungen</span>
-                            <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">Grundlagen-Training {{ gtNumber }}</span>
                         </div>
                     </div>
 
@@ -261,7 +253,6 @@
             <template v-else>
                 <div class="worksheet-solutions-header">
                     <span>{{ showWorksheetSolutions ? 'Lösungen' : 'Aufgaben' }}</span>
-                    <span v-if="worksheetA5Pages !== 1" class="worksheet-header-gt">GT {{ gtNumber }}</span>
                 </div>
 
                 <div class="worksheet-solution-board task-grid">

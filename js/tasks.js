@@ -66,7 +66,50 @@ const taskTypesByGrade = {
 	]
 };
 
-const quizTaskTypesByGrade = { ...taskTypesByGrade };
+const quizTaskTypesByGrade = {
+	klasse5: [
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add',  'table_sub', 'table_mul','table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'geometry', 'winkel', 'schraegbild', 'statistik'
+	],
+	klasse6: [
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add',  'table_sub', 'table_mul','table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'anteile', 'percent', 'geometry', 'winkel', 'schraegbild', 'statistik', 'wkt'
+	],
+	klasse7: [
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add', 'table_sub', 'table_mul', 'table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
+		'anteile', 'prop', 'percent', 'pv', 
+		'equations', 'formel_umstellen',
+		'round', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
+	],
+	klasse8: [
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add', 'table_sub', 'table_mul', 'table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'anteile', 'prop', 'percent', 'pv', 
+		'equations', 'equations_adv', 'formel_umstellen',
+		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
+	],
+	klasse9: [
+		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'table_add', 'table_sub', 'table_mul', 'table_terms',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'anteile', 'prop', 'percent', 'pv', 
+		'equations', 'equations_adv', 'formel_umstellen',
+		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
+	],
+	klasse10: [
+		'teiler', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'anteile', 'prop', 'percent', 'pv', 
+		'equations', 'geometry', 'winkel', 'statistik', 'wkt'
+	]
+};
 
 /* TODO / Roadmap 
  - rechten Rand so vergrößern, dass immer eine kurze Lösung hin passt 
@@ -467,15 +510,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				return { expr, solution };
 			};
 
-			if (isTraining) {
-				const entry = createDbAsEntry();
-				textDisplay = entry.expr;
-				s = entry.solution;
-			} else {
-				const entries = [createDbAsEntry(), createDbAsEntry()];
-				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
-				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
-			}
+			const entry = createDbAsEntry();
+			textDisplay = entry.expr;
+			s = entry.solution;
 			break;
 		}
 
@@ -1501,20 +1538,14 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				}
 
 				return {
-					expr: `${toCleanString(startValue)} ${fromUnit} = ${blank(2.2)} ${toUnit}`,
+					expr: `${toCleanString(startValue)} ${fromUnit} = ${blank(3)} ${toUnit}`,
 					solution: `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`
 				};
 			};
 
-			if (isTraining) {
-				const entry = createUnitsEntry();
-				textDisplay = entry.expr;
-				s = entry.solution;
-			} else {
-				const entries = [createUnitsEntry(), createUnitsEntry()];
-				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
-				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
-			}
+			const entry = createUnitsEntry();
+			textDisplay = entry.expr;
+			s = entry.solution;
 			break;
 		}
 
@@ -1599,7 +1630,15 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				textDisplay = entry.expr;
 				s = entry.solution;
 			} else {
-				const entries = [createPotenzenEntry(), createPotenzenEntry()];
+				const firstEntry = createPotenzenEntry();
+				let secondEntry;
+				let attempt = 0;
+				do {
+					secondEntry = createPotenzenEntry();
+					attempt += 1;
+				} while (attempt < 10 && secondEntry.expr === firstEntry.expr);
+
+				const entries = [firstEntry, secondEntry];
 				textDisplay = buildTwoColumnTaskTable(entries.map(item => item.expr));
 				s = buildTwoColumnTaskTable(entries.map(item => item.solution));
 			}
@@ -2447,12 +2486,12 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					break;
 					case 1:
 						taskName = "den Zentralwert (Median)";
-					if (n === 7) {
-						// Bei 7 Daten: Genau der 4. Wert
-						let median = sortedData[3];
+					if (n === 5) {
+						// Bei 5 Daten: Genau der 3. Wert
+						let median = sortedData[2];
 						loesung = isMentalMode ?
 						`${displayData.join(', ')}<br>Zentralwert (Median) = ${median}.` :
-						`${sortedData.join(', ')}<br>Zentralwert (Median) = ${median}`;
+						`geordnete Liste: ${sortedData.join(', ')}<br>Zentralwert (Median) = ${median}`;
 					} else {
 						// Bei 6 Daten: Mittelwert aus dem 3. und 4. Wert
 						let m1 = sortedData[2];
@@ -2565,11 +2604,6 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				const j = Math.floor(Math.random() * (i + 1));
 				[p[i], p[j]] = [p[j], p[i]];
 			}
-
-			const sNames = ['a', 'b', 'c'];
-			const aNames = ['\\alpha', '\\beta', '\\gamma'];
-			const sn1 = sNames[p[0]], sn2 = sNames[p[1]], sn3 = sNames[p[2]];
-			const an1 = aNames[p[0]], an2 = aNames[p[1]], an3 = aNames[p[2]];
 			
 			const type = randInt(0, 3); // 0: SSS, 1: SWS, 2: WSW, 3: SsW
 			const kongruenzsatz = ['SSS', 'SWS', 'WSW', 'SsW'][type];
@@ -2583,8 +2617,33 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			};
 
 			let givenStr = '';
+			let givenSides = [false, false, false];
+			let givenAngles = [false, false, false];
 			let s1, s2, s3, a1, a2, a3;
-			
+			const deg = Math.PI / 180;
+			const computeTriangleHeight = (sides, angles, given) => {
+				const givenSideIndexes = [0, 1, 2].filter((i) => given[i]);
+				if (!givenSideIndexes.length) return 0;
+				const baseIndex = givenSideIndexes.reduce((maxIdx, idx) =>
+					sides[idx] > sides[maxIdx] ? idx : maxIdx,
+					givenSideIndexes[0]
+				);
+				if (baseIndex === 0) return sides[1] * Math.sin(angles[2] * deg);
+				if (baseIndex === 1) return sides[0] * Math.sin(angles[2] * deg);
+				if (baseIndex === 2) return sides[0] * Math.sin(angles[1] * deg);
+				return 0;
+			};
+			const buildGivenStr = () => {
+				const parts = [];
+				if (givenSides[0]) parts.push(`a=${cm(resS[0])}\\,\\text{cm}`);
+				if (givenSides[1]) parts.push(`b=${cm(resS[1])}\\,\\text{cm}`);
+				if (givenSides[2]) parts.push(`c=${cm(resS[2])}\\,\\text{cm}`);
+				if (givenAngles[0]) parts.push(`\\alpha=${resA[0]}^\\circ`);
+				if (givenAngles[1]) parts.push(`\\beta=${resA[1]}^\\circ`);
+				if (givenAngles[2]) parts.push(`\\gamma=${resA[2]}^\\circ`);
+				return parts.length ? `\\( \\; ${parts.join('; \\; ')} \\)` : '';
+			};
+
 			if (type === 0) {
 				// SSS
 				do {
@@ -2601,12 +2660,15 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					a1 = Math.round(Math.acos((s2 * s2 + s3 * s3 - s1 * s1) / (2 * s2 * s3)) * 180 / Math.PI);
 					a2 = Math.round(Math.acos((s1 * s1 + s3 * s3 - s2 * s2) / (2 * s1 * s3)) * 180 / Math.PI);
 					a3 = 180 - a1 - a2;
-				} while (Math.max(s1, s2, s3) > 10);
+					givenSides = [true, true, true];
+					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
+				} while (Math.max(s1, s2, s3) > 9 || triangleHeight > 4 || triangleHeight < 2);
 
-				givenStr = `\\( \\; ${sn1}=${cm(s1)}\\,\\text{cm}; \\; ${sn2}=${cm(s2)}\\,\\text{cm}; \\; ${sn3}=${cm(s3)}\\,\\text{cm} \\)`;
 			} else if (type === 1) {
 				// SWS
 				do {
+					givenSides = [false, false, false];
+					givenAngles = [false, false, false];
 					s1 = pickDecNoZeroTenth(31, 69);
 					s2 = pickDecNoZeroTenth(31, 69);
 					a3 = randInt(25, 125);
@@ -2615,12 +2677,16 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					a1 = Math.round(Math.acos((s2 * s2 + s3 * s3 - s1 * s1) / (2 * s2 * s3)) * 180 / Math.PI);
 					s3 = Math.round(s3 * 10) / 10;
 					a2 = 180 - a3 - a1;
-				} while (Math.max(s1, s2, s3) > 10 || a2 <= 0);
-
-				givenStr = `\\( \\; ${sn1}=${cm(s1)}\\,\\text{cm}; \\; ${sn2}=${cm(s2)}\\,\\text{cm}; \\; ${an3}=${a3}^\\circ \\)`;
+					givenSides[p[0]] = true;
+					givenSides[p[1]] = true;
+					givenAngles[p[2]] = true;
+					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
+				} while (Math.max(s1, s2, s3) > 9 || a2 <= 0 || triangleHeight > 4 || triangleHeight < 2);
 			} else if (type === 2) {
 				// WSW
 				do {
+					givenSides = [false, false, false];
+					givenAngles = [false, false, false];
 					s3 = pickDecNoZeroTenth(31, 69);
 					a1 = randInt(25, 50);
 					a2 = randInt(90, 120);
@@ -2628,12 +2694,17 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					
 					s1 = Math.round((s3 * Math.sin(a1 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
 					s2 = Math.round((s3 * Math.sin(a2 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
-				} while (a3 <= 0 || Math.max(s1, s2, s3) > 10);
+					givenSides[p[2]] = true;
+					givenAngles[p[0]] = true;
+					givenAngles[p[1]] = true;
+					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
+				} while (a3 < 10 || Math.max(s1, s2, s3) > 9 || triangleHeight > 4 || triangleHeight < 2);
 
-				givenStr = `\\( \\; ${sn3}=${cm(s3)}\\,\\text{cm}; \\; ${an1}=${a1}^\\circ; \\; ${an2}=${a2}^\\circ \\)`;
 			} else {
 				// SsW
 				do {
+					givenSides = [false, false, false];
+					givenAngles = [false, false, false];
 					s1 = pickDecNoZeroTenth(51, 69);
 					s2 = pickDecNoZeroTenth(31, 49);
 					a1 = randInt(25, 110);
@@ -2649,28 +2720,36 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					a2 = Math.round(Math.asin(sinA2) * 180 / Math.PI);
 					a3 = 180 - a1 - a2;
 					s3 = Math.round((s1 * Math.sin(a3 * Math.PI / 180) / Math.sin(a1 * Math.PI / 180)) * 10) / 10;
-				} while (!Number.isFinite(s3) || a3 <= 0 || Math.max(s1, s2, s3) > 10);
+					givenSides[p[0]] = true;
+					givenSides[p[1]] = true;
+					givenAngles[p[0]] = true;
+					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
+				} while (!Number.isFinite(s3) || a3 < 10 || Math.max(s1, s2, s3) > 9 || triangleHeight > 4 || triangleHeight < 2);
 
-				givenStr = `\\( \\; ${sn1}=${cm(s1)}\\,\\text{cm}; \\; ${sn2}=${cm(s2)}\\,\\text{cm}; \\; ${an1}=${a1}^\\circ \\)`;
 			}
 
 			const resS = [], resA = [];
 			resS[p[0]] = s1; resS[p[1]] = s2; resS[p[2]] = s3;
 			resA[p[0]] = a1; resA[p[1]] = a2; resA[p[2]] = a3;
 
-			// Höhe des zu zeichnenden Dreiecks berechnen (bei größter Seite als Grundseite).
+			givenStr = buildGivenStr();
+
+			// Höhe des zu zeichnenden Dreiecks berechnen (bei längster gegebener Seite als Grundseite).
 			// Über Heron: A = sqrt(u(u-a)(u-b)(u-c)), dann h = 2A/g.
 			const sideA = resS[0], sideB = resS[1], sideC = resS[2];
-			const base = Math.max(sideA, sideB, sideC);
+			const givenSideValues = [];
+			if (givenSides[0]) givenSideValues.push(sideA);
+			if (givenSides[1]) givenSideValues.push(sideB);
+			if (givenSides[2]) givenSideValues.push(sideC);
+			const base = givenSideValues.length ? Math.max(...givenSideValues) : Math.max(sideA, sideB, sideC);
 			const semi = (sideA + sideB + sideC) / 2;
 			const areaSq = semi * (semi - sideA) * (semi - sideB) * (semi - sideC);
 			const area = Math.sqrt(Math.max(0, areaSq));
-			const triangleHeight = base > 0 ? (2 * area) / base : 0;
-			const reservedHeight = Number(Math.max(2, triangleHeight + 0.5).toFixed(1));
+			const computedHeight = base > 0 ? (2 * area) / base : 0;
+			const reservedHeight = Number(computedHeight + 0.5).toFixed(1);
 			
-			textDisplay = `Zeichne eine Planfigur, nenne den Kongruenzsatz, konstruiere das Dreieck und miss die übrigen Größen:<br>${givenStr}`;
-			textPrint = `Zeichne eine Planfigur, nenne den Kongruenzsatz, konstruiere das Dreieck und miss die übrigen Größen: ${givenStr}${space(reservedHeight)}`;
-			textPrint = `Nenne den Kongruenzsatz, zeichne das Dreieck und miss alle Größen: ${givenStr}${space(reservedHeight)}`;
+			textDisplay = `Skizziere eine Planfigur, zeichne und beschrifte das Dreieck und miss alle Größen: <br>${givenStr}`;
+			textPrint = `Skizziere eine Planfigur, zeichne und beschrifte das Dreieck und miss alle Größen: ${givenStr}${space(reservedHeight)}`;
 			s = `Kongruenzsatz ${kongruenzsatz}, alle Maße:<br>\\[ \\begin{aligned}
 				a &= ${cm(resS[0])}\\,\\text{cm}; &\\quad b &= ${cm(resS[1])}\\,\\text{cm}; &\\quad c &= ${cm(resS[2])}\\,\\text{cm} \\\\ \\alpha &= ${resA[0]}^\\circ; &\\quad \\beta &= ${resA[1]}^\\circ; &\\quad \\gamma &= ${resA[2]}^\\circ
 			\\end{aligned} \\]`;
