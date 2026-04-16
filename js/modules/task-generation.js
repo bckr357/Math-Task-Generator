@@ -30,6 +30,34 @@ window.MTGTaskGenerationModule = {
             loesung: task.solution
         }));
 
+        const parseTaskImportData = (data) => {
+            const rawArray = Array.isArray(data)
+                ? data
+                : Array.isArray(data.tasks)
+                    ? data.tasks
+                    : [];
+
+            return rawArray.map(item => ({
+                type: item.aufgabentyp || item.type || '',
+                textDisplay: item.textDisplay ?? item.aufgabe ?? item.task ?? '',
+                textPrint: item.textPrint ?? item.aufgabe ?? item.task ?? '',
+                solution: item.loesung ?? item.solution ?? ''
+            }));
+        };
+
+        const loadTasksFromJSON = (data) => {
+            const tasks = parseTaskImportData(data);
+            if (!Array.isArray(tasks) || tasks.length === 0) {
+                return false;
+            }
+
+            state.tasks.value = tasks;
+            state.showSolutions.value = false;
+            state.showWorksheetSolutions.value = false;
+            state.taskCount.value = tasks.length;
+            return true;
+        };
+
         const downloadJSONFile = (filename, data) => {
             const dataStr = JSON.stringify(data, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
@@ -210,6 +238,7 @@ window.MTGTaskGenerationModule = {
         return {
             getTaskExportData,
             downloadJSONFile,
+            loadTasksFromJSON,
             buildTasks,
             generateSingleTrainingTask,
             generateSingleQuizTask

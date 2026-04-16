@@ -2221,7 +2221,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 					let ereignis = `eine durch ${auswahl} teilbare Zahl`;
 					taskStr = `Wahrscheinlichkeit für ${ereignis} bei einem 12-seitigen Spielwürfel?`;
-					resStr = `P(durch ${auswahl} teilbar) = \\( \\dfrac{${treffer}}{12} \\) = ${gekuerzt}`;
+					resStr = `P(durch ${auswahl} teilbar) = \\( \\dfrac{${treffer}}{12} = ${gekuerzt}\\) `;
 				}
 
 			} else if (mode === 3) {

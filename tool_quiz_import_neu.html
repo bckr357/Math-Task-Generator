@@ -4,7 +4,23 @@
     <meta charset="UTF-8">
     <title>Elite-Turbo-Ninja-Laser-Mathe-Battle</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                packages: {'[-]': ['textmacros']}
+            },
+            chtml: {
+                mtextInheritFont: true,
+                matchFontHeight: false,
+                scale: 1
+            },
+            output: {
+                font: 'mathjax-termes'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     
     <style>
         :root {
@@ -166,7 +182,7 @@
             <div style="font-size: 18px; font-weight: bold; color: var(--slate-800); font-family: monospace;">
                 <span v-if="currentTask">Aufgabe: #{{ currentTask.id }} </span>
                 <span v-else>Bereitmachen...</span>
-                <span v-if="nextTaskPreview !== null" style="color: #94a3b8; margin-left: 10px;">(Nächste: #{{ importedTasks[nextTaskPreview].id }})</span>
+                <!-- <span v-if="nextTaskPreview !== null" style="color: #94a3b8; margin-left: 10px;">(Nächste: #{{ importedTasks[nextTaskPreview].id }})</span> -->
             </div>
         </div>
 
@@ -267,8 +283,23 @@ createApp({
         };
 
         const resetTaskPool = () => {
-            taskPool.value = Array.from({length: importedTasks.value.length}, (_, i) => i)
-                                  .sort(() => Math.random() - 0.5);
+            const total = importedTasks.value.length;
+            if (total === 0) {
+                taskPool.value = [];
+                nextTaskPreview.value = null;
+                return;
+            }
+
+            const firstIdx = Math.floor(Math.random() * total);
+            currentTaskIndex.value = firstIdx;
+            currentTask.value = importedTasks.value[firstIdx];
+            history.value = [firstIdx];
+            historyPointer.value = 0;
+
+            taskPool.value = Array.from({ length: Math.max(0, total - 1) }, (_, i) =>
+                (firstIdx + 1 + i) % total
+            );
+
             updatePreview();
         };
 
@@ -328,13 +359,16 @@ createApp({
             isShuffling.value = false;
         };
 
-        const startQuiz = () => {
+        const startQuiz = async () => {
             ['A','B','C'].forEach(g => { fillCandidatePool(g); scores[g] = 0; });
+            showSolution.value = false;
             currentTask.value = null;
             history.value = [];
             historyPointer.value = -1;
             resetTaskPool();
             quizActive.value = true;
+            await nextTick();
+            if (window.MathJax) await MathJax.typesetPromise();
         };
 
         const nextTask = async () => {
@@ -343,11 +377,27 @@ createApp({
                 historyPointer.value++;
                 currentTaskIndex.value = history.value[historyPointer.value];
             } else {
-                if (taskPool.value.length === 0) resetTaskPool();
-                const nextIdx = taskPool.value.shift();
-                history.value.push(nextIdx);
-                historyPointer.value = history.value.length - 1;
-                currentTaskIndex.value = nextIdx;
+                const total = importedTasks.value.length;
+                if (taskPool.value.length === 0) {
+                    if (total === 0) return;
+
+                    let nextIdx = Math.floor(Math.random() * total);
+                    while (total > 1 && nextIdx === currentTaskIndex.value) {
+                        nextIdx = Math.floor(Math.random() * total);
+                    }
+
+                    currentTaskIndex.value = nextIdx;
+                    history.value.push(nextIdx);
+                    historyPointer.value = history.value.length - 1;
+                    taskPool.value = Array.from({ length: Math.max(0, total - 1) }, (_, i) =>
+                        (nextIdx + 1 + i) % total
+                    );
+                } else {
+                    const nextIdx = taskPool.value.shift();
+                    history.value.push(nextIdx);
+                    historyPointer.value = history.value.length - 1;
+                    currentTaskIndex.value = nextIdx;
+                }
             }
             currentTask.value = importedTasks.value[currentTaskIndex.value];
             updatePreview();

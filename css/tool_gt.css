@@ -1491,8 +1491,23 @@ mjx-container[jax="CHTML"][display="true"] {
     display: grid;
     grid-template-columns: 34px 1fr;
     gap: 12px;
-    padding: 5px 0;
+    padding: 1mm 0;
     border-bottom: 1px solid var(--slate-100);
+}
+
+.quiz-row.quiz-title-row {
+    border-bottom-width: 2px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.quiz-row.quiz-title-row .quiz-num {
+    visibility: hidden;
+}
+
+.quiz-row.quiz-title-row .quiz-content {
+    font-weight: 600;
+    color: var(--slate-700);
 }
 
 .quiz-num {
@@ -1508,6 +1523,7 @@ mjx-container[jax="CHTML"][display="true"] {
     min-width: 0;
     font-size: 1rem;
     line-height: 1.35;
+    margin: 1mm;
 }
 
 .quiz-math,
@@ -1784,12 +1800,12 @@ mjx-container[jax="CHTML"][display="true"] {
 
     .quiz-num {
         font-size: 9pt;
-        padding-top: 2mm;
     }
 
     .quiz-row {
-        padding: 3mm 0;
+        padding: 1mm 0;
         gap: 6px;
+        border: none;
     }
 
     .quiz-content {

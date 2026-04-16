@@ -165,9 +165,11 @@
                     {{ showWorksheetSolutions ? 'Aufgaben' : 'Lösungen' }}
                 </button>
                 <button @click="generateWorksheet" class="btn btn--primary">Erzeugen 🎲</button>
+                <button @click="openWorksheetImportDialog" class="btn btn--export">Import</button>
                 <button @click="exportWorksheetJSON" class="btn btn--export">JSON</button>
                 <button @click="downloadWorksheetHTML" class="btn btn--export">Speichern 💾</button>
                 <button @click="printWorksheet" class="btn btn--primary">Drucken</button>
+                <input type="file" ref="worksheetImportInput" @change="importWorksheetJSON" accept=".json" style="display:none">
             </div>
         </div>
 
@@ -342,6 +344,10 @@
                         <input type="number" v-model.number="taskCount" min="1" max="300" class="settings-input settings-topbar-input">
                     </label>
                     <label class="settings-topbar-label">
+                        Quiz-Nr.
+                        <input type="text" v-model="quizNumber" class="settings-input settings-topbar-input" placeholder="z. B. A1">
+                    </label>
+                    <label class="settings-topbar-label">
                         Anordnung
                         <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
                             <option value="random">zufällig</option>
@@ -354,9 +360,12 @@
 
             <div class="worksheet-toolbar-actions top-bar-actions">
                 <button @click="generateQuiz" class="btn btn--primary" :disabled="!hasSelectedTypes">Erzeugen 🎲</button>
+                <button @click="openQuizImportDialog" class="btn btn--export">Import</button>
+                <button @click="exportQuizJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">JSON</button>
                 <button @click="toggleQuizSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
                     {{ showQuizSolutions ? 'Aufgaben' : 'Lösungen' }}
                 </button>
+                <input type="file" ref="quizImportInput" @change="importQuizJSON" accept=".json" style="display:none">
             </div>
         </div>
 
@@ -370,13 +379,14 @@
         </div>
 
         <div v-else class="quiz-sheet">
-            <div class="quiz-sheet-header">
-                <span>{{ showQuizSolutions ? 'Quiz-Lösungen' : 'Quiz-Aufgaben' }}</span>
-                <span>{{ taskCount }} Aufgaben</span>
-            </div>
-
             <div class="quiz-columns">
                 <div v-for="(column, columnIndex) in quizColumns" :key="'quiz-column-'+columnIndex" class="quiz-column">
+                    <div v-if="columnIndex === 0" class="quiz-row quiz-title-row">
+                        <div class="quiz-num"></div>
+                        <div class="quiz-content quiz-title-content">
+                            {{ (showQuizSolutions ? 'Quiz-Lösungen Nr. ' : 'Quiz-Aufgaben Nr. ') + quizNumber }}
+                        </div>
+                    </div>
                     <div v-for="entry in column" :key="entry.key" class="quiz-row">
                         <div class="quiz-num">{{ `${entry.number})` }}</div>
                         <div class="quiz-content">

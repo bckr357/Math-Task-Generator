@@ -16,7 +16,7 @@ window.MTGStateModule = {
         const taskWeights = ref(
             Object.fromEntries(Object.keys(typeLabels).map(type => [type, 2]))
         );
-        const taskCount = ref(10);
+        const taskCount = ref(20);
         const taskArrangementMode = ref('random');
         const gtNumber = ref(1);
         const worksheetA5Pages = ref(2);
@@ -24,9 +24,10 @@ window.MTGStateModule = {
         const weights = ref(false);
         const quizSelectedTypes = ref([]);
         const quizTaskWeights = ref(
-            Object.fromEntries(Object.keys(typeLabels).map(type => [type, 1]))
+            Object.fromEntries(Object.keys(typeLabels).map(type => [type, 2]))
         );
         const quizMentalMathMode = ref(true);
+        const quizNumber = ref('1');
 
         const rowWiseFirstColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 0));
         const rowWiseSecondColumnTasks = computed(() => tasks.value.filter((_, index) => index % 2 === 1));
@@ -93,6 +94,7 @@ window.MTGStateModule = {
             quizSelectedTypes,
             quizTaskWeights,
             quizMentalMathMode,
+            quizNumber,
             rowWiseFirstColumnTasks,
             rowWiseSecondColumnTasks,
             worksheetTaskColumns,
