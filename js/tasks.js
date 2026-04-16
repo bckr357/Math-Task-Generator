@@ -36,33 +36,33 @@ const taskTypesByGrade = {
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
 		'anteile', 'prop', 'percent', 'pv', 
-		'terme', 'equations', 'formel_umstellen',
-		'round', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
+		'terme', 'word_terms', 'equations', 'equations_lin', 'formel_umstellen',
+		'round', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
 	],
 	klasse8: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
 		'anteile', 'prop', 'percent', 'pv', 
-		'terme', 'equations', 'equations_adv', 'formel_umstellen',
-		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
+		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
+		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
 	],
 	klasse9: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
 		'anteile', 'prop', 'percent', 'pv', 
-		'terme', 'equations', 'equations_adv', 'formel_umstellen',
-		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
+		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
+		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
 	],
 	klasse10: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
 		'anteile', 'prop', 'percent', 'pv', 
-		'terme', 'equations', 'equations_adv', 'formel_umstellen',
+		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz',
-		'statistik', 'wkt'
+		'statistik', 'wkt', 'linear_function'
 	]
 };
 
@@ -84,7 +84,7 @@ const quizTaskTypesByGrade = {
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
 		'anteile', 'prop', 'percent', 'pv', 
-		'equations', 'formel_umstellen',
+		'equations', 'equations_lin', 'formel_umstellen',
 		'round', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse8: [
@@ -92,7 +92,7 @@ const quizTaskTypesByGrade = {
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
 		'anteile', 'prop', 'percent', 'pv', 
-		'equations', 'equations_adv', 'formel_umstellen',
+		'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse9: [
@@ -100,14 +100,14 @@ const quizTaskTypesByGrade = {
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
 		'anteile', 'prop', 'percent', 'pv', 
-		'equations', 'equations_adv', 'formel_umstellen',
+		'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse10: [
 		'teiler', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
 		'anteile', 'prop', 'percent', 'pv', 
-		'equations', 'geometry', 'winkel', 'statistik', 'wkt'
+		'equations', 'equations_lin', 'geometry', 'winkel', 'statistik', 'wkt'
 	]
 };
 
@@ -167,8 +167,10 @@ const typeDefinitions = [
 
 	// Algebra / Terme / Gleichungen
 	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
+	['word_terms', 'Wortterme', 'Wortterme in mathematische Symbole übersetzen und berechnen'],
 	['equations', 'Gleichungen ax+b = c', 'Lineare Gleichung der Form ax + b = c lösen'],
 	['equations_adv', 'Gleichungen ax+b = cx+d', 'Lineare Gleichung der Form ax + b = cx + d lösen'],
+	['equations_lin', 'Gleichungen nach y umstellen', 'Lineare Gleichungen nach y umstellen und lösen'],
 	['formel_umstellen', 'Formel umstellen', 'Formeln nach einer anderen Variablen umstellen'],
 
 	// Geometrie
@@ -178,6 +180,7 @@ const typeDefinitions = [
 	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren'],
 
 	// Funktionen, Statistik & Wahrscheinlichkeiten
+	['linear_function', 'Lineare Funktionen zeichnen', 'Lineare Funktionen grafisch darstellen'],
 	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
 	['statistik', 'Statistik', 'Kenngrößen der Statistik bestimmen'],
 	['wkt', 'Wahrscheinlichkeiten', 'Wahrscheinlichkeiten bestimmen']
@@ -1779,6 +1782,96 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			x &= ${comma(x)} 
 			\\end{aligned} \\]`;
 			break;
+		
+		case 'equations_lin': {
+			const forms = ['ax+by=c', 'ax+c=by', 'ax=by+c', 'by=ax+c'];
+			const form = forms[randInt(0, forms.length - 1)];
+
+			const formatHalf = (val) => Number.isInteger(val) ? `${val}` : comma(val.toFixed(1));
+			const cleanHalf = (val) => Math.round(val * 2) / 2;
+			const varTerm = (coef, variable, withSign = false) => {
+				const abs = Math.abs(coef);
+				const base = abs === 1 ? variable : `${abs}${variable}`;
+				if (withSign) return `${coef >= 0 ? '+' : '-'} ${base}`;
+				return coef < 0 ? `-${base}` : base;
+			};
+			const invTermOp = (coef, variable) => coef >= 0 ? `- ${varTerm(coef, variable)}` : `+ ${varTerm(-coef, variable)}`;
+			const formatLinearExpr = (m, n) => {
+				const mm = cleanHalf(m);
+				const nn = cleanHalf(n);
+				const xPart = mm === 1 ? 'x' : (mm === -1 ? '-x' : `${formatHalf(mm)}x`);
+				if (nn === 0) return xPart;
+				return `${xPart} ${nn > 0 ? '+' : '-'} ${formatHalf(Math.abs(nn))}`;
+			};
+
+			const pickValidForB = (b) => {
+				const absB = Math.abs(b);
+				const vals = [];
+				for (let n = -20; n <= 20; n++) {
+					if (n === 0) continue;
+					if ((2 * n) % absB === 0) vals.push(n);
+				}
+				return vals;
+			};
+
+			let b_lin, a_lin, c_lin;
+			do {
+				b_lin = rnd(-20, 20);
+				const valid = pickValidForB(b_lin);
+				a_lin = valid[randInt(0, valid.length - 1)];
+				c_lin = valid[randInt(0, valid.length - 1)];
+			} while (!a_lin || !b_lin || !c_lin);
+
+			const aTerm = varTerm(a_lin, 'x');
+			const bTerm = varTerm(b_lin, 'y');
+			const absATerm = varTerm(Math.abs(a_lin), 'x');
+			const cSigned = c_lin >= 0 ? `+ ${Math.abs(c_lin)}` : `- ${Math.abs(c_lin)}`;
+			const cOppSigned = c_lin >= 0 ? `- ${Math.abs(c_lin)}` : `+ ${Math.abs(c_lin)}`;
+
+			let textEquation = '';
+			let step1 = '';
+			let step2 = '';
+			let finalStep = '';
+
+			switch (form) {
+				case 'ax+by=c': {
+					textEquation = `${aTerm} ${varTerm(b_lin, 'y', true)} = ${c_lin}`;
+					step1 = `${aTerm} ${varTerm(b_lin, 'y', true)} &= ${c_lin} &&| \\, ${invTermOp(a_lin, 'x')}`;
+					step2 = `${bTerm} &= ${c_lin} ${a_lin >= 0 ? '-' : '+'} ${absATerm} &&| \\, : ${fmt(b_lin)}`;
+					finalStep = `y &= ${formatLinearExpr(-a_lin / b_lin, c_lin / b_lin)}`;
+					break;
+				}
+				case 'ax+c=by': {
+					textEquation = `${aTerm} ${cSigned} = ${bTerm}`;
+					step1 = `${aTerm} ${cSigned} &= ${bTerm} &&| \\, ${invTermOp(a_lin, 'x')}`;
+					step2 = `${c_lin} &= ${bTerm} ${a_lin >= 0 ? '-' : '+'} ${absATerm} &&| \\, : ${fmt(b_lin)}`;
+					finalStep = `y &= ${formatLinearExpr(-a_lin / b_lin, c_lin / b_lin)}`;
+					break;
+				}
+				case 'ax=by+c': {
+					textEquation = `${aTerm} = ${bTerm} ${cSigned}`;
+					step1 = `${aTerm} &= ${bTerm} ${cSigned} &&| \\, ${cOppSigned}`;
+					step2 = `${aTerm} ${cOppSigned} &= ${bTerm} &&| \\, : ${fmt(b_lin)}`;
+					finalStep = `y &= ${formatLinearExpr(a_lin / b_lin, -c_lin / b_lin)}`;
+					break;
+				}
+				default: {
+					textEquation = `${bTerm} = ${aTerm} ${cSigned}`;
+					step1 = `${bTerm} &= ${aTerm} ${cSigned} &&| \\, : ${fmt(b_lin)}`;
+					finalStep = `y &= ${formatLinearExpr(a_lin / b_lin, c_lin / b_lin)}`;
+					break;
+				}
+			}
+
+			textDisplay = `Stelle die Gleichung nach \\( y \\) um: <br>\\( ${textEquation} \\)`;
+			textPrint = `Stelle nach \\( y \\) um: \\(\\quad ${textEquation} \\qquad |\\)${space(2)}`;
+			s = `\\[ \\begin{aligned}
+			${step1} \\\\
+			${step2 ? `${step2} \\\\` : ''}
+			${finalStep}
+			\\end{aligned} \\]`;
+			break;
+		}
 			
 			case 'formel_umstellen': {
 				const formeln = [
@@ -2135,6 +2228,128 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			break;
 		}
 
+		case 'word_terms': {
+			// Generiere verschiedene Wortterme
+			const wrapNum = (n) => (n < 0 ? `(${n})` : `${n}`);
+			const formatResult = (val) => Number.isInteger(val) ? `${val}` : comma(val.toFixed(2));
+			const operations = [
+				{
+					name: 'sum',
+					generate: (nums) => ({
+						term: `Addiere ${wrapNum(nums[0])} und ${wrapNum(nums[1])}`,
+						expr: `${wrapNum(nums[0])} + ${wrapNum(nums[1])}`,
+						result: nums[0] + nums[1]
+					})
+				},
+				{
+					name: 'diff',
+					generate: (nums) => ({
+						term: `Subtrahiere ${wrapNum(nums[1])} von ${wrapNum(nums[0])}`,
+						expr: `${wrapNum(nums[0])} - ${wrapNum(nums[1])}`,
+						result: nums[0] - nums[1]
+					})
+				},
+				{
+					name: 'product',
+					generate: (nums) => ({
+						term: `Multipliziere ${wrapNum(nums[0])} und ${wrapNum(nums[1])}`,
+						expr: `${wrapNum(nums[0])} \\cdot ${wrapNum(nums[1])}`,
+						result: nums[0] * nums[1]
+					})
+				},
+				{
+					name: 'quotient',
+					generate: (nums) => ({
+						term: `Dividiere ${wrapNum(nums[0])} durch ${wrapNum(nums[1])}`,
+						expr: `${wrapNum(nums[0])} : ${wrapNum(nums[1])}`,
+						result: nums[0] / nums[1]
+					})
+				},
+				{
+					name: 'prod_sum',
+					generate: (nums) => ({
+						term: `Addiere das Produkt von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} mit ${wrapNum(nums[2])}`,
+						expr: `${wrapNum(nums[0])} \\cdot ${wrapNum(nums[1])} + ${wrapNum(nums[2])}`,
+						result: nums[0] * nums[1] + nums[2]
+					})
+				},
+				{
+					name: 'prod_diff',
+					generate: (nums) => ({
+						term: `Subtrahiere das Produkt von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} von ${wrapNum(nums[2])}`,
+						expr: `${wrapNum(nums[2])} - ${wrapNum(nums[0])} \\cdot ${wrapNum(nums[1])}`,
+						result: nums[2] - nums[0] * nums[1]
+					})
+				},
+				{
+					name: 'sum_product',
+					generate: (nums) => ({
+						term: `Multipliziere die Summe von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} mit ${wrapNum(nums[2])}`,
+						expr: `(${wrapNum(nums[0])} + ${wrapNum(nums[1])}) \\cdot ${wrapNum(nums[2])}`,
+						result: (nums[0] + nums[1]) * nums[2]
+					})
+				},
+				{
+					name: 'diff_product',
+					generate: (nums) => ({
+						term: `Multipliziere die Differenz von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} mit ${wrapNum(nums[2])}`,
+						expr: `(${wrapNum(nums[0])} - ${wrapNum(nums[1])}) \\cdot ${wrapNum(nums[2])}`,
+						result: (nums[0] - nums[1]) * nums[2]
+					})
+				},
+				{
+					name: 'sum_quotient',
+					generate: (nums) => ({
+						term: `Dividiere die Summe von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} durch ${wrapNum(nums[2])}`,
+						expr: `(${wrapNum(nums[0])} + ${wrapNum(nums[1])}) : ${wrapNum(nums[2])}`,
+						result: (nums[0] + nums[1]) / nums[2]
+					})
+				},
+				{
+					name: 'diff_quotient',
+					generate: (nums) => ({
+						term: `Dividiere die Differenz von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} durch ${wrapNum(nums[2])}`,
+						expr: `(${wrapNum(nums[0])} - ${wrapNum(nums[1])}) : ${wrapNum(nums[2])}`,
+						result: (nums[0] - nums[1]) / nums[2]
+					})
+				}
+			];
+
+			// Wähle zufällig eine Operation
+			const selectedOp = operations[randInt(0, operations.length - 1)];
+			
+			// Generiere passende Zahlen (vermeidet Division durch 0)
+			let nums = [];
+			if (selectedOp.name.includes('quotient')) {
+				// Bei Divisionen: stelle sicher, dass die Division aufgeht
+				nums = [rnd(-15, 15), rnd(2, 10), rnd(-15, 15)];
+				if (selectedOp.name === 'quotient') {
+					// Stelle sicher, dass nums[0] % nums[1] === 0
+					nums[0] = nums[1] * randInt(-5, 5);
+				} else if (selectedOp.name === 'sum_quotient') {
+					nums[2] = randInt(1, 10);
+					nums[0] = nums[2] * randInt(-5, 5) - randInt(0, nums[2] - 1);
+					nums[1] = randInt(-nums[2], nums[2]);
+				} else if (selectedOp.name === 'diff_quotient') {
+					nums[2] = randInt(1, 10);
+					nums[0] = nums[2] * randInt(-5, 5) + randInt(0, nums[2] - 1);
+					nums[1] = randInt(-nums[2], nums[2]);
+				}
+			} else {
+				nums = [rnd(-15, 15), rnd(-15, 15), rnd(-15, 15)];
+			}
+			
+			const taskData = selectedOp.generate(nums);
+			
+			textDisplay = `Übersetze in einen Term und berechne:<br> <strong>${taskData.term}</strong>`;
+			textPrint = `${taskData.term} | \\(\\quad\\)${space(1.5)}`;
+			
+			const resultStr = formatResult(taskData.result);
+			
+			s = `\\[ ${taskData.expr} = ${resultStr} \\]`;
+			break;
+		}
+
 		case 'primzahlen': {
 			const isPrim = mathUtils.isPrime;
 
@@ -2149,6 +2364,108 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			textDisplay = `Nenne alle Primzahlen von ${start} bis ${start + 10}.`;
 			s = `Primzahlen ${start} - ${start + 10}: \\( \\quad ${prims.join(', ')}\\)`;
 			
+			break;
+		}
+
+		case 'linear_function': {
+			// Generiere eine zufällige lineare Funktion
+			let m;
+			let b = randInt(-8, 8) / 2; 
+			if (b > 0) m = randInt(-6, -1) / 2;
+			else m = randInt(1, 6) / 2; 
+
+			// Funktion
+			const f = (x) => m * x + b;
+			
+			// Markante Punkte
+			const yIntercept = b;
+			const xIntercept = b !== 0 ? -b / m : 0; // Nullstelle
+			
+			// SVG-Grafik für Koordinatensystem
+			const svgWidth = 340;
+			const svgHeight = 300;
+			const centerX = 100;
+			const centerY = svgHeight / 2;
+			const scale = 30; // Pixel pro Einheit
+			
+			// Konvertiere Koordinaten von mathematisch zu SVG
+			const toSVG = (x, y) => ({
+				x: centerX + x * scale,
+				y: centerY - y * scale  // SVG y ist invertiert
+			});
+			
+			// Erstelle SVG
+			let svgContent = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid #ccc; background: white;">`;
+			
+			// Gitter
+			for (let i = -3; i <= 8; i++) {
+				const posX = toSVG(i, 0);
+				svgContent += `<line x1="${posX.x}" y1="${centerY - 150}" x2="${posX.x}" y2="${centerY + 150}" stroke="#ccc" stroke-width="0.5"/>`;
+			}
+			for (let i = -5; i <= 5; i++) {
+				const posY = toSVG(0, i);
+				svgContent += `<line x1="0" y1="${posY.y}" x2="${svgWidth}" y2="${posY.y}" stroke="#ccc" stroke-width="0.5"/>`;
+			}
+			
+			// Achsen
+			svgContent += `<line x1="0" y1="${centerY}" x2="${svgWidth}" y2="${centerY}" stroke="black" stroke-width="2"/>`;
+			svgContent += `<line x1="${centerX}" y1="0" x2="${centerX}" y2="${svgHeight}" stroke="black" stroke-width="2"/>`;
+			svgContent += `<polygon points="${svgWidth - 10},${centerY - 6} ${svgWidth},${centerY} ${svgWidth - 10},${centerY + 6}" fill="black"/>`;
+			svgContent += `<polygon points="${centerX - 6},10 ${centerX},0 ${centerX + 6},10" fill="black"/>`;
+			svgContent += `<text x="${svgWidth - 16}" y="${centerY - 12}" text-anchor="end" font-size="14" fill="black">x</text>`;
+			svgContent += `<text x="${centerX + 10}" y="18" font-size="14" fill="black">y</text>`;
+			
+			// Achsen-Beschriftungen
+			for (let i = -3; i <= 7; i++) {
+				if (i !== 0) {
+					const xPos = toSVG(i, 0);
+					svgContent += `<text x="${xPos.x}" y="${centerY + 15}" text-anchor="middle" font-size="10" fill="black">${i}</text>`;
+				}
+			}
+			for (let i = -4; i <= 4; i++) {
+				if (i !== 0) {
+					const yPos = toSVG(0, i);
+					svgContent += `<text x="${centerX - 15}" y="${yPos.y + 4}" text-anchor="end" font-size="10" fill="black">${i}</text>`;
+				}
+			}
+			
+			// Gerade zeichnen
+			const leftPoint = toSVG(-4, f(-4));
+			const rightPoint = toSVG(8, f(8));
+			svgContent += `<line x1="${leftPoint.x}" y1="${leftPoint.y}" x2="${rightPoint.x}" y2="${rightPoint.y}" stroke="#e74c3c" stroke-width="2.5"/>`;
+			
+			// y-Achsenabschnitt markieren
+			const yIntPos = toSVG(0, yIntercept);
+			svgContent += `<circle cx="${yIntPos.x}" cy="${yIntPos.y}" r="4" fill="#3498db" stroke="#2980b9" stroke-width="2"/>`;
+			
+			// Punkt bei x = 1 markieren (1, b + m)
+			const highlightPos = toSVG(1, f(1));
+			svgContent += `<circle cx="${highlightPos.x}" cy="${highlightPos.y}" r="4" fill="#27ae60" stroke="#229954" stroke-width="2"/>`;
+			
+			// Ursprung
+			svgContent += `<circle cx="${centerX}" cy="${centerY}" r="3" fill="black"/>`;
+			
+			svgContent += `</svg>`;
+			
+			// Funktionsgleichung
+			const mStr = m === 1 ? 'x' : (m === -1 ? '-x' : `${m}x`);
+			const funcStr = b === 0
+				? `f(x) = ${mStr}`
+				: b > 0
+					? `f(x) = ${mStr} + ${b}`
+					: `f(x) = ${mStr} - ${Math.abs(b)}`;
+			
+			textDisplay = `Zeichne den Graphen und lies die Nullstelle ab: \\( ${funcStr} \\)`;
+			textPrint = `Zeichne und lies die Nullstelle ab: \\( \\; ${funcStr} \\)`;
+
+			const x0 = comma(xIntercept.toFixed(2));
+			s = `<div style="display:flex; justify-content: center; align-items:center; gap:20px;">
+				<div style="min-width:180px;">
+					<span>\\( ${funcStr} \\)</span><br><br>
+					<span>Nst. \\( \\; x_0 = ${x0} \\)</span>
+				</div>
+				<div>${svgContent}</div>
+			</div>`;
 			break;
 		}
 
