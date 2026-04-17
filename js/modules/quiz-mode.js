@@ -10,17 +10,25 @@ window.MTGQuizModeModule = {
                 return columns;
             }
 
-            const columnSize = Math.ceil(tasks.length / 3);
+            const total = tasks.length;
+            const firstColCount = Math.floor(total / 3);
+            const remaining = total - firstColCount;
+            const secondColCount = Math.ceil(remaining / 2);
+            const thirdColCount = remaining - secondColCount;
+            const counts = [firstColCount, secondColCount, thirdColCount];
 
+            let offset = 0;
             for (let columnIndex = 0; columnIndex < 3; columnIndex++) {
-                const start = columnIndex * columnSize;
-                const chunk = tasks.slice(start, start + columnSize);
+                const count = counts[columnIndex];
+                const chunk = tasks.slice(offset, offset + count);
 
                 columns[columnIndex] = chunk.map((task, index) => ({
                     task,
-                    number: start + index + 1,
+                    number: offset + index + 1,
                     key: `quiz-${columnIndex}-${index}`
                 }));
+
+                offset += count;
             }
 
             return columns;

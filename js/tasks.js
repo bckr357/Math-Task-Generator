@@ -2412,8 +2412,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			svgContent += `<line x1="${centerX}" y1="0" x2="${centerX}" y2="${svgHeight}" stroke="black" stroke-width="2"/>`;
 			svgContent += `<polygon points="${svgWidth - 10},${centerY - 6} ${svgWidth},${centerY} ${svgWidth - 10},${centerY + 6}" fill="black"/>`;
 			svgContent += `<polygon points="${centerX - 6},10 ${centerX},0 ${centerX + 6},10" fill="black"/>`;
-			svgContent += `<text x="${svgWidth - 16}" y="${centerY - 12}" text-anchor="end" font-size="14" fill="black">x</text>`;
-			svgContent += `<text x="${centerX + 10}" y="18" font-size="14" fill="black">y</text>`;
+			svgContent += `<text x="${svgWidth - 16}" y="${centerY + 16}" text-anchor="end" font-size="14" fill="black">x</text>`;
+			svgContent += `<text x="${centerX - 16}" y="18" text-anchor="end" font-size="14" fill="black">y</text>`;
 			
 			// Achsen-Beschriftungen
 			for (let i = -3; i <= 7; i++) {
@@ -2437,6 +2437,23 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			// y-Achsenabschnitt markieren
 			const yIntPos = toSVG(0, yIntercept);
 			svgContent += `<circle cx="${yIntPos.x}" cy="${yIntPos.y}" r="4" fill="#3498db" stroke="#2980b9" stroke-width="2"/>`;
+			
+			// Horizontale Strecke von (0,b) nach (1,b)
+			const rightFromYAxis = toSVG(1, yIntercept);
+			svgContent += `<line x1="${yIntPos.x}" y1="${yIntPos.y}" x2="${rightFromYAxis.x}" y2="${rightFromYAxis.y}" stroke="#2980b9" stroke-width="2"/>`;
+			svgContent += `<polygon points="${rightFromYAxis.x - 6},${rightFromYAxis.y - 4} ${rightFromYAxis.x},${rightFromYAxis.y} ${rightFromYAxis.x - 6},${rightFromYAxis.y + 4}" fill="#2980b9"/>`;
+			svgContent += `<text x="${(yIntPos.x + rightFromYAxis.x) / 2}" y="${yIntPos.y - 6}" text-anchor="middle" font-size="16" fill="#2980b9">1</text>`;
+			
+			// Vertikale Strecke von (1,b) nach (1,b+m)
+			const upFromPoint = toSVG(1, yIntercept + m);
+			svgContent += `<line x1="${rightFromYAxis.x}" y1="${rightFromYAxis.y}" x2="${upFromPoint.x}" y2="${upFromPoint.y}" stroke="#2980b9" stroke-width="2"/>`;
+			if (m >= 0) {
+				svgContent += `<polygon points="${upFromPoint.x - 4},${upFromPoint.y + 6} ${upFromPoint.x},${upFromPoint.y} ${upFromPoint.x + 4},${upFromPoint.y + 6}" fill="#2980b9"/>`;
+				svgContent += `<text x="${upFromPoint.x + 12}" y="${(rightFromYAxis.y + upFromPoint.y) / 2 + 6}" text-anchor="start" font-size="16" fill="#2980b9">${m}</text>`;
+			} else {
+				svgContent += `<polygon points="${upFromPoint.x - 4},${upFromPoint.y - 6} ${upFromPoint.x},${upFromPoint.y} ${upFromPoint.x + 4},${upFromPoint.y - 6}" fill="#2980b9"/>`;
+				svgContent += `<text x="${upFromPoint.x + 12}" y="${(rightFromYAxis.y + upFromPoint.y) / 2 + 6}" text-anchor="start" font-size="16" fill="#2980b9">${m}</text>`;
+			}
 			
 			// Punkt bei x = 1 markieren (1, b + m)
 			const highlightPos = toSVG(1, f(1));
