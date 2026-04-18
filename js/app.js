@@ -148,6 +148,292 @@ createApp({
             ? state.quizTaskWeights.value
             : state.taskWeights.value);
 
+        const builderDraftTask = ref(null);
+        const builderDraftType = ref('');
+        const builderReplaceIndex = ref(null);
+        const builderImportInput = ref(null);
+        const builderShowPreviewSolution = ref(false);
+        const builderShowTaskSolutions = ref(false);
+        const builderDragIndex = ref(null);
+        const builderEditingIndex = ref(null);
+        const builderEditTaskText = ref('');
+        const builderEditSolutionText = ref('');
+        const getBuilderTaskMarkup = (task, showSolution = false) => {
+            if (!task) {
+                return '';
+            }
+
+            if (showSolution) {
+                return task.solution ?? '';
+            }
+
+            return task.textPrint || task.textDisplay || '';
+        };
+
+        const builderDraftMarkup = computed(() => getBuilderTaskMarkup(builderDraftTask.value, builderShowPreviewSolution.value));
+        const builderReplaceTargetLabel = computed(() => {
+            const index = builderReplaceIndex.value;
+            if (!Number.isInteger(index) || index < 0 || index >= state.tasks.value.length) {
+                return '';
+            }
+
+            const task = state.tasks.value[index];
+            const typeKey = task?.type;
+            return typeLabels[typeKey] ?? typeKey ?? '';
+        });
+
+        const syncTaskCountFromTasks = () => {
+            state.taskCount.value = state.tasks.value.length;
+        };
+
+        const builderGenerateTaskPreview = async type => {
+            const task = taskGeneration.generateTaskByType(type, 'default');
+            if (!task) {
+                return;
+            }
+
+            builderDraftTask.value = task;
+            builderDraftType.value = type;
+            builderShowPreviewSolution.value = false;
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderTogglePreviewSolution = async () => {
+            builderShowPreviewSolution.value = !builderShowPreviewSolution.value;
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderToggleTaskSolutions = async () => {
+            builderShowTaskSolutions.value = !builderShowTaskSolutions.value;
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderAddDraftTask = async () => {
+            if (!builderDraftTask.value) {
+                return;
+            }
+
+            state.tasks.value.push({ ...builderDraftTask.value });
+            state.showWorksheetSolutions.value = false;
+            state.showSolutions.value = false;
+            syncTaskCountFromTasks();
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderRemoveTask = async index => {
+            if (!Number.isInteger(index) || index < 0 || index >= state.tasks.value.length) {
+                return;
+            }
+
+            state.tasks.value.splice(index, 1);
+
+            if (builderReplaceIndex.value === index) {
+                builderReplaceIndex.value = null;
+            } else if (Number.isInteger(builderReplaceIndex.value) && builderReplaceIndex.value > index) {
+                builderReplaceIndex.value -= 1;
+            }
+
+            syncTaskCountFromTasks();
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderClearTasks = () => {
+            state.tasks.value = [];
+            builderReplaceIndex.value = null;
+            builderEditingIndex.value = null;
+            builderDragIndex.value = null;
+            syncTaskCountFromTasks();
+        };
+
+        const builderStartReplaceTask = index => {
+            if (!Number.isInteger(index) || index < 0 || index >= state.tasks.value.length) {
+                return;
+            }
+
+            builderReplaceIndex.value = index;
+        };
+
+        const builderCancelReplaceTask = () => {
+            builderReplaceIndex.value = null;
+        };
+
+        const builderApplyDraftReplacement = async () => {
+            const index = builderReplaceIndex.value;
+            if (!builderDraftTask.value || !Number.isInteger(index) || index < 0 || index >= state.tasks.value.length) {
+                return;
+            }
+
+            state.tasks.value.splice(index, 1, { ...builderDraftTask.value });
+            builderReplaceIndex.value = null;
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderRerollTask = async (index, forcedType = null) => {
+            if (!Number.isInteger(index) || index < 0 || index >= state.tasks.value.length) {
+                return;
+            }
+
+            const currentType = forcedType || state.tasks.value[index]?.type;
+            if (!currentType) {
+                return;
+            }
+
+            const replacement = taskGeneration.generateTaskByType(currentType, 'default');
+            if (!replacement) {
+                return;
+            }
+
+            state.tasks.value.splice(index, 1, replacement);
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const openBuilderImportDialog = () => {
+            builderImportInput.value?.click();
+        };
+
+        const importBuilderJSON = async event => {
+            const file = event.target.files?.[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async ev => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    const loaded = taskGeneration.loadTasksFromJSON(data);
+                    if (!loaded) {
+                        window.alert('Die JSON-Datei enthält keine gültigen Aufgaben.');
+                        return;
+                    }
+
+                    state.currentView.value = 'worksheet-builder';
+                    state.isSettingsSidebarOpen.value = false;
+                    builderReplaceIndex.value = null;
+
+                    await nextTick();
+                    await typesetMathJax();
+                } catch (error) {
+                    window.alert('Fehler beim Laden der JSON-Datei. Bitte prüfe das Format.');
+                } finally {
+                    if (event.target) {
+                        event.target.value = '';
+                    }
+                }
+            };
+
+            reader.readAsText(file);
+        };
+
+        const exportBuilderJSON = () => {
+            const taskLength = state.tasks.value.length;
+            taskGeneration.downloadJSONFile(
+                `arbeitsblatt_individuell_${Math.max(1, taskLength)}.json`,
+                taskGeneration.getTaskExportData()
+            );
+        };
+
+        const builderBeginInlineEdit = index => {
+            if (!Number.isInteger(index) || index < 0 || index >= state.tasks.value.length) {
+                return;
+            }
+
+            const task = state.tasks.value[index];
+            builderEditingIndex.value = index;
+            builderEditTaskText.value = task.textPrint || task.textDisplay || '';
+            builderEditSolutionText.value = task.solution || '';
+        };
+
+        const builderCancelInlineEdit = () => {
+            builderEditingIndex.value = null;
+            builderEditTaskText.value = '';
+            builderEditSolutionText.value = '';
+        };
+
+        const builderSaveInlineEdit = async () => {
+            const index = builderEditingIndex.value;
+            if (!Number.isInteger(index) || index < 0 || index >= state.tasks.value.length) {
+                return;
+            }
+
+            const updatedTask = {
+                ...state.tasks.value[index],
+                textDisplay: builderEditTaskText.value,
+                textPrint: builderEditTaskText.value,
+                solution: builderEditSolutionText.value
+            };
+
+            state.tasks.value.splice(index, 1, updatedTask);
+            builderCancelInlineEdit();
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderHandleDragStart = index => {
+            builderDragIndex.value = index;
+        };
+
+        const builderHandleDragOver = event => {
+            event.preventDefault();
+        };
+
+        const builderHandleDrop = async targetIndex => {
+            const sourceIndex = builderDragIndex.value;
+            if (!Number.isInteger(sourceIndex) || !Number.isInteger(targetIndex) || sourceIndex === targetIndex) {
+                builderDragIndex.value = null;
+                return;
+            }
+
+            const nextTasks = [...state.tasks.value];
+            const [movedTask] = nextTasks.splice(sourceIndex, 1);
+            nextTasks.splice(targetIndex, 0, movedTask);
+            state.tasks.value = nextTasks;
+
+            if (builderEditingIndex.value === sourceIndex) {
+                builderEditingIndex.value = targetIndex;
+            } else if (Number.isInteger(builderEditingIndex.value)) {
+                if (sourceIndex < builderEditingIndex.value && targetIndex >= builderEditingIndex.value) {
+                    builderEditingIndex.value -= 1;
+                } else if (sourceIndex > builderEditingIndex.value && targetIndex <= builderEditingIndex.value) {
+                    builderEditingIndex.value += 1;
+                }
+            }
+
+            if (builderReplaceIndex.value === sourceIndex) {
+                builderReplaceIndex.value = targetIndex;
+            } else if (Number.isInteger(builderReplaceIndex.value)) {
+                if (sourceIndex < builderReplaceIndex.value && targetIndex >= builderReplaceIndex.value) {
+                    builderReplaceIndex.value -= 1;
+                } else if (sourceIndex > builderReplaceIndex.value && targetIndex <= builderReplaceIndex.value) {
+                    builderReplaceIndex.value += 1;
+                }
+            }
+
+            builderDragIndex.value = null;
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderHandleDragEnd = () => {
+            builderDragIndex.value = null;
+        };
+
         const navigation = window.MTGNavigationModule.createNavigationModule({
             state,
             nextTick,
@@ -198,6 +484,12 @@ createApp({
         const refreshCurrentView = async () => {
             if (state.currentView.value === 'worksheet') {
                 await worksheetMode.generateWorksheet();
+                return;
+            }
+
+            if (state.currentView.value === 'worksheet-builder') {
+                await nextTick();
+                await typesetMathJax();
                 return;
             }
 
@@ -260,6 +552,12 @@ createApp({
 
         watch(() => state.currentView.value, view => {
             syncUrlWithView(view);
+
+            if (view !== 'worksheet-builder') {
+                builderReplaceIndex.value = null;
+                builderEditingIndex.value = null;
+                builderDragIndex.value = null;
+            }
         }, { immediate: true });
 
         watch(() => state.worksheetA5Pages.value, async () => {
@@ -308,6 +606,39 @@ createApp({
             randomizeTypeSelection,
             generateRandomWorksheet,
             refreshCurrentView,
+            builderDraftTask,
+            builderDraftType,
+            builderDraftMarkup,
+            builderReplaceIndex,
+            builderReplaceTargetLabel,
+            builderShowPreviewSolution,
+            builderShowTaskSolutions,
+            builderDragIndex,
+            builderEditingIndex,
+            builderEditTaskText,
+            builderEditSolutionText,
+            getBuilderTaskMarkup,
+            builderGenerateTaskPreview,
+            builderTogglePreviewSolution,
+            builderToggleTaskSolutions,
+            builderAddDraftTask,
+            builderRemoveTask,
+            builderClearTasks,
+            builderStartReplaceTask,
+            builderCancelReplaceTask,
+            builderApplyDraftReplacement,
+            builderRerollTask,
+            builderBeginInlineEdit,
+            builderCancelInlineEdit,
+            builderSaveInlineEdit,
+            builderHandleDragStart,
+            builderHandleDragOver,
+            builderHandleDrop,
+            builderHandleDragEnd,
+            openBuilderImportDialog,
+            importBuilderJSON,
+            exportBuilderJSON,
+            builderImportInput,
             openSettingsSidebar: navigation.openSettingsSidebar,
             closeSettingsSidebar: navigation.closeSettingsSidebar,
             toggleSettingsSidebar: navigation.toggleSettingsSidebar,
@@ -325,12 +656,10 @@ createApp({
             generateWorksheet: worksheetMode.generateWorksheet,
             toggleWorksheetSolutions: worksheetMode.toggleWorksheetSolutions,
             toggleWorksheetLayoutMode: worksheetMode.toggleWorksheetLayoutMode,
-            printWorksheet: worksheetMode.printWorksheet,
             exportWorksheetJSON: worksheetMode.exportWorksheetJSON,
             importWorksheetJSON: worksheetMode.importWorksheetJSON,
             openWorksheetImportDialog: worksheetMode.openWorksheetImportDialog,
             worksheetImportInput: worksheetMode.worksheetImportInput,
-            downloadWorksheetHTML: worksheetMode.downloadWorksheetHTML,
             showQuizSolutions: quizMode.showQuizSolutions,
             quizColumns: quizMode.quizColumns,
             quizNumber: state.quizNumber,

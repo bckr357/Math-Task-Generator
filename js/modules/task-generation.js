@@ -232,6 +232,23 @@ window.MTGTaskGenerationModule = {
             };
         };
 
+        const generateTaskByType = (type, scope = 'default', options = {}) => {
+            if (typeof type !== 'string' || type.trim() === '') {
+                return null;
+            }
+
+            const normalizedType = type.trim();
+            const config = getScopeConfig(scope);
+            const generated = createTask(normalizedType, config.mentalMathMode, getNumericGrade(), options);
+
+            return {
+                type: normalizedType,
+                textDisplay: generated.textDisplay ?? '',
+                textPrint: generated.textPrint ?? '',
+                solution: generated.solution
+            };
+        };
+
         const generateSingleTrainingTask = () => generateSingleTask('default', { training: true });
         const generateSingleQuizTask = () => generateSingleTask('quiz', { training: true, quiz: true });
 
@@ -240,6 +257,7 @@ window.MTGTaskGenerationModule = {
             downloadJSONFile,
             loadTasksFromJSON,
             buildTasks,
+            generateTaskByType,
             generateSingleTrainingTask,
             generateSingleQuizTask
         };

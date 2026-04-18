@@ -33,9 +33,9 @@
 
 <div id="app">
 
-    <div v-if="currentView !== 'home'" :class="['settings-drawer-overlay', { 'is-open': isSettingsSidebarOpen }]" @click="closeSettingsSidebar"></div>
+    <div v-if="currentView !== 'home' && currentView !== 'worksheet-builder'" :class="['settings-drawer-overlay', { 'is-open': isSettingsSidebarOpen }]" @click="closeSettingsSidebar"></div>
 
-    <aside v-if="currentView !== 'home'" :class="['settings-drawer', { 'is-open': isSettingsSidebarOpen, 'mode-training': currentView === 'training', 'mode-quiz': currentView === 'quiz' }]">
+    <aside v-if="currentView !== 'home' && currentView !== 'worksheet-builder'" :class="['settings-drawer', { 'is-open': isSettingsSidebarOpen, 'mode-training': currentView === 'training', 'mode-quiz': currentView === 'quiz' }]">
         <div class="settings-drawer-header">
             <div class="settings-drawer-heading">
                 <h2 class="settings-drawer-title">Aufgabenauswahl</h2>
@@ -97,6 +97,12 @@
                 <span class="mode-card-kicker">Druckansicht</span>
                 <strong>Arbeitsblatt</strong>
                 <span>Zweiseitiges Blatt, Lösungen optional groß für die Tafel.</span>
+            </button>
+
+            <button @click="switchView('worksheet-builder')" class="mode-card mode-card--builder">
+                <span class="mode-card-kicker">Baustein-Modus</span>
+                <strong>Individuelles Arbeitsblatt</strong>
+                <span>Stelle Aufgaben einzeln zusammen, importiere JSON-Sets und bearbeite jede Aufgabe separat.</span>
             </button>
 
             <button @click="switchView('presentation')" class="mode-card mode-card--presentation">
@@ -167,8 +173,7 @@
                 <button @click="generateWorksheet" class="btn btn--primary">Erzeugen 🎲</button>
                 <button @click="openWorksheetImportDialog" class="btn btn--export">Import</button>
                 <button @click="exportWorksheetJSON" class="btn btn--export">JSON</button>
-                <button @click="downloadWorksheetHTML" class="btn btn--export">Speichern 💾</button>
-                <button @click="printWorksheet" class="btn btn--primary">Drucken</button>
+                <button @click="switchView('worksheet-builder')" class="btn btn--primary">Zurück zum Individuell-Modus</button>
                 <input type="file" ref="worksheetImportInput" @change="importWorksheetJSON" accept=".json" style="display:none">
             </div>
         </div>
@@ -280,6 +285,144 @@
                 </div>
             </template>
         </div>
+    </div>
+
+    <div v-else-if="currentView === 'worksheet-builder'" class="worksheet-builder-view">
+        <aside class="builder-sidebar">
+            <div class="builder-sidebar-top">
+                <div class="builder-sidebar-controls">
+                    <label class="settings-checkbox-option builder-inline-control"><input type="checkbox" v-model="activeMentalMathMode" class="settings-checkbox"><span>Easy-Mode</span></label>
+                    <label class="settings-topbar-label builder-inline-control">
+                        <span>Klasse</span>
+                        <select v-model="selectedGrade" class="settings-input settings-grade-input">
+                            <option v-for="grade in gradeOptions" :key="'builder-grade-'+grade" :value="grade">{{ grade }}</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="builder-draft-card builder-draft-card--large" v-if="builderDraftTask">
+                    <div class="builder-draft-header">
+                        <strong>{{ typeLabels[builderDraftTask.type] ?? builderDraftTask.type }}</strong>
+                        <span v-if="builderReplaceIndex !== null">Ersetzt Aufgabe {{ builderReplaceIndex + 1 }}</span>
+                    </div>
+                    <div :class="['builder-draft-math', { 'is-solution': builderShowPreviewSolution }]" v-html="builderDraftMarkup"></div>
+                    <div class="builder-draft-actions">
+                        <button @click="builderTogglePreviewSolution" class="btn btn--toggle settings-compact-btn">
+                            {{ builderShowPreviewSolution ? 'Aufgabe' : 'Lösung' }}
+                        </button>
+                        <button @click="builderGenerateTaskPreview(builderDraftType)" class="btn btn--export settings-compact-btn">Neu würfeln</button>
+                        <button @click="builderAddDraftTask" class="btn btn--primary settings-compact-btn">Hinzufügen</button>
+                        <button
+                            v-if="builderReplaceIndex !== null"
+                            @click="builderApplyDraftReplacement"
+                            class="btn btn--primary settings-compact-btn"
+                        >Ersetzen</button>
+                        <button
+                            v-if="builderReplaceIndex !== null"
+                            @click="builderCancelReplaceTask"
+                            class="btn btn--back settings-compact-btn"
+                        >Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="type-grid settings-type-grid builder-type-grid">
+                <button
+                    v-for="([key, label]) in activeVisibleTypeEntries"
+                    :key="'builder-type-'+key"
+                    @click="builderGenerateTaskPreview(key)"
+                    class="builder-type-btn"
+                    type="button"
+                >
+                    {{ label }}
+                </button>
+            </div>
+        </aside>
+
+        <section class="builder-main">
+            <div class="worksheet-toolbar no-print builder-toolbar">
+                <div class="toolbar-main-controls">
+                    <h3 class="settings-drawer-section-title">Modul:</h3>
+                    <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
+                        <option v-for="tab in viewTabs" :key="'builder-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
+                    </select>
+                </div>
+
+                <div class="worksheet-toolbar-title builder-toolbar-title">
+                    <strong>Aufgaben im Blatt: {{ tasks.length }}</strong>
+                    <span v-if="builderReplaceIndex !== null" class="builder-replace-hint">
+                        Ersetzen aktiv für Aufgabe {{ builderReplaceIndex + 1 }}: {{ builderReplaceTargetLabel }}
+                    </span>
+                </div>
+
+                <div class="worksheet-toolbar-actions">
+                    <button @click="builderToggleTaskSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
+                        {{ builderShowTaskSolutions ? 'Aufgaben' : 'Lösungen' }}
+                    </button>
+                    <button @click="openBuilderImportDialog" class="btn btn--export">Import</button>
+                    <button @click="exportBuilderJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">JSON</button>
+                    <button @click="builderClearTasks" class="btn btn--back" :disabled="!hasGeneratedTasks">Leeren</button>
+                    <button @click="switchView('worksheet')" class="btn btn--primary" :disabled="!hasGeneratedTasks">Arbeitsblatt öffnen</button>
+                    <input type="file" ref="builderImportInput" @change="importBuilderJSON" accept=".json" style="display:none">
+                </div>
+            </div>
+
+            <div v-if="!hasGeneratedTasks" class="empty-state builder-empty-state">
+                <h2>Noch keine Aufgaben ausgewählt</h2>
+                <p>Klicke links auf einen Aufgabentyp, prüfe die Vorschau und füge die Aufgabe dann deiner Liste hinzu. JSON-Sets kannst du jederzeit importieren und danach einzeln bearbeiten.</p>
+                <div class="empty-state-actions">
+                    <button @click="openBuilderImportDialog" class="btn btn--primary">JSON importieren</button>
+                </div>
+            </div>
+
+            <div v-else class="builder-task-sheet">
+                <div class="builder-task-list">
+                    <article
+                        v-for="(task, index) in tasks"
+                        :key="'builder-task-'+index"
+                        :class="['builder-task-item', { 'is-replace-target': builderReplaceIndex === index, 'is-dragging': builderDragIndex === index }]"
+                        draggable="true"
+                        @dragstart="builderHandleDragStart(index)"
+                        @dragover="builderHandleDragOver($event)"
+                        @drop="builderHandleDrop(index)"
+                        @dragend="builderHandleDragEnd"
+                    >
+                        <div class="builder-task-meta">
+                            <span class="builder-task-number">{{ index + 1 }})</span>
+                            <strong>{{ typeLabels[task.type] ?? task.type }}</strong>
+                            <span class="builder-drag-hint">ziehen zum Sortieren</span>
+                        </div>
+
+                        <template v-if="builderEditingIndex === index">
+                            <div class="builder-inline-edit-grid">
+                                <label class="builder-edit-label">
+                                    <span>Aufgabe</span>
+                                    <textarea v-model="builderEditTaskText" class="builder-edit-textarea" rows="6"></textarea>
+                                </label>
+                                <label class="builder-edit-label">
+                                    <span>Lösung</span>
+                                    <textarea v-model="builderEditSolutionText" class="builder-edit-textarea" rows="6"></textarea>
+                                </label>
+                            </div>
+                            <div class="builder-task-actions">
+                                <button @click="builderSaveInlineEdit" class="btn btn--primary settings-compact-btn">Speichern</button>
+                                <button @click="builderCancelInlineEdit" class="btn btn--back settings-compact-btn">Abbrechen</button>
+                            </div>
+                        </template>
+
+                        <template v-else>
+                            <div :class="['builder-task-math', { 'is-solution': builderShowTaskSolutions }]" v-html="getBuilderTaskMarkup(task, builderShowTaskSolutions)"></div>
+                            <div class="builder-task-actions">
+                                <button @click="builderRerollTask(index)" class="btn btn--export settings-compact-btn">Neu</button>
+                                <button @click="builderBeginInlineEdit(index)" class="btn btn--export settings-compact-btn">Bearbeiten</button>
+                                <button @click="builderStartReplaceTask(index)" class="btn btn--back settings-compact-btn">Mit anderem Typ ersetzen</button>
+                                <button @click="builderRemoveTask(index)" class="btn btn--toggle settings-compact-btn">Entfernen</button>
+                            </div>
+                        </template>
+                    </article>
+                </div>
+            </div>
+        </section>
     </div>
 
     <div v-else-if="currentView === 'training'" class="training-view">

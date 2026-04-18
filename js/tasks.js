@@ -2382,9 +2382,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			const xIntercept = b !== 0 ? -b / m : 0; // Nullstelle
 			
 			// SVG-Grafik für Koordinatensystem
-			const svgWidth = 340;
+			const svgWidth = 360;
 			const svgHeight = 300;
-			const centerX = 100;
+			const centerX = svgWidth / 2;
 			const centerY = svgHeight / 2;
 			const scale = 30; // Pixel pro Einheit
 			
@@ -2397,35 +2397,55 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			// Erstelle SVG
 			let svgContent = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid #ccc; background: white;">`;
 			
-			// Gitter
-			for (let i = -3; i <= 8; i++) {
-				const posX = toSVG(i, 0);
-				svgContent += `<line x1="${posX.x}" y1="${centerY - 150}" x2="${posX.x}" y2="${centerY + 150}" stroke="#ccc" stroke-width="0.5"/>`;
+			// Gitter: kariertes Papier mit 2 Kästchen pro Einheit
+			for (let i = -12; i <= 12; i++) {
+				const posX = toSVG(i / 2, 0);
+				svgContent += `<line x1="${posX.x}" y1="${centerY - 150}" x2="${posX.x}" y2="${centerY + 150}" stroke="${i % 2 === 0 ? '#bbb' : '#bbb'}" stroke-width="0.5"/>`;
 			}
-			for (let i = -5; i <= 5; i++) {
-				const posY = toSVG(0, i);
-				svgContent += `<line x1="0" y1="${posY.y}" x2="${svgWidth}" y2="${posY.y}" stroke="#ccc" stroke-width="0.5"/>`;
+			for (let i = -10; i <= 10; i++) {
+				const posY = toSVG(0, i / 2);
+				svgContent += `<line x1="0" y1="${posY.y}" x2="${svgWidth}" y2="${posY.y}" stroke="${i % 2 === 0 ? '#bbb' : '#bbb'}" stroke-width="0.5"/>`;
 			}
 			
 			// Achsen
+			// Zeichne die x-Achse als horizontale Linie
 			svgContent += `<line x1="0" y1="${centerY}" x2="${svgWidth}" y2="${centerY}" stroke="black" stroke-width="2"/>`;
+			// Zeichne die y-Achse als vertikale Linie
 			svgContent += `<line x1="${centerX}" y1="0" x2="${centerX}" y2="${svgHeight}" stroke="black" stroke-width="2"/>`;
+			// Pfeilspitze für die x-Achse nach rechts
 			svgContent += `<polygon points="${svgWidth - 10},${centerY - 6} ${svgWidth},${centerY} ${svgWidth - 10},${centerY + 6}" fill="black"/>`;
+			// Pfeilspitze für die y-Achse nach oben
 			svgContent += `<polygon points="${centerX - 6},10 ${centerX},0 ${centerX + 6},10" fill="black"/>`;
-			svgContent += `<text x="${svgWidth - 16}" y="${centerY + 16}" text-anchor="end" font-size="14" fill="black">x</text>`;
-			svgContent += `<text x="${centerX - 16}" y="18" text-anchor="end" font-size="14" fill="black">y</text>`;
+			// Beschriftung für die x-Achse im Quadranten IV
+			svgContent += `<text x="${svgWidth - 5}" y="${centerY + 16}" text-anchor="end" font-size="14" fill="black">x</text>`;
+			// Beschriftung für die y-Achse im Quadranten II
+			svgContent += `<text x="${centerX - 10}" y="10" text-anchor="end" font-size="14" fill="black">y</text>`;
 			
-			// Achsen-Beschriftungen
-			for (let i = -3; i <= 7; i++) {
+			// Achsenticks für ganze Zahlen auf x- und y-Achse
+			for (let i = -5; i <= 5; i++) {
 				if (i !== 0) {
 					const xPos = toSVG(i, 0);
-					svgContent += `<text x="${xPos.x}" y="${centerY + 15}" text-anchor="middle" font-size="10" fill="black">${i}</text>`;
+					svgContent += `<line x1="${xPos.x}" y1="${centerY - 4}" x2="${xPos.x}" y2="${centerY + 4}" stroke="black" stroke-width="1"/>`;
 				}
 			}
 			for (let i = -4; i <= 4; i++) {
 				if (i !== 0) {
 					const yPos = toSVG(0, i);
-					svgContent += `<text x="${centerX - 15}" y="${yPos.y + 4}" text-anchor="end" font-size="10" fill="black">${i}</text>`;
+					svgContent += `<line x1="${centerX - 4}" y1="${yPos.y}" x2="${centerX + 4}" y2="${yPos.y}" stroke="black" stroke-width="1"/>`;
+				}
+			}
+			
+			// Achsen-Beschriftungen (ganze Zahlen)
+			for (let i = -5; i <= 5; i++) {
+				if (i !== 0) {
+					const xPos = toSVG(i, 0);
+					svgContent += `<text x="${xPos.x}" y="${centerY + 15}" text-anchor="middle" font-size="11" fill="black">${i}</text>`;
+				}
+			}
+			for (let i = -4; i <= 4; i++) {
+				if (i !== 0) {
+					const yPos = toSVG(0, i);
+					svgContent += `<text x="${centerX - 15}" y="${yPos.y + 4}" text-anchor="end" font-size="11" fill="black">${i}</text>`;
 				}
 			}
 			
@@ -2436,7 +2456,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			
 			// y-Achsenabschnitt markieren
 			const yIntPos = toSVG(0, yIntercept);
-			svgContent += `<circle cx="${yIntPos.x}" cy="${yIntPos.y}" r="4" fill="#3498db" stroke="#2980b9" stroke-width="2"/>`;
+			svgContent += `<circle cx="${yIntPos.x}" cy="${yIntPos.y}" r="3" fill="#3498db" stroke="#2980b9" stroke-width="2"/>`;
 			
 			// Horizontale Strecke von (0,b) nach (1,b)
 			const rightFromYAxis = toSVG(1, yIntercept);
@@ -2457,7 +2477,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			
 			// Punkt bei x = 1 markieren (1, b + m)
 			const highlightPos = toSVG(1, f(1));
-			svgContent += `<circle cx="${highlightPos.x}" cy="${highlightPos.y}" r="4" fill="#27ae60" stroke="#229954" stroke-width="2"/>`;
+			svgContent += `<circle cx="${highlightPos.x}" cy="${highlightPos.y}" r="3" fill="#27ae60" stroke="#229954" stroke-width="2"/>`;
 			
 			// Ursprung
 			svgContent += `<circle cx="${centerX}" cy="${centerY}" r="3" fill="black"/>`;

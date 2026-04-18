@@ -291,14 +291,13 @@ createApp({
             }
 
             const firstIdx = Math.floor(Math.random() * total);
-            currentTaskIndex.value = firstIdx;
-            currentTask.value = importedTasks.value[firstIdx];
-            history.value = [firstIdx];
-            historyPointer.value = 0;
-
-            taskPool.value = Array.from({ length: Math.max(0, total - 1) }, (_, i) =>
-                (firstIdx + 1 + i) % total
+            taskPool.value = Array.from({ length: total }, (_, i) =>
+                (firstIdx + i) % total
             );
+            history.value = [];
+            historyPointer.value = -1;
+            currentTaskIndex.value = null;
+            currentTask.value = null;
 
             updatePreview();
         };

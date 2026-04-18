@@ -67,6 +67,7 @@ window.MTGStateModule = {
         const viewTabs = [
             { key: 'home', label: 'Start' },
             { key: 'worksheet', label: 'Arbeitsblatt' },
+            { key: 'worksheet-builder', label: 'Individuell' },
             { key: 'presentation', label: 'Präsentation' },
             { key: 'training', label: 'Training' },
             { key: 'quiz', label: 'Quiz generieren' }
