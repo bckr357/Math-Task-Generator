@@ -1,30 +1,38 @@
 # Math-Task-Generator
 
 Ein leichtgewichtiges, client-seitiges Tool zum Erzeugen von Mathematik-Aufgaben (Training, Quiz und Arbeitsblätter).
+https://bckr357.github.io/Math-Task-Generator/
 
-Kurzbeschreibung
-- Generiert Aufgaben aus vielen Themenbereichen (Arithmetik, Brüche, Geometrie, Wahrscheinlichkeiten, Funktionen u.v.m.).
-- Ausgabe geeignet für Darstellung im Browser (LaTeX-Formeln, einfache SVG-Grafiken, Druckansicht).
-- Hauptdateien: `index.html`, `js/` (insbesondere `tasks.js`, `app.js`, `utils.js`).
+## Features
+- Generiert Aufgaben aus vielen Themenbereichen: Arithmetik, Brüche, Geometrie, Wahrscheinlichkeiten, Funktionen, Statistik u.v.m.
+- Ausgabe im Browser mit LaTeX-Formeln und einfachen SVG-Grafiken.
+- Druckfreundliche Darstellung für Arbeitsblätter.
+- Konfigurierbare Aufgabentypen und Klassenstufen (siehe `js/tasks.js`).
 
-Schnellstart
-1. Repository klonen oder herunterladen.
-2. Im Browser `index.html` öffnen.
-3. Aufgaben über die Benutzeroberfläche erzeugen und ggf. drucken.
+## Schnellstart
+1. Repository klonen oder als ZIP herunterladen.
+2. Datei `index.html` im Browser öffnen.
+3. Aufgaben über die UI generieren; Druckansicht zum Ausdrucken verwenden.
 
-Entwicklung
-- JavaScript-Module befinden sich im Ordner `js/modules/`.
-- Für Änderungen: Editor öffnen, lokal testen, Änderungen committen.
+## Dateien (wichtig)
+- `index.html` — Hauptseite / UI
+- `js/` — JavaScript-Quellcode
+	- `js/tasks.js` — Aufgaben-Generator (Kernlogik)
+	- `js/app.js` — App-Initialisierung und UI-Integration
+	- `js/utils.js` — Hilfsfunktionen
+- `css/` — Stile
+- `img/` — Bilder und Icons
 
-Lizenz
-Dieses Projekt ist unter der MIT License lizenziert. Siehe die Datei LICENSE für den vollständigen Lizenztext.
+## Entwicklung
+- Lokales Editieren: Änderungen im Projektordner vornehmen und `index.html` im Browser neu laden.
+- Tests: keine speziellen Test-Skripte vorhanden; einfache manuelle Tests im Browser.
+- Beiträge: Fork → Branch → Pull Request.
 
-Wenn du noch keine `LICENSE`-Datei im Repository hast, kannst du folgende kurze Mitteilung verwenden und eine `LICENSE`-Datei mit dem Standard-MIT-Text hinzufügen:
+## Lizenz
+Dieses Projekt ist lizenziert unter der MIT License. Siehe die Datei [LICENSE](LICENSE) für den vollständigen Lizenztext.
 
-"Dieses Projekt ist lizenziert unter der MIT License — siehe LICENSE-Datei."
+Kurzfassung: Du darfst das Projekt benutzen, kopieren, ändern und weiterverbreiten. Der obenstehende Urheberrechtshinweis und die Lizenz müssen in Kopien des Projekts enthalten bleiben.
 
-Mitwirken
-- Beiträge sind willkommen. Bitte Issues erstellen oder Pull Requests senden.
-
-Kontakt
-- Projekt: Math-Task-Generator
+## Mitwirken
+- Issues erstellen für Bugs oder Feature-Requests.
+- Pull Requests willkommen — bitte beschreibe Änderungen im PR-Text.
