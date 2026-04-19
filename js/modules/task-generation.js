@@ -58,11 +58,178 @@ window.MTGTaskGenerationModule = {
             return true;
         };
 
-        const downloadJSONFile = (filename, data) => {
+        const FILE_HANDLE_DB = 'mtg-file-handles';
+        const FILE_HANDLE_STORE = 'handles';
+        const JSON_EXPORT_HANDLE_KEY = 'json-export-handle';
+
+        const openHandleDB = () => new Promise((resolve, reject) => {
+            if (!window.indexedDB) {
+                resolve(null);
+                return;
+            }
+
+            const request = indexedDB.open(FILE_HANDLE_DB, 1);
+            request.onupgradeneeded = event => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(FILE_HANDLE_STORE)) {
+                    db.createObjectStore(FILE_HANDLE_STORE);
+                }
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => resolve(null);
+        });
+
+        const getSavedFileHandle = async () => {
+            const db = await openHandleDB();
+            if (!db) return null;
+
+            return new Promise(resolve => {
+                const tx = db.transaction(FILE_HANDLE_STORE, 'readonly');
+                const store = tx.objectStore(FILE_HANDLE_STORE);
+                const getReq = store.get(JSON_EXPORT_HANDLE_KEY);
+                getReq.onsuccess = () => {
+                    resolve(getReq.result ?? null);
+                    db.close();
+                };
+                getReq.onerror = () => {
+                    resolve(null);
+                    db.close();
+                };
+            });
+        };
+
+        const saveFileHandle = async handle => {
+            const db = await openHandleDB();
+            if (!db) return;
+
+            return new Promise(resolve => {
+                const tx = db.transaction(FILE_HANDLE_STORE, 'readwrite');
+                const store = tx.objectStore(FILE_HANDLE_STORE);
+                const putReq = store.put(handle, JSON_EXPORT_HANDLE_KEY);
+                putReq.onsuccess = () => {
+                    resolve();
+                    db.close();
+                };
+                putReq.onerror = () => {
+                    resolve();
+                    db.close();
+                };
+            });
+        };
+
+        const verifyPermission = async (handle, mode = 'readwrite') => {
+            if (!handle || typeof handle.queryPermission !== 'function') {
+                return false;
+            }
+
+            const permission = await handle.queryPermission({ mode });
+            if (permission === 'granted') return true;
+            const request = await handle.requestPermission({ mode });
+            return request === 'granted';
+        };
+
+        const downloadJSONFile = async (filename, data) => {
             const dataStr = JSON.stringify(data, null, 2);
+
+            if (window.showSaveFilePicker) {
+                let handle = await getSavedFileHandle();
+                let options = {
+                    suggestedName: filename,
+                    types: [{
+                        description: 'JSON Datei',
+                        accept: { 'application/json': ['.json'] }
+                    }]
+                };
+
+                if (handle) {
+                    options.startIn = handle;
+                }
+
+                try {
+                    handle = await window.showSaveFilePicker(options);
+                } catch (error) {
+                    if (error && error.name === 'AbortError') {
+                        return;
+                    }
+
+                    if (options.startIn) {
+                        delete options.startIn;
+                        try {
+                            handle = await window.showSaveFilePicker(options);
+                        } catch (retryError) {
+                            if (retryError && retryError.name === 'AbortError') {
+                                return;
+                            }
+
+                            if (handle && handle.name) {
+                                try {
+                                    if (await verifyPermission(handle)) {
+                                        const writable = await handle.createWritable();
+                                        await writable.write(dataStr);
+                                        await writable.close();
+                                        await saveFileHandle(handle);
+                                        return;
+                                    }
+                                } catch (innerError) {
+                                    // ignore and fallback
+                                }
+                            }
+
+                            const blob = new Blob([dataStr], { type: 'application/json' });
+                            const url = URL.createObjectURL(blob);
+                            const anchor = document.createElement('a');
+                            anchor.href = url;
+                            anchor.download = filename;
+                            anchor.click();
+                            URL.revokeObjectURL(url);
+                            return;
+                        }
+                    } else {
+                        if (handle && handle.name) {
+                            try {
+                                if (await verifyPermission(handle)) {
+                                    const writable = await handle.createWritable();
+                                    await writable.write(dataStr);
+                                    await writable.close();
+                                    await saveFileHandle(handle);
+                                    return;
+                                }
+                            } catch (innerError) {
+                                // ignore and fallback
+                            }
+                        }
+
+                        const blob = new Blob([dataStr], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const anchor = document.createElement('a');
+                        anchor.href = url;
+                        anchor.download = filename;
+                        anchor.click();
+                        URL.revokeObjectURL(url);
+                        return;
+                    }
+                }
+
+                try {
+                    const writable = await handle.createWritable();
+                    await writable.write(dataStr);
+                    await writable.close();
+                    await saveFileHandle(handle);
+                    return;
+                } catch (error) {
+                    const blob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const anchor = document.createElement('a');
+                    anchor.href = url;
+                    anchor.download = filename;
+                    anchor.click();
+                    URL.revokeObjectURL(url);
+                }
+                return;
+            }
+
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-
             const anchor = document.createElement('a');
             anchor.href = url;
             anchor.download = filename;

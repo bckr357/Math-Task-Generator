@@ -168,10 +168,10 @@ const typeDefinitions = [
 	// Algebra / Terme / Gleichungen
 	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
 	['word_terms', 'Wortterme', 'Wortterme in mathematische Symbole übersetzen und berechnen'],
-	['equations', 'Gleichungen ax+b = c', 'Lineare Gleichung der Form ax + b = c lösen'],
-	['equations_adv', 'Gleichungen ax+b = cx+d', 'Lineare Gleichung der Form ax + b = cx + d lösen'],
-	['equations_lin', 'Gleichungen nach y umstellen', 'Lineare Gleichungen nach y umstellen und lösen'],
-	['formel_umstellen', 'Formel umstellen', 'Formeln nach einer anderen Variablen umstellen'],
+	['equations', 'lin. Gl. ax+b = c', 'Lineare Gleichung der Form ax + b = c lösen'],
+	['equations_adv', 'lin. Gl. ax+b = cx+d', 'Lineare Gleichung der Form ax + b = cx + d lösen'],
+	['equations_lin', 'lin. Gl. umstellen', 'Lineare Gleichungen nach y umstellen'],
+	['formel_umstellen', 'Formeln umstellen', 'Formeln nach einer anderen Variablen umstellen'],
 
 	// Geometrie
 	['geometry', 'A und u ebener Figuren', 'Flächeninhalte und Umfänge berechnen'],
@@ -362,7 +362,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				[`${clueRowIndex}-${hiddenColIndex}`]: true
 			};
 
-			const opSymbol = '-';
+			const opSymbol = '&#8210';
 			textDisplay = buildOpTableHTML({
 				colHeaders,
 				rowHeaders,
@@ -748,7 +748,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			const op = isAdd ? '+' : '-';
 			const finalZ = isAdd ? ez1 + ez2 : ez1 - ez2;
 
-			textDisplay = `\\[ \\frac{${z1}}{${n1}} ${op} \\frac{${z2}}{${n2}} = \\]`;
+			textDisplay = `Berechne: \\( \\quad \\dfrac{${z1}}{${n1}} ${op} \\dfrac{${z2}}{${n2}} = \\)`;
 
 			// Dynamischer Lösungsweg
 			let step1 = "";
@@ -781,11 +781,11 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						N1 = rnd(2, 9);
 						n = rnd(2, 9);
 					} else {
-						Z1 = rnd(2, 13);
-						N1 = rnd(2, 13);
+						Z1 = rnd(2, 15);
+						N1 = rnd(2, 15);
 						n = rnd(2, 13);
 					}
-				} while (getGcd(Z1, N1) > 1 || Z1 === N1);
+				} while (getGcd(Z1, N1) > 1 || getGcd(N1, n) > 1 || getGcd(Z1, n) > 1);
 
 				const op = isMult ? '\\cdot' : ':';
 				const resZ = isMult ? Z1 * n : Z1;
@@ -794,7 +794,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					? `\\frac{${Z1}}{${N1}} \\cdot \\frac{${n}}{1}`
 					: `\\frac{${Z1}}{${N1}} \\cdot \\frac{1}{${n}}`;
 
-				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} ${n} = \\]`;
+				textDisplay = `Berechne: \\( \\quad \\dfrac{${Z1}}{${N1}} ${op} ${n} = \\)`;
 				s = `\\[ \\frac{${Z1}}{${N1}} ${op} ${n} = ${step1} = \\frac{${resZ}}{${resN}} \\]`;
 				break;
 			}
@@ -818,7 +818,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				const finalN = isMult ? N1 * N2 : N1 * Z2;
 				const step1 = isMult ? '' : `\\frac{${Z1}}{${N1}} \\cdot \\frac{${N2}}{${Z2}} = `;
 
-				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = \\]`;
+				textDisplay = `Berechne: \\( \\quad \\dfrac{${Z1}}{${N1}} ${op} \\dfrac{${Z2}}{${N2}} = \\)`;
 				s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${step1} \\frac{${finalZ}}{${finalN}} \\]`;
 			} else {
 				do {
@@ -866,7 +866,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				// MidStep nutzt die gekürzten Werte
 				const midStep = `\\frac{${z1_base}}{${n1_base}} \\cdot \\frac{${z2_base}}{${n2_base}}`;
 
-				textDisplay = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = \\]`;
+				textDisplay = `Berechne: \\( \\quad \\dfrac{${Z1}}{${N1}} ${op} \\dfrac{${Z2}}{${N2}} = \\)`;
 				s = `\\[ \\frac{${Z1}}{${N1}} ${op} \\frac{${Z2}}{${N2}} = ${stepKehrwert}${midStep} = \\frac{${resZ}}{${resN}} \\]`;
 			}
 			break;
@@ -1107,7 +1107,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					let mult = p10 / n;
 					let decStr = Number((z / n).toFixed(4)).toString().replace('.', ',');
 
-					textDisplay = `Als Dezimalbruch: \\( \\dfrac{${z}}{${n}} = \\)`;
+					textDisplay = `als Dezimalbruch: \\( \\quad \\dfrac{${z}}{${n}} = \\)`;
 
 					if (n === p10) {
 						s = `\\[ \\frac{${z}}{${n}} = ${decStr} \\]`;
@@ -1150,7 +1150,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					let z_p10 = z * mult;
 
 					// 3. Aufgabenstellung
-					textDisplay = ` Als max. gekürzter gem. Bruch: \\( ${decStr} = \\)`;
+					textDisplay = `als max. gekürzter gem. Bruch: \\( \\quad ${decStr} = \\)`;
 
 					// 4. Lösungsweg (Rückwärts: Dezimal -> Zehnerbruch -> Kürzen -> Ergebnis)
 					if (n === p10) {
@@ -1203,7 +1203,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					// Da wir auf 100 erweitern, ist der neue Zähler direkt die Prozentzahl
 					let percStr = (z * mult).toString() + '\\,\\text{%}';
 
-					textDisplay = `In Prozent: \\( \\dfrac{${z}}{${n}} = \\)`;
+					textDisplay = `in Prozent: \\( \\quad \\dfrac{${z}}{${n}} = \\)`;
 					s = `\\[ \\frac{${z}}{${n}} \\overset{${mult}}{=} \\frac{${z * mult}}{100} = ${percStr} \\]`;
 
 					break;
@@ -1218,7 +1218,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						let percVal = is200 ? 200 : 100;
 						let resultVal = is200 ? 2 : 1; // Das gekürzte Ergebnis als ganze Zahl
 
-						textDisplay = ` Als max. gekürzter gem. Bruch: \\( ${percVal}\\,\\text{%} = \\)`;
+						textDisplay = `als max. gekürzter gem. Bruch: \\( \\quad ${percVal}\\,\\text{%} = \\)`;
 						s = `\\[ ${percVal}\\,\\text{%} = \\frac{${percVal}}{100} = ${resultVal} \\]`;
 
 						// Hinweis: Wenn dein System zwingend eine Bruch-Schreibweise als Lösung erwartet, 
@@ -1267,7 +1267,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					let percStr = percVal.toString() + '\\,\\text{%}';
 
 					// 4. Strings für Aufgabe und Lösung bauen
-					textDisplay = `Als max. gekürzter gem. Bruch: \\( ${percStr} = \\)`;
+					textDisplay = `als max. gekürzter gem. Bruch: \\( \\quad ${percStr} = \\)`;
 
 					if (n === p10) {
 						s = `\\[ ${percStr} = \\frac{${z}}{100} \\]`;
@@ -1291,7 +1291,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					let w_simp = Math.floor(z / n);
 					let rem_simp = z % n;
 
-					textDisplay = `In gemischter Schreibweise: \\( \\dfrac{${z}}{${n}} = \\)`;
+					textDisplay = `in gemischter Schreibweise: \\( \\quad \\dfrac{${z}}{${n}} = \\)`;
 					s = `\\[ \\frac{${z}}{${n}} = \\frac{${w_simp * n}}{${n}} + \\frac{${rem_simp}}{${n}} = ${w_simp} \\frac{${rem_simp}}{${n}} \\]`;
 					break;
 				}
@@ -1318,7 +1318,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					let decStr = Number((p / 100).toFixed(4)).toString().replace('.', ',');
 					let percStr = p.toString().replace('.', ',') + '\\,\\text{%}';
 
-					textDisplay = ` In Prozent: \\( ${decStr} = \\)`;
+					textDisplay = ` in Prozent: \\( \\quad ${decStr} = \\)`;
 					s = `\\( ${decStr} = ${percStr} \\)`;
 					break;
 				}
@@ -1327,7 +1327,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					let decStr = Number((p / 100).toFixed(4)).toString().replace('.', ',');
 					let percStr = p.toString().replace('.', ',') + '\\,\\text{%}';
 
-					textDisplay = `Als Dezimalbruch: \\( ${percStr} = \\)`;
+					textDisplay = `als Dezimalbruch: \\( \\quad ${percStr} = \\)`;
 					s = `\\( ${percStr} = ${decStr} \\)`;
 					break;
 				}
@@ -1375,26 +1375,40 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
 			let p = [3, 4, 5, 6, 7, 10, 20, 25, 50][randInt(0, 8)];
 			let pVal = rnd(2, 11) * 100;
-			rd = Math.random();
-			if (rd > 0.8) {
-				textDisplay = `${pVal} ${einheit} um ${p} % erhöht sind ${blank(3)}`;
-				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal + (pVal / 100 * p)} ${einheit} ≙ ${100 + p} %`;
-			} else if (rd > 0.6) {
-				textDisplay = `${pVal} ${einheit} um ${p} % reduziert sind ${blank(3)}`;
-				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal - (pVal / 100 * p)} ${einheit} ≙ ${100 - p} %`;
-			} else if (rd > 0.4) {
-				textDisplay = `${pVal} ${einheit} auf ${100 + p} % erhöht sind ${blank(3)}`;
-				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal + (pVal / 100 * p)} ${einheit} ≙ ${100 + p} %`;
-			} else if (rd > 0.2) {
-				textDisplay = `${pVal}  ${einheit} auf ${100 - p} % reduziert sind ${blank(3)}`;
-				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal - (pVal / 100 * p)} ${einheit} ≙ ${100 - p} %`;
-			} else {
-				// Rabatt-Fall: Ein Artikel kostet normalerweise pVal, mit p% Rabatt kostet er ___
-				p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
-				const originalPrice = pVal;
-				const discountedPrice = originalPrice - (originalPrice / 100 * p);
-				textDisplay = `${p} % Rabatt auf ${originalPrice} €. Neuer Preis: ${blank(3)}`;
-				s = `${originalPrice} € ≙ 100 %<br>${originalPrice / 100} € ≙ 1 %<br>${discountedPrice} € ≙ ${100 - p} %`;
+			type = randInt(0, 5); // 0: Erhöhung um p%, 1: Reduzierung um p%, 2: Erhöhung auf 100+p%, 3: Reduzierung auf 100-p%, 4: Rabatt-Fall 1, 5: Rabatt-Fall 2
+			switch (type) {
+				case 0: // Erhöhung um p%
+					textDisplay = `${pVal} ${einheit} um ${p} % erhöht sind ${blank(3)}`;
+					s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${100 + p} % ≙ <b>${pVal + (pVal / 100 * p)} ${einheit}</b>`;
+					break;
+				case 1: // Reduzierung um p%
+					textDisplay = `${pVal} ${einheit} um ${p} % reduziert sind ${blank(3)}`;
+					s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${100 - p} % ≙ <b>${pVal - (pVal / 100 * p)} ${einheit}</b>`;
+					break;
+				case 2: // Erhöhung auf 100+p%
+					textDisplay = `${pVal} ${einheit} auf ${100 + p} % erhöht sind ${blank(3)}`;
+					s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${100 + p} % ≙ <b>${pVal + (pVal / 100 * p)} ${einheit}</b>`;
+					break;
+				case 3: // Reduzierung auf 100-p%
+					textDisplay = `${pVal} ${einheit} auf ${100 - p} % reduziert sind ${blank(3)}`;
+					s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${100 - p} % ≙ <b>${pVal - (pVal / 100 * p)} ${einheit}</b>`;
+					break;
+				case 4: {// Rabatt-Fall 1
+					p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
+					const originalPrice = pVal;
+					const discountedPrice = originalPrice - (originalPrice / 100 * p);
+					textDisplay = `${p} % Rabatt auf ${originalPrice} €. Neuer Preis: ${blank(3)}`;
+					s = `100 % ≙ ${originalPrice} €<br>1 % ≙ ${originalPrice / 100} €<br>${100 - p} % ≙ <b>${discountedPrice} €</b>`;
+					break;
+				}
+				case 5: {// Rabatt-Fall 2
+				    p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
+					const originalPrice = pVal;
+					const discountedPrice = originalPrice - (originalPrice / 100 * p);
+					textDisplay = `Preissenkung von ${originalPrice} € auf ${discountedPrice} €. Rabatt: ${blank(2)} %`;
+					s = `100 % ≙ ${originalPrice} €<br>1 % ≙ ${originalPrice / 100} €<br><b>${p} %</b> ≙ ${(originalPrice - discountedPrice)} €`;					
+					break;
+				}
 			}
 			break;
 		}
@@ -1807,16 +1821,16 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			const pickValidForB = (b) => {
 				const absB = Math.abs(b);
 				const vals = [];
-				for (let n = -20; n <= 20; n++) {
+				for (let n = -40; n <= 40; n++) {
 					if (n === 0) continue;
-					if ((2 * n) % absB === 0) vals.push(n);
+					if ((n) % absB === 0) vals.push(n);
 				}
 				return vals;
 			};
 
 			let b_lin, a_lin, c_lin;
 			do {
-				b_lin = rnd(-20, 20);
+				b_lin = rnd(-12, 12);
 				const valid = pickValidForB(b_lin);
 				a_lin = valid[randInt(0, valid.length - 1)];
 				c_lin = valid[randInt(0, valid.length - 1)];
@@ -2341,8 +2355,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			
 			const taskData = selectedOp.generate(nums);
 			
-			textDisplay = `Übersetze in einen Term und berechne:<br> <strong>${taskData.term}</strong>`;
-			textPrint = `${taskData.term} | \\(\\quad\\)${space(1.5)}`;
+			textDisplay = `${taskData.term}`;
+			textPrint = `${taskData.term}`;
 			
 			const resultStr = formatResult(taskData.result);
 			
@@ -2532,7 +2546,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					{ txt: 'Basketball: Von', einheit: 'Würfen', e: 'getroffen' },
 					{ txt: 'Qualitätskontrolle: Von', einheit: 'Bauteilen', e: 'defekt' },
 					{ txt: 'Umfrage: Von', einheit: 'Personen antworten', e: 'Teilnehmer mit "Ja"' },
-					{ txt: 'Torwart: Von', einheit: 'Schüssen', e: 'Bälle' }
+					{ txt: 'Torwart: Von', einheit: 'Schüssen', e: 'Bälle gehalten' }
 				];
 				const sz = szenarien[randInt(0, szenarien.length - 1)];
 				let gesamt = [10, 20, 25, 40, 50][randInt(0, 4)];
@@ -2622,7 +2636,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					const multMax = Math.floor(30 / choice.simpDen);
 					n = choice.simpDen * randInt(multMin, multMax);
 					redCount = n * choice.simpNum / choice.simpDen;
-					taskStr = `Urne mit ${n} Kugeln. Wahrscheinlichkeit, eine rote Kugel zu ziehen, beträgt ${choice.pct} %. Anzahl der roten Kugeln?`;
+					taskStr = `Urne mit ${n} Kugeln. Die Wahrscheinlichkeit, eine rote Kugel zu ziehen, beträgt ${choice.pct} %. Anzahl der roten Kugeln?`;
 					resStr = `${choice.pct} % von ${n} sind ${redCount} rote Kugeln.`;
 				} else {
 					const fracCandidates = [
@@ -2640,7 +2654,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					const multMax = Math.floor(30 / frac.den);
 					n = frac.den * randInt(multMin, multMax);
 					redCount = n * frac.num / frac.den;
-					taskStr = `Urne mit ${n} Kugeln. Wahrscheinlichkeit, eine rote Kugel zu ziehen, beträgt \\( \\frac{${frac.num}}{${frac.den}} \\). Anzahl der roten Kugeln?`;
+					taskStr = `Urne mit ${n} Kugeln. Die Wahrscheinlichkeit, eine rote Kugel zu ziehen, beträgt \\( \\frac{${frac.num}}{${frac.den}} \\). Anzahl der roten Kugeln?`;
 					resStr = `\\( \\dfrac{${frac.num}}{${frac.den}} \\) von ${n} sind ${redCount} rote Kugeln.`;
 				}
 			}
@@ -3198,7 +3212,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let W = z * multiplier;
 				let G = n * multiplier;
 				
-				textDisplay = `${comma(W)} ${einheit} von ${comma(G)}  ${einheit} sind ${blank(3)}`;
+				textDisplay = `${comma(W)} ${einheit} von ${comma(G)}  ${einheit} sind ${blank(3)} (gekürzter Bruch)`;
 				s = `${comma(W)}  ${einheit} von  ${comma(G)}  ${einheit} sind  \\(\\dfrac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\dfrac{${z}}{${n}} \\)`;
 			}
 			break;
@@ -3263,20 +3277,20 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					s2 = `${de(wert1)} ${sz.einheit2} ≙ ${menge1} ${sz.einheit1}`;
 					sFrage = `Wie viel verdient er in ${menge2} ${sz.einheit1}?`;
 					sStep = `${de(einzelwert)} ${sz.einheit2}  ≙ 1 ${einheitSingular}`;
-					sRes = `${de(wert2)} ${sz.einheit2} ≙ ${menge2} ${sz.einheit1}`;
+					sRes = `<b>${de(wert2)} ${sz.einheit2}</b> ≙ ${menge2} ${sz.einheit1}`;
 				} else if (sz.type === 'print') {
 					s1 = `${de(wert1)} ${sz.einheit2} schafft ${sz.objekt} in ${menge1} ${sz.einheit1}`;
 					s2 = `${de(wert1)} ${sz.einheit2} ≙ ${menge1} ${sz.einheit1}`;
 					sFrage = `Wie viele ${sz.einheit2} schafft er in ${menge2} ${sz.einheit1}?`;
 					sStep = `${de(einzelwert)} ${sz.einheit2} ≙ 1 ${einheitSingular}`;
-					sRes = `${de(wert2)} ${sz.einheit2} ≙ ${menge2} ${sz.einheit1}`;
+					sRes = `<b>${de(wert2)} ${sz.einheit2}</b> ≙ ${menge2} ${sz.einheit1}`;
 				} else {
 					// Lebensmittel
 					s1 = `${menge1} ${sz.einheit1} kosten ${de(wert1)} ${sz.einheit2}`;
 					s2 = `${menge1} ${sz.einheit1} ≙ ${de(wert1)} ${sz.einheit2}`;
 					sFrage = `Wie viel kosten ${menge2} ${sz.einheit1}?`;
 					sStep = `1 ${sz.einheit1.includes('Brötchen') ? 'Brötchen' : sz.einheit1} ≙ ${de(einzelwert)} ${sz.einheit2}`;
-					sRes = `${menge2} ${sz.einheit1} ≙ ${de(wert2)} ${sz.einheit2}`;
+					sRes = `${menge2} ${sz.einheit1} ≙ <b>${de(wert2)} ${sz.einheit2}</b>`;
 				}
 			} else {
 				// --- UMGEKEHRTE FRAGE: Nach der Start-Einheit (z.B. kg oder Stunden) fragen ---
@@ -3285,20 +3299,20 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					s2 = `${de(wert1)} ${sz.einheit2} ≙ ${menge1} ${sz.einheit1}`;
 					sFrage = `Wie viele ${sz.einheit1} muss er für ${de(wert2)} ${sz.einheit2} arbeiten?`;
 					sStep = `${de(einzelwert)} ${sz.einheit2} ≙ 1 ${einheitSingular}`;
-					sRes = `${de(wert2)} ${sz.einheit2} ≙ ${menge2} ${sz.einheit1}`;
+					sRes = `${de(wert2)} ${sz.einheit2} ≙ <b>${menge2} ${sz.einheit1}</b>`;
 				} else if (sz.type === 'print') {
 					s1 = `${de(wert1)} ${sz.einheit2} schafft ${sz.objekt} in ${menge1} ${sz.einheit1}`;
 					s2 = `${de(wert1)} ${sz.einheit2} ≙ ${menge1} ${sz.einheit1}`;
 					sFrage = `Wie viele ${sz.einheit1} braucht er für ${de(wert2)} ${sz.einheit2}?`;
 					sStep = `${de(einzelwert)} ${sz.einheit2} ≙ 1 ${einheitSingular}`;
-					sRes = `${de(wert2)} ${sz.einheit2} ≙ ${menge2} ${sz.einheit1}`;
+					sRes = `${de(wert2)} ${sz.einheit2} ≙ <b>${menge2} ${sz.einheit1}</b>`;
 				} else {
 					// Lebensmittel
 					s1 = `${menge1} ${sz.einheit1} kosten ${de(wert1)} ${sz.einheit2}`;
 					s2 = `${menge1} ${sz.einheit1} ≙ ${de(wert1)} ${sz.einheit2}`;
 					sFrage = `Wie viele ${sz.einheit1} bekommt man für ${de(wert2)} ${sz.einheit2}?`;
 					sStep = `1 ${sz.einheit1.includes('Brötchen') ? 'Brötchen' : sz.einheit1} ≙ ${de(einzelwert)} ${sz.einheit2} `;
-					sRes = `${menge2} ${sz.einheit1} ≙ ${de(wert2)} ${sz.einheit2}`;
+					sRes = `<b>${menge2} ${sz.einheit1}</b> ≙ ${de(wert2)} ${sz.einheit2}`;
 				}
 			}
 

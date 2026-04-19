@@ -171,8 +171,9 @@
                     {{ showWorksheetSolutions ? 'Aufgaben' : 'Lösungen' }}
                 </button>
                 <button @click="generateWorksheet" class="btn btn--primary">Erzeugen 🎲</button>
+                <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Neu sortieren</button>
                 <button @click="openWorksheetImportDialog" class="btn btn--export">Import</button>
-                <button @click="exportWorksheetJSON" class="btn btn--export">JSON</button>
+                <button @click="exportWorksheetJSON" class="btn btn--export">Export</button>
                 <button @click="switchView('worksheet-builder')" class="btn btn--primary">Zurück zum Individuell-Modus</button>
                 <input type="file" ref="worksheetImportInput" @change="importWorksheetJSON" accept=".json" style="display:none">
             </div>
@@ -287,7 +288,7 @@
         </div>
     </div>
 
-    <div v-else-if="currentView === 'worksheet-builder'" class="worksheet-builder-view">
+    <div v-else-if="currentView === 'worksheet-builder'" class="worksheet-builder-view" :style="{ '--builder-sidebar-width': builderSidebarWidth + 'px' }">
         <aside class="builder-sidebar">
             <div class="builder-sidebar-top">
                 <div class="builder-sidebar-controls">
@@ -298,6 +299,12 @@
                             <option v-for="grade in gradeOptions" :key="'builder-grade-'+grade" :value="grade">{{ grade }}</option>
                         </select>
                     </label>
+                    <button
+                        v-if="builderReplaceIndex !== null"
+                        @click="builderCancelReplaceTask"
+                        class="btn btn--back settings-compact-btn"
+                        type="button"
+                    >Abbrechen</button>
                 </div>
 
                 <div class="builder-draft-card builder-draft-card--large" v-if="builderDraftTask">
@@ -337,7 +344,23 @@
                     {{ label }}
                 </button>
             </div>
+
+            <div class="builder-stats-panel">
+                <h3 class="builder-stats-title">Aufgabentyp-Statistik</h3>
+                <table class="builder-stat-table">
+                    <tbody>
+                        <tr v-for="row in builderTaskTypeRows" :key="row.left.type">
+                            <td class="builder-stat-count">{{ row.left.count }}</td>
+                            <td class="builder-stat-name">{{ row.left.label }}</td>
+                            <td class="builder-stat-count">{{ row.right.count }}</td>
+                            <td class="builder-stat-name">{{ row.right.label }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </aside>
+
+        <div class="builder-sidebar-resizer" @mousedown.prevent="builderStartSidebarResize" @touchstart.prevent="builderStartSidebarResizeTouch"></div>
 
         <section class="builder-main">
             <div class="worksheet-toolbar no-print builder-toolbar">
@@ -356,12 +379,21 @@
                 </div>
 
                 <div class="worksheet-toolbar-actions">
+                    <label class="settings-topbar-label">
+                        Anordnung
+                        <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
+                            <option value="random">zufällig</option>
+                            <option value="ordered">blockweise</option>
+                            <option value="random-ordered">blockw. zuf.</option>
+                        </select>
+                    </label>
                     <button @click="builderToggleTaskSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
-                        {{ builderShowTaskSolutions ? 'Aufgaben' : 'Lösungen' }}
+                        {{ builderShowTaskSolutions ? 'Lösungen aus' : 'Lösungen' }}
                     </button>
+                    <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Neu sortieren</button>
                     <button @click="openBuilderImportDialog" class="btn btn--export">Import</button>
-                    <button @click="exportBuilderJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">JSON</button>
-                    <button @click="builderClearTasks" class="btn btn--back" :disabled="!hasGeneratedTasks">Leeren</button>
+                    <button @click="exportBuilderJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Export</button>
+                    <!-- <button @click="builderClearTasks" class="btn btn--back" :disabled="!hasGeneratedTasks">Leeren</button> -->
                     <button @click="switchView('worksheet')" class="btn btn--primary" :disabled="!hasGeneratedTasks">Arbeitsblatt öffnen</button>
                     <input type="file" ref="builderImportInput" @change="importBuilderJSON" accept=".json" style="display:none">
                 </div>
@@ -371,7 +403,7 @@
                 <h2>Noch keine Aufgaben ausgewählt</h2>
                 <p>Klicke links auf einen Aufgabentyp, prüfe die Vorschau und füge die Aufgabe dann deiner Liste hinzu. JSON-Sets kannst du jederzeit importieren und danach einzeln bearbeiten.</p>
                 <div class="empty-state-actions">
-                    <button @click="openBuilderImportDialog" class="btn btn--primary">JSON importieren</button>
+                    <button @click="openBuilderImportDialog" class="btn btn--primary">Import</button>
                 </div>
             </div>
 
@@ -411,9 +443,11 @@
                         </template>
 
                         <template v-else>
-                            <div :class="['builder-task-math', { 'is-solution': builderShowTaskSolutions }]" v-html="getBuilderTaskMarkup(task, builderShowTaskSolutions)"></div>
+                            <div class="builder-task-math" v-html="getBuilderTaskMarkup(task, false)"></div>
+                            <div v-if="builderShowTaskSolutions" class="builder-task-solution" v-html="getBuilderTaskMarkup(task, true)"></div>
                             <div class="builder-task-actions">
                                 <button @click="builderRerollTask(index)" class="btn btn--export settings-compact-btn">Neu</button>
+                                <button @click="builderDuplicateTask(index)" class="btn btn--export settings-compact-btn">Duplizieren</button>
                                 <button @click="builderBeginInlineEdit(index)" class="btn btn--export settings-compact-btn">Bearbeiten</button>
                                 <button @click="builderStartReplaceTask(index)" class="btn btn--back settings-compact-btn">Mit anderem Typ ersetzen</button>
                                 <button @click="builderRemoveTask(index)" class="btn btn--toggle settings-compact-btn">Entfernen</button>
@@ -504,7 +538,7 @@
             <div class="worksheet-toolbar-actions top-bar-actions">
                 <button @click="generateQuiz" class="btn btn--primary" :disabled="!hasSelectedTypes">Erzeugen 🎲</button>
                 <button @click="openQuizImportDialog" class="btn btn--export">Import</button>
-                <button @click="exportQuizJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">JSON</button>
+                <button @click="exportQuizJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Export</button>
                 <button @click="toggleQuizSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
                     {{ showQuizSolutions ? 'Aufgaben' : 'Lösungen' }}
                 </button>
@@ -573,8 +607,8 @@
                 <button @click="toggleDarkMode" class="btn btn--theme">
                     {{ isDarkMode ? 'Light-Mode' : 'Dark-Mode' }}
                 </button>
-                <button @click="exportJSON" class="btn btn--export">JSON</button>
-                <button @click="exportHTML" class="btn btn--export">Speichern 💾</button>
+                <button @click="exportJSON" class="btn btn--export">Export</button>
+                <!-- <button @click="exportHTML" class="btn btn--export">Speichern 💾</button> -->
                 <button @click="generateAll" class="btn btn--primary">Erzeugen 🎲</button>
                 <button @click="toggleSolutions()" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
                     {{ showSolutions ? 'Aufgaben' : 'Lösungen' }}

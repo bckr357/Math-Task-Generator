@@ -154,6 +154,10 @@ createApp({
         const builderImportInput = ref(null);
         const builderShowPreviewSolution = ref(false);
         const builderShowTaskSolutions = ref(false);
+        const builderSidebarWidth = ref(650);
+        const builderIsResizing = ref(false);
+        let builderResizeStartX = 0;
+        let builderResizeStartWidth = 0;
         const builderDragIndex = ref(null);
         const builderEditingIndex = ref(null);
         const builderEditTaskText = ref('');
@@ -180,6 +184,28 @@ createApp({
             const task = state.tasks.value[index];
             const typeKey = task?.type;
             return typeLabels[typeKey] ?? typeKey ?? '';
+        });
+
+        const builderTaskTypeStats = computed(() => {
+            const counts = Object.fromEntries(Object.keys(typeLabels).map(type => [type, 0]));
+            state.tasks.value.forEach(task => {
+                if (task && typeof task.type === 'string') {
+                    counts[task.type] = (counts[task.type] ?? 0) + 1;
+                }
+            });
+            return Object.entries(typeLabels).map(([type, label]) => ({ type, label, count: counts[type] ?? 0 }));
+        });
+
+        const builderTaskTypeRows = computed(() => {
+            const rows = [];
+            const stats = builderTaskTypeStats.value;
+            for (let i = 0; i < stats.length; i += 2) {
+                rows.push({
+                    left: stats[i],
+                    right: stats[i + 1] || { type: '', label: '', count: 0 }
+                });
+            }
+            return rows;
         });
 
         const syncTaskCountFromTasks = () => {
@@ -255,6 +281,55 @@ createApp({
             syncTaskCountFromTasks();
         };
 
+        const builderResortTasks = async () => {
+            const tasks = [...state.tasks.value];
+            if (tasks.length < 2) {
+                return;
+            }
+
+            const mode = state.taskArrangementMode.value;
+
+            if (mode === 'random') {
+                for (let i = tasks.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [tasks[i], tasks[j]] = [tasks[j], tasks[i]];
+                }
+            } else if (mode === 'ordered' || mode === 'random-ordered') {
+                const labelOrder = Object.keys(typeLabels);
+                const groups = {};
+                for (const task of tasks) {
+                    const key = task.type || '__unknown';
+                    if (!groups[key]) groups[key] = [];
+                    groups[key].push(task);
+                }
+                const orderedKeys = [
+                    ...labelOrder.filter(k => groups[k]),
+                    ...Object.keys(groups).filter(k => !labelOrder.includes(k))
+                ];
+                if (mode === 'random-ordered') {
+                    for (let i = orderedKeys.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [orderedKeys[i], orderedKeys[j]] = [orderedKeys[j], orderedKeys[i]];
+                    }
+                }
+                state.tasks.value = orderedKeys.flatMap(k => groups[k]);
+                builderReplaceIndex.value = null;
+                builderEditingIndex.value = null;
+                syncTaskCountFromTasks();
+                await nextTick();
+                await typesetMathJax();
+                return;
+            }
+
+            state.tasks.value = tasks;
+            builderReplaceIndex.value = null;
+            builderEditingIndex.value = null;
+            syncTaskCountFromTasks();
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
         const builderStartReplaceTask = index => {
             if (!Number.isInteger(index) || index < 0 || index >= state.tasks.value.length) {
                 return;
@@ -275,6 +350,34 @@ createApp({
 
             state.tasks.value.splice(index, 1, { ...builderDraftTask.value });
             builderReplaceIndex.value = null;
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderDuplicateTask = async index => {
+            if (!Number.isInteger(index) || index < 0 || index >= state.tasks.value.length) {
+                return;
+            }
+
+            const sourceTask = state.tasks.value[index];
+            const duplicate = taskGeneration.generateTaskByType(sourceTask.type, 'default');
+            if (!duplicate) {
+                return;
+            }
+
+            const nextTasks = [...state.tasks.value];
+            nextTasks.splice(index + 1, 0, duplicate);
+            state.tasks.value = nextTasks;
+
+            if (Number.isInteger(builderEditingIndex.value) && builderEditingIndex.value > index) {
+                builderEditingIndex.value += 1;
+            }
+            if (Number.isInteger(builderReplaceIndex.value) && builderReplaceIndex.value > index) {
+                builderReplaceIndex.value += 1;
+            }
+
+            syncTaskCountFromTasks();
 
             await nextTick();
             await typesetMathJax();
@@ -390,6 +493,60 @@ createApp({
 
         const builderHandleDragOver = event => {
             event.preventDefault();
+        };
+
+        const builderHandleSidebarResize = event => {
+            if (!builderIsResizing.value) {
+                return;
+            }
+
+            event.preventDefault();
+            const clientX = event.type.startsWith('touch')
+                ? event.touches[0].clientX
+                : event.clientX;
+            const delta = clientX - builderResizeStartX;
+            const minWidth = 500;
+            const maxWidth = Math.max(minWidth, Math.floor(window.innerWidth / 2));
+            const nextWidth = Math.min(Math.max(builderResizeStartWidth + delta, minWidth), maxWidth);
+            builderSidebarWidth.value = nextWidth;
+        };
+
+        const builderStopSidebarResize = () => {
+            if (!builderIsResizing.value) {
+                return;
+            }
+
+            builderIsResizing.value = false;
+            window.removeEventListener('mousemove', builderHandleSidebarResize);
+            window.removeEventListener('mouseup', builderStopSidebarResize);
+            window.removeEventListener('touchmove', builderHandleSidebarResize);
+            window.removeEventListener('touchend', builderStopSidebarResize);
+        };
+
+        const builderStartSidebarResize = event => {
+            builderIsResizing.value = true;
+            builderResizeStartX = event.clientX;
+            builderResizeStartWidth = builderSidebarWidth.value;
+
+            window.addEventListener('mousemove', builderHandleSidebarResize);
+            window.addEventListener('mouseup', builderStopSidebarResize);
+            window.addEventListener('touchmove', builderHandleSidebarResize, { passive: false });
+            window.addEventListener('touchend', builderStopSidebarResize);
+        };
+
+        const builderStartSidebarResizeTouch = event => {
+            if (!event.touches || !event.touches[0]) {
+                return;
+            }
+
+            builderIsResizing.value = true;
+            builderResizeStartX = event.touches[0].clientX;
+            builderResizeStartWidth = builderSidebarWidth.value;
+
+            window.addEventListener('mousemove', builderHandleSidebarResize);
+            window.addEventListener('mouseup', builderStopSidebarResize);
+            window.addEventListener('touchmove', builderHandleSidebarResize, { passive: false });
+            window.addEventListener('touchend', builderStopSidebarResize);
         };
 
         const builderHandleDrop = async targetIndex => {
@@ -624,9 +781,13 @@ createApp({
             builderAddDraftTask,
             builderRemoveTask,
             builderClearTasks,
+            builderResortTasks,
             builderStartReplaceTask,
             builderCancelReplaceTask,
             builderApplyDraftReplacement,
+            builderTaskTypeStats,
+            builderTaskTypeRows,
+            builderDuplicateTask,
             builderRerollTask,
             builderBeginInlineEdit,
             builderCancelInlineEdit,
@@ -635,6 +796,9 @@ createApp({
             builderHandleDragOver,
             builderHandleDrop,
             builderHandleDragEnd,
+            builderSidebarWidth,
+            builderStartSidebarResize,
+            builderStartSidebarResizeTouch,
             openBuilderImportDialog,
             importBuilderJSON,
             exportBuilderJSON,
