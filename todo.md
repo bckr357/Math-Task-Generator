@@ -1,4 +1,0 @@
-- Cookies entfernen 
-- Aufgaben für Druck optimieren 
-- Aufgaben nach Klasse sortieren 
-- Aufgabentyp-Texte formulieren und besser benennen 
