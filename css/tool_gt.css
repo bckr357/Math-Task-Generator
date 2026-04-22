@@ -967,7 +967,7 @@ mjx-container[jax="CHTML"][display="true"] {
 .task-num {
     font-size: 3rem;
     font-weight: 900;
-    color: var(--slate-300);
+    color: var(--slate-500);
     width: 70px;
     text-align: center;
     flex-shrink: 0;
@@ -1204,6 +1204,38 @@ mjx-mtext {
 
 .presentation-view.dark-mode .math-q {
     color: #f8fafc;
+}
+
+.presentation-view.dark-mode .math-q .op-table,
+.presentation-view.dark-mode .math-a .op-table {
+    background: rgba(15, 23, 42, 0.9);
+}
+
+.presentation-view.dark-mode .math-q .op-table th,
+.presentation-view.dark-mode .math-q .op-table td,
+.presentation-view.dark-mode .math-a .op-table th,
+.presentation-view.dark-mode .math-a .op-table td {
+    border-color: rgba(148, 163, 184, 0.18);
+}
+
+.presentation-view.dark-mode .math-q .op-table th,
+.presentation-view.dark-mode .math-q .op-table td {
+    color: #e2e8f0;
+}
+
+.presentation-view.dark-mode .math-a .op-table th,
+.presentation-view.dark-mode .math-a .op-table td {
+    color: var(--primary-dark);
+}
+
+.presentation-view.dark-mode .math-q .op-table th,
+.presentation-view.dark-mode .math-a .op-table th {
+    background: rgba(30, 41, 59, 0.95);
+}
+
+.presentation-view.dark-mode .math-q .op-table .op-corner,
+.presentation-view.dark-mode .math-a .op-table .op-corner {
+    background: rgba(51, 65, 85, 0.9);
 }
 
 .presentation-view.dark-mode .math-a {
