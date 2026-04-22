@@ -112,8 +112,6 @@ const quizTaskTypesByGrade = {
 };
 
 /* TODO / Roadmap 
- - rechten Rand so vergrößern, dass immer eine kurze Lösung hin passt 
- - neue cases einbauen und validieren 
  - Grafik-Modus 
  - Bild für Geradenkreuzung oder IWS einbinden 
  - Funktionen einbauen  
@@ -180,14 +178,26 @@ const typeDefinitions = [
 	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren'],
 
 	// Funktionen, Statistik & Wahrscheinlichkeiten
+	['wkt', 'Wahrscheinlichkeiten', 'Wahrscheinlichkeiten bestimmen'],
 	['linear_function', 'Lineare Funktionen zeichnen', 'Lineare Funktionen grafisch darstellen'],
 	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
-	['statistik', 'Statistik', 'Kenngrößen der Statistik bestimmen'],
-	['wkt', 'Wahrscheinlichkeiten', 'Wahrscheinlichkeiten bestimmen']
+	['statistik', 'Statistik', 'Kenngrößen der Statistik bestimmen']
 ];
 
 const typeLabels = Object.fromEntries(typeDefinitions.map(([key, label]) => [key, label]));
 const typeDescriptions = Object.fromEntries(typeDefinitions.map(([key, , description]) => [key, description]));
+
+const typeOrderIndex = Object.fromEntries(typeDefinitions.map(([key], index) => [key, index]));
+function sortByTypeDefinitions(types) {
+	return [...types].sort((a, b) => {
+		const indexA = typeOrderIndex[a] ?? Number.MAX_SAFE_INTEGER;
+		const indexB = typeOrderIndex[b] ?? Number.MAX_SAFE_INTEGER;
+		if (indexA !== indexB) {
+			return indexA - indexB;
+		}
+		return a.localeCompare(b);
+	});
+}
 
 // ============================================================
 // AUFGABEN-GENERATOR

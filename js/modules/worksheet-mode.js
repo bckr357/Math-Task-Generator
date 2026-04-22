@@ -1,5 +1,20 @@
 window.MTGWorksheetModeModule = {
-    createWorksheetMode({ state, taskGeneration, nextTick, typesetMathJax }) {
+    createWorksheetMode({ state, taskGeneration, nextTick, typesetMathJax, selectedGrade, typeLabels, taskTypesByGrade }) {
+        const getVisibleTypeKeys = () => {
+            const allTypes = Object.keys(typeLabels || {});
+            const classConfig = (typeof taskTypesByGrade === 'object' && taskTypesByGrade)
+                ? taskTypesByGrade
+                : {};
+            const configured = classConfig[`klasse${selectedGrade?.value}`];
+
+            if (!Array.isArray(configured)) {
+                return allTypes;
+            }
+
+            const validKeys = configured.filter(type => Object.prototype.hasOwnProperty.call(typeLabels, type));
+            return validKeys.length > 0 ? validKeys : allTypes;
+        };
+
         const toggleWorksheetSolutions = async () => {
             state.showWorksheetSolutions.value = !state.showWorksheetSolutions.value;
             await nextTick();
@@ -54,6 +69,19 @@ window.MTGWorksheetModeModule = {
                         window.alert('Die JSON-Datei enthält keine gültigen Aufgaben.');
                         return;
                     }
+
+                    const rawTasks = Array.isArray(data)
+                        ? data
+                        : Array.isArray(data.tasks)
+                            ? data.tasks
+                            : [];
+
+                    const importedTypes = [...new Set(rawTasks
+                        .map(item => item.aufgabentyp || item.type || '')
+                        .filter(type => typeof type === 'string' && type))];
+
+                    const visibleKeys = new Set(getVisibleTypeKeys());
+                    state.selectedTypes.value = importedTypes.filter(type => visibleKeys.has(type));
 
                     state.currentView.value = 'worksheet';
                     state.isSettingsSidebarOpen.value = false;

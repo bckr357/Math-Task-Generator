@@ -36,7 +36,7 @@ const typesetMathJax = async () => {
 createApp({
     setup() {
         const state = window.MTGStateModule.createState(Vue, typeLabels);
-        const allTypes = Object.keys(typeLabels);
+        const allTypes = sortByTypeDefinitions(Object.keys(typeLabels));
         const selectedGrade = ref(10);
         const gradeOptions = [5, 6, 7, 8, 9, 10];
 
@@ -55,7 +55,7 @@ createApp({
             }
 
             const validKeys = configured.filter(type => Object.prototype.hasOwnProperty.call(typeLabels, type));
-            return validKeys.length > 0 ? validKeys : allTypes;
+            return validKeys.length > 0 ? sortByTypeDefinitions(validKeys) : allTypes;
         });
 
         const visibleTypeEntries = computed(() => visibleTypeKeys.value.map(key => [key, typeLabels[key]]));
@@ -67,7 +67,7 @@ createApp({
             }
 
             const validKeys = configured.filter(type => Object.prototype.hasOwnProperty.call(typeLabels, type));
-            return validKeys.length > 0 ? validKeys : allTypes;
+            return validKeys.length > 0 ? sortByTypeDefinitions(validKeys) : allTypes;
         });
 
         const quizVisibleTypeEntries = computed(() => quizVisibleTypeKeys.value.map(key => [key, typeLabels[key]]));
@@ -106,7 +106,10 @@ createApp({
             state,
             taskGeneration,
             nextTick,
-            typesetMathJax
+            typesetMathJax,
+            selectedGrade,
+            typeLabels,
+            taskTypesByGrade
         });
 
         const quizMode = window.MTGQuizModeModule.createQuizMode({
@@ -129,6 +132,8 @@ createApp({
                 state.selectedTypes.value = value;
             }
         });
+
+        const activeSelectedTypesCount = computed(() => activeSelectedTypes.value.length);
 
         const activeMentalMathMode = computed({
             get: () => state.currentView.value === 'quiz'
@@ -622,14 +627,97 @@ createApp({
             const classTypes = activeVisibleTypeKeys.value;
             const selectedTypesRef = getActiveSelectedTypesRef();
             const taskWeightsRef = getActiveTaskWeightsRef();
-            const randomized = classTypes.filter(() => Math.random() > 0.5);
+            const availableTypes = new Set(classTypes);
 
-            selectedTypesRef.value = randomized.length > 0
-                ? randomized
-                : [classTypes[Math.floor(Math.random() * classTypes.length)]];
+            const config = {
+                requiredTypes: [
+                    'units',
+                    'z_as',
+                    'z_md',
+                    'db_as',
+                    'db_md',
+                    'percent',
+                    'pow10'
+                ],
+                exactOneGroups: [
+                    ['schriftlich_as', 'schriftlich_md']
+                ],
+                atMostOneGroups: [
+                    ['table_add', 'table_sub', 'table_mul', 'table_terms']
+                ],
+                hardCodedWeights: {
+                    units: 2,
+                    z_as: 2,
+                    z_md: 2,
+                    db_as: 2,
+                    db_md: 2,
+                    percent: 2,
+                    pow10: 2,
+                    schriftlich_as: 1,
+                    schriftlich_md: 1,
+                    table_add: 1,
+                    table_sub: 1,
+                    table_mul: 1,
+                    table_terms: 1
+                },
+                optionalPickChance: 0.5
+            };
 
-            allTypes.forEach(type => {
-                taskWeightsRef.value[type] = 1;
+            const pickOneFrom = keys => {
+                const candidates = keys.filter(type => availableTypes.has(type));
+                if (candidates.length === 0) {
+                    return [];
+                }
+                return [candidates[Math.floor(Math.random() * candidates.length)]];
+            };
+
+            const pickAtMostOneFrom = keys => {
+                const candidates = keys.filter(type => availableTypes.has(type));
+                if (candidates.length === 0 || Math.random() >= 0.5) {
+                    return [];
+                }
+                return [candidates[Math.floor(Math.random() * candidates.length)]];
+            };
+
+            const selected = new Set();
+
+            for (const type of config.requiredTypes) {
+                if (availableTypes.has(type)) {
+                    selected.add(type);
+                }
+            }
+
+            for (const group of config.exactOneGroups) {
+                for (const type of pickOneFrom(group)) {
+                    selected.add(type);
+                }
+            }
+
+            for (const group of config.atMostOneGroups) {
+                for (const type of pickAtMostOneFrom(group)) {
+                    selected.add(type);
+                }
+            }
+
+            const isConflictingWithGroup = type => {
+                return config.exactOneGroups.some(group => group.includes(type) && group.some(member => selected.has(member) && member !== type)) ||
+                    config.atMostOneGroups.some(group => group.includes(type) && group.some(member => selected.has(member) && member !== type));
+            };
+
+            for (const type of classTypes) {
+                if (!selected.has(type) && !isConflictingWithGroup(type) && Math.random() < config.optionalPickChance) {
+                    selected.add(type);
+                }
+            }
+
+            if (selected.size === 0 && classTypes.length > 0) {
+                selected.add(classTypes[Math.floor(Math.random() * classTypes.length)]);
+            }
+
+            selectedTypesRef.value = classTypes.filter(type => selected.has(type));
+
+            classTypes.forEach(type => {
+                taskWeightsRef.value[type] = config.hardCodedWeights[type] ?? 2;
             });
         };
 
@@ -759,6 +847,7 @@ createApp({
             activeSelectedTypes,
             activeMentalMathMode,
             activeTaskWeights,
+            activeSelectedTypesCount,
             selectAllTypes,
             randomizeTypeSelection,
             generateRandomWorksheet,

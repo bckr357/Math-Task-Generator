@@ -620,8 +620,8 @@ mjx-container[jax="CHTML"][display="true"] {
 }
 
 .builder-type-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    padding: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    padding: 10px;
 }
 
 .builder-stats-panel {
@@ -761,10 +761,10 @@ mjx-container[jax="CHTML"][display="true"] {
 
 .type-grid {
     display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     background: var(--slate-100);
-    padding: 20px;
+    padding: 10px;
     border-radius: 20px;
     margin-bottom: 20px;
 }
