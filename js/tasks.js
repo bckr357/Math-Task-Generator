@@ -4,6 +4,7 @@
 
 const fmt = formatUtils.fmt;
 const comma = formatUtils.comma;
+const formatDecimal = formatUtils.formatDecimal;
 
 const taskCategories = {
 	arithmetic: ['z_as', 'z_md', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'db_as', 'db_md', 'pow10', 'round', 'vorrang'],
@@ -687,11 +688,11 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 				if (isMult) {
 					result = operand * power;
-					resultStr = isDecimal ? result.toFixed(2).replace(/\.?0+$/, '') : result.toString();
+					resultStr = formatDecimal(result, 2);
 				} else {
 					result = operand / power;
 					// Bei Division: immer mit angemessener Dezimalgenauigkeit
-					resultStr = result.toFixed(4).replace(/\.?0+$/, '');
+					resultStr = formatDecimal(result, 4);
 				}
 
 				// Formatierung des Operanden
@@ -1117,7 +1118,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 					let p10 = getP10(n);
 					let mult = p10 / n;
-					let decStr = Number((z / n).toFixed(4)).toString().replace('.', ',');
+					let decStr = formatDecimal(z / n, 4);
 
 					textDisplay = `als Dezimalbruch: \\( \\quad \\dfrac{${z}}{${n}} = \\)`;
 
@@ -1156,7 +1157,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					// 2. Werte für den Dezimalbruch und den Zwischenschritt berechnen
 					let p10 = getP10(n);
 					let mult = p10 / n; // Das ist jetzt unser Kürzungsfaktor
-					let decStr = Number((z / n).toFixed(4)).toString().replace('.', ',');
+					let decStr = formatDecimal(z / n, 4);
 
 					// Der Zähler des ungekürzten Zehnerbruchs (z. B. 35 bei 0,35)
 					let z_p10 = z * mult;
@@ -1327,7 +1328,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				// ---------------------------------------------------------
 				case 'dec_to_perc': {
 					let p = (Math.floor(Math.random() * 400) + 1) / 2; // Schritte von 0,5%
-					let decStr = Number((p / 100).toFixed(4)).toString().replace('.', ',');
+					let decStr = formatDecimal(p / 100, 4);
 					let percStr = p.toString().replace('.', ',') + '\\,\\text{%}';
 
 					textDisplay = ` in Prozent: \\( \\quad ${decStr} = \\)`;
@@ -1336,7 +1337,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				}
 				case 'perc_to_dec': {
 					let p = (Math.floor(Math.random() * 400) + 1) / 2;
-					let decStr = Number((p / 100).toFixed(4)).toString().replace('.', ',');
+					let decStr = formatDecimal(p / 100, 4);
 					let percStr = p.toString().replace('.', ',') + '\\,\\text{%}';
 
 					textDisplay = `als Dezimalbruch: \\( \\quad ${percStr} = \\)`;
@@ -1438,7 +1439,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					res = v1 + v2;
 					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(v1)} + ${comma(v2)} \\)`;
 					textPrint = `Berechne schriftlich: \\( \\quad ${comma(v1)} + ${comma(v2)} \\)<br>${karo(4, 12)}`;
-					s = `\\( ${comma(v1)} + ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
+					s = `\\( ${comma(v1)} + ${comma(v2)} = ${formatDecimal(res, 2)} \\)`;
 					break;
 
 				case 1: // SUBTRAKTION
@@ -1447,7 +1448,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					res = v1 - v2;
 					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(v1)} - ${comma(v2)} \\)`;
 					textPrint = `Berechne schriftlich: \\( \\quad ${comma(v1)} - ${comma(v2)} \\)<br>${karo(4, 12)}`;
-					s = `\\( ${comma(v1)} - ${comma(v2)} = ${comma(res.toFixed(2).replace(/\.?0+$/, ""))} \\)`;
+					s = `\\( ${comma(v1)} - ${comma(v2)} = ${formatDecimal(res, 2)} \\)`;
 					break;
 			}
 			break;
@@ -1474,8 +1475,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(v1)} \\cdot ${comma(v2)} \\)`;
 					textPrint = `Berechne schriftlich: \\( \\quad ${comma(v1)} \\cdot ${comma(v2)} \\)<br>${karo(mulRows, 16)}`;
 					// Bei Multiplikation können bis zu 4 Stellen entstehen (2+2)
-					s = `\\( ${comma(v1)} \\cdot ${comma(v2)} = ${comma(Number(res.toFixed(4)))} \\)`;
-					
+				s = `\\( ${comma(v1)} \\cdot ${comma(v2)} = ${formatDecimal(res, 4)} \\)`;
 					break;
 
 				case 3: // DIVISION (durch ganze Zahl)
@@ -1488,9 +1488,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					const resultDigits = countDigits(comma(resultValue));
 					const divRows = Math.max(4, resultDigits * 2 + 3);
 
-					textDisplay = `Berechne schriftlich: \\( \\quad ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)`;
-					textPrint = `Berechne schriftlich: \\( \\quad ${comma(Number(dividend.toFixed(2)))} : ${divisor} \\)<br>${karo(divRows, 16)}`;
-					s = `\\( ${comma(Number(dividend.toFixed(2)))} : ${divisor} = ${comma(resultValue)} \\)`;
+					textDisplay = `Berechne schriftlich: \\( \\quad ${formatDecimal(dividend, 2)} : ${divisor} \\)`;
+					textPrint = `Berechne schriftlich: \\( \\quad ${formatDecimal(dividend, 2)} : ${divisor} \\)<br>${karo(divRows, 16)}`;
+					s = `\\( ${formatDecimal(dividend, 2)} : ${divisor} = ${comma(resultValue)} \\)`;
 					
 					break;
 			}
@@ -2319,9 +2319,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			// Generiere eine zufällige lineare Funktion
 			let m;
 			let b = randInt(-8, 8) / 2; 
-			if (b > 2) m = randInt(-6, -2) / 2;
-			else if (b < -2) m = randInt(2, 6) / 2;
-			else m = rnd(-6, 6) / 2; 
+			if (b >= 2) m = randInt(-6, -2) / 2;
+			else if (b <= -2) m = randInt(2, 6) / 2;
+			else m = randInt(-6, 6) / 2; 
 
 			// Funktion
 			const f = (x) => m * x + b;
@@ -2444,7 +2444,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			textDisplay = `Zeichne den Graphen und lies die Nullstelle ab: \\( ${funcStr} \\)`;
 			textPrint = `Zeichne und lies die Nullstelle ab: \\( \\; ${funcStr} \\)`;
 
-			const x0 = comma(xIntercept.toFixed(2));
+			const x0 = comma(formatDecimal(xIntercept, 2));
 			s = `<div style="display:flex; justify-content: center; align-items:center; gap:20px;">
 				<div style="min-width:180px;">
 					<span>\\( ${funcStr} \\)</span><br><br>
@@ -2910,7 +2910,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			
 			const type = randInt(0, 3); // 0: SSS, 1: SWS, 2: WSW, 3: SsW
 			const kongruenzsatz = ['SSS', 'SWS', 'WSW', 'SsW'][type];
-			const cm = (x) => x.toFixed(1).replace('.', ',');
+			const cm = (x) => formatDecimal(x, 1);
 			const pickDecNoZeroTenth = (minTenths, maxTenths) => {
 				let n;
 				do {
@@ -3166,7 +3166,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			
 			// Hilfsfunktion für deutsches Zahlenformat
 			const de = (num) => {
-				if (sz.type === 'food' || sz.type === 'job') return num.toFixed(2).replace('.', ',');
+				if (sz.type === 'food' || sz.type === 'job') return formatDecimal(num, 2);
 				return Math.round(num).toString();
 			};
 
@@ -3469,4 +3469,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		solution: s
 	};
 };
+
+
+
+
 

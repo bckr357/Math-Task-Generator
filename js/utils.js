@@ -54,6 +54,16 @@ const formatUtils = {
         return s.replace('.', ',');
     },
 
+    // Gibt eine Zahl mit maximal `maxDecimals` Nachkommastellen zurück.
+    // Unnötige Nullen werden abgeschnitten und der Dezimalpunkt durch ein Komma ersetzt.
+    // Beispiele: 2.50 -> "2,5", 3.00 -> "3", 2.66666 -> "2,67".
+    formatDecimal: (val, maxDecimals = 2) => {
+        if (typeof val !== 'number' || !isFinite(val)) {
+            return String(val);
+        }
+        return Number(val.toFixed(maxDecimals)).toString().replace('.', ',');
+    },
+
     /**
      * Formatiert eine Zahl mit Vorzeichen für mathematische Ausdrücke
      * @param {number} value - Die zu formatierende Zahl
