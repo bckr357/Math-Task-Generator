@@ -1752,7 +1752,7 @@ mjx-container[jax="CHTML"][display="true"] {
     border-collapse: collapse;
     border-spacing: 0;
     /* outer border: same thickness as inner cell borders */
-    border: 0.2mm solid #64748b;
+    border: 0.1mm solid #909090;
 }
 .karo-placeholder table {
     border-collapse: collapse;
@@ -1764,7 +1764,7 @@ mjx-container[jax="CHTML"][display="true"] {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    border: 0.1mm solid rgb(150, 150, 150);
+    border: 0.05mm solid rgb(190, 190, 190);
 }
 
 .worksheet-solutions-header {

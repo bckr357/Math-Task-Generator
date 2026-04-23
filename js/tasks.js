@@ -1064,7 +1064,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			const sortedStr = sortedAsc.map(f => fmtFrac(f.orig)).join(' < ');
 
 			textDisplay = `Ordne von klein nach groß: \\( \\quad ${displayStr} \\)`;
-			tripleNumeratorCase ? 	s = `\\[ ${sortedStr} \\]` :
+			tripleNumeratorCase ? 	s = `\\[ ${sortedStr} \\quad \\text{(Nenner entscheidet)}\\]` :
 									s = `\\[ ${sortedStr} \\quad \\left(${extStep}\\right) \\]`;
 			break;
 		}
@@ -2442,7 +2442,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					: `f(x) = ${comma(mStr)} - ${comma(Math.abs(b))}`;
 
 			textDisplay = `Zeichne den Graphen und lies die Nullstelle ab: \\( ${funcStr} \\)`;
-			textPrint = `Zeichne und lies die Nullstelle ab: \\( \\; ${funcStr} \\)`;
+			textPrint = `Zeichne und lies die Nullstelle ab: \\( \\; ${funcStr} \\) ${karo(11, 20)}` ;
 
 			const x0 = comma(formatDecimal(xIntercept, 2));
 			s = `<div style="display:flex; justify-content: center; align-items:center; gap:20px;">
