@@ -958,7 +958,7 @@ mjx-container[jax="CHTML"][display="true"] {
 .task-row {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--slate-100);
+    border-bottom: 1px solid var(--slate-300);
     min-height: 60px; 
     height: auto; 
     padding: 20px 0;
@@ -1199,7 +1199,7 @@ mjx-mtext {
 }
 
 .presentation-view.dark-mode .task-num {
-    color: #475569;
+    color: #a3adba;
 }
 
 .presentation-view.dark-mode .math-q {

@@ -412,7 +412,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						return {
 							expr,
 							evalFn: x => a * x + b,
-							substitute: x => `${a}\\cdot${fmt(x)} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`
+							substitute: x => b >= 0 ? `${a*x} + ${Math.abs(b)}` : `${a*x} - ${Math.abs(b)}`,
+							// substitute: x => `${a}\\cdot${fmt(x)} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`
 						};
 					},
 					() => {
@@ -422,7 +423,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						return {
 							expr,
 							evalFn: x => a * x * x + b,
-							substitute: x => `${a}\\cdot${fmt(x)}^2 ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`
+							substitute: x => b >= 0 ? `${a*x*x} + ${Math.abs(b)}` : `${a*x*x} - ${Math.abs(b)}`,
+							// substitute: x => `${a}\\cdot${fmt(x)}^2 ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`
 						};
 					},
 					() => {
@@ -432,7 +434,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						return {
 							expr,
 							evalFn: x => a * x + (b >= 0 ? 1 : -1) * Math.abs(b) * x * x,
-							substitute: x => `${a}\\cdot${fmt(x)} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}\\cdot${fmt(x)}^2`
+							substitute: x => b >= 0 ? `${a*x} + ${Math.abs(b)*x*x}` : `${a*x} - ${Math.abs(b)*x*x}`,
+							// substitute: x => `${a}\\cdot${fmt(x)} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}\\cdot${fmt(x)}^2`
 						};
 					}
 				];
@@ -514,11 +517,11 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let b = allowNegativeDecimals ? trueDec(-15, 15) : trueDec(0, 13);
 
 				if (Math.random() > 0.5) {
-					expr = `\\( ${comma(a)} + ${comma(fmt(b))} =\\)`;
-					solution = `\\( ${comma(a)} + ${comma(fmt(b))} = ${comma((a + b).toFixed(1))} \\)`;
+					expr = `\\[ ${comma(a)} + ${comma(fmt(b))} = \\]`;
+					solution = `\\[ ${comma(a)} + ${comma(fmt(b))} = ${comma((a + b).toFixed(1))} \\]`;
 				} else {
-					expr = `\\( ${comma(a)} - ${comma(fmt(b))} = \\)`;
-					solution = `\\( ${comma(a)} - ${comma(fmt(b))} = ${comma((a - b).toFixed(1))} \\)`;
+					expr = `\\[ ${comma(a)} - ${comma(fmt(b))} = \\]`;
+					solution = `\\[ ${comma(a)} - ${comma(fmt(b))} = ${comma((a - b).toFixed(1))} \\]`;
 				}
 				return { expr, solution };
 			};
@@ -545,8 +548,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				} else if (rdLocal > 0.4) {
 					const a = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
 					const b = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
-					expr = `\\( ${comma(a)} \\cdot ${comma(fmt(b))} =\\)`;
-					solution = `\\(${comma(a)} \\cdot ${comma(fmt(b))} = ${comma((a * b).toFixed(2))} \\)`;
+					expr = `\\[ ${comma(a)} \\cdot ${comma(fmt(b))} = \\]`;
+					solution = `\\[ ${comma(a)} \\cdot ${comma(fmt(b))} = ${comma((a * b).toFixed(2))} \\]`;
 				} else {
 					const res = allowNegativeDecimals ? trueDec(-1.5, 1.5) : trueDec(0, 1.5);
 					let b = allowNegativeDecimals ? rnd(-9, 9) : rnd(2, 9);
@@ -554,8 +557,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						b = allowNegativeDecimals ? rnd(-9, 9) : rnd(2, 9);
 					}
 					const a = res * b;
-					expr = `\\( ${comma(a.toFixed(1))} : ${comma(fmt(b))} =\\)`;
-					solution = `\\(${comma(a.toFixed(1))} : ${comma(fmt(b))} = ${comma(res.toFixed(1))} \\)`;
+					expr = `\\[ ${comma(a.toFixed(1))} : ${comma(fmt(b))} = \\]`;
+					solution = `\\[ ${comma(a.toFixed(1))} : ${comma(fmt(b))} = ${comma(res.toFixed(1))} \\]`;
 				}
 				return { expr, solution };
 			};
@@ -584,21 +587,21 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					expr = `\\( ${v1} + ${fmt(v2)} =\\)`;
 					const sum = v1 + v2;
 					if (v2 < 0) {
-						solution = `\\( ${v1} + ${fmt(v2)} = ${v1} - ${Math.abs(v2)} = ${sum} \\)`;
+						solution = `\\[ ${v1} + ${fmt(v2)} = ${v1} - ${Math.abs(v2)} = ${sum} \\]`;
 					} else {
-						solution = `\\( ${v1} + ${fmt(v2)} = ${sum} \\)`;
+						solution = `\\[ ${v1} + ${fmt(v2)} = ${sum} \\]`;
 					}
 				} else {
 					do {
 						v1 = rnd(-20, 20);
 						v2 = rnd(-20, 20);
 					} while (!(v1 < 0 || v2 < 0 || (v1 - v2) < 0));
-					expr = `\\( ${v1} - ${fmt(v2)} =\\)`;
+					expr = `\\[ ${v1} - ${fmt(v2)} = \\]`;
 					const diff = v1 - v2;
 					if (v2 < 0) {
-						solution = `\\( ${v1} - ${fmt(v2)} = ${v1} + ${Math.abs(v2)} = ${diff} \\)`;
+						solution = `\\[ ${v1} - ${fmt(v2)} = ${v1} + ${Math.abs(v2)} = ${diff} \\]`;
 					} else {
-						solution = `\\( ${v1} - ${fmt(v2)} = ${diff} \\)`;
+						solution = `\\[ ${v1} - ${fmt(v2)} = ${diff} \\]`;
 					}
 				}
 				return { expr, solution };
@@ -625,8 +628,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						v1 = rnd(-15, 15);
 						v2 = rnd(-9, 9);
 					} while (!(v1 < 0 || v2 < 0 || (v1 * v2) < 0));
-					expr = `\\( ${v1} \\cdot ${fmt(v2)} = \\)`;
-					solution = `\\( ${v1} \\cdot ${fmt(v2)} = ${v1 * v2} \\)`;
+					expr = `\\[ ${v1} \\cdot ${fmt(v2)} = \\]`;
+					solution = `\\[ ${v1} \\cdot ${fmt(v2)} = ${v1 * v2} \\]`;
 				} else {
 					let res;
 					do {
@@ -634,8 +637,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						v2 = rnd(-12, 12);
 					} while (v2 === 0 || !(res < 0 || v2 < 0 || (res * v2) < 0));
 					v1 = res * v2;
-					expr = `\\( ${v1} : ${fmt(v2)} = \\)`;
-					solution = `\\( ${v1} : ${fmt(v2)} = ${res} \\)`;
+					expr = `\\[ ${v1} : ${fmt(v2)} = \\]`;
+					solution = `\\[ ${v1} : ${fmt(v2)} = ${res} \\]`;
 				}
 				return { expr, solution };
 			};
@@ -657,53 +660,54 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				// Zehnerpotenzen: natürliche Zahl oder Dezimalbruch mit 10, 100 oder 1000
 				const powers = [10, 10, 100, 100, 1000];
 				const power = powers[randInt(0, 4)];
-			const isMult = Math.random() > 0.5;
+				const isMult = Math.random() > 0.5;
 
-			// Operand: entweder natürliche Zahl oder Dezimalbruch (1-2 Stellen)
-			let operand;
-			let isDecimal;
+				// Operand: entweder natürliche Zahl oder Dezimalbruch (1-2 Stellen)
+				let operand;
+				let isDecimal;
 
-			if (Math.random() > 0.5) {
-				// Dezimalbruch mit 1-2 Stellen nach Komma
-				isDecimal = true;
-				const isDec2 = Math.random() > 0.5;
-				if (isDec2) {
-					operand = rnd(10, 999) / 100; // 0,10 bis 9,99
+				if (Math.random() > 0.5) {
+					// Dezimalbruch mit 1-2 Stellen nach Komma
+					isDecimal = true;
+					const isDec2 = Math.random() > 0.5;
+					if (isDec2) {
+						operand = rnd(111, 19999) / 100; // 1,11 bis 199,99
+					} else {
+						operand = rnd(2, 199) / 10; // 0,1 bis 19,9
+					}
 				} else {
-					operand = rnd(2, 99) / 10; // 0,1 bis 9,9
+					// Natürliche Zahl
+					isDecimal = false;
+					operand = rnd(2, 299);
 				}
-			} else {
-				// Natürliche Zahl
-				isDecimal = false;
-				operand = rnd(10, 999);
-			}
 
-			const op = isMult ? '\\cdot' : ':';
-			let result;
-			let resultStr;
+				const op = isMult ? '\\cdot' : ':';
+				let result;
+				let resultStr;
 
-			if (isMult) {
-				result = operand * power;
-				resultStr = isDecimal ? result.toFixed(2).replace(/\.?0+$/, '') : result.toString();
-			} else {
-				result = operand / power;
-				// Bei Division: immer mit angemessener Dezimalgenauigkeit
-				resultStr = result.toFixed(4).replace(/\.?0+$/, '');
-			}
+				if (isMult) {
+					result = operand * power;
+					resultStr = isDecimal ? result.toFixed(2).replace(/\.?0+$/, '') : result.toString();
+				} else {
+					result = operand / power;
+					// Bei Division: immer mit angemessener Dezimalgenauigkeit
+					resultStr = result.toFixed(4).replace(/\.?0+$/, '');
+				}
 
-			// Formatierung des Operanden
-			const operandStr = isDecimal ? comma(operand) : operand.toString();
+				// Formatierung des Operanden
+				const operandStr = isDecimal ? comma(operand) : operand.toString();
 
-			// Aufgabe
-			const expr = `\\( ${operandStr} ${op} ${power} =\\)`;
+				// Aufgabe
+				const expr = `\\( ${operandStr} ${op} ${power} =\\)`;
 
-			// Lösung mit Erklärung der Kommaverschiebung/Stellenwertverschiebung
-			const shiftCount = power === 10 ? 1 : power === 100 ? 2 : 3;
-			const shiftDirection = isMult ? '&#x2192;' : '&#x2190;';
-			const shiftDescription = `(Komma ${shiftCount} x ${shiftDirection})`;
+				// Lösung mit Erklärung der Kommaverschiebung/Stellenwertverschiebung
+				// const shiftCount = power === 10 ? 1 : power === 100 ? 2 : 3;
+				// const shiftDirection = isMult ? '&#x2192;' : '&#x2190;';
+				// const shiftDescription = `(Komma ${shiftCount} x ${shiftDirection})`;
 
-			const solution = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad \\text{${shiftDescription}}\\)`;
-			return { expr, solution };
+				// const solution = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad \\text{${shiftDescription}}\\)`;
+				const solution = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\)`;
+				return { expr, solution };
 			};
 
 			if (isTraining) {
@@ -763,15 +767,13 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			// Dynamischer Lösungsweg
 			let step1 = "";
 			if (f1 > 1 && f2 > 1) {
-				step1 = `\\frac{${z1} \\cdot ${f1}}{${n1} \\cdot ${f1}} ${op} \\frac{${z2} \\cdot ${f2}}{${n2} \\cdot ${f2}}`;
+				step1 = `\\frac{${z1} \\cdot ${f1} ${op} ${z2} \\cdot ${f2}}{${n1} \\cdot ${f1}} = \\frac{${ez1} ${op} ${ez2}}{${hn}}`;
 			} else if (f1 > 1) {
-				step1 = `\\frac{${z1} \\cdot ${f1}}{${n1} \\cdot ${f1}} ${op} \\frac{${z2}}{${n2}}`;
+				step1 = `\\frac{${z1} \\cdot ${f1}}{${n1} \\cdot ${f1}} ${op} \\frac{${z2}}{${n2}} = \\frac{${ez1} ${op} ${ez2}}{${hn}}`;
 			} else if (f2 > 1) {
-				step1 = `\\frac{${z1}}{${n1}} ${op} \\frac{${z2} \\cdot ${f2}}{${n2} \\cdot ${f2}}`;
-			} else {
-				step1 = `\\frac{${z1}}{${n1}} ${op} \\frac{${z2}}{${n2}}`;
-			}
-			s = `\\[ \\frac{${z1}}{${n1}} ${op} \\frac{${z2}}{${n2}} = ${step1} = \\frac{${ez1}}{${hn}} ${op} \\frac{${ez2}}{${hn}} = \\frac{${finalZ}}{${hn}} \\]`;
+				step1 = `\\frac{${z1}}{${n1}} ${op} \\frac{${z2} \\cdot ${f2}}{${n2} \\cdot ${f2}} = \\frac{${ez1} ${op} ${ez2}}{${hn}}`;
+			} 
+			s = `\\[ \\frac{${z1}}{${n1}} ${op} \\frac{${z2}}{${n2}} = ${step1} = \\frac{${finalZ}}{${hn}} \\]`;
 			break;
 		}
 
@@ -1349,20 +1351,20 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			let p, pVal;
 			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
 			rd = Math.random();
-			if (rd > 0.67) {
+			if (rd > 0.5) {
 				pVal = rnd(2, 11) * 100;
 				p = [3, 4, 5, 6, 7, 8, 9, 11, 12, 20, 25, 30, 35, 40, 60, 70, 80, 90][randInt(0, 17)];
 				textDisplay = `${p} % von ${pVal} ${einheit} sind ${blank(3)}`;
-				s = `${pVal} ${einheit} ≙ 100 %<br>${pVal / 100} ${einheit} ≙ 1 %<br>${pVal / 100 * p} ${einheit} ≙ ${p} %`;
-			} else if (rd > 0.33) {
+				s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${p} % ≙ <b>${pVal / 100 * p} ${einheit}</b>`;
+			} else if (rd > 0.3) {
 				p = [20, 25, 30, 40, 50, 60, 70, 80, 90][randInt(0, 8)];
 				pVal = rnd(2, 9) * p;
 				textDisplay = `${p} % sind ${pVal} ${einheit} von ${blank(3)}`;
-				s = `${p} % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / p} ${einheit}<br>100 % ≙ ${pVal / p * 100} ${einheit}`;
+				s = `${p} % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / p} ${einheit}<br>100 % ≙ <b>${pVal / p * 100} ${einheit}</b>`;
 			} else {
 				// 1. Wähle einen "schönen" Prozentsatz p (z.B. 5, 10, 20, 25, 50...)
 				const p_list = isMentalMode ? [2, 3, 5, 10, 20, 25, 50, 75, 80, 90] : [2, 3, 5, 10, 15, 20, 25, 40, 50, 75, 80, 90, 95];
-				const p = p_list[rnd(2, p_list.length + 1) - 2];
+				const p = p_list[randInt(0, p_list.length - 1)];
 
 				// 2. Wähle einen Multiplikator für den Prozentwert W, 
 				// damit die Zahlen nicht zu krumm werden
@@ -1377,7 +1379,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				textDisplay = ` ${comma(W)} ${einheit} von ${comma(G)} ${einheit} sind ${blank(2)} % `;
 
 				// Lösung: Zeigt den Rechenweg oder das Ergebnis
-				s = `${comma(G)} ${einheit} ≙ 100 %<br>${comma(G / 100)} ${einheit} ≙ 1 %<br>${comma(W)} ${einheit} ≙ ${p} %`;
+				s = `100 % ≙ ${comma(G)} ${einheit}<br>1 % ≙ ${comma(G / 100)} ${einheit} <br><b>${p} %</b> ≙ ${comma(W)} ${einheit}`;
 			}
 			break;
 
@@ -1524,7 +1526,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			else direction = Math.random() > 0.5 ? 1 : 0;
 
 			const fromUnit = group.units[unitIndex];
-			let toUnit, startValue, result;
+			let toUnit, startValue, result, operation;
 
 			switch (group.type) {
 				case 'Zeit':
@@ -1532,11 +1534,13 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						// In nächstkleinere Einheit (Zahl wird größer)
 						toUnit = group.units[unitIndex - 1];
 						const f = group.factors[unitIndex - 1];
+							operation = `· ${f}`;
 						startValue = [0.1, 0.25, 0.5, 1.5, 2.25, 2.5, 2.75, 3.5, 4][randInt(0, 8)];
 						result = (startValue * f);
 					} else {
 						toUnit = group.units[unitIndex + 1];
 						const f = group.factors[unitIndex];
+							operation = `: ${f}`;
 						startValue = [0.1, 0.25, 0.5, 1.5, 2.25, 2.5, 2.75, 3.5, 4][randInt(0, 8)] * f;
 						result = comma(startValue / f);
 					}
@@ -1544,6 +1548,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				default:
 					const factor = (direction === 0) ? group.factors[unitIndex - 1] : group.factors[unitIndex];
 					toUnit = (direction === 0) ? group.units[unitIndex - 1] : group.units[unitIndex + 1];
+						operation = (direction === 0) ? `· ${factor}` : `: ${factor}`;
 
 					if (direction === 0) {
 						// Zahl wird größer (Multiplikation)
@@ -1566,7 +1571,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 				return {
 					expr: `${toCleanString(startValue)} ${fromUnit} = ${blank(3)} ${toUnit}`,
-					solution: `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit}`
+					solution: `${toCleanString(startValue)} ${fromUnit} = ${result} ${toUnit} &emsp; ( ${operation} )`
 				};
 			};
 
@@ -1737,7 +1742,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			}
 
 			textDisplay = `Runde auf ${target}: \\( \\quad ${comma(v1.toFixed(3))} \\approx \\) ${blank(2)}`;
-			s = `\\( ${comma(v1.toFixed(3))} \\approx ${comma(result.toFixed(digits))} \\) (${target})`;
+			s = `Runde auf ${target}: \\( \\; \\; ${comma(v1.toFixed(3))} \\approx ${comma(result.toFixed(digits))} \\)`;
 			break;
 		}
 		
@@ -1955,7 +1960,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					steps: [
 						{ eq: `A &= \\tfrac{1}{2} (a+c) \\cdot h`, op: `\\cdot 2` },
 						{ eq: `2 \\, A &= (a + c) \\cdot h`,       op: `: (a+c)` },
-						{ eq: `2 \\, A : (a+c) &= h`,              op: null }
+						{ eq: `\\dfrac{2 \\, A}{a+c} &= h`,              op: null }
 					]
 				},
 				// --- RECHTECKUMFANG ---
@@ -2036,7 +2041,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					steps: [
 						{ eq: `s &= \\tfrac{1}{2} \\cdot a \\cdot t^2`, op: `\\cdot 2` },
 						{ eq: `2\\,s &= a \\cdot t^2`,                       op: `: t^2` },
-						{ eq: `\\dfrac{2\\,s}{t^2} &= a`,                    op: null }
+						{ eq: `2\\,s : t^2 &= a`,                    op: null }
 					]
 				},
 				// --- Sinus ---
@@ -2049,18 +2054,18 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						{ eq: `\\sin \\beta &= \\dfrac{b}{a}`,          op: `\\sin^{-1}` },
 						{ eq: `\\sin^{-1} \\left( \\dfrac{b}{a} \\right) &= \\beta`, op: null }
 					]
-				},
-				// --- Kosinussatz ---
-				{
-					textPrint: `Stelle nach \\( \\gamma \\) um: \\( \\quad c^2 = a^2 + b^2 - 2 \\, a \\, b \\, \\cos \\gamma \\quad | \\) ${space(2)}`,
-					textDisplay: `Stelle nach \\( \\gamma \\) um: \\( \\quad c^2 = a^2 + b^2 - 2 \\, a \\, b \\, \\cos \\gamma \\)`,
-					steps: [
-						{ eq: `c^2 &= a^2 + b^2 - 2 \\, a \\, b \\, \\cos \\gamma`, op: `- a^2 -b^2` },
-						{ eq: `c^2 -a^2 - b^2 &= - 2 \\, a \\, b \\, \\cos \\gamma`, op: `: - (2 \\, a \\, b)` },
-						{ eq: `\\dfrac{c^2 -a^2 - b^2}{- (2 \\, a \\, b)} &= \\cos \\gamma`, op: `\\cos^{-1}` },
-						{ eq: `\\cos^{-1} \\left( \\dfrac{c^2 -a^2 - b^2}{- (2 \\, a \\, b)} \\right) &= \\gamma`, op: null }
-					]
 				}
+				// --- Kosinussatz ---
+				// {
+				// 	textPrint: `Stelle nach \\( \\gamma \\) um: \\( \\quad c^2 = a^2 + b^2 - 2 \\, a \\, b \\, \\cos \\gamma \\quad | \\) ${space(2)}`,
+				// 	textDisplay: `Stelle nach \\( \\gamma \\) um: \\( \\quad c^2 = a^2 + b^2 - 2 \\, a \\, b \\, \\cos \\gamma \\)`,
+				// 	steps: [
+				// 		{ eq: `c^2 &= a^2 + b^2 - 2 \\, a \\, b \\, \\cos \\gamma`, op: `- a^2 -b^2` },
+				// 		{ eq: `c^2 -a^2 - b^2 &= - 2 \\, a \\, b \\, \\cos \\gamma`, op: `: - (2 \\, a \\, b)` },
+				// 		{ eq: `\\dfrac{c^2 -a^2 - b^2}{- (2 \\, a \\, b)} &= \\cos \\gamma`, op: `\\cos^{-1}` },
+				// 		{ eq: `\\cos^{-1} \\left( \\dfrac{c^2 -a^2 - b^2}{- (2 \\, a \\, b)} \\right) &= \\gamma`, op: null }
+				// 	]
+				// }
 			];
 
 			const f = formeln[randInt(0, formeln.length - 1)];
@@ -2253,124 +2258,141 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'word_terms': {
-			// Generiere verschiedene Wortterme
-			const wrapNum = (n) => (n < 0 ? `(${n})` : `${n}`);
-			const formatResult = (val) => Number.isInteger(val) ? `${val}` : comma(val.toFixed(2));
-			const operations = [
-				{
-					name: 'sum',
-					generate: (nums) => ({
-						term: `Addiere ${wrapNum(nums[0])} und ${wrapNum(nums[1])}`,
-						expr: `${wrapNum(nums[0])} + ${wrapNum(nums[1])}`,
-						result: nums[0] + nums[1]
-					})
+			// === BAUSTEIN-SYSTEM FÜR WORTTERME ===
+			// Verschachtelte Aufgaben beginnen immer mit: Addiere, Subtrahiere, Multipliziere, Dividiere
+			const operations = {
+				add: {
+					symbol: '+',
+					calc: (a, b) => a + b,
+					noun: 'die Summe von',
+					nounNested: 'der Summe von'
 				},
-				{
-					name: 'diff',
-					generate: (nums) => ({
-						term: `Subtrahiere ${wrapNum(nums[1])} von ${wrapNum(nums[0])}`,
-						expr: `${wrapNum(nums[0])} - ${wrapNum(nums[1])}`,
-						result: nums[0] - nums[1]
-					})
+				sub: {
+					symbol: '-',
+					calc: (a, b) => a - b,
+					noun: 'die Differenz von',
+					nounNested: 'der Differenz von'
 				},
-				{
-					name: 'product',
-					generate: (nums) => ({
-						term: `Multipliziere ${wrapNum(nums[0])} und ${wrapNum(nums[1])}`,
-						expr: `${wrapNum(nums[0])} \\cdot ${wrapNum(nums[1])}`,
-						result: nums[0] * nums[1]
-					})
+				mul: {
+					symbol: '\\cdot',
+					calc: (a, b) => a * b,
+					noun: 'das Produkt von',
+					nounNested: 'dem Produkt von'
 				},
-				{
-					name: 'quotient',
-					generate: (nums) => ({
-						term: `Dividiere ${wrapNum(nums[0])} durch ${wrapNum(nums[1])}`,
-						expr: `${wrapNum(nums[0])} : ${wrapNum(nums[1])}`,
-						result: nums[0] / nums[1]
-					})
-				},
-				{
-					name: 'prod_sum',
-					generate: (nums) => ({
-						term: `Addiere das Produkt von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} mit ${wrapNum(nums[2])}`,
-						expr: `${wrapNum(nums[0])} \\cdot ${wrapNum(nums[1])} + ${wrapNum(nums[2])}`,
-						result: nums[0] * nums[1] + nums[2]
-					})
-				},
-				{
-					name: 'prod_diff',
-					generate: (nums) => ({
-						term: `Subtrahiere das Produkt von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} von ${wrapNum(nums[2])}`,
-						expr: `${wrapNum(nums[2])} - ${wrapNum(nums[0])} \\cdot ${wrapNum(nums[1])}`,
-						result: nums[2] - nums[0] * nums[1]
-					})
-				},
-				{
-					name: 'sum_product',
-					generate: (nums) => ({
-						term: `Multipliziere die Summe von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} mit ${wrapNum(nums[2])}`,
-						expr: `(${wrapNum(nums[0])} + ${wrapNum(nums[1])}) \\cdot ${wrapNum(nums[2])}`,
-						result: (nums[0] + nums[1]) * nums[2]
-					})
-				},
-				{
-					name: 'diff_product',
-					generate: (nums) => ({
-						term: `Multipliziere die Differenz von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} mit ${wrapNum(nums[2])}`,
-						expr: `(${wrapNum(nums[0])} - ${wrapNum(nums[1])}) \\cdot ${wrapNum(nums[2])}`,
-						result: (nums[0] - nums[1]) * nums[2]
-					})
-				},
-				{
-					name: 'sum_quotient',
-					generate: (nums) => ({
-						term: `Dividiere die Summe von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} durch ${wrapNum(nums[2])}`,
-						expr: `(${wrapNum(nums[0])} + ${wrapNum(nums[1])}) : ${wrapNum(nums[2])}`,
-						result: (nums[0] + nums[1]) / nums[2]
-					})
-				},
-				{
-					name: 'diff_quotient',
-					generate: (nums) => ({
-						term: `Dividiere die Differenz von ${wrapNum(nums[0])} und ${wrapNum(nums[1])} durch ${wrapNum(nums[2])}`,
-						expr: `(${wrapNum(nums[0])} - ${wrapNum(nums[1])}) : ${wrapNum(nums[2])}`,
-						result: (nums[0] - nums[1]) / nums[2]
-					})
+				div: {
+					symbol: ':',
+					calc: (a, b) => a / b,
+					noun: 'der Quotient von',
+					nounNested: 'dem Quotienten von'
 				}
-			];
+			};
 
-			// Wähle zufällig eine Operation
-			const selectedOp = operations[randInt(0, operations.length - 1)];
-			
-			// Generiere passende Zahlen (vermeidet Division durch 0)
-			let nums = [];
-			if (selectedOp.name.includes('quotient')) {
-				// Bei Divisionen: stelle sicher, dass die Division aufgeht
-				nums = [rnd(-15, 15), rnd(2, 10), rnd(-15, 15)];
-				if (selectedOp.name === 'quotient') {
-					// Stelle sicher, dass nums[0] % nums[1] === 0
-					nums[0] = nums[1] * randInt(-5, 5);
-				} else if (selectedOp.name === 'sum_quotient') {
-					nums[2] = randInt(1, 10);
-					nums[0] = nums[2] * randInt(-5, 5) - randInt(0, nums[2] - 1);
-					nums[1] = randInt(-nums[2], nums[2]);
-				} else if (selectedOp.name === 'diff_quotient') {
-					nums[2] = randInt(1, 10);
-					nums[0] = nums[2] * randInt(-5, 5) + randInt(0, nums[2] - 1);
-					nums[1] = randInt(-nums[2], nums[2]);
+			const imperative = {
+				add: 'Addiere',
+				sub: 'Subtrahiere',
+				mul: 'Multipliziere',
+				div: 'Dividiere'
+			};
+
+			// Generiere rekursiv einen Term oder eine einfache Zahl
+			const generateTerm = (depth = 0) => {
+				const maxDepth = 2; // Ermöglicht Verschachtelung
+				// Top-Level darf nie eine einfache Zahl sein
+				if (depth >= maxDepth || (depth > 0 && Math.random() < 0.5)) {
+					const num = rnd(-15, 15);
+					return {
+						value: num,
+						description: fmt(num),
+						descriptionGenitive: fmt(num),
+						mathExpr: fmt(num),
+						isSimple: true
+					};
 				}
-			} else {
-				nums = [rnd(-15, 15), rnd(-15, 15), rnd(-15, 15)];
-			}
-			
-			const taskData = selectedOp.generate(nums);
-			
-			textDisplay = `${taskData.term}`;
-			textPrint = `${taskData.term}`;
-			
-			const resultStr = formatResult(taskData.result);
-			
-			s = `\\[ ${taskData.expr} = ${resultStr} \\]`;
+
+				const opKeys = Object.keys(operations);
+				const opKey = opKeys[randInt(0, opKeys.length - 1)];
+				const op = operations[opKey];
+
+				const first = generateTerm(depth + 1);
+				const firstVal = first.value;
+				const firstDesc = first.description;
+				const firstDescGen = first.descriptionGenitive;
+				const firstMathExpr = first.mathExpr;
+
+				let second;
+				if (opKey === 'div') {
+					if (firstVal === 0) {
+						let factor = 0;
+						while (factor === 0) factor = randInt(-5, 5);
+						second = randInt(2, 10) * factor;
+					} else {
+						const absVal = Math.abs(firstVal);
+						const divisors = [];
+						for (let d = 1; d <= absVal; d++) {
+							if (absVal % d === 0) divisors.push(d);
+						}
+						const divisor = divisors[randInt(0, divisors.length - 1)];
+						const sign = Math.random() < 0.5 ? 1 : -1;
+						second = divisor * sign;
+					}
+				} else {
+					second = rnd(-15, 15);
+				}
+
+				const result = op.calc(firstVal, second);
+
+				let descStr, descGenStr, mathExprStr;
+				if (depth === 0) {
+					// Äußerste Aufgabe beginnt mit Imperativ
+					if (first.isSimple) {
+						if (opKey === 'add') {
+							descStr = `${imperative[opKey]} ${firstDesc} und ${fmt(second)}`;
+						} else if (opKey === 'sub') {
+							descStr = `${imperative[opKey]} ${fmt(second)} von ${firstDesc}`;
+						} else if (opKey === 'mul') {
+							descStr = `${imperative[opKey]} ${firstDesc} und ${fmt(second)}`;
+						} else {
+							descStr = `${imperative[opKey]} ${firstDesc} durch ${fmt(second)}`;
+						}
+					} else {
+						if (opKey === 'add') {
+							descStr = `${imperative[opKey]} ${firstDesc} und ${fmt(second)}`;
+						} else if (opKey === 'sub') {
+							descStr = `${imperative[opKey]} ${fmt(second)} von ${firstDescGen}`;
+						} else if (opKey === 'mul') {
+							descStr = `${imperative[opKey]} ${firstDesc} und ${fmt(second)}`;
+						} else {
+							descStr = `${imperative[opKey]} ${firstDescGen} durch ${fmt(second)}`;
+						}
+					}
+					mathExprStr = first.isSimple ? `${fmt(firstVal)} ${op.symbol} ${fmt(second)}` : `(${firstMathExpr}) ${op.symbol} ${fmt(second)}`;
+					// Nominativ und Genitiv für mögliche übergeordnete Verwendung
+					descGenStr = `${op.nounNested} ${first.isSimple ? firstDesc : firstDescGen} und ${fmt(second)}`;
+				} else {
+					if (first.isSimple) {
+						descStr = `${op.noun} ${firstDesc} und ${fmt(second)}`;
+						descGenStr = `${op.nounNested} ${firstDesc} und ${fmt(second)}`;
+					} else {
+						descStr = `${op.noun} ${op.nounNested} ${firstDesc} und ${fmt(second)}`;
+						descGenStr = `${op.nounNested} ${op.nounNested} ${firstDesc} und ${fmt(second)}`;
+					}
+					mathExprStr = `(${firstMathExpr}) ${op.symbol} ${fmt(second)}`;
+				}
+
+				return {
+					value: result,
+					description: descStr,
+					descriptionGenitive: descGenStr,
+					mathExpr: mathExprStr,
+					isSimple: false
+				};
+			};
+
+			const task = generateTerm();
+			textDisplay = `${task.description}`;
+			textPrint = `${task.description}`;
+			const resultStr = Number.isInteger(task.value) ? `${task.value}` : comma(task.value.toFixed(2));
+			s = `\\[ ${task.mathExpr} = ${resultStr} \\]`;
 			break;
 		}
 
@@ -3222,7 +3244,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let W = z * multiplier;
 				let G = n * multiplier;
 				
-				textDisplay = `${comma(W)} ${einheit} von ${comma(G)}  ${einheit} sind ${blank(3)} (gekürzter Bruch)`;
+				textDisplay = `${comma(W)} ${einheit} von ${comma(G)}  ${einheit} sind ${blank(3)} (als gekürzter Bruch)`;
 				s = `${comma(W)}  ${einheit} von  ${comma(G)}  ${einheit} sind  \\(\\dfrac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\dfrac{${z}}{${n}} \\)`;
 			}
 			break;
