@@ -33,8 +33,12 @@ const mathUtils = {
 // ZENTRALE FORMATIERUNGS-FUNKTIONEN
 // ============================================================
 const formatUtils = {
+    // Tauscht den Dezimalpunkt gegen ein Komma, wie es im deutschen Zahlensystem üblich ist.
     comma: (val) => val.toString().replace('.', ','),
     
+    // Formatiert negative Werte für mathematische Ausdrücke.
+    // Strings bleiben erhalten, sofern sie bereits in Klammern stehen.
+    // Wenn das Ergebnis negativ ist, wird es in runde Klammern gesetzt.
     fmt: (value) => {
         if (typeof value === 'string') {
             const trimmed = value.trim();
@@ -44,6 +48,7 @@ const formatUtils = {
         return value < 0 ? `(${value})` : value;
     },
     
+    // Wandelt eine Zahl auf drei Nachkommastellen und ersetzt den Punkt durch ein Komma.
     toCleanString: (val) => {
         let s = Number(val.toFixed(3)).toString();
         return s.replace('.', ',');

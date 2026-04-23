@@ -1584,33 +1584,35 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		case 'geometry':
 			const shapeType = randInt(0, grade >= 7 ? 2 : 1);
 			const goal = Math.random() > 0.5 ? 'A' : 'u';
+			const lengthUnits = ['cm', 'dm', 'm'];
+			const unit = lengthUnits[randInt(0, lengthUnits.length - 1)];
 			let sideA, sideB;
 
 			if (shapeType === 0) { // QUADRAT
 				sideA = rnd(3, 12);
 				if (goal === 'A') {
-					textDisplay = `Quadrat mit \\( a = ${sideA} \\text{ m} \\). Flächeninhalt?`;
-					s = `\\( A = a \\cdot a = ${sideA} \\cdot ${sideA} = ${sideA * sideA} \\text{ m}^2 \\)`;
+					textDisplay = `Berechne den Flächeninhalt eines Quadrats mit \\( a = ${sideA} \\) ${unit}.`;
+					s = `\\( A = a \\cdot a = ${sideA} \\cdot ${sideA} = ${sideA * sideA} \\text{ ${unit}}^2 \\)`;
 				} else {
-					textDisplay = `Quadrat mit \\( a = ${sideA} \\text{ m} \\). Umfang?`;
-					s = `\\( u = 4 \\cdot a = 4 \\cdot ${sideA} = ${sideA * 4} \\text{ m} \\)`;
+					textDisplay = `Berechne den Umfang eines Quadrats mit \\( a = ${sideA} \\) ${unit}.`;
+					s = `\\( u = 4 \\cdot a = 4 \\cdot ${sideA} = ${sideA * 4} \\text{ ${unit}} \\)`;
 				}
 			}
 			else if (shapeType === 1) { // RECHTECK
 				sideA = rnd(2, 12); sideB = rnd(3, 7);
 				if (sideA === sideB) { sideB++ }
 				if (goal === 'A') {
-					textDisplay = `Rechteck mit \\( a = ${sideA} \\text{ m} \\) und \\( b = ${sideB} \\text{ m} \\). Flächeninhalt?`;
-					s = `\\( A = a \\cdot b = ${sideA} \\cdot ${sideB} = ${sideA * sideB} \\text{ m}^2 \\)`;
+					textDisplay = `Berechne den Flächeninhalt eines Rechtecks mit <br>\\( a = ${sideA} \\) ${unit} und \\( b = ${sideB} \\) ${unit}.`;
+					s = `\\( A = a \\cdot b = ${sideA} \\cdot ${sideB} = ${sideA * sideB} \\text{ ${unit}}^2 \\)`;
 				} else {
-					textDisplay = `Rechteck mit \\( a = ${sideA} \\text{ m} \\) und \\( b = ${sideB} \\text{ m} \\). Umfang?`;
-					s = `\\( u = 2 \\cdot (a+b) = 2 \\cdot (${sideA} + ${sideB}) = ${2 * (sideA + sideB)} \\text{ m} \\)`;
+					textDisplay = `Berechne den Umfang eines Rechtecks mit <br>\\( a = ${sideA} \\) ${unit} und \\( b = ${sideB} \\) ${unit}.`;
+					s = `\\( u = 2 \\cdot (a+b) = 2 \\cdot (${sideA} + ${sideB}) = ${2 * (sideA + sideB)} \\text{ ${unit}} \\)`;
 				}
 			}
 			else { // DREIECK
 				sideA = rnd(2, 12); sideB = rnd(3, 7);
-				textDisplay = `Dreieck mit Grundseite \\( g = ${sideA} \\text{ m} \\) und Höhe \\( h = ${sideB} \\text{ m} \\). Flächeninhalt? <br>`;
-				s = `\\( A = \\frac{1}{2} \\cdot g \\cdot h = \\frac{1}{2} \\cdot ${sideA} \\cdot ${sideB} = ${(sideA * sideB) / 2} \\text{ m}^2 \\)`.replace('.', ',');
+				textDisplay = `Berechne den Flächeninhalt eines Dreiecks mit <br>Grundseite \\( g = ${sideA} \\) ${unit} und Höhe \\( h = ${sideB} \\) ${unit}.`;
+				s = `\\( A = \\frac{1}{2} \\cdot g \\cdot h = \\frac{1}{2} \\cdot ${sideA} \\cdot ${sideB} = ${(sideA * sideB) / 2} \\text{ ${unit}}^2 \\)`.replace('.', ',');
 			}
 			break;
 			
@@ -2258,141 +2260,41 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'word_terms': {
-			// === BAUSTEIN-SYSTEM FÜR WORTTERME ===
-			// Verschachtelte Aufgaben beginnen immer mit: Addiere, Subtrahiere, Multipliziere, Dividiere
-			const operations = {
-				add: {
-					symbol: '+',
-					calc: (a, b) => a + b,
-					noun: 'die Summe von',
-					nounNested: 'der Summe von'
-				},
-				sub: {
-					symbol: '-',
-					calc: (a, b) => a - b,
-					noun: 'die Differenz von',
-					nounNested: 'der Differenz von'
-				},
-				mul: {
-					symbol: '\\cdot',
-					calc: (a, b) => a * b,
-					noun: 'das Produkt von',
-					nounNested: 'dem Produkt von'
-				},
-				div: {
-					symbol: ':',
-					calc: (a, b) => a / b,
-					noun: 'der Quotient von',
-					nounNested: 'dem Quotienten von'
+			const templates = [
+				{ text: (a, b) => `Addiere ${a} und ${b}.`, symbol: '+' },
+				{ text: (a, b) => `Subtrahiere ${b} von ${a}.`, symbol: '-' },
+				{ text: (a, b) => `Multipliziere ${a} und ${b}.`, symbol: '\\cdot' },
+				{ text: (a, b) => `Dividiere ${a} durch ${b}.`, symbol: ':' },
+				{ text: (a, b) => `Berechne die Summe von ${a} und ${b}.`, symbol: '+' },
+				{ text: (a, b) => `Berechne die Differenz von ${a} und ${b}.`, symbol: '-' },
+				{ text: (a, b) => `Berechne das Produkt von ${a} und ${b}.`, symbol: '\\cdot' },
+				{ text: (a, b) => `Berechne den Quotienten von ${a} und ${b}.`, symbol: ':' }
+			];
+
+			const template = templates[randInt(0, templates.length - 1)];
+
+			let a = rnd(-15, 15);
+			let b = rnd(-15, 15);
+			if (template.symbol === ':') {
+				b = 0;
+				while (b === 0) {
+					b = rnd(-12, 12);
 				}
-			};
+				const q = rnd(-12, 12);
+				a = b * q;
+			}
 
-			const imperative = {
-				add: 'Addiere',
-				sub: 'Subtrahiere',
-				mul: 'Multipliziere',
-				div: 'Dividiere'
-			};
+			const result = template.symbol === '+'
+				? a + b
+				: template.symbol === '-'
+					? a - b
+					: template.symbol === '\\cdot'
+						? a * b
+						: a / b;
 
-			// Generiere rekursiv einen Term oder eine einfache Zahl
-			const generateTerm = (depth = 0) => {
-				const maxDepth = 2; // Ermöglicht Verschachtelung
-				// Top-Level darf nie eine einfache Zahl sein
-				if (depth >= maxDepth || (depth > 0 && Math.random() < 0.5)) {
-					const num = rnd(-15, 15);
-					return {
-						value: num,
-						description: fmt(num),
-						descriptionGenitive: fmt(num),
-						mathExpr: fmt(num),
-						isSimple: true
-					};
-				}
-
-				const opKeys = Object.keys(operations);
-				const opKey = opKeys[randInt(0, opKeys.length - 1)];
-				const op = operations[opKey];
-
-				const first = generateTerm(depth + 1);
-				const firstVal = first.value;
-				const firstDesc = first.description;
-				const firstDescGen = first.descriptionGenitive;
-				const firstMathExpr = first.mathExpr;
-
-				let second;
-				if (opKey === 'div') {
-					if (firstVal === 0) {
-						let factor = 0;
-						while (factor === 0) factor = randInt(-5, 5);
-						second = randInt(2, 10) * factor;
-					} else {
-						const absVal = Math.abs(firstVal);
-						const divisors = [];
-						for (let d = 1; d <= absVal; d++) {
-							if (absVal % d === 0) divisors.push(d);
-						}
-						const divisor = divisors[randInt(0, divisors.length - 1)];
-						const sign = Math.random() < 0.5 ? 1 : -1;
-						second = divisor * sign;
-					}
-				} else {
-					second = rnd(-15, 15);
-				}
-
-				const result = op.calc(firstVal, second);
-
-				let descStr, descGenStr, mathExprStr;
-				if (depth === 0) {
-					// Äußerste Aufgabe beginnt mit Imperativ
-					if (first.isSimple) {
-						if (opKey === 'add') {
-							descStr = `${imperative[opKey]} ${firstDesc} und ${fmt(second)}`;
-						} else if (opKey === 'sub') {
-							descStr = `${imperative[opKey]} ${fmt(second)} von ${firstDesc}`;
-						} else if (opKey === 'mul') {
-							descStr = `${imperative[opKey]} ${firstDesc} und ${fmt(second)}`;
-						} else {
-							descStr = `${imperative[opKey]} ${firstDesc} durch ${fmt(second)}`;
-						}
-					} else {
-						if (opKey === 'add') {
-							descStr = `${imperative[opKey]} ${firstDesc} und ${fmt(second)}`;
-						} else if (opKey === 'sub') {
-							descStr = `${imperative[opKey]} ${fmt(second)} von ${firstDescGen}`;
-						} else if (opKey === 'mul') {
-							descStr = `${imperative[opKey]} ${firstDesc} und ${fmt(second)}`;
-						} else {
-							descStr = `${imperative[opKey]} ${firstDescGen} durch ${fmt(second)}`;
-						}
-					}
-					mathExprStr = first.isSimple ? `${fmt(firstVal)} ${op.symbol} ${fmt(second)}` : `(${firstMathExpr}) ${op.symbol} ${fmt(second)}`;
-					// Nominativ und Genitiv für mögliche übergeordnete Verwendung
-					descGenStr = `${op.nounNested} ${first.isSimple ? firstDesc : firstDescGen} und ${fmt(second)}`;
-				} else {
-					if (first.isSimple) {
-						descStr = `${op.noun} ${firstDesc} und ${fmt(second)}`;
-						descGenStr = `${op.nounNested} ${firstDesc} und ${fmt(second)}`;
-					} else {
-						descStr = `${op.noun} ${op.nounNested} ${firstDesc} und ${fmt(second)}`;
-						descGenStr = `${op.nounNested} ${op.nounNested} ${firstDesc} und ${fmt(second)}`;
-					}
-					mathExprStr = `(${firstMathExpr}) ${op.symbol} ${fmt(second)}`;
-				}
-
-				return {
-					value: result,
-					description: descStr,
-					descriptionGenitive: descGenStr,
-					mathExpr: mathExprStr,
-					isSimple: false
-				};
-			};
-
-			const task = generateTerm();
-			textDisplay = `${task.description}`;
-			textPrint = `${task.description}`;
-			const resultStr = Number.isInteger(task.value) ? `${task.value}` : comma(task.value.toFixed(2));
-			s = `\\[ ${task.mathExpr} = ${resultStr} \\]`;
+			textDisplay = template.text(a, b);
+			textPrint = template.text(a, b);
+			s = `\\[ ${fmt(a)} ${template.symbol} ${fmt(b)} = ${result} \\]`;
 			break;
 		}
 
@@ -2417,8 +2319,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			// Generiere eine zufällige lineare Funktion
 			let m;
 			let b = randInt(-8, 8) / 2; 
-			if (b > 0) m = randInt(-6, -1) / 2;
-			else m = randInt(1, 6) / 2; 
+			if (b > 2) m = randInt(-6, -2) / 2;
+			else if (b < -2) m = randInt(2, 6) / 2;
+			else m = rnd(-6, 6) / 2; 
 
 			// Funktion
 			const f = (x) => m * x + b;
@@ -2428,10 +2331,10 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			const xIntercept = b !== 0 ? -b / m : 0; // Nullstelle
 			
 			// SVG-Grafik für Koordinatensystem
-			const svgWidth = 360;
-			const svgHeight = 300;
-			const centerX = svgWidth / 2;
-			const centerY = svgHeight / 2;
+			const svgWidth = 345;
+			const svgHeight = 285;
+			const centerX = 360 / 2 - 15; 
+			const centerY = 300 / 2;
 			const scale = 30; // Pixel pro Einheit
 			
 			// Konvertiere Koordinaten von mathematisch zu SVG
@@ -2444,11 +2347,11 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			let svgContent = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid #ccc; background: white;">`;
 			
 			// Gitter: kariertes Papier mit 2 Kästchen pro Einheit
-			for (let i = -12; i <= 12; i++) {
+			for (let i = -11; i <= 12; i++) {
 				const posX = toSVG(i / 2, 0);
 				svgContent += `<line x1="${posX.x}" y1="${centerY - 150}" x2="${posX.x}" y2="${centerY + 150}" stroke="${i % 2 === 0 ? '#bbb' : '#bbb'}" stroke-width="0.5"/>`;
 			}
-			for (let i = -10; i <= 10; i++) {
+			for (let i = -9; i <= 10; i++) {
 				const posY = toSVG(0, i / 2);
 				svgContent += `<line x1="0" y1="${posY.y}" x2="${svgWidth}" y2="${posY.y}" stroke="${i % 2 === 0 ? '#bbb' : '#bbb'}" stroke-width="0.5"/>`;
 			}
@@ -2496,8 +2399,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			}
 			
 			// Gerade zeichnen
-			const leftPoint = toSVG(-4, f(-4));
-			const rightPoint = toSVG(8, f(8));
+			const leftPoint = toSVG(-6, f(-6));
+			const rightPoint = toSVG(6, f(6));
 			svgContent += `<line x1="${leftPoint.x}" y1="${leftPoint.y}" x2="${rightPoint.x}" y2="${rightPoint.y}" stroke="#e74c3c" stroke-width="2.5"/>`;
 			
 			// y-Achsenabschnitt markieren
@@ -2533,11 +2436,11 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			// Funktionsgleichung
 			const mStr = m === 1 ? 'x' : (m === -1 ? '-x' : `${m}x`);
 			const funcStr = b === 0
-				? `f(x) = ${mStr}`
+				? `f(x) = ${comma(mStr)}`
 				: b > 0
-					? `f(x) = ${mStr} + ${b}`
-					: `f(x) = ${mStr} - ${Math.abs(b)}`;
-			
+					? `f(x) = ${comma(mStr)} + ${comma(b)}`
+					: `f(x) = ${comma(mStr)} - ${comma(Math.abs(b))}`;
+
 			textDisplay = `Zeichne den Graphen und lies die Nullstelle ab: \\( ${funcStr} \\)`;
 			textPrint = `Zeichne und lies die Nullstelle ab: \\( \\; ${funcStr} \\)`;
 
