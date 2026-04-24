@@ -659,8 +659,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		case 'pow10': {
 			const createPow10Entry = () => {
 				// Zehnerpotenzen: natürliche Zahl oder Dezimalbruch mit 10, 100 oder 1000
-				const powers = [10, 10, 100, 100, 1000];
-				const power = powers[randInt(0, 4)];
+				const powers = [0.1, 0.01, 10, 10, 100, 100, 1000];
+				const power = powers[randInt(0, 6)];
 				const isMult = Math.random() > 0.5;
 
 				// Operand: entweder natürliche Zahl oder Dezimalbruch (1-2 Stellen)
@@ -672,9 +672,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					isDecimal = true;
 					const isDec2 = Math.random() > 0.5;
 					if (isDec2) {
-						operand = rnd(111, 19999) / 100; // 1,11 bis 199,99
+						operand = rnd(111, 14999) / 100; // 1,11 bis 149,99
 					} else {
-						operand = rnd(2, 199) / 10; // 0,1 bis 19,9
+						operand = rnd(2, 1499) / 10; // 0,2 bis 149,9
 					}
 				} else {
 					// Natürliche Zahl
@@ -699,15 +699,17 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				const operandStr = isDecimal ? comma(operand) : operand.toString();
 
 				// Aufgabe
-				const expr = `\\( ${operandStr} ${op} ${power} =\\)`;
+				const expr = `\\[ ${operandStr} ${op} ${comma(power)} =\\]`;
 
 				// Lösung mit Erklärung der Kommaverschiebung/Stellenwertverschiebung
 				// const shiftCount = power === 10 ? 1 : power === 100 ? 2 : 3;
 				// const shiftDirection = isMult ? '&#x2192;' : '&#x2190;';
 				// const shiftDescription = `(Komma ${shiftCount} x ${shiftDirection})`;
-
+				let solution;
 				// const solution = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad \\text{${shiftDescription}}\\)`;
-				const solution = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\)`;
+				if (power < 1 && isMult) solution = `\\[ ${operandStr} ${op} ${comma(power)} = ${comma(resultStr)} \\quad ( : ${1 / power} )\\]`;
+				else if (power < 1 && !isMult) solution = `\\[ ${operandStr} ${op} ${comma(power)} = ${comma(resultStr)} \\quad ( \\cdot ${1 / power} )\\]`;
+				else solution = `\\[ ${operandStr} ${op} ${comma(power)} = ${comma(resultStr)} \\]`;
 				return { expr, solution };
 			};
 
@@ -2441,8 +2443,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					? `f(x) = ${comma(mStr)} + ${comma(b)}`
 					: `f(x) = ${comma(mStr)} - ${comma(Math.abs(b))}`;
 
-			textDisplay = `Zeichne den Graphen und lies die Nullstelle ab: \\( ${funcStr} \\)`;
-			textPrint = `Zeichne und lies die Nullstelle ab: \\( \\; ${funcStr} \\) ${karo(11, 20)}` ;
+			textDisplay = `Zeichne den Graphen und gib die Nullstelle an: \\( ${funcStr} \\)`;
+			textPrint = `Zeichne und gib die Nullstelle an: \\( \\; ${funcStr} \\) ${karo(11, 20)}` ;
 
 			const x0 = comma(formatDecimal(xIntercept, 2));
 			s = `<div style="display:flex; justify-content: center; align-items:center; gap:20px;">
@@ -2456,12 +2458,12 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'wkt': {
-			let mode = randInt(0, 4); // 0: Urne (3 Farben), 1: Rel. Häufigkeit, 2: 12-seitiger Würfel, 3: Glücksrad, 4: Urne rückwärts
+			let mode = randInt(0, 4); // 0: Urne (3 Farben), 1: Rel. Häufigkeit, 2: 12-seitiger Würfel, 3: Glücksrad, 4: Würfel 
 			let taskStr, resStr;
 			
 			if (mode === 0) {
 				// --- TYP: LAPLACE URNE (3 FARBEN) ---
-				const farben = ['roten', 'blauen', 'grünen', 'gelben', 'weißen'];
+				const farben = ['rote', 'blaue', 'grüne', 'gelbe'];
 				let w = [...farben].sort(() => 0.5 - Math.random());
 				let n1 = randInt(3, 9);
 				let n2 = randInt(3, 9);
@@ -2471,23 +2473,23 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				// Grammatik-Fix: "rote" -> "Rot", "grüne" -> "Grün"
 				let farbeSubst = w[0].charAt(0).toUpperCase() + w[0].slice(1, -1);
 				
-				taskStr = `Urne mit ${n1} ${w[0]}, ${n2} ${w[1]} und ${n3} ${w[2]} Kugeln. Wahrscheinlichkeit, eine ${w[0].slice(0, -1)} Kugel zu ziehen?`;
+				taskStr = `Eine Urne enthält ${n1} ${w[0]}, ${n2} ${w[1]} und ${n3} ${w[2]} Kugeln. Nenne die Wahrscheinlichkeit, eine ${w[0]} Kugel zu ziehen?`;
 				
 				// In der Lösung nutzen wir jetzt die substantivierte Form
 				resStr = `P(${farbeSubst}) = \\( \\dfrac{${n1}}{${gesamt}} \\)`;
 			} else if (mode === 1) {
 				// --- TYP: RELATIVE HÄUFIGKEIT (KONTEXT-SPEZIFISCH) ---
 				const szenarien = [
-					{ txt: 'Basketball: Von', einheit: 'Würfen', e: 'getroffen' },
-					{ txt: 'Qualitätskontrolle: Von', einheit: 'Bauteilen', e: 'defekt' },
-					{ txt: 'Umfrage: Von', einheit: 'Personen antworten', e: 'Teilnehmer mit "Ja"' },
-					{ txt: 'Torwart: Von', einheit: 'Schüssen', e: 'Bälle gehalten' }
+					{ txt: 'Basketball: Von', einheit: 'Würfen wurden', e: 'getroffen' },
+					{ txt: 'Qualitätskontrolle: Von', einheit: 'Bauteilen sind', e: 'defekt' },
+					{ txt: 'Umfrage: Von', einheit: 'Personen antworten', e: 'mit "Ja"' },
+					{ txt: 'Torwart: Von', einheit: 'Schüssen wurden', e: 'gehalten' }
 				];
 				const sz = szenarien[randInt(0, szenarien.length - 1)];
 				let gesamt = [10, 20, 25, 40, 50][randInt(0, 4)];
 				let treffer = Math.floor(gesamt * (randInt(2, 9) / 10));
 				
-				taskStr = `${sz.txt} ${gesamt} ${sz.einheit} ${treffer} ${sz.e}. Relative Häufigkeit?`;
+				taskStr = `${sz.txt} ${gesamt} ${sz.einheit} ${treffer} ${sz.e}.<br>Nenne die relative Häufigkeit in %.`;
 				let prozent = (treffer / gesamt) * 100;
 				resStr = `h = \\( \\dfrac{${treffer}}{${gesamt}} \\) = ${prozent.toFixed(0).replace('.', ',')} %`;
 				
@@ -2498,14 +2500,14 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				
 				if (subMode === 0) {
 					ereignis = "eine Primzahl";
-					taskStr = `Wahrscheinlichkeit für ${ereignis} bei einem 12-seitigen Spielwürfel?`;
+					taskStr = `Nenne die Wahrscheinlichkeit für ${ereignis} bei einem 12-seitigen Spielwürfel?`;
 					resStr = `P(Primzahl) = \\( \\dfrac{5}{12} \\)`;
 				} else if (subMode === 1) {
 					let limit = randInt(7, 10);
 					ereignis = `eine Zahl größer als ${limit}`;
 					let count = 12 - limit;
-					taskStr = `Wahrscheinlichkeit für ${ereignis} bei einem 12-seitigen Spielwürfel?`;
-					resStr = `P( x > ${limit}) = \\( \\dfrac{${count}}{12} \\)`;
+					taskStr = `Nenne die Wahrscheinlichkeit für ${ereignis} bei einem 12-seitigen Spielwürfel?`;
+					resStr = `P(x > ${limit}) = \\( \\dfrac{${count}}{12} \\)`;
 				} else {
 					// Würfeln: Teilbarkeit durch 3, 4 oder 5
 					let auswahl = [3, 4, 5][randInt(0, 2)];
@@ -2513,23 +2515,23 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					
 					if (auswahl === 3) {
 						treffer = 4; // {3, 6, 9, 12}
-						gekuerzt = "\\frac{1}{3}";
+						gekuerzt = "\\dfrac{1}{3}";
 					} else if (auswahl === 4) {
 						treffer = 3; // {4, 8, 12}
-						gekuerzt = "\\frac{1}{4}";
+						gekuerzt = "\\dfrac{1}{4}";
 					} else {
 						treffer = 2; // {5, 10}
-						gekuerzt = "\\frac{1}{6}";
+						gekuerzt = "\\dfrac{1}{6}";
 					}
 
 					let ereignis = `eine durch ${auswahl} teilbare Zahl`;
-					taskStr = `Wahrscheinlichkeit für ${ereignis} bei einem 12-seitigen Spielwürfel?`;
+					taskStr = `Nenne die Wahrscheinlichkeit für ${ereignis} bei einem 12-seitigen Spielwürfel?`;
 					resStr = `P(durch ${auswahl} teilbar) = \\( \\dfrac{${treffer}}{12} = ${gekuerzt}\\) `;
 				}
 
 			} else if (mode === 3) {
 				// --- TYP: GLÜCKSRAD (2 Farben, zweimal drehen) ---
-				const farben = ['roten', 'blauen', 'grünen', 'gelben', 'weißen'];
+				const farben = ['rote', 'blaue', 'grüne', 'gelbe'];
 				let w = [...farben].sort(() => 0.5 - Math.random());
 				let f1 = w[0]; // Die gesuchte Farbe (z.B. "rote")
 				let f2 = w[1]; // Die andere Farbe
@@ -2539,9 +2541,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let gesamt = n1 + n2;
 				
 				// Grammatik-Anpassung für die Farbe im Satz (Substantiviert)
-				let f1Subst = f1.charAt(0).toUpperCase() + f1.slice(1, -2); // "rote" -> "Rot"
+				let f1Subst = f1.charAt(0).toUpperCase() + f1.slice(1, -1); // "rote" -> "Rot"
 				
-				taskStr = `Glücksrad mit ${n1} ${f1} und ${n2} ${f2} gleich großen Feldern. Wahrscheinlichkeit, dass zweimal nacheinander ${f1Subst} gedreht wird?`;
+				taskStr = `Ein Glücksrad hat ${n1} ${f1} und ${n2} ${f2} gleich große Felder. Nenne die Wahrscheinlichkeit, dass 2-mal in Folge ${f1Subst} gedreht wird.`;
 				
 				// Berechnung: (n1/gesamt) * (n1/gesamt)
 				let zaehler = n1 * n1;
@@ -2550,50 +2552,22 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				// Lösungsweg mit Pfadregel
 				resStr = `P(${f1Subst}, ${f1Subst}) = \\( \\dfrac{${n1}}{${gesamt}} \\cdot \\dfrac{${n1}}{${gesamt}} = \\dfrac{${zaehler}}{${nenner}} \\)`;
 				
-			} else {
-				// --- TYP: URNE RÜCKWÄRTS (ANZAHL ROTER KUGELN BERECHNEN) ---
-				const usePct = Math.random() < 0.5;
-				let n, redCount;
-				
-				if (usePct) {
-					const pctCandidates = [
-						{ pct: 10, simpNum: 1, simpDen: 10 },
-						{ pct: 20, simpNum: 1, simpDen: 5  },
-						{ pct: 25, simpNum: 1, simpDen: 4  },
-						{ pct: 40, simpNum: 2, simpDen: 5  },
-						{ pct: 50, simpNum: 1, simpDen: 2  },
-						{ pct: 75, simpNum: 3, simpDen: 4  },
-						{ pct: 80, simpNum: 4, simpDen: 5  },
-						{ pct: 90, simpNum: 9, simpDen: 10 }
-					];
-					const choice = pctCandidates[randInt(0, pctCandidates.length - 1)];
-					const multMin = Math.ceil(8 / choice.simpDen);
-					const multMax = Math.floor(30 / choice.simpDen);
-					n = choice.simpDen * randInt(multMin, multMax);
-					redCount = n * choice.simpNum / choice.simpDen;
-					taskStr = `Urne mit ${n} Kugeln. Die Wahrscheinlichkeit, eine rote Kugel zu ziehen, beträgt ${choice.pct} %. Anzahl der roten Kugeln?`;
-					resStr = `${choice.pct} % von ${n} sind ${redCount} rote Kugeln.`;
-				} else {
-					const fracCandidates = [
-						{ num: 1, den: 2 },
-						{ num: 1, den: 3 },
-						{ num: 2, den: 3 },
-						{ num: 1, den: 4 },
-						{ num: 3, den: 4 },
-						{ num: 1, den: 5 },
-						{ num: 2, den: 5 },
-						{ num: 3, den: 5 },
-					];
-					const frac = fracCandidates[randInt(0, fracCandidates.length - 1)];
-					const multMin = Math.ceil(8 / frac.den);
-					const multMax = Math.floor(30 / frac.den);
-					n = frac.den * randInt(multMin, multMax);
-					redCount = n * frac.num / frac.den;
-					taskStr = `Urne mit ${n} Kugeln. Die Wahrscheinlichkeit, eine rote Kugel zu ziehen, beträgt \\( \\frac{${frac.num}}{${frac.den}} \\). Anzahl der roten Kugeln?`;
-					resStr = `\\( \\dfrac{${frac.num}}{${frac.den}} \\) von ${n} sind ${redCount} rote Kugeln.`;
+			} else if (mode === 4) {
+				// --- TYP: 2 WÜRFEL - AUGENSUMME ---
+				const target = randInt(2, 12);
+				let count = 0;
+				for (let a = 1; a <= 6; a++) {
+					for (let b = 1; b <= 6; b++) {
+						if (a + b === target) count++;
+					}
 				}
-			}
 
+				const num = count;
+				const den = 36;
+				const frac = den === 1 ? `${num}` : `\\dfrac{${num}}{${den}}`;
+				taskStr = `Zwei Würfel werden geworfen.<br>Nenne die Wahrscheinlichkeit für die Augensumme ${target}.`;
+				resStr = `P(Summe = ${target}) = \\( ${frac} \\)`;
+			} 
 			textDisplay = taskStr;
 			s = `${resStr}`;
 			break;
@@ -2844,7 +2818,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let p = prozentListe[randInt(0, prozentListe.length - 1)];
 				let result = (p / 100) * 360;
 				
-				textDisplay = `Welchem Winkel entsprechen ${p} % in einem Kreisdiagramm?`;
+				textDisplay = `Welchen Winkel haben ${p} % in einem Kreisdiagramm?`;
 				s = `10 % ≙ 36° &#x2192; ${p} % ≙ ${result}°`;
 				
 			} else if (mode === 2) {
@@ -2860,13 +2834,13 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let pick = pools[randInt(0, pools.length - 1)];
 				
 				textDisplay = `Zeichne einen ${pick.name}.`;
-				textPrint = `Zeichne einen ${pick.name}.${space(3)}`;
+				textPrint = `Zeichne einen ${pick.name}.${space(2.5)}`;
 				s = pick.val !== undefined ? `${pick.name.replace('en', 'er')}: ${pick.val}°` : `${pick.name.replace('en', 'er')}: ${pick.min}° bis ${pick.max}°`;
 				
 			} else if (mode === 3) {
-				let grad = randInt(15, 250);
+				let grad = Math.random() < 0.5 ? randInt(15, 50) : randInt(130, 230);
 				textDisplay = `Zeichne den Winkel \\(\\alpha\\) = ${grad}°.`;
-				textPrint = `Zeichne den Winkel \\(\\alpha\\) = ${grad}°.${space(3)}`;
+				textPrint = `Zeichne den Winkel \\(\\alpha\\) = ${grad}°.${space(2.5)}`;
 				s = `Zeichne den Winkel \\(\\alpha\\) = ${grad}°.`;
 
 			} else if (mode === 4) {
@@ -2879,7 +2853,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				const triangleTypes = ['spitzwinkliges', 'stumpfwinkliges', 'gleichschenkliges', 'gleichseitiges'];
 				const type = triangleTypes[randInt(0, triangleTypes.length - 1)];
 				textDisplay = `Zeichne ein ${type} Dreieck.`;
-				textPrint = `Zeichne ein ${type} Dreieck.${space(3)}`;
+				textPrint = `Zeichne ein ${type} Dreieck.${space(2.5)}`;
 				let definition;
 				switch (type) {
 					case 'spitzwinkliges':
