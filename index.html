@@ -541,6 +541,7 @@
 
             <div class="worksheet-toolbar-actions top-bar-actions">
                 <button @click="generateQuiz" class="btn btn--primary" :disabled="!hasSelectedTypes">Erzeugen 🎲</button>
+                <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Neu sortieren</button>
                 <button @click="openQuizImportDialog" class="btn btn--export">Import</button>
                 <button @click="exportQuizJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Export</button>
                 <button @click="toggleQuizSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">

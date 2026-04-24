@@ -180,7 +180,8 @@
             <button @click="quizActive = false" class="btn-ui" style="min-width: 100px; padding: 10px;">← Menü</button>
             <h2 style="margin:0; color: var(--slate-800)">Ultra-Elite-Turbo-Ninja-Laser-Mathe-Battle</h2>
             <div style="font-size: 18px; font-weight: bold; color: var(--slate-800); font-family: monospace;">
-                <span v-if="currentTask">Aufgabe: #{{ currentTask.id }} </span>
+                <span v-if="currentTask">Aufgabe: #{{ currentTask.id }}</span>
+                <span v-else-if="nextTaskPreview !== null">Startaufgabe: #{{ importedTasks[nextTaskPreview].id }}</span>
                 <span v-else>Bereitmachen...</span>
                 <!-- <span v-if="nextTaskPreview !== null" style="color: #94a3b8; margin-left: 10px;">(Nächste: #{{ importedTasks[nextTaskPreview].id }})</span> -->
             </div>

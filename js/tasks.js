@@ -105,10 +105,10 @@ const quizTaskTypesByGrade = {
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse10: [
-		'teiler', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
+		'teiler', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang', 'primzahlen',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
-		'anteile', 'prop', 'percent', 'pv', 
-		'equations', 'equations_lin', 'geometry', 'winkel', 'statistik', 'wkt'
+		'anteile', 'prop', 'percent', 'pv', 'word_terms',
+		'equations', 'geometry', 'winkel', 'statistik', 'wkt'
 	]
 };
 
@@ -3115,7 +3115,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			let z = frac.z;
 			let n = frac.n;
 			
-			if (rd > 0.67) {
+			if (rd > 0.6) {
 				// TYP 1: Anteil berechnen (Bruch von Ganzem)
 				// Damit es glatt aufgeht, muss das Ganze ein Vielfaches des Nenners sein.
 				let scale = Math.random() > 0.5 ? 10 : 1; // Sorgt manchmal für Hunderter/Zehner-Werte
@@ -3127,7 +3127,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				s = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)}  ${einheit} sind  ${comma(W)} ${einheit}<br>
 				\\((${comma(G)} : ${n} \\cdot ${z} = ${comma(W)})\\)`;
 
-			} else if (rd > 0.33) {
+			} else if (rd > 0.3) {
 				// TYP 2: Ganzes berechnen (Bruch sind Anteil von...)
 				// Damit es glatt aufgeht, muss der Anteil ein Vielfaches des Zählers sein.
 				let scale = Math.random() > 0.5 ? 10 : 1;
@@ -3166,7 +3166,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			
 			// Hilfsfunktion für deutsches Zahlenformat
 			const de = (num) => {
-				if (sz.type === 'food' || sz.type === 'job') return formatDecimal(num, 2);
+				if (sz.type === 'food' || sz.type === 'job') return comma(num.toFixed(2));
 				return Math.round(num).toString();
 			};
 
