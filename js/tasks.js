@@ -7,7 +7,7 @@ const comma = formatUtils.comma;
 const formatDecimal = formatUtils.formatDecimal;
 
 const taskCategories = {
-	arithmetic: ['z_as', 'z_md', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'db_as', 'db_md', 'pow10', 'round', 'vorrang'],
+	arithmetic: ['z_as', 'z_md', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'db_as', 'db_md', 'pow10', 'round', 'zahlengerade', 'vorrang'],
 	tables: ['table_add', 'table_mul', 'table_sub', 'table_terms'],
 	fractions: ['frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order'],
 	percent: ['anteile', 'prop', 'percent', 'pv', 'units'],
@@ -23,13 +23,13 @@ const taskTypesByGrade = {
 	klasse5: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'geometry', 'winkel', 'schraegbild', 'statistik'
 	],
 	klasse6: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'anteile', 'percent', 'geometry', 'winkel', 'schraegbild', 'statistik', 'wkt'
 	],
 	klasse7: [
@@ -38,12 +38,12 @@ const taskTypesByGrade = {
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
 		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'word_terms', 'equations', 'equations_lin', 'formel_umstellen',
-		'round', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
+		'round', 'zahlengerade', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
 	],
 	klasse8: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
@@ -51,7 +51,7 @@ const taskTypesByGrade = {
 	klasse9: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
@@ -59,7 +59,7 @@ const taskTypesByGrade = {
 	klasse10: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz',
@@ -71,13 +71,13 @@ const quizTaskTypesByGrade = {
 	klasse5: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'geometry', 'winkel', 'schraegbild', 'statistik'
 	],
 	klasse6: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'anteile', 'percent', 'geometry', 'winkel', 'schraegbild', 'statistik', 'wkt'
 	],
 	klasse7: [
@@ -86,12 +86,12 @@ const quizTaskTypesByGrade = {
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
 		'anteile', 'prop', 'percent', 'pv', 
 		'equations', 'equations_lin', 'formel_umstellen',
-		'round', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
+		'round', 'zahlengerade', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse8: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
@@ -99,14 +99,14 @@ const quizTaskTypesByGrade = {
 	klasse9: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse10: [
 		'teiler', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang', 'primzahlen',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 'word_terms',
 		'equations', 'geometry', 'winkel', 'statistik', 'wkt'
 	]
@@ -152,11 +152,12 @@ const typeDefinitions = [
 	
 	// Brüche
 	['frac_simplify', 'Brüche kürzen', 'Brüche vollständig kürzen'],
-	['frac_convert', 'Brüche Darstellungsformen', 'Brüche, Dezimalzahlen und Prozentwerte umwandeln'],
+	['frac_convert', 'Brüche umwandeln', 'Brüche, Dezimalzahlen und Prozentwerte umwandeln'],
 	['frac_as', 'Brüche +/-', 'Brüche addieren und subtrahieren'],
 	['frac_md', 'Brüche ×/÷', 'Brüche multiplizieren und dividieren'],
 	['frac_order', 'Brüche ordnen', 'Brüche der Größe nach sortieren'],
 	['round', 'Dezimalbrüche runden', 'Dezimalbrüche runden'],
+	['zahlengerade', 'Zahlenstrahl', 'Zahlenstrahl-Aufgaben lesen, eintragen und zeichnen'],
 	
 	// Prozent / Proportionalität / Maßeinheiten
 	['anteile', 'Anteile berechnen', 'Anteile berechnen'],
@@ -2457,7 +2458,114 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			break;
 		}
 
-		case 'wkt': {
+	case 'zahlengerade': {
+		const isPositiveOnly = grade <= 6;
+		const tickBases = [1, 2, 3, 5];
+		const tickFactors = [1, 10, 100];
+		const tickDistance = tickBases[randInt(0, tickBases.length - 1)] * tickFactors[randInt(0, tickFactors.length - 1)];
+		const tickCount = randInt(5, 7);
+		const startValue = isPositiveOnly ? 0 : randInt(-3, 2) * tickDistance;
+		const endValue = startValue + tickDistance * (tickCount - 1);
+		const formatValue = (value) => Number.isInteger(value) ? `${value}` : formatDecimal(value, 1);
+		const getValueAt = (position) => startValue + position * tickDistance;
+		const svgWidth = 520;
+		const svgHeight = 140;
+		const margin = 40;
+		const axisY = 80;
+		const arrowSize = 10;
+		const lineStart = margin;
+		const lineEnd = svgWidth - margin - arrowSize;
+		const unitPx = (lineEnd - lineStart) / tickCount;
+		const tickOffset = unitPx / 2;
+		const getX = (position) => lineStart + tickOffset + position * unitPx;
+		const renderNumberLine = ({ labels = {}, markers = [], letters = [] } = {}) => {
+			let content = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid #ccc; background: white;">`;
+			content += `<line x1="${lineStart}" y1="${axisY}" x2="${lineEnd}" y2="${axisY}" stroke="black" stroke-width="2"/>`;
+		content += `<polygon points="${svgWidth - margin},${axisY} ${lineEnd},${axisY - 6} ${lineEnd},${axisY + 6}" fill="black"/>`;
+			for (let i = 0; i < tickCount; i++) {
+				const x = getX(i);
+				content += `<line x1="${x}" y1="${axisY - 8}" x2="${x}" y2="${axisY + 8}" stroke="black" stroke-width="1"/>`;
+				const label = labels[i];
+				if (label !== undefined) {
+					content += `<text x="${x}" y="${axisY + 24}" text-anchor="middle" font-size="12" fill="black">${label}</text>`;
+				}
+			}
+			for (const marker of markers) {
+				const x = getX(marker.position);
+				content += `<circle cx="${x}" cy="${axisY - 18}" r="5" fill="#e74c3c"/>`;
+				if (marker.text) {
+					content += `<text x="${x}" y="${axisY - 28}" text-anchor="middle" font-size="12" fill="black">${marker.text}</text>`;
+				}
+			}
+			for (const letter of letters) {
+				const x = getX(letter.position);
+				content += `<text x="${x}" y="${axisY - 28}" text-anchor="middle" font-size="14" fill="#2c3e50">${letter.label}</text>`;
+			}
+			content += `</svg>`;
+			return content;
+		};
+
+		const subtype = randInt(0, 2);
+		let svgContent = '';
+		if (subtype === 0) {
+			const markerIndex = randInt(1, tickCount - 2);
+			const markerOffset = Math.random() < 0.5 ? 0 : 0.5;
+			const markerPosition = markerIndex + markerOffset;
+			const markerValue = getValueAt(markerPosition);
+			const labels = {
+				0: formatValue(startValue),
+				[tickCount - 1]: formatValue(endValue)
+			};
+			svgContent = renderNumberLine({ labels, markers: [{ position: markerPosition, text: 'P' }] });
+			textDisplay = `Auf der Zahlengerade sind nur die Zahlen ${formatValue(startValue)} und ${formatValue(endValue)} eingetragen. Welche Zahl liegt beim markierten Punkt P?`;
+			textPrint = `Trage die Zahl ein: \\( \\underline{\\hspace{3cm}} \\) <br>${svgContent}`;
+			s = `\\( ${formatValue(markerValue)} \\)`;
+		} else if (subtype === 1) {
+			const knownIndices = [0, tickCount - 1];
+			if (tickCount >= 6) {
+				const extra = randInt(1, tickCount - 2);
+				knownIndices.splice(1, 0, extra);
+			}
+			const labels = {};
+			const missingValues = [];
+			for (let i = 0; i < tickCount; i++) {
+				if (knownIndices.includes(i)) {
+					labels[i] = formatValue(getValueAt(i));
+				} else {
+					labels[i] = '?';
+					missingValues.push(formatValue(getValueAt(i)));
+				}
+			}
+			svgContent = renderNumberLine({ labels });
+			textDisplay = `Trage die fehlenden Zahlen in die ?-Felder der Zahlengerade ein.`;
+			textPrint = `Vervollständige die Zahlengerade:<br>${svgContent}`;
+			s = `Die fehlenden Zahlen lauten: ${missingValues.map(value => `\\(${value}\\)`).join(', ')}`;
+		} else {
+			const possiblePositions = [];
+			for (let i = 1; i < tickCount - 1; i++) {
+				possiblePositions.push(i);
+				if (tickCount >= 6) {
+					possiblePositions.push(i + 0.5);
+				}
+			}
+			const shuffled = [...possiblePositions].sort(() => 0.5 - Math.random());
+			const targetPositions = shuffled.slice(0, 3).sort((a, b) => a - b);
+			const letters = ['A', 'B', 'C'];
+			const values = targetPositions.map(pos => formatValue(getValueAt(pos)));
+			const letterMarkers = targetPositions.map((position, index) => ({ position, label: letters[index] }));
+			const labels = {
+				0: formatValue(startValue),
+				[tickCount - 1]: formatValue(endValue)
+			};
+			svgContent = renderNumberLine({ labels, letters: letterMarkers });
+			textDisplay = `Zeichne einen Zahlenstrahl von \\( ${formatValue(startValue)} \\) bis \\( ${formatValue(endValue)} \\) mit Abstand \\( ${formatValue(tickDistance)} \\). Trage die Zahlen ${values.map(v => `\\(${v}\\)`).join(', ')} an den passenden Punkten ein.`;
+			textPrint = `Zeichne den Zahlenstrahl und beschrifte die Punkte:<br>${svgContent}`;
+			s = letters.map((letter, index) => `${letter} = ${values[index]}`).join(', ');
+		}
+		break;
+	}
+
+	case 'wkt': {
 			let mode = randInt(0, 4); // 0: Urne (3 Farben), 1: Rel. Häufigkeit, 2: 12-seitiger Würfel, 3: Glücksrad, 4: Würfel 
 			let taskStr, resStr;
 			

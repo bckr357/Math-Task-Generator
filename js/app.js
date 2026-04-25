@@ -153,13 +153,63 @@ createApp({
             ? state.quizTaskWeights.value
             : state.taskWeights.value);
 
+        let blockHoverOpen = false;
+
+        const preserveBodyFocus = () => {
+            if (document.activeElement && document.activeElement.tagName === 'SELECT') {
+                document.activeElement.blur();
+            }
+            if (document.activeElement && document.activeElement.tagName === 'BODY') {
+                return;
+            }
+            document.body.focus?.();
+        };
+
+        const closeNativeSelect = select => {
+            select.blur();
+            if (document.activeElement === select) {
+                setTimeout(() => {
+                    select.blur();
+                    preserveBodyFocus();
+                }, 0);
+            }
+        };
+
+        const openViewDropdown = event => {
+            if (blockHoverOpen) {
+                return;
+            }
+
+            const select = event.target;
+            if (typeof select.showPicker === 'function') {
+                select.showPicker();
+                return;
+            }
+            select.focus();
+            if (typeof select.click === 'function') {
+                select.click();
+            }
+        };
+
+        const onModuleSelect = async event => {
+            const select = event.target;
+            const value = select.value;
+            blockHoverOpen = true;
+            closeNativeSelect(select);
+            await navigation.switchView(value);
+            closeNativeSelect(select);
+            setTimeout(() => {
+                blockHoverOpen = false;
+            }, 200);
+        };
+
         const builderDraftTask = ref(null);
         const builderDraftType = ref('');
         const builderReplaceIndex = ref(null);
         const builderImportInput = ref(null);
         const builderShowPreviewSolution = ref(false);
         const builderShowTaskSolutions = ref(false);
-        const builderSidebarWidth = ref(650);
+        const builderSidebarWidth = ref(580);
         const builderIsResizing = ref(false);
         let builderResizeStartX = 0;
         let builderResizeStartWidth = 0;
@@ -852,6 +902,8 @@ createApp({
             randomizeTypeSelection,
             generateRandomWorksheet,
             refreshCurrentView,
+            openViewDropdown,
+            onModuleSelect,
             builderDraftTask,
             builderDraftType,
             builderDraftMarkup,
@@ -905,6 +957,9 @@ createApp({
             toggleSolutions: presentationMode.toggleSolutions,
             toggleDarkMode: presentationMode.toggleDarkMode,
             exportJSON: presentationMode.exportJSON,
+            openPresentationImportDialog: presentationMode.openPresentationImportDialog,
+            importPresentationJSON: presentationMode.importPresentationJSON,
+            presentationImportInput: presentationMode.presentationImportInput,
             exportHTML: presentationMode.exportHTML,
             generateWorksheet: worksheetMode.generateWorksheet,
             toggleWorksheetSolutions: worksheetMode.toggleWorksheetSolutions,

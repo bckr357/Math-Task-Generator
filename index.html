@@ -54,12 +54,12 @@
                     <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-count-input">
                 </label>
                 <label v-if="currentView !== 'training'" class="settings-topbar-label">
-                    <span>Anordnung</span>
+                    <!-- <span>Anordnung</span>
                     <select v-model="taskArrangementMode" class="settings-input settings-arrangement-input">
+                        <option value="ordered">sortiert</option>
                         <option value="random">zufällig</option>
-                        <option value="ordered">blockweise</option>
-                        <option value="random-ordered">blockw. zuf.</option>
-                    </select>
+                        <option value="random-ordered">zuf. sortiert</option>
+                    </select> -->
                 </label>
                 <label class="settings-topbar-label">
                     <span>Klasse</span>
@@ -67,8 +67,8 @@
                         <option v-for="grade in gradeOptions" :key="grade" :value="grade">{{ grade }}</option>
                     </select>
                 </label>
-                <div class="settings-topbar-label">
-                    <span>Ausgewählt</span>
+                <div class="settings-topbar-label" style="margin: auto 0; text-align: center;">
+                    <span>Typen</span>
                     <strong>{{ activeSelectedTypesCount }}</strong>
                 </div>
                 <button @click="selectAllTypes" class="btn btn--export settings-compact-btn">Alle</button>
@@ -103,16 +103,16 @@
                 <span>Zweiseitiges Blatt, Lösungen optional groß für die Tafel.</span>
             </button>
 
-            <button @click="switchView('worksheet-builder')" class="mode-card mode-card--builder">
-                <span class="mode-card-kicker">Baustein-Modus</span>
-                <strong>Individuelles Arbeitsblatt</strong>
-                <span>Stelle Aufgaben einzeln zusammen, importiere JSON-Sets und bearbeite jede Aufgabe separat.</span>
-            </button>
-
             <button @click="switchView('presentation')" class="mode-card mode-card--presentation">
                 <span class="mode-card-kicker">Anzeigen</span>
                 <strong>Präsentation</strong>
                 <span>Große Darstellung für Projektion, Tafel und gemeinsame Besprechung.</span>
+            </button>
+            
+            <button @click="switchView('worksheet-builder')" class="mode-card mode-card--builder">
+                <span class="mode-card-kicker">Baustein-Modus</span>
+                <strong>Customizer</strong>
+                <span>Stelle Aufgaben einzeln zusammen, importiere JSON-Sets und bearbeite jede Aufgabe separat.</span>
             </button>
 
             <button @click="switchView('training')" class="mode-card mode-card--training">
@@ -140,7 +140,7 @@
             <div class="toolbar-main-controls">
                 <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
                 <h3 class="settings-drawer-section-title">Modul:</h3>
-                <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
+                <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'worksheet-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
             </div>
@@ -153,9 +153,9 @@
                     <label class="settings-topbar-label">
                         Anordnung
                         <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
+                            <option value="ordered">sortiert</option>
                             <option value="random">zufällig</option>
-                            <option value="ordered">blockweise</option>
-                            <option value="random-ordered">blockw. zuf.</option>
+                            <option value="random-ordered">zuf. sortiert</option>
                         </select>
                     </label>
                     <label class="settings-topbar-label">
@@ -168,17 +168,17 @@
                 </div>
             </div>
             <div class="worksheet-toolbar-actions">
-                <button @click="toggleWorksheetLayoutMode" class="btn btn--export">
+                <!-- <button @click="toggleWorksheetLayoutMode" class="btn btn--export">
                     {{ worksheetLayoutMode === 'presentation' ? 'Arbeitsblatt' : 'Präsentation' }}
-                </button>
+                </button> -->
                 <button @click="toggleWorksheetSolutions" class="btn btn--toggle">
                     {{ showWorksheetSolutions ? 'Aufgaben' : 'Lösungen' }}
                 </button>
                 <button @click="generateWorksheet" class="btn btn--primary">Erzeugen 🎲</button>
-                <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Neu sortieren</button>
-                <button @click="openWorksheetImportDialog" class="btn btn--export">Import</button>
-                <button @click="exportWorksheetJSON" class="btn btn--export">Export</button>
-                <button @click="switchView('worksheet-builder')" class="btn btn--primary">Zurück zum Individuell-Modus</button>
+                <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Anordnen</button>
+                <button @click="openWorksheetImportDialog" class="btn btn--export">Öffnen</button>
+                <button @click="exportWorksheetJSON" class="btn btn--export">Speichern</button>
+                <!-- <button @click="switchView('worksheet-builder')" class="btn btn--primary">Anpassen</button> -->
                 <input type="file" ref="worksheetImportInput" @change="importWorksheetJSON" accept=".json" style="display:none">
             </div>
         </div>
@@ -370,13 +370,13 @@
             <div class="worksheet-toolbar no-print builder-toolbar">
                 <div class="toolbar-main-controls">
                     <h3 class="settings-drawer-section-title">Modul:</h3>
-                    <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
+                    <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
                         <option v-for="tab in viewTabs" :key="'builder-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                     </select>
                 </div>
 
                 <div class="worksheet-toolbar-title builder-toolbar-title">
-                    <strong>Aufgaben im Blatt: {{ tasks.length }}</strong>
+                    <strong>Aufgaben: {{ tasks.length }}</strong>
                     <span v-if="builderReplaceIndex !== null" class="builder-replace-hint">
                         Ersetzen aktiv für Aufgabe {{ builderReplaceIndex + 1 }}: {{ builderReplaceTargetLabel }}
                     </span>
@@ -386,19 +386,19 @@
                     <label class="settings-topbar-label">
                         Anordnung
                         <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
+                            <option value="ordered">sortiert</option>
                             <option value="random">zufällig</option>
-                            <option value="ordered">blockweise</option>
-                            <option value="random-ordered">blockw. zuf.</option>
+                            <option value="random-ordered">zuf. sortiert</option>
                         </select>
                     </label>
                     <button @click="builderToggleTaskSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
                         {{ builderShowTaskSolutions ? 'Lösungen aus' : 'Lösungen' }}
                     </button>
-                    <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Neu sortieren</button>
-                    <button @click="openBuilderImportDialog" class="btn btn--export">Import</button>
-                    <button @click="exportBuilderJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Export</button>
+                    <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Anordnen</button>
+                    <button @click="openBuilderImportDialog" class="btn btn--export">Öffnen</button>
+                    <button @click="exportBuilderJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Speichern</button>
                     <!-- <button @click="builderClearTasks" class="btn btn--back" :disabled="!hasGeneratedTasks">Leeren</button> -->
-                    <button @click="switchView('worksheet')" class="btn btn--primary" :disabled="!hasGeneratedTasks">Arbeitsblatt öffnen</button>
+                    <!-- <button @click="switchView('worksheet')" class="btn btn--primary" :disabled="!hasGeneratedTasks">Arbeitsblatt öffnen</button> -->
                     <input type="file" ref="builderImportInput" @change="importBuilderJSON" accept=".json" style="display:none">
                 </div>
             </div>
@@ -467,7 +467,7 @@
         <div class="training-top-bar">
             <div class="toolbar-main-controls">
                 <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
-                <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
+                <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'training-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
             </div>
@@ -513,7 +513,7 @@
             <div class="toolbar-main-controls">
                 <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
                 <h3 class="settings-drawer-section-title">Modul:</h3>
-                <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
+                <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'quiz-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
             </div>
@@ -531,22 +531,22 @@
                     <label class="settings-topbar-label">
                         Anordnung
                         <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
+                            <option value="ordered">sortiert</option>
                             <option value="random">zufällig</option>
-                            <option value="ordered">blockweise</option>
-                            <option value="random-ordered">blockw. zuf.</option>
+                            <option value="random-ordered">zuf. sortiert</option>
                         </select>
                     </label>
                 </div>
             </div>
 
             <div class="worksheet-toolbar-actions top-bar-actions">
-                <button @click="generateQuiz" class="btn btn--primary" :disabled="!hasSelectedTypes">Erzeugen 🎲</button>
-                <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Neu sortieren</button>
-                <button @click="openQuizImportDialog" class="btn btn--export">Import</button>
-                <button @click="exportQuizJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Export</button>
                 <button @click="toggleQuizSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
                     {{ showQuizSolutions ? 'Aufgaben' : 'Lösungen' }}
                 </button>
+                <button @click="generateQuiz" class="btn btn--primary" :disabled="!hasSelectedTypes">Erzeugen 🎲</button>
+                <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Anordnen</button>
+                <button @click="openQuizImportDialog" class="btn btn--export">Öffnen</button>
+                <button @click="exportQuizJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Speichern</button>
                 <input type="file" ref="quizImportInput" @change="importQuizJSON" accept=".json" style="display:none">
             </div>
         </div>
@@ -586,7 +586,7 @@
             <div class="toolbar-main-controls">
                 <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
                 <h3 class="settings-drawer-section-title">Modul:</h3>
-                <select :value="currentView" @change="switchView($event.target.value)" class="view-switch-select">
+                <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'presentation-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
             </div>
@@ -600,24 +600,27 @@
                     <label class="settings-topbar-label">
                         Anordnung
                         <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
+                            <option value="ordered">sortiert</option>
                             <option value="random">zufällig</option>
-                            <option value="ordered">blockweise</option>
-                            <option value="random-ordered">blockw. zuf.</option>
+                            <option value="random-ordered">zuf. sortiert</option>
                         </select>
                     </label>
                 </div>
             </div>
             
             <div class="worksheet-toolbar-actions top-bar-actions">
-                <button @click="toggleDarkMode" class="btn btn--theme">
-                    {{ isDarkMode ? 'Light-Mode' : 'Dark-Mode' }}
-                </button>
-                <button @click="exportJSON" class="btn btn--export">Export</button>
-                <!-- <button @click="exportHTML" class="btn btn--export">Speichern 💾</button> -->
-                <button @click="generateAll" class="btn btn--primary">Erzeugen 🎲</button>
                 <button @click="toggleSolutions()" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
                     {{ showSolutions ? 'Aufgaben' : 'Lösungen' }}
                 </button>
+                <button @click="generateAll" class="btn btn--primary">Erzeugen 🎲</button>
+                <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Anordnen</button>
+                <button @click="openPresentationImportDialog" class="btn btn--export">Öffnen</button>
+                <input type="file" ref="presentationImportInput" @change="importPresentationJSON" accept=".json" style="display:none">
+                <button @click="exportJSON" class="btn btn--export">Speichern</button>
+                <button @click="toggleDarkMode" class="btn btn--theme">
+                    {{ isDarkMode ? 'Light-Mode' : 'Dark-Mode' }}
+                </button>
+                <!-- <button @click="exportHTML" class="btn btn--export">Speichern 💾</button> -->
             </div>
         </div>
 
@@ -626,7 +629,7 @@
             <p>Öffne die Aufgabenauswahl, wähle Aufgaben aus und erzeuge anschließend die Präsentation.</p>
             <div class="empty-state-actions">
                 <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
-                <button @click="generateAll" class="btn btn--primary" :disabled="!hasSelectedTypes">Präsentation erzeugen</button>
+                <!-- <button @click="generateAll" class="btn btn--primary" :disabled="!hasSelectedTypes">Präsentation erzeugen</button> -->
             </div>
         </div>
 

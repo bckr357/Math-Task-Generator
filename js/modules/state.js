@@ -17,7 +17,7 @@ window.MTGStateModule = {
             Object.fromEntries(Object.keys(typeLabels).map(type => [type, 2]))
         );
         const taskCount = ref(20);
-        const taskArrangementMode = ref('random');
+        const taskArrangementMode = ref('ordered');
         const gtNumber = ref(1);
         const worksheetA5Pages = ref(2);
         const mentalMathMode = ref(false);
@@ -67,8 +67,8 @@ window.MTGStateModule = {
         const viewTabs = [
             { key: 'home', label: 'Start' },
             { key: 'worksheet', label: 'Arbeitsblatt' },
-            { key: 'worksheet-builder', label: 'Individuell' },
             { key: 'presentation', label: 'Präsentation' },
+            { key: 'worksheet-builder', label: 'Customizer' },
             { key: 'training', label: 'Training' },
             { key: 'quiz', label: 'Quiz generieren' }
         ];
