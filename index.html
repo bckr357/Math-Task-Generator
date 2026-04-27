@@ -297,6 +297,7 @@
             <div class="builder-sidebar-top">
                 <div class="builder-sidebar-controls">
                     <label class="settings-checkbox-option builder-inline-control"><input type="checkbox" v-model="activeMentalMathMode" class="settings-checkbox"><span>Easy-Mode</span></label>
+                    <label class="settings-checkbox-option builder-inline-control"><input type="checkbox" v-model="builderQuizMode" class="settings-checkbox"><span>Quiz-Mode</span></label>
                     <label class="settings-topbar-label builder-inline-control">
                         <span>Klasse</span>
                         <select v-model="selectedGrade" class="settings-input settings-grade-input">
@@ -473,9 +474,11 @@
             </div>
             <div class="training-progress">Aufgabe {{ currentTrainingIndex + 1 }} – {{ typeDescriptions[currentTrainingTask?.type] ?? typeLabels[currentTrainingTask?.type] ?? currentTrainingTask?.type ?? 'Noch kein Training gestartet' }}</div>
             <div class="training-top-actions">
+                <button @click="openTrainingImportDialog" class="btn btn--export">Öffnen</button>
                 <button @click="startTraining" class="btn btn--primary">Neu starten</button>
             </div>
         </div>
+        <input type="file" ref="trainingImportInput" @change="importTrainingJSON" accept=".json" style="display:none">
 
         <div v-if="!currentTrainingTask" class="empty-state empty-state--training">
             <h2>Training ist bereit</h2>

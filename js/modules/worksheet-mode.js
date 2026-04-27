@@ -1,5 +1,5 @@
 window.MTGWorksheetModeModule = {
-    createWorksheetMode({ state, taskGeneration, nextTick, typesetMathJax, selectedGrade, typeLabels, taskTypesByGrade }) {
+    createWorksheetMode({ state, taskGeneration, nextTick, typesetMathJax, selectedGrade, typeLabels, taskTypesByGrade, createJsonImportHandler }) {
         const getVisibleTypeKeys = () => {
             const allTypes = Object.keys(typeLabels || {});
             const classConfig = (typeof taskTypesByGrade === 'object' && taskTypesByGrade)
@@ -54,52 +54,18 @@ window.MTGWorksheetModeModule = {
             worksheetImportInput.value?.click();
         };
 
-        const importWorksheetJSON = async event => {
-            const file = event.target.files?.[0];
-            if (!file) {
-                return;
+        const importWorksheetJSON = createJsonImportHandler({
+            loadTasks: taskGeneration.loadTasksFromJSON,
+            getVisibleKeys: getVisibleTypeKeys,
+            setSelectedTypes: types => {
+                state.selectedTypes.value = types;
+            },
+            onAfterLoad: async () => {
+                state.currentView.value = 'worksheet';
+                state.isSettingsSidebarOpen.value = false;
+                state.showWorksheetSolutions.value = false;
             }
-
-            const reader = new FileReader();
-            reader.onload = async ev => {
-                try {
-                    const data = JSON.parse(ev.target.result);
-                    const loaded = taskGeneration.loadTasksFromJSON(data);
-                    if (!loaded) {
-                        window.alert('Die JSON-Datei enthält keine gültigen Aufgaben.');
-                        return;
-                    }
-
-                    const rawTasks = Array.isArray(data)
-                        ? data
-                        : Array.isArray(data.tasks)
-                            ? data.tasks
-                            : [];
-
-                    const importedTypes = [...new Set(rawTasks
-                        .map(item => item.aufgabentyp || item.type || '')
-                        .filter(type => typeof type === 'string' && type))];
-
-                    const visibleKeys = new Set(getVisibleTypeKeys());
-                    state.selectedTypes.value = importedTypes.filter(type => visibleKeys.has(type));
-
-                    state.currentView.value = 'worksheet';
-                    state.isSettingsSidebarOpen.value = false;
-                    state.showWorksheetSolutions.value = false;
-
-                    await nextTick();
-                    await typesetMathJax();
-                } catch {
-                    window.alert('Fehler beim Laden der JSON-Datei. Bitte prüfe das Format.');
-                } finally {
-                    if (event.target) {
-                        event.target.value = '';
-                    }
-                }
-            };
-
-            reader.readAsText(file);
-        };
+        });
 
         return {
             toggleWorksheetSolutions,

@@ -790,6 +790,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			if (useNaturalNumberVariant) {
 				let n;
 				isMult = Math.random() > 0.5;
+				let resultZ;
+				let resultN;
 
 				do {
 					if (isMentalMode) {
@@ -801,11 +803,19 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						N1 = rnd(2, 15);
 						n = rnd(2, 13);
 					}
-				} while (getGcd(Z1, N1) > 1 || getGcd(N1, n) > 1 || getGcd(Z1, n) > 1);
+
+					resultZ = isMult ? Z1 * n : Z1;
+					resultN = isMult ? N1 : N1 * n;
+				} while (
+					getGcd(Z1, N1) > 1 ||
+					getGcd(N1, n) > 1 ||
+					getGcd(Z1, n) > 1 ||
+					getGcd(resultZ, resultN) > 1
+				);
 
 				const op = isMult ? '\\cdot' : ':';
-				const resZ = isMult ? Z1 * n : Z1;
-				const resN = isMult ? N1 : N1 * n;
+				const resZ = resultZ;
+				const resN = resultN;
 				const step1 = isMult
 					? `\\frac{${Z1}}{${N1}} \\cdot \\frac{${n}}{1}`
 					: `\\frac{${Z1}}{${N1}} \\cdot \\frac{1}{${n}}`;
@@ -817,21 +827,25 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 			if (isMentalMode) {
 				isMult = Math.random() > 0.5;
+				let finalZ;
+				let finalN;
 
 				do {
 					Z1 = rnd(2, 9);
 					N1 = rnd(2, 9);
 					Z2 = rnd(2, 9);
 					N2 = rnd(2, 9);
+
+					finalZ = isMult ? Z1 * Z2 : Z1 * N2;
+					finalN = isMult ? N1 * N2 : N1 * Z2;
 				} while (
 					new Set([Z1, N1, Z2, N2]).size < 4 ||
 					getGcd(Z1, N1) > 1 ||
-					getGcd(Z2, N2) > 1
+					getGcd(Z2, N2) > 1 ||
+					getGcd(finalZ, finalN) > 1
 				);
 
 				const op = isMult ? '\\cdot' : ':';
-				const finalZ = isMult ? Z1 * Z2 : Z1 * N2;
-				const finalN = isMult ? N1 * N2 : N1 * Z2;
 				const step1 = isMult ? '' : `\\frac{${Z1}}{${N1}} \\cdot \\frac{${N2}}{${Z2}} = `;
 
 				textDisplay = `Berechne: \\( \\quad \\dfrac{${Z1}}{${N1}} ${op} \\dfrac{${Z2}}{${N2}} = \\)`;
@@ -928,124 +942,80 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		case 'frac_order': {
 			const getGcd = mathUtils.getGcd;
 
-			// LCM von zwei Zahlen
-			const lcm = (a, b) => (a * b) / getGcd(a, b);
+			const mainDenominators = isMentalMode
+				? [12, 15, 18, 20, 24, 30, 36]
+				: [12, 15, 18, 20, 24, 30, 36, 40, 42, 45, 48, 54, 60];
 
-			// Erzeugt einen vollständig gekürzten echten Bruch mit festem Nenner
-			const makeFracWithDen = (den, forbiddenNums = []) => {
-				let num;
-				do {
-					num = randInt(1, den - 1);
-				} while (getGcd(num, den) !== 1 || forbiddenNums.includes(num));
-				return [num, den];
+			const hn = mainDenominators[randInt(0, mainDenominators.length - 1)];
+
+			const buildCloseExtendedSet = () => {
+				const useImproper = Math.random() < 0.35;
+				const maxImproperDelta = Math.max(1, Math.floor(hn * 0.10));
+
+				let extNums;
+				if (useImproper) {
+					const improper = hn + randInt(1, maxImproperDelta);
+					const properHigh = hn - randInt(1, 3);
+					const properLow = properHigh - randInt(1, 2);
+					extNums = [properLow, properHigh, improper];
+				} else {
+					const high = hn - randInt(1, 3);
+					const mid = high - randInt(1, 2);
+					const low = mid - randInt(1, 2);
+					extNums = [low, mid, high];
+				}
+
+				extNums = extNums.map(value => Math.max(1, value));
+				if (new Set(extNums).size !== 3) return null;
+				if (Math.max(...extNums) - Math.min(...extNums) > 4) return null;
+
+				return extNums;
 			};
 
-			// Erlaubte Nenner-Kombinationen (3 Nenner, LCM ≤ 60, kein Nenner doppelt)
-			// Wir ziehen per Zufall eine von mehreren vordefinierten Familien
-			const denominatorFamilies = isMentalMode ? [
-				[2, 3, 4],
-				[2, 3, 6],
-				[2, 4, 8],
-				[3, 4, 6],
-				[3, 4, 12],
-				[2, 5, 10],
-				[3, 5, 15],
-				[4, 5, 20],
-				[4, 6, 12],
-				[5, 10, 15],
-				[3, 7, 21],
-				[4, 8, 16],
-			] : [
-				[2, 3, 4],
-				[2, 3, 6],
-				[2, 4, 8],
-				[2, 3, 8],
-				[3, 4, 6],
-				[3, 4, 12],
-				[2, 5, 10],
-				[3, 5, 15],
-				[4, 5, 20],
-				[2, 6, 9],
-				[3, 6, 9],
-				[4, 6, 12],
-				[5, 10, 15],
-				[2, 5, 4],
-				[3, 7, 21],
-				[4, 8, 16],
-				[2, 3, 9],
-				[5, 6, 15],
-			];
+			const toReducedFraction = extNum => {
+				const g = getGcd(extNum, hn);
+				return [extNum / g, hn / g];
+			};
 
-			const denFamily = denominatorFamilies[randInt(0, denominatorFamilies.length - 1)];
-			// Shuffle family so fractions aren't always in denominator order
-			const shuffled = [...denFamily].sort(() => Math.random() - 0.5);
-			const [d1, d2, d3] = shuffled;
-
-			// 35 % Chance: alle drei Zähler sind bereits vor dem Erweitern gleich (1..9)
-			const tripleNumeratorCase = Math.random() < 0.35;
-
-			let f1, f2, f3;
-
-			if (tripleNumeratorCase) {
-				const sharedCandidates = [];
-				for (let n = 1; n <= 9; n++) {
-					const validDens = [];
-					for (let d = 1; d <= 20; d++) {
-						if (d % n !== 0) {
-							validDens.push(d);
-						}
-					}
-					if (validDens.length >= 3) {
-						sharedCandidates.push({ n, validDens });
-					}
+			let fracs = null;
+			let retries = 0;
+			do {
+				const extNums = buildCloseExtendedSet();
+				if (!extNums) {
+					retries += 1;
+					continue;
 				}
 
-				if (sharedCandidates.length > 0) {
-					const chosen = sharedCandidates[randInt(0, sharedCandidates.length - 1)];
-					const shuffledDens = [...chosen.validDens].sort(() => Math.random() - 0.5);
-					const [sd1, sd2, sd3] = shuffledDens;
+				const candidateFracs = extNums.map(extNum => ({
+					orig: toReducedFraction(extNum),
+					ext: extNum
+				}));
 
-					f1 = [chosen.n, sd1];
-					f2 = [chosen.n, sd2];
-					f3 = [chosen.n, sd3];
-				} else {
-					// Fallback: normale zufällige Brüche
-					f1 = makeFracWithDen(d1);
-					f2 = makeFracWithDen(d2);
-					f3 = makeFracWithDen(d3);
+				const uniqueFracCount = new Set(candidateFracs.map(f => `${f.orig[0]}/${f.orig[1]}`)).size;
+				const denominatorVariety = new Set(candidateFracs.map(f => f.orig[1])).size;
+				const improperFractions = candidateFracs.filter(f => f.orig[0] > f.orig[1]);
+				const improperNearOne = improperFractions.every(f => (f.orig[0] / f.orig[1]) <= 1.15);
+
+				if (
+					uniqueFracCount === 3 &&
+					denominatorVariety >= 2 &&
+					improperFractions.length <= 1 &&
+					improperNearOne
+				) {
+					fracs = candidateFracs;
 				}
-			} else {
-				f1 = makeFracWithDen(d1);
-				f2 = makeFracWithDen(d2);
-				f3 = makeFracWithDen(d3);
-				// Sicherstellen: alle drei Brüche sind verschieden
-				let retry = 0;
-				while (retry < 100 && (
-					(f1[0] === f2[0] && f1[1] === f2[1]) ||
-					(f1[0] === f3[0] && f1[1] === f3[1]) ||
-					(f2[0] === f3[0] && f2[1] === f3[1])
-				)) {
-					f1 = makeFracWithDen(d1);
-					f2 = makeFracWithDen(d2);
-					f3 = makeFracWithDen(d3);
-					retry++;
-				}
+
+				retries += 1;
+			} while (!fracs && retries < 120);
+
+			if (!fracs) {
+				const fallbackExt = [hn - 3, hn - 2, hn - 1];
+				fracs = fallbackExt.map(extNum => ({
+					orig: toReducedFraction(extNum),
+					ext: extNum
+				}));
 			}
 
-			// Hauptnenner berechnen
-			const hn = lcm(lcm(f1[1], f2[1]), f3[1]);
-
-			// Erweiterte Zähler (zum Vergleichen und für die Lösung)
-			const e1 = f1[0] * (hn / f1[1]);
-			const e2 = f2[0] * (hn / f2[1]);
-			const e3 = f3[0] * (hn / f3[1]);
-
-			// Sortierung bestimmen (aufsteigend)
-			const fracs = [
-				{ orig: f1, ext: e1 },
-				{ orig: f2, ext: e2 },
-				{ orig: f3, ext: e3 }
-			];
 			// Zufällig mischen für die Aufgabenstellung
 			const displayOrder = [...fracs].sort(() => Math.random() - 0.5);
 			// Aufsteigend sortiert für die Lösung
@@ -1067,8 +1037,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			const sortedStr = sortedAsc.map(f => fmtFrac(f.orig)).join(' < ');
 
 			textDisplay = `Ordne von klein nach groß: \\( \\quad ${displayStr} \\)`;
-			tripleNumeratorCase ? 	s = `\\[ ${sortedStr} \\quad \\text{(Nenner entscheidet)}\\]` :
-									s = `\\[ ${sortedStr} \\quad \\left(${extStep}\\right) \\]`;
+			s = `\\[ ${sortedStr} \\quad \\left(${extStep}\\right) \\]`;
 			break;
 		}
 

@@ -1,5 +1,5 @@
 window.MTGPresentationModeModule = {
-    createPresentationMode({ state, taskGeneration, nextTick, typesetMathJax }) {
+    createPresentationMode({ state, taskGeneration, nextTick, typesetMathJax, createJsonImportHandler }) {
         const toggleSolutions = async () => {
             state.showSolutions.value = !state.showSolutions.value;
             await nextTick();
@@ -30,39 +30,14 @@ window.MTGPresentationModeModule = {
             presentationImportInput.value?.click();
         };
 
-        const importPresentationJSON = async event => {
-            const file = event.target.files?.[0];
-            if (!file) {
-                return;
+        const importPresentationJSON = createJsonImportHandler({
+            loadTasks: taskGeneration.loadTasksFromJSON,
+            onAfterLoad: async () => {
+                state.currentView.value = 'presentation';
+                state.isSettingsSidebarOpen.value = false;
+                state.showSolutions.value = false;
             }
-
-            const reader = new FileReader();
-            reader.onload = async ev => {
-                try {
-                    const data = JSON.parse(ev.target.result);
-                    const loaded = taskGeneration.loadTasksFromJSON(data);
-                    if (!loaded) {
-                        window.alert('Die JSON-Datei enthält keine gültigen Aufgaben.');
-                        return;
-                    }
-
-                    state.currentView.value = 'presentation';
-                    state.isSettingsSidebarOpen.value = false;
-                    state.showSolutions.value = false;
-
-                    await nextTick();
-                    await typesetMathJax();
-                } catch {
-                    window.alert('Fehler beim Laden der JSON-Datei. Bitte prüfe das Format.');
-                } finally {
-                    if (event.target) {
-                        event.target.value = '';
-                    }
-                }
-            };
-
-            reader.readAsText(file);
-        };
+        });
 
         const exportHTML = () => {
             const oddTasks = state.rowWiseFirstColumnTasks.value;

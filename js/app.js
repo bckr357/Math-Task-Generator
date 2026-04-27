@@ -74,6 +74,55 @@ createApp({
         const activeVisibleTypeEntries = computed(() => state.currentView.value === 'quiz' ? quizVisibleTypeEntries.value : visibleTypeEntries.value);
         const activeVisibleTypeKeys = computed(() => state.currentView.value === 'quiz' ? quizVisibleTypeKeys.value : visibleTypeKeys.value);
  
+        const parseRawTaskArray = data => Array.isArray(data)
+            ? data
+            : Array.isArray(data.tasks)
+                ? data.tasks
+                : [];
+
+        const extractImportedTypes = rawTasks => [...new Set(rawTasks
+            .map(item => item.aufgabentyp || item.type || '')
+            .filter(type => typeof type === 'string' && type))];
+
+        const createJsonImportHandler = ({ loadTasks, getVisibleKeys, setSelectedTypes, onAfterLoad }) => async event => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async ev => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    const loaded = loadTasks(data);
+                    if (!loaded) {
+                        window.alert('Die JSON-Datei enthält keine gültigen Aufgaben.');
+                        return;
+                    }
+
+                    if (setSelectedTypes && getVisibleKeys) {
+                        const rawTasks = parseRawTaskArray(data);
+                        const importedTypes = extractImportedTypes(rawTasks);
+                        const visibleKeys = new Set(getVisibleKeys());
+                        setSelectedTypes(importedTypes.filter(type => visibleKeys.has(type)));
+                    }
+
+                    if (typeof onAfterLoad === 'function') {
+                        await onAfterLoad(data);
+                    }
+
+                    await nextTick();
+                    await typesetMathJax();
+                } catch (error) {
+                    window.alert('Fehler beim Laden der JSON-Datei. Bitte prüfe das Format.');
+                } finally {
+                    if (event.target) {
+                        event.target.value = '';
+                    }
+                }
+            };
+
+            reader.readAsText(file);
+        };
+
          watch(visibleTypeKeys, (keys) => {
              const allowed = new Set(keys);
              state.selectedTypes.value = state.selectedTypes.value.filter(type => allowed.has(type));
@@ -99,7 +148,8 @@ createApp({
             state,
             taskGeneration,
             nextTick,
-            typesetMathJax
+            typesetMathJax,
+            createJsonImportHandler
         });
 
         const worksheetMode = window.MTGWorksheetModeModule.createWorksheetMode({
@@ -109,14 +159,16 @@ createApp({
             typesetMathJax,
             selectedGrade,
             typeLabels,
-            taskTypesByGrade
+            taskTypesByGrade,
+            createJsonImportHandler
         });
 
         const quizMode = window.MTGQuizModeModule.createQuizMode({
             state,
             taskGeneration,
             nextTick,
-            typesetMathJax
+            typesetMathJax,
+            createJsonImportHandler
         });
 
         const activeSelectedTypes = computed({
@@ -126,6 +178,17 @@ createApp({
             set: value => {
                 if (state.currentView.value === 'quiz') {
                     state.quizSelectedTypes.value = value;
+
+                    const quizTypes = new Set(quizVisibleTypeKeys.value);
+                    const updatedSelectedTypes = state.selectedTypes.value.filter(type => !quizTypes.has(type));
+
+                    for (const type of value) {
+                        if (!updatedSelectedTypes.includes(type)) {
+                            updatedSelectedTypes.push(type);
+                        }
+                    }
+
+                    state.selectedTypes.value = updatedSelectedTypes;
                     return;
                 }
 
@@ -209,6 +272,7 @@ createApp({
         const builderImportInput = ref(null);
         const builderShowPreviewSolution = ref(false);
         const builderShowTaskSolutions = ref(false);
+        const builderQuizMode = ref(false);
         const builderSidebarWidth = ref(580);
         const builderIsResizing = ref(false);
         let builderResizeStartX = 0;
@@ -267,8 +331,10 @@ createApp({
             state.taskCount.value = state.tasks.value.length;
         };
 
+        const builderTaskOptions = () => builderQuizMode.value ? { training: true } : {};
+
         const builderGenerateTaskPreview = async type => {
-            const task = taskGeneration.generateTaskByType(type, 'default');
+            const task = taskGeneration.generateTaskByType(type, 'default', builderTaskOptions());
             if (!task) {
                 return;
             }
@@ -416,7 +482,7 @@ createApp({
             }
 
             const sourceTask = state.tasks.value[index];
-            const duplicate = taskGeneration.generateTaskByType(sourceTask.type, 'default');
+            const duplicate = taskGeneration.generateTaskByType(sourceTask.type, 'default', builderTaskOptions());
             if (!duplicate) {
                 return;
             }
@@ -448,7 +514,7 @@ createApp({
                 return;
             }
 
-            const replacement = taskGeneration.generateTaskByType(currentType, 'default');
+            const replacement = taskGeneration.generateTaskByType(currentType, 'default', builderTaskOptions());
             if (!replacement) {
                 return;
             }
@@ -459,43 +525,42 @@ createApp({
             await typesetMathJax();
         };
 
+        const trainingImportInput = Vue.ref(null);
+
+        const openTrainingImportDialog = () => {
+            trainingImportInput.value?.click();
+        };
+
+        const importTrainingJSON = createJsonImportHandler({
+            loadTasks: taskGeneration.loadTasksFromJSON,
+            getVisibleKeys: () => visibleTypeKeys.value,
+            setSelectedTypes: types => {
+                state.selectedTypes.value = types;
+            },
+            onAfterLoad: async () => {
+                state.trainingHistory.value = [];
+                state.currentTrainingIndex.value = 0;
+                state.showTrainingSolution.value = false;
+                state.isSettingsSidebarOpen.value = false;
+            }
+        });
+
         const openBuilderImportDialog = () => {
             builderImportInput.value?.click();
         };
 
-        const importBuilderJSON = async event => {
-            const file = event.target.files?.[0];
-            if (!file) {
-                return;
+        const importBuilderJSON = createJsonImportHandler({
+            loadTasks: taskGeneration.loadTasksFromJSON,
+            getVisibleKeys: () => visibleTypeKeys.value,
+            setSelectedTypes: types => {
+                state.selectedTypes.value = types;
+            },
+            onAfterLoad: async () => {
+                state.currentView.value = 'worksheet-builder';
+                state.isSettingsSidebarOpen.value = false;
+                builderReplaceIndex.value = null;
             }
-
-            const reader = new FileReader();
-            reader.onload = async ev => {
-                try {
-                    const data = JSON.parse(ev.target.result);
-                    const loaded = taskGeneration.loadTasksFromJSON(data);
-                    if (!loaded) {
-                        window.alert('Die JSON-Datei enthält keine gültigen Aufgaben.');
-                        return;
-                    }
-
-                    state.currentView.value = 'worksheet-builder';
-                    state.isSettingsSidebarOpen.value = false;
-                    builderReplaceIndex.value = null;
-
-                    await nextTick();
-                    await typesetMathJax();
-                } catch (error) {
-                    window.alert('Fehler beim Laden der JSON-Datei. Bitte prüfe das Format.');
-                } finally {
-                    if (event.target) {
-                        event.target.value = '';
-                    }
-                }
-            };
-
-            reader.readAsText(file);
-        };
+        });
 
         const exportBuilderJSON = () => {
             const taskLength = state.tasks.value.length;
@@ -848,6 +913,11 @@ createApp({
         watch(() => state.currentView.value, view => {
             syncUrlWithView(view);
 
+            if (view === 'quiz') {
+                state.quizSelectedTypes.value = state.selectedTypes.value
+                    .filter(type => quizVisibleTypeKeys.value.includes(type));
+            }
+
             if (view !== 'worksheet-builder') {
                 builderReplaceIndex.value = null;
                 builderEditingIndex.value = null;
@@ -911,6 +981,7 @@ createApp({
             builderReplaceTargetLabel,
             builderShowPreviewSolution,
             builderShowTaskSolutions,
+            builderQuizMode,
             builderDragIndex,
             builderEditingIndex,
             builderEditTaskText,
@@ -944,6 +1015,9 @@ createApp({
             importBuilderJSON,
             exportBuilderJSON,
             builderImportInput,
+            openTrainingImportDialog,
+            importTrainingJSON,
+            trainingImportInput,
             openSettingsSidebar: navigation.openSettingsSidebar,
             closeSettingsSidebar: navigation.closeSettingsSidebar,
             toggleSettingsSidebar: navigation.toggleSettingsSidebar,
