@@ -157,7 +157,7 @@ const typeDefinitions = [
 	['frac_md', 'Brüche ×/÷', 'Brüche multiplizieren und dividieren'],
 	['frac_order', 'Brüche ordnen', 'Brüche der Größe nach sortieren'],
 	['round', 'Dezimalbrüche runden', 'Dezimalbrüche runden'],
-	['zahlengerade', 'Zahlenstrahl', 'Zahlenstrahl-Aufgaben lesen, eintragen und zeichnen'],
+	// ['zahlengerade', 'Zahlenstrahl', 'Zahlenstrahl-Aufgaben lesen, eintragen und zeichnen'],
 	
 	// Prozent / Proportionalität / Maßeinheiten
 	['anteile', 'Anteile berechnen', 'Anteile berechnen'],
@@ -182,7 +182,7 @@ const typeDefinitions = [
 	// Funktionen, Statistik & Wahrscheinlichkeiten
 	['wkt', 'Wahrscheinlichkeiten', 'Wahrscheinlichkeiten bestimmen'],
 	['linear_function', 'Lineare Funktionen zeichnen', 'Lineare Funktionen grafisch darstellen'],
-	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
+	// ['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
 	['statistik', 'Statistik', 'Kenngrößen der Statistik bestimmen']
 ];
 

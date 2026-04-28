@@ -748,6 +748,13 @@ createApp({
             }
         };
 
+        const startTrainingFromTrainingView = async () => {
+            if (state.currentView.value === 'training' && !state.hasSelectedTypes.value) {
+                state.selectedTypes.value = [...visibleTypeKeys.value];
+            }
+            await trainingMode.startTraining();
+        };
+
         const randomizeTypeSelection = () => {
             const classTypes = activeVisibleTypeKeys.value;
             const selectedTypesRef = getActiveSelectedTypesRef();
@@ -973,12 +980,14 @@ createApp({
             selectedGrade,
             gradeOptions,
             visibleTypeEntries,
+            activeVisibleTypeKeys,
             activeVisibleTypeEntries,
             activeSelectedTypes,
             activeMentalMathMode,
             activeTaskWeights,
             activeSelectedTypesCount,
             selectAllTypes,
+            startTrainingFromTrainingView,
             randomizeTypeSelection,
             generateRandomWorksheet,
             refreshCurrentView,

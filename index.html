@@ -188,6 +188,7 @@
             <p>Öffne die Aufgabenauswahl, wähle Aufgaben aus und erzeuge anschließend das Arbeitsblatt.</p>
             <div class="empty-state-actions">
                 <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
+                <button @click="openWorksheetImportDialog" class="btn btn--export">Öffnen</button>
                 <button
                     @click="hasSelectedTypes ? generateWorksheet() : generateRandomWorksheet()"
                     class="btn btn--primary"
@@ -411,7 +412,7 @@
                 <h2>Noch keine Aufgaben ausgewählt</h2>
                 <p>Klicke links auf einen Aufgabentyp, prüfe die Vorschau und füge die Aufgabe dann deiner Liste hinzu. JSON-Sets kannst du jederzeit importieren und danach einzeln bearbeiten.</p>
                 <div class="empty-state-actions">
-                    <button @click="openBuilderImportDialog" class="btn btn--primary">Import</button>
+                    <button @click="openBuilderImportDialog" class="btn btn--export">Öffnen</button>
                 </div>
             </div>
 
@@ -498,11 +499,12 @@
         <input type="file" ref="trainingImportInput" @change="importTrainingJSON" accept=".json" style="display:none">
 
         <div v-if="!currentTrainingTask" class="empty-state empty-state--training">
-            <h2>Training ist bereit</h2>
+            <h2>Trainingsmodus</h2>
             <p>Wähle zuerst Aufgaben in der Aufgabenauswahl und starte dann das Training.</p>
             <div class="empty-state-actions">
                 <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
-                <button @click="startTraining" class="btn btn--primary" :disabled="!hasSelectedTypes">Training starten</button>
+                <button @click="openTrainingImportDialog" class="btn btn--export">Öffnen</button>
+                <button @click="startTrainingFromTrainingView" class="btn btn--primary" :disabled="activeVisibleTypeKeys.length === 0">Training starten</button>
             </div>
         </div>
 
@@ -576,6 +578,7 @@
             <p>Wähle zuerst Aufgabentypen in der Aufgabenauswahl und erzeuge dann das Quiz.</p>
             <div class="empty-state-actions">
                 <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
+                <button @click="openQuizImportDialog" class="btn btn--export">Öffnen</button>
                 <button @click="generateQuiz" class="btn btn--primary" :disabled="!hasSelectedTypes">Quiz erzeugen</button>
             </div>
         </div>
@@ -634,12 +637,12 @@
                 </button>
                 <button @click="generateAll" class="btn btn--primary">Erzeugen 🎲</button>
                 <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Anordnen</button>
-                <button @click="openPresentationImportDialog" class="btn btn--export">Öffnen</button>
-                <input type="file" ref="presentationImportInput" @change="importPresentationJSON" accept=".json" style="display:none">
-                <button @click="exportJSON" class="btn btn--export">Speichern</button>
                 <button @click="toggleDarkMode" class="btn btn--theme">
                     {{ isDarkMode ? 'Light-Mode' : 'Dark-Mode' }}
                 </button>
+                <button @click="openPresentationImportDialog" class="btn btn--export">Öffnen</button>
+                <input type="file" ref="presentationImportInput" @change="importPresentationJSON" accept=".json" style="display:none">
+                <button @click="exportJSON" class="btn btn--export">Speichern</button>
                 <!-- <button @click="exportHTML" class="btn btn--export">Speichern 💾</button> -->
             </div>
         </div>
@@ -649,6 +652,7 @@
             <p>Öffne die Aufgabenauswahl, wähle Aufgaben aus und erzeuge anschließend die Präsentation.</p>
             <div class="empty-state-actions">
                 <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
+                <button @click="openPresentationImportDialog" class="btn btn--export">Öffnen</button>
                 <!-- <button @click="generateAll" class="btn btn--primary" :disabled="!hasSelectedTypes">Präsentation erzeugen</button> -->
             </div>
         </div>

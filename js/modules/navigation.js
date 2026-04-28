@@ -24,7 +24,7 @@ window.MTGNavigationModule = {
         };
 
         const switchView = async (view, options = {}) => {
-            const { autoOpenSettingsFromHome = true } = options;
+            const { autoOpenSettingsFromHome = false } = options;
             const fromHome = state.currentView.value === 'home';
 
             closeSettingsSidebar();

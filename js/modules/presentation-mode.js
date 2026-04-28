@@ -270,6 +270,9 @@ window.MTGPresentationModeModule = {
             toggleDarkMode,
             generateAll,
             exportJSON,
+            openPresentationImportDialog,
+            importPresentationJSON,
+            presentationImportInput,
             exportHTML
         };
     }
