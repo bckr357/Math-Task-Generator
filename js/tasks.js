@@ -2274,7 +2274,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			const isPrim = mathUtils.isPrime;
 
 			// --- TYP: BEREICH ABSUCHEN ---
-			let start = randInt(0, 40);
+			let start = randInt(0, 8) * 5; // Start bei 0, 5, 10, ..., 40
 			
 			let prims = [];
 			for (let i = start; i <= start + 10; i++) {
@@ -3243,7 +3243,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				} else if (sz.type === 'job') {
 					einzelwert = randInt(5, 9) + (Math.random() < 0.5 ? 0.5 : 0); // 5,00€ bis 9,50€ Stundenlohn
 				} else {
-					einzelwert = randInt(3, 1) * 0.2; // 0,50€ bis 3,00€ für Lebensmittel
+					einzelwert = randInt(1, 7) * 0.2; // 0,20€ bis 1,40€ für Lebensmittel
 				}
 			}
 
