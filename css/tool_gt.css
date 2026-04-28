@@ -880,7 +880,7 @@ mjx-container[jax="CHTML"][display="true"] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
@@ -985,6 +985,7 @@ mjx-container[jax="CHTML"][display="true"] {
 }
 
 .presentation-view mjx-container[jax="CHTML"][display="true"],
+.builder-task-item--presentation mjx-container[jax="CHTML"][display="true"],
 .training-view mjx-container[jax="CHTML"][display="true"] {
     margin: 0 !important;
     padding: 0 !important;
@@ -1000,6 +1001,7 @@ mjx-mtext {
 .math-a { font-size: 2.2rem; font-weight: 400; color: var(--primary); line-height: 1.25; }
 
 .presentation-view .math-q .two-column-task,
+.builder-task-item--presentation .math-q .two-column-task,
 .presentation-view .math-a .two-column-task {
     display: block;
     width: 100%;
@@ -1008,11 +1010,13 @@ mjx-mtext {
 }
 
 .presentation-view .math-q .two-column-task tr,
+.builder-task-item--presentation .math-q .two-column-task tr,
 .presentation-view .math-a .two-column-task tr {
     display: block;
 }
 
 .presentation-view .math-q .two-column-task td,
+.builder-task-item--presentation .math-q .two-column-task td,
 .presentation-view .math-a .two-column-task td {
     display: block;
     width: auto;
@@ -1023,6 +1027,7 @@ mjx-mtext {
 }
 
 .presentation-view .math-q .two-column-task td:last-child,
+.builder-task-item--presentation .math-q .two-column-task td:last-child,
 .presentation-view .math-a .two-column-task td:last-child {
     margin-bottom: 0;
 }
@@ -1113,12 +1118,15 @@ mjx-mtext {
 
 /* Tabellen-Lösungen in der Präsentation an .math-a angleichen */
 .presentation-view .math-a .op-table-wrap,
+.builder-task-item--presentation .math-a .op-table-wrap,
 .worksheet-sheet--solutions .math-a .op-table-wrap {
     max-width: 1000px;
 }
 
 .presentation-view .math-a .op-table th,
 .presentation-view .math-a .op-table td,
+.builder-task-item--presentation .math-a .op-table th,
+.builder-task-item--presentation .math-a .op-table td,
 .worksheet-sheet--solutions .math-a .op-table th,
 .worksheet-sheet--solutions .math-a .op-table td {
     font-size: 35px;
@@ -1128,6 +1136,8 @@ mjx-mtext {
 
 .presentation-view .math-a .op-table th:first-child,
 .presentation-view .math-a .op-table td:first-child,
+.builder-task-item--presentation .math-a .op-table th:first-child,
+.builder-task-item--presentation .math-a .op-table td:first-child,
 .worksheet-sheet--solutions .math-a .op-table th:first-child,
 .worksheet-sheet--solutions .math-a .op-table td:first-child {
     width: 3.1em;
@@ -1136,18 +1146,22 @@ mjx-mtext {
 }
 
 .presentation-view .math-a .op-table mjx-container,
+.builder-task-item--presentation .math-a .op-table mjx-container,
 .worksheet-sheet--solutions .math-a .op-table mjx-container {
     font-size: 105% !important;
 }
 
 /* Gleiche Darstellung auch für die Aufgaben (math-q) in der Präsentation */
 .presentation-view .math-q .op-table-wrap,
+.builder-task-item--presentation .math-q .op-table-wrap,
 .worksheet-sheet--solutions .math-q .op-table-wrap {
     max-width: 1000px;
 }
 
 .presentation-view .math-q .op-table th,
 .presentation-view .math-q .op-table td,
+.builder-task-item--presentation .math-q .op-table th,
+.builder-task-item--presentation .math-q .op-table td,
 .worksheet-sheet--solutions .math-q .op-table th,
 .worksheet-sheet--solutions .math-q .op-table td {
     font-size: 35px;
@@ -1157,6 +1171,8 @@ mjx-mtext {
 
 .presentation-view .math-q .op-table th:first-child,
 .presentation-view .math-q .op-table td:first-child,
+.builder-task-item--presentation .math-q .op-table th:first-child,
+.builder-task-item--presentation .math-q .op-table td:first-child,
 .worksheet-sheet--solutions .math-q .op-table th:first-child,
 .worksheet-sheet--solutions .math-q .op-table td:first-child {
     width: 3.1em;
@@ -1165,6 +1181,7 @@ mjx-mtext {
 }
 
 .presentation-view .math-q .op-table mjx-container,
+.builder-task-item--presentation .math-q .op-table mjx-container,
 .worksheet-sheet--solutions .math-q .op-table mjx-container {
     font-size: 105% !important;
 }

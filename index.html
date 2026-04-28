@@ -393,7 +393,10 @@
                         </select>
                     </label>
                     <button @click="builderToggleTaskSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
-                        {{ builderShowTaskSolutions ? 'Lösungen aus' : 'Lösungen' }}
+                        {{ builderShowTaskSolutions ? 'Lösungen' : 'Lösungen' }}
+                    </button>
+                    <button @click="builderToggleDisplayMode" class="btn btn--export" :disabled="!hasGeneratedTasks">
+                        {{ builderDisplayMode === 'presentation' ? 'Arbeitsblatt' : 'Präsentation' }}
                     </button>
                     <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Anordnen</button>
                     <button @click="openBuilderImportDialog" class="btn btn--export">Öffnen</button>
@@ -417,7 +420,7 @@
                     <article
                         v-for="(task, index) in tasks"
                         :key="'builder-task-'+index"
-                        :class="['builder-task-item', { 'is-replace-target': builderReplaceIndex === index, 'is-dragging': builderDragIndex === index }]"
+                        :class="['builder-task-item', { 'is-replace-target': builderReplaceIndex === index, 'is-dragging': builderDragIndex === index, 'builder-task-item--presentation': builderDisplayMode === 'presentation' }]"
                         draggable="true"
                         @dragstart="builderHandleDragStart(index)"
                         @dragover="builderHandleDragOver($event)"
@@ -448,13 +451,27 @@
                         </template>
 
                         <template v-else>
-                            <div class="builder-task-math" v-html="getBuilderTaskMarkup(task, false)"></div>
-                            <div v-if="builderShowTaskSolutions" class="builder-task-solution" v-html="getBuilderTaskMarkup(task, true)"></div>
+                            <template v-if="builderDisplayMode === 'presentation'">
+                                <div class="task-row">
+                                    <div class="content">
+                                        <div class="math-q" v-html="task.textDisplay || task.textPrint || ''"></div>
+                                    </div>
+                                </div>
+                                <div v-if="builderShowTaskSolutions" class="task-row">
+                                    <div class="content">
+                                        <div class="math-a" v-html="task.solution || ''"></div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="builder-task-math" v-html="getBuilderTaskMarkup(task, false)"></div>
+                                <div v-if="builderShowTaskSolutions" class="builder-task-solution" v-html="getBuilderTaskMarkup(task, true)"></div>
+                            </template>
                             <div class="builder-task-actions">
                                 <button @click="builderRerollTask(index)" class="btn btn--export settings-compact-btn">Neu</button>
                                 <button @click="builderDuplicateTask(index)" class="btn btn--export settings-compact-btn">Duplizieren</button>
                                 <button @click="builderBeginInlineEdit(index)" class="btn btn--export settings-compact-btn">Bearbeiten</button>
-                                <button @click="builderStartReplaceTask(index)" class="btn btn--back settings-compact-btn">Mit anderem Typ ersetzen</button>
+                                <button @click="builderStartReplaceTask(index)" class="btn btn--back settings-compact-btn">Ersetzen</button>
                                 <button @click="builderRemoveTask(index)" class="btn btn--toggle settings-compact-btn">Entfernen</button>
                             </div>
                         </template>

@@ -272,8 +272,9 @@ createApp({
         const builderImportInput = ref(null);
         const builderShowPreviewSolution = ref(false);
         const builderShowTaskSolutions = ref(false);
+        const builderDisplayMode = ref('worksheet');
         const builderQuizMode = ref(false);
-        const builderSidebarWidth = ref(580);
+        const builderSidebarWidth = ref(585);
         const builderIsResizing = ref(false);
         let builderResizeStartX = 0;
         let builderResizeStartWidth = 0;
@@ -356,6 +357,15 @@ createApp({
 
         const builderToggleTaskSolutions = async () => {
             builderShowTaskSolutions.value = !builderShowTaskSolutions.value;
+
+            await nextTick();
+            await typesetMathJax();
+        };
+
+        const builderToggleDisplayMode = async () => {
+            builderDisplayMode.value = builderDisplayMode.value === 'presentation'
+                ? 'worksheet'
+                : 'presentation';
 
             await nextTick();
             await typesetMathJax();
@@ -981,6 +991,7 @@ createApp({
             builderReplaceTargetLabel,
             builderShowPreviewSolution,
             builderShowTaskSolutions,
+            builderDisplayMode,
             builderQuizMode,
             builderDragIndex,
             builderEditingIndex,
@@ -990,6 +1001,7 @@ createApp({
             builderGenerateTaskPreview,
             builderTogglePreviewSolution,
             builderToggleTaskSolutions,
+            builderToggleDisplayMode,
             builderAddDraftTask,
             builderRemoveTask,
             builderClearTasks,
