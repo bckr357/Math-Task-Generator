@@ -1056,7 +1056,7 @@ mjx-mtext {
 
 .op-table th,
 .op-table td {
-    border: 1px solid rgba(148, 163, 184, 0.35);
+    border: 1px solid rgb(139, 119, 119);
     padding: 10px 8px;
     text-align: center;
     vertical-align: middle;
@@ -2323,7 +2323,7 @@ mjx-container[jax="CHTML"][display="true"] {
         font-size: 10pt;
         font-weight: 350;
         padding: 1.2mm 1.0mm;
-        border: 0.2mm solid #5c6775;
+        border: 0.2mm solid #7d848d;
         word-break: break-word;
     }
 

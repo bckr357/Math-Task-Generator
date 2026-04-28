@@ -1606,7 +1606,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				} else if (rdLocal > 0.40) {
 					v1 = rnd(3, 13);
 					expr = `\\( \\sqrt{${v1 * v1}} = \\)`;
-					solution = `\\( \\sqrt{${v1 * v1}} = ${v1} \\)`;
+					solution = `\\( \\sqrt{${v1 * v1}} = \\pm ${v1} \\)`;
 				} else if (rdLocal > 0.2) {
 					v1 = rnd(3, 9);
 					expr = `\\( 2^${v1} = \\)`;
@@ -3175,7 +3175,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let W = (G / n) * z;            // Der Anteil (Prozentwert)
 
 				textDisplay = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)} ${einheit} sind ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)}  ${einheit} sind  ${comma(W)} ${einheit}<br>
+				s = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)}  ${einheit} sind ${comma(W)} ${einheit}<br>
 				\\((${comma(G)} : ${n} \\cdot ${z} = ${comma(W)})\\)`;
 
 			} else if (rd > 0.3) {
