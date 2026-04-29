@@ -1872,19 +1872,6 @@ mjx-container[jax="CHTML"][display="true"] {
     margin-bottom: 0;
 }
 
-.worksheet-view .worksheet-solution-board .two-column-task td {
-    display: block;
-    width: auto;
-    border: none;
-    padding: 0;
-    margin-bottom: 1rem;
-    text-align: left;
-}
-
-.worksheet-view .worksheet-solution-board .two-column-task td:last-child {
-    margin-bottom: 0;
-}
-
 .worksheet-view .worksheet-solution-board .task-row {
     min-height: 86px;
     padding: 16px 0;

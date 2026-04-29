@@ -189,6 +189,10 @@ const typeDefinitions = [
 const typeLabels = Object.fromEntries(typeDefinitions.map(([key, label]) => [key, label]));
 const typeDescriptions = Object.fromEntries(typeDefinitions.map(([key, , description]) => [key, description]));
 
+if (typeof window !== 'undefined') {
+	window.typeLabels = typeLabels;
+}
+
 const typeOrderIndex = Object.fromEntries(typeDefinitions.map(([key], index) => [key, index]));
 function sortByTypeDefinitions(types) {
 	return [...types].sort((a, b) => {
@@ -1017,7 +1021,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			}
 
 			// Zufällig mischen für die Aufgabenstellung
-			const displayOrder = [...fracs].sort(() => Math.random() - 0.5);
+			const displayOrder = fisherYatesShuffle(fracs);
 			// Aufsteigend sortiert für die Lösung
 			const sortedAsc = [...fracs].sort((a, b) => a.ext - b.ext);
 
@@ -2058,7 +2062,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		
 		case 'terme': {
 			const vars = ['x', 'y', 'z', 'a', 'b'];
-			let selectedVars = [...vars].sort(() => 0.5 - Math.random()).slice(0, 2);
+			let selectedVars = fisherYatesShuffle(vars).slice(0, 2);
 			if (Math.random() < 0.5) selectedVars[1] = '';
 			
 			let mode = grade >= 8 ? randInt(0, 2) : 0;
@@ -2517,7 +2521,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					possiblePositions.push(i + 0.5);
 				}
 			}
-			const shuffled = [...possiblePositions].sort(() => 0.5 - Math.random());
+			const shuffled = fisherYatesShuffle(possiblePositions);
 			const targetPositions = shuffled.slice(0, 3).sort((a, b) => a - b);
 			const letters = ['A', 'B', 'C'];
 			const values = targetPositions.map(pos => formatValue(getValueAt(pos)));
@@ -2541,7 +2545,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			if (mode === 0) {
 				// --- TYP: LAPLACE URNE (3 FARBEN) ---
 				const farben = ['rote', 'blaue', 'grüne', 'gelbe'];
-				let w = [...farben].sort(() => 0.5 - Math.random());
+				let w = fisherYatesShuffle(farben);
 				let n1 = randInt(3, 9);
 				let n2 = randInt(3, 9);
 				let n3 = randInt(3, 9);
@@ -2609,7 +2613,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			} else if (mode === 3) {
 				// --- TYP: GLÜCKSRAD (2 Farben, zweimal drehen) ---
 				const farben = ['rote', 'blaue', 'grüne', 'gelbe'];
-				let w = [...farben].sort(() => 0.5 - Math.random());
+				let w = fisherYatesShuffle(farben);
 				let f1 = w[0]; // Die gesuchte Farbe (z.B. "rote")
 				let f2 = w[1]; // Die andere Farbe
 				

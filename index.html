@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,300..900;1,300..900&display=swap">
-    <link rel="stylesheet" href="css/tool_gt.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -127,7 +127,7 @@
                 <span>Erzeuge Quiz-Aufgaben im 3-Spalten-Layout mit spaltenweiser Nummerierung.</span>
             </button>
 
-            <a href="tool_quiz_import_neu.html" class="mode-card mode-card--import">
+            <a href="quiz.html" class="mode-card mode-card--import">
                 <span class="mode-card-kicker">Quiz Import</span>
                 <strong>Battle-Quiz laden</strong>
                 <span>Importiere eine Aufgaben-JSON und starte das Quiz direkt.</span>
@@ -394,7 +394,7 @@
                         </select>
                     </label>
                     <button @click="builderToggleTaskSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
-                        {{ builderShowTaskSolutions ? 'Lösungen' : 'Lösungen' }}
+                        Lösungen
                     </button>
                     <button @click="builderToggleDisplayMode" class="btn btn--export" :disabled="!hasGeneratedTasks">
                         {{ builderDisplayMode === 'presentation' ? 'Arbeitsblatt' : 'Präsentation' }}

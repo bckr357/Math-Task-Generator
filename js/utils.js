@@ -143,6 +143,96 @@ const trueDec = (min, max) => {
 };
 
 // ============================================================
+// IMPORT-SICHERHEIT, PARSING UND SHUFFLE
+// ============================================================
+
+const safeJSONParse = (jsonText) => {
+    try {
+        return { ok: true, data: JSON.parse(jsonText), error: null };
+    } catch (error) {
+        return { ok: false, data: null, error };
+    }
+};
+
+const sanitizeStyleValue = (styleValue) => {
+    const value = String(styleValue || '');
+    const lower = value.toLowerCase();
+    if (lower.includes('javascript:') || lower.includes('expression(') || lower.includes('url(')) {
+        return '';
+    }
+    return value;
+};
+
+const sanitizeImportedHtml = (input) => {
+    const raw = String(input ?? '');
+    if (!raw) return '';
+
+    const allowedTags = new Set([
+        'br', 'b', 'strong', 'i', 'em', 'u', 'sup', 'sub', 'span', 'div', 'p',
+        'ul', 'ol', 'li', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th'
+    ]);
+    const allowedAttributes = new Set(['class', 'colspan', 'rowspan', 'style', 'title']);
+
+    const template = document.createElement('template');
+    template.innerHTML = raw;
+
+    const walk = (node) => {
+        if (!node) return;
+
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            const tagName = node.tagName.toLowerCase();
+            if (!allowedTags.has(tagName)) {
+                const replacement = document.createTextNode(node.textContent || '');
+                node.replaceWith(replacement);
+                return;
+            }
+
+            const attrs = [...node.attributes];
+            attrs.forEach(attr => {
+                const attrName = attr.name.toLowerCase();
+                const isAria = attrName.startsWith('aria-');
+                const isData = attrName.startsWith('data-');
+                const allowed = allowedAttributes.has(attrName) || isAria || isData;
+
+                if (!allowed || attrName.startsWith('on')) {
+                    node.removeAttribute(attr.name);
+                    return;
+                }
+
+                if (attrName === 'style') {
+                    const safeStyle = sanitizeStyleValue(attr.value);
+                    if (!safeStyle) {
+                        node.removeAttribute(attr.name);
+                    } else {
+                        node.setAttribute('style', safeStyle);
+                    }
+                }
+            });
+        }
+
+        [...node.childNodes].forEach(child => walk(child));
+    };
+
+    [...template.content.childNodes].forEach(child => walk(child));
+    return template.innerHTML;
+};
+
+const fisherYatesShuffle = (items) => {
+    const arr = Array.isArray(items) ? [...items] : [];
+    for (let index = arr.length - 1; index > 0; index--) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [arr[index], arr[swapIndex]] = [arr[swapIndex], arr[index]];
+    }
+    return arr;
+};
+
+if (typeof window !== 'undefined') {
+    window.safeJSONParse = safeJSONParse;
+    window.sanitizeImportedHtml = sanitizeImportedHtml;
+    window.fisherYatesShuffle = fisherYatesShuffle;
+}
+
+// ============================================================
 // TRAINING VS. PAIR AUFGABEN PATTERN
 // ============================================================
 

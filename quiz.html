@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Elite-Turbo-Ninja-Laser-Mathe-Battle</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="js/quiz.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="css/quiz.css">
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Zurück zur Startseite</a>
+<div id="app">
+    <div v-if="!quizActive" class="setup-screen">
+        <h1 style="margin-top:0">Ultra-Elite-Turbo-Ninja-Laser-Mathe-Battle<br>(ohne Hilfsmittel)</h1>
+        <div class="file-input">
+            <input type="file" @change="handleFileUpload" accept=".json">
+            <p v-if="importedTasks.length > 0">✅ {{ importedTasks.length }} Aufgaben geladen!</p>
+        </div>
+        <div class="input-row">
+            <div><small><b>Gruppe C</b></small><input type="number" v-model.number="sizes.C"></div>
+            <div><small><b>Gruppe B</b></small><input type="number" v-model.number="sizes.B"></div>
+            <div><small><b>Gruppe A</b></small><input type="number" v-model.number="sizes.A"></div>
+        </div>
+        <button class="btn-start" @click="startQuiz" :disabled="importedTasks.length === 0">Quiz starten</button>
+    </div>
+
+    <div v-else class="quiz-view">
+		<div class="top-nav">
+            <button @click="quizActive = false" class="btn-ui" style="min-width: 100px; padding: 10px;">← Menü</button>
+            <h2 style="margin:0; color: var(--slate-800)">Ultra-Elite-Turbo-Ninja-Laser-Mathe-Battle</h2>
+            <div style="font-size: 18px; font-weight: bold; color: var(--slate-800); font-family: monospace;">
+                <span v-if="currentTask">Aufgabe: #{{ currentTask.id }}</span>
+                <span v-else-if="nextTaskPreview !== null">Startaufgabe: #{{ importedTasks[nextTaskPreview].id }}</span>
+                <span v-else>Bereitmachen...</span>
+                <!-- <span v-if="nextTaskPreview !== null" style="color: #94a3b8; margin-left: 10px;">(Nächste: #{{ importedTasks[nextTaskPreview].id }})</span> -->
+            </div>
+        </div>
+
+	<div class="battle-zone">
+		<div v-for="g in ['A', 'B', 'C']" :id="'card-' + g" :class="['group-card', 'card-' + g.toLowerCase()]">
+			
+			<div class="id-row">
+				<span>Gruppe {{ g }}</span>
+				<span class="id-badge">{{ currentCandidates[g] }}</span>
+			</div>
+
+			<div class="score-area">
+				<button class="btn-score btn-minus" @click="changeScore(g, -1)">–</button>
+				<div class="score-display">{{ scores[g] }} Pkt.</div>
+				<button class="btn-score btn-plus" @click="changeScore(g, 1)">+</button>
+			</div>
+			
+		</div>
+	</div>
+
+		<div class="task-area">
+            <div v-if="!currentTask" class="prep-text">Macht euch bereit! 🚀 </div>
+            <template v-else>
+                <div v-if="!showSolution" class="math-text" v-html="currentTask?.aufgabe"></div>
+                <div v-else class="math-text sol-text" v-html="currentTask?.loesung"></div>
+            </template>
+        </div>
+
+        <div class="control-bar">
+            <button @click="startShuffleAnimation" class="btn-ui btn-shuffle" :disabled="isShuffling">
+                Ziehung [Space]
+            </button>
+            <button @click="prevTask" class="btn-ui btn-sol" :disabled="history.length <= 1 || historyPointer <= 0">← Zurück</button>
+            <button @click="toggleSolution" class="btn-ui btn-sol" :disabled="!currentTask">Lösung [L]</button>
+            <button @click="nextTask" class="btn-ui btn-next">Weiter [→]</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

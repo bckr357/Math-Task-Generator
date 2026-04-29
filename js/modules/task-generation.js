@@ -37,11 +37,18 @@ window.MTGTaskGenerationModule = {
                     ? data.tasks
                     : [];
 
+            const sanitize = (value) => {
+                if (typeof sanitizeImportedHtml === 'function') {
+                    return sanitizeImportedHtml(value ?? '');
+                }
+                return String(value ?? '');
+            };
+
             return rawArray.map(item => ({
                 type: item.aufgabentyp || item.type || '',
-                textDisplay: item.textDisplay ?? item.aufgabe ?? item.task ?? '',
-                textPrint: item.textPrint ?? item.aufgabe ?? item.task ?? '',
-                solution: item.loesung ?? item.solution ?? ''
+                textDisplay: sanitize(item.textDisplay ?? item.aufgabe ?? item.task ?? ''),
+                textPrint: sanitize(item.textPrint ?? item.aufgabe ?? item.task ?? ''),
+                solution: sanitize(item.loesung ?? item.solution ?? '')
             }));
         };
 
@@ -290,7 +297,7 @@ window.MTGTaskGenerationModule = {
 
                     const remainingCount = remainingTarget - (fullSets * repeatWeightedTypes.length);
                     if (remainingCount > 0) {
-                        const finalShuffle = [...repeatWeightedTypes].sort(() => Math.random() - 0.5);
+                        const finalShuffle = fisherYatesShuffle(repeatWeightedTypes);
                         for (let index = 0; index < remainingCount; index++) {
                             counts[finalShuffle[index]] += 1;
                         }
@@ -299,7 +306,7 @@ window.MTGTaskGenerationModule = {
                     const repeatPool = [...singleTypes];
                     const finalShuffle = [];
                     while (finalShuffle.length < remainingTarget) {
-                        finalShuffle.push(...repeatPool.sort(() => Math.random() - 0.5));
+                        finalShuffle.push(...fisherYatesShuffle(repeatPool));
                     }
                     for (let index = 0; index < remainingTarget; index++) {
                         counts[finalShuffle[index]] += 1;
@@ -311,7 +318,10 @@ window.MTGTaskGenerationModule = {
 
             if (arrangementMode === 'ordered' || arrangementMode === 'random-ordered') {
                 const typeCounts = getTypeCounts();
-                const labelOrder = Object.keys(typeLabels);
+                const typeLabelMap = (typeof window !== 'undefined' && window.typeLabels && typeof window.typeLabels === 'object')
+                    ? window.typeLabels
+                    : {};
+                const labelOrder = Object.keys(typeLabelMap);
                 const selectedSet = new Set(config.selectedTypes);
                 const orderedTypes = [
                     ...labelOrder.filter(type => selectedSet.has(type)),
@@ -336,13 +346,13 @@ window.MTGTaskGenerationModule = {
 
                 const fillTypes = normalWeightedTypes.length > 0 ? normalWeightedTypes : singleTypesToUse;
                 while (typePool.length + fillTypes.length <= targetTotal) {
-                    const shuffledSet = [...fillTypes].sort(() => Math.random() - 0.5);
+                    const shuffledSet = fisherYatesShuffle(fillTypes);
                     typePool = [...typePool, ...shuffledSet];
                 }
 
                 if (typePool.length < targetTotal) {
                     const remainingCount = targetTotal - typePool.length;
-                    const finalShuffle = [...fillTypes].sort(() => Math.random() - 0.5);
+                    const finalShuffle = fisherYatesShuffle(fillTypes);
                     for (let index = 0; index < remainingCount; index++) {
                         typePool.push(finalShuffle[index]);
                     }

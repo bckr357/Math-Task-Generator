@@ -63,7 +63,6 @@ window.MTGStateModule = {
 
             return selectedTypes.value.length > 0;
         });
-        const isQuizMode = computed(() => currentView.value === 'quiz');
         const viewTabs = [
             { key: 'home', label: 'Start' },
             { key: 'worksheet', label: 'Arbeitsblatt' },

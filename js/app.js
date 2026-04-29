@@ -91,7 +91,13 @@ createApp({
             const reader = new FileReader();
             reader.onload = async ev => {
                 try {
-                    const data = JSON.parse(ev.target.result);
+                    const parseResult = safeJSONParse(ev.target.result);
+                    if (!parseResult.ok) {
+                        window.alert('Fehler beim Laden der JSON-Datei. Bitte prüfe das Format.');
+                        return;
+                    }
+
+                    const data = parseResult.data;
                     const loaded = loadTasks(data);
                     if (!loaded) {
                         window.alert('Die JSON-Datei enthält keine gültigen Aufgaben.');
