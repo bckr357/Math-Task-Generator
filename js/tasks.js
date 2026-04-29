@@ -471,7 +471,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				<div class="op-table-wrap">
 					<table class="op-table op-table--terms">
 						<tr>
-							<th class="op-corner">x</th>
+							<th class="op-corner">\\( x \\)</th>
 							<th>\\( ${term1.expr} \\)</th>
 							<th>\\( ${term2.expr} \\)</th>
 						</tr>
@@ -924,7 +924,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				N = n_base * k;
 			} while (Z === N || getGcd(z_base, n_base) > 1 || Z % N === 0 || N % Z === 0);
 
-			textDisplay = `Kürze vollständig: \\( \\quad\\dfrac{${Z}}{${N}} = \\)`;
+			textDisplay = `kürze vollständig: \\( \\quad\\dfrac{${Z}}{${N}} = \\)`;
 
 			// Lösungsweg mit \underset unter dem Gleichheitszeichen
 			let solutionSteps = `\\frac{${Z}}{${N}}`;
