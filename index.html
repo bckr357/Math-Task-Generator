@@ -187,8 +187,8 @@
             <h2>Noch keine Aufgaben erzeugt</h2>
             <p>Öffne die Aufgabenauswahl, wähle Aufgaben aus und erzeuge anschließend das Arbeitsblatt.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
-                <button @click="openWorksheetImportDialog" class="btn btn--export">Öffnen</button>
+                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
+                <button @click="openWorksheetImportDialog" class="btn btn--export">Datei öffnen</button>
                 <button
                     @click="hasSelectedTypes ? generateWorksheet() : generateRandomWorksheet()"
                     class="btn btn--primary"
@@ -502,8 +502,8 @@
             <h2>Trainingsmodus</h2>
             <p>Wähle zuerst Aufgaben in der Aufgabenauswahl und starte dann das Training.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
-                <button @click="openTrainingImportDialog" class="btn btn--export">Öffnen</button>
+                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
+                <button @click="openTrainingImportDialog" class="btn btn--export">Datei öffnen</button>
                 <button @click="startTrainingFromTrainingView" class="btn btn--primary" :disabled="activeVisibleTypeKeys.length === 0">Training starten</button>
             </div>
         </div>
@@ -577,9 +577,11 @@
             <h2>Noch keine Quiz-Aufgaben erzeugt</h2>
             <p>Wähle zuerst Aufgabentypen in der Aufgabenauswahl und erzeuge dann das Quiz.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
-                <button @click="openQuizImportDialog" class="btn btn--export">Öffnen</button>
-                <button @click="generateQuiz" class="btn btn--primary" :disabled="!hasSelectedTypes">Quiz erzeugen</button>
+                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
+                <button @click="openQuizImportDialog" class="btn btn--export">Datei öffnen</button>
+                <button @click="hasSelectedTypes ? generateQuiz() : (selectAllQuizTypes(), generateQuiz())" class="btn btn--primary">
+                    {{ hasSelectedTypes ? 'Quiz erzeugen' : 'Zufälliges Quiz erzeugen' }}
+                </button>
             </div>
         </div>
 
@@ -651,9 +653,11 @@
             <h2>Noch keine Aufgaben erzeugt</h2>
             <p>Öffne die Aufgabenauswahl, wähle Aufgaben aus und erzeuge anschließend die Präsentation.</p>
             <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl öffnen</button>
-                <button @click="openPresentationImportDialog" class="btn btn--export">Öffnen</button>
-                <!-- <button @click="generateAll" class="btn btn--primary" :disabled="!hasSelectedTypes">Präsentation erzeugen</button> -->
+                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
+                <button @click="openPresentationImportDialog" class="btn btn--export">Datei öffnen</button>
+                <button @click="hasSelectedTypes ? generateAll() : generateRandomPresentation()" class="btn btn--primary">
+                    {{ hasSelectedTypes ? 'Präsentation erzeugen' : 'Zufällige Präsentation erzeugen' }}
+                </button>
             </div>
         </div>
 

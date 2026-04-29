@@ -869,6 +869,15 @@ createApp({
             await worksheetMode.generateWorksheet();
         };
 
+        const generateRandomPresentation = async () => {
+            randomizeTypeSelection();
+            await presentationMode.generateAll();
+        };
+
+        const selectAllQuizTypes = () => {
+            state.quizSelectedTypes.value = [...quizVisibleTypeKeys.value];
+        };
+
         const refreshCurrentView = async () => {
             if (state.currentView.value === 'worksheet') {
                 await worksheetMode.generateWorksheet();
@@ -1002,6 +1011,7 @@ createApp({
             selectAllTypes,
             startTrainingFromTrainingView,
             randomizeTypeSelection,
+            selectAllQuizTypes,
             generateRandomWorksheet,
             refreshCurrentView,
             openViewDropdown,
@@ -1062,6 +1072,7 @@ createApp({
             goToPreviousTrainingTask: trainingMode.goToPreviousTrainingTask,
             goToNextTrainingTask: trainingMode.goToNextTrainingTask,
             generateAll: presentationMode.generateAll,
+            generateRandomPresentation,
             toggleSolutions: presentationMode.toggleSolutions,
             toggleDarkMode: presentationMode.toggleDarkMode,
             exportJSON: presentationMode.exportJSON,
