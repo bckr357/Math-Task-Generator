@@ -129,11 +129,15 @@ createApp({
             reader.readAsText(file);
         };
 
-         watch(visibleTypeKeys, (keys) => {
-             const allowed = new Set(keys);
-             state.selectedTypes.value = state.selectedTypes.value.filter(type => allowed.has(type));
-             state.quizSelectedTypes.value = state.quizSelectedTypes.value.filter(type => allowed.has(type));
-         }, { immediate: true });
+        watch(visibleTypeKeys, keys => {
+            const allowed = new Set(keys);
+            state.selectedTypes.value = state.selectedTypes.value.filter(type => allowed.has(type));
+        }, { immediate: true });
+
+        watch(quizVisibleTypeKeys, keys => {
+            const allowed = new Set(keys);
+            state.quizSelectedTypes.value = state.quizSelectedTypes.value.filter(type => allowed.has(type));
+        }, { immediate: true });
 
         const taskGeneration = window.MTGTaskGenerationModule.createTaskGenerationModule({
             state,
@@ -174,7 +178,8 @@ createApp({
             taskGeneration,
             nextTick,
             typesetMathJax,
-            createJsonImportHandler
+            createJsonImportHandler,
+            getVisibleTypeKeys: () => quizVisibleTypeKeys.value
         });
 
         const activeSelectedTypes = computed({
@@ -937,8 +942,10 @@ createApp({
             syncUrlWithView(view);
 
             if (view === 'quiz') {
-                state.quizSelectedTypes.value = state.selectedTypes.value
-                    .filter(type => quizVisibleTypeKeys.value.includes(type));
+                if (state.quizSelectedTypes.value.length === 0 && state.selectedTypes.value.length > 0) {
+                    state.quizSelectedTypes.value = state.selectedTypes.value
+                        .filter(type => quizVisibleTypeKeys.value.includes(type));
+                }
             }
 
             if (view !== 'worksheet-builder') {

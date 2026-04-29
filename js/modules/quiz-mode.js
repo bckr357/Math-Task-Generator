@@ -1,5 +1,5 @@
 window.MTGQuizModeModule = {
-    createQuizMode({ state, taskGeneration, nextTick, typesetMathJax, createJsonImportHandler }) {
+    createQuizMode({ state, taskGeneration, nextTick, typesetMathJax, createJsonImportHandler, getVisibleTypeKeys }) {
         const showQuizSolutions = Vue.computed(() => state.showWorksheetSolutions.value);
 
         const quizColumns = Vue.computed(() => {
@@ -61,6 +61,21 @@ window.MTGQuizModeModule = {
 
         const importQuizJSON = createJsonImportHandler({
             loadTasks: taskGeneration.loadTasksFromJSON,
+            getVisibleKeys: getVisibleTypeKeys,
+            setSelectedTypes: types => {
+                state.quizSelectedTypes.value = types;
+
+                const quizTypes = new Set((typeof getVisibleTypeKeys === 'function' ? getVisibleTypeKeys() : []) || []);
+                const nextSelectedTypes = state.selectedTypes.value.filter(type => !quizTypes.has(type));
+
+                for (const type of types) {
+                    if (!nextSelectedTypes.includes(type)) {
+                        nextSelectedTypes.push(type);
+                    }
+                }
+
+                state.selectedTypes.value = nextSelectedTypes;
+            },
             onAfterLoad: async data => {
                 if (typeof data.quizNumber === 'string') {
                     state.quizNumber.value = data.quizNumber;
