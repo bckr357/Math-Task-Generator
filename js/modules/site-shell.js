@@ -53,6 +53,16 @@
     let _drawer = null;
     let _overlay = null;
 
+    function getBaseHref() {
+        // Zuverlässig für file:// (Windows) UND http:// (Live Server):
+        // Prüfe nur, ob das letzte Verzeichnis-Segment ein bekannter Unterordner ist.
+        const path = window.location.pathname;
+        const dir = path.substring(0, path.lastIndexOf('/'));
+        const lastSegment = dir.split('/').filter(Boolean).pop() || '';
+        const SUBFOLDERS = ['kompetenzraster'];
+        return SUBFOLDERS.includes(lastSegment) ? '../' : '';
+    }
+
     function getCurrentKey() {
         const file = window.location.pathname.split('/').pop() || 'index.html';
         const map = {
@@ -87,6 +97,7 @@
 
     function buildDrawer() {
         const activeKey = getCurrentKey();
+        const base = getBaseHref();
 
         const drawer = document.createElement('div');
         drawer.className = 'site-nav-drawer';
@@ -114,7 +125,7 @@
 
         MODULES.forEach(function (mod) {
             const a = document.createElement('a');
-            a.href = mod.url;
+            a.href = base + mod.url;
             a.className = 'site-nav-item' + (mod.key === activeKey ? ' is-active' : '');
             a.setAttribute('aria-current', mod.key === activeKey ? 'page' : 'false');
             a.innerHTML =
@@ -158,4 +169,5 @@
     }
 
     window.MTGSiteShell = { openNav: openNav, closeNav: closeNav };
+    window.MTGSiteShellModule = window.MTGSiteShell;
 })();

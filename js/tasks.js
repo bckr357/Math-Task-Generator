@@ -3509,6 +3509,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			s = `${displayExpr} <br>= ${targetExpr} = ${fmtNum(resultInTarget)} ${targetUnit}`;
 			break;
 		}
+
+		default:
+			console.warn(`MTG: Unbekannter Aufgabentyp "${type}" – keine Aufgabe generiert.`);
 	}
 	
 	if (!textPrint) {

@@ -27,7 +27,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,300..900;1,300..900&display=swap">
-    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/shell.css">
+    <link rel="stylesheet" href="css/generator.css">
 </head>
 <body>
 
@@ -67,7 +70,7 @@
                         <option v-for="grade in gradeOptions" :key="grade" :value="grade">{{ grade }}</option>
                     </select>
                 </label>
-                <div class="settings-topbar-label" style="margin: auto 0; text-align: center;">
+                <div class="settings-topbar-label settings-topbar-label--summary">
                     <span>Typen</span>
                     <strong>{{ activeSelectedTypesCount }}</strong>
                 </div>
@@ -192,7 +195,7 @@
                 <button @click="openWorksheetImportDialog" class="btn btn--export">Öffnen</button>
                 <button @click="exportWorksheetJSON" class="btn btn--export">Speichern</button>
                 <!-- <button @click="switchView('worksheet-builder')" class="btn btn--primary">Anpassen</button> -->
-                <input type="file" ref="worksheetImportInput" @change="importWorksheetJSON" accept=".json" style="display:none">
+                <input type="file" ref="worksheetImportInput" @change="importWorksheetJSON" accept=".json" class="u-hidden-file-input">
             </div>
         </div>
 
@@ -422,7 +425,7 @@
                     <button @click="exportBuilderJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Speichern</button>
                     <!-- <button @click="builderClearTasks" class="btn btn--back" :disabled="!hasGeneratedTasks">Leeren</button> -->
                     <!-- <button @click="switchView('worksheet')" class="btn btn--primary" :disabled="!hasGeneratedTasks">Arbeitsblatt öffnen</button> -->
-                    <input type="file" ref="builderImportInput" @change="importBuilderJSON" accept=".json" style="display:none">
+                    <input type="file" ref="builderImportInput" @change="importBuilderJSON" accept=".json" class="u-hidden-file-input">
                 </div>
             </div>
 
@@ -519,7 +522,7 @@
                 <button @click="startTraining" class="btn btn--primary">Neu starten</button>
             </div>
         </div>
-        <input type="file" ref="trainingImportInput" @change="importTrainingJSON" accept=".json" style="display:none">
+        <input type="file" ref="trainingImportInput" @change="importTrainingJSON" accept=".json" class="u-hidden-file-input">
 
         <div v-if="!currentTrainingTask" class="empty-state empty-state--training">
             <h2>Trainingsmodus</h2>
@@ -597,7 +600,7 @@
                 <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Anordnen</button>
                 <button @click="openQuizImportDialog" class="btn btn--export">Öffnen</button>
                 <button @click="exportQuizJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Speichern</button>
-                <input type="file" ref="quizImportInput" @change="importQuizJSON" accept=".json" style="display:none">
+                <input type="file" ref="quizImportInput" @change="importQuizJSON" accept=".json" class="u-hidden-file-input">
             </div>
         </div>
 
@@ -676,7 +679,7 @@
                     {{ isDarkMode ? 'Light-Mode' : 'Dark-Mode' }}
                 </button>
                 <button @click="openPresentationImportDialog" class="btn btn--export">Öffnen</button>
-                <input type="file" ref="presentationImportInput" @change="importPresentationJSON" accept=".json" style="display:none">
+                <input type="file" ref="presentationImportInput" @change="importPresentationJSON" accept=".json" class="u-hidden-file-input">
                 <button @click="exportJSON" class="btn btn--export">Speichern</button>
                 <!-- <button @click="exportHTML" class="btn btn--export">Speichern 💾</button> -->
             </div>
@@ -731,3 +734,5 @@
     <script src="js/app.js"></script>
 </body>
 </html>
+
+

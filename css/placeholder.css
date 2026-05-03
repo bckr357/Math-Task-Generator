@@ -1,0 +1,235 @@
+﻿       PLACEHOLDER-SEITEN
+       ===================================================================== */
+
+    .placeholder-body {
+        margin: 0;
+        font-family: 'Reddit Sans', system-ui, -apple-system, sans-serif;
+        background: linear-gradient(180deg, #ffffff 0%, #f8f7ff 100%);
+        min-height: 100vh;
+        color: var(--slate-800);
+        overflow-x: hidden;
+    }
+
+    .placeholder-main {
+        padding: calc(var(--shell-header-h) + 56px) 28px 64px;
+        max-width: 960px;
+        margin: 0 auto;
+    }
+
+    .placeholder-hero {
+        text-align: center;
+        margin-bottom: 48px;
+    }
+
+    .placeholder-hero-icon {
+        font-size: 3.5rem;
+        margin-bottom: 16px;
+    }
+
+    .placeholder-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 14px;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.15);
+        color: var(--slate-500);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    .placeholder-hero-title {
+        margin: 0 0 14px;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        line-height: 1.05;
+        color: var(--slate-800);
+    }
+
+    .placeholder-hero-desc {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: var(--slate-500);
+        margin: 0 auto;
+        max-width: 560px;
+    }
+
+    .placeholder-content {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        border-radius: 20px;
+        padding: 36px;
+        box-shadow: 0 8px 32px rgba(15, 23, 42, 0.06);
+    }
+
+    .placeholder-content-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--slate-400);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 0 0 20px;
+    }
+
+    .placeholder-content p {
+        color: var(--slate-500);
+        line-height: 1.6;
+        margin: 0 0 12px;
+    }
+
+    /* ---- Kompetenzraster: Klassen-Karten ---- */
+    .placeholder-class-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 24px;
+    }
+
+    .placeholder-class-card {
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        border-radius: 16px;
+        padding: 20px;
+        background: rgba(248, 250, 252, 0.8);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        text-decoration: none;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .placeholder-class-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .placeholder-class-label {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--slate-800);
+    }
+
+    .placeholder-class-status {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--slate-400);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    /* ---- Feature-Listen ---- */
+    .placeholder-feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 16px 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .placeholder-feature-list li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: rgba(248, 250, 252, 0.8);
+        font-size: 0.92rem;
+        color: var(--slate-600);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    .placeholder-feature-list li::before {
+        content: 'â—‹';
+        color: var(--slate-300);
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    /* ---- Visualisierung: Kategorien ---- */
+    .placeholder-viz-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .placeholder-viz-item {
+        border-radius: 14px;
+        padding: 18px;
+        background: rgba(219, 234, 254, 0.25);
+        border: 1px solid rgba(37, 99, 235, 0.12);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--slate-700);
+    }
+
+    .placeholder-viz-item-icon {
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+
+    /* ---- Generator Plus ---- */
+    .placeholder-type-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .placeholder-type-item {
+        border-radius: 12px;
+        padding: 14px 16px;
+        background: rgba(237, 233, 254, 0.3);
+        border: 1px solid rgba(124, 58, 237, 0.1);
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--slate-600);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .placeholder-type-item::before {
+        content: 'â—‹';
+        color: rgba(124, 58, 237, 0.3);
+    }
+
+    /* =====================================================================
+
+
+    @media (max-width: 900px) {
+        .placeholder-class-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .placeholder-viz-grid,
+        .placeholder-type-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .placeholder-main {
+            padding: calc(var(--shell-header-h) + 36px) 16px 48px;
+        }
+
+        .placeholder-class-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .placeholder-content {
+            padding: 24px;
+        }
+    }
+
+    @media (max-width: 560px) {
+        .placeholder-class-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+

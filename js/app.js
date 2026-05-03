@@ -33,6 +33,21 @@ const typesetMathJax = async () => {
     }
 };
 
+const requiredModules = [
+    'MTGStateModule',
+    'MTGTaskGenerationModule',
+    'MTGTrainingModeModule',
+    'MTGPresentationModeModule',
+    'MTGWorksheetModeModule',
+    'MTGQuizModeModule',
+    'MTGNavigationModule',
+    'MTGSiteShellModule'
+];
+const missingModules = requiredModules.filter(m => !window[m]);
+if (missingModules.length > 0) {
+    throw new Error(`MTG: Pflichtmodule fehlen – ${missingModules.join(', ')}. Prüfe die Ladereihenfolge der Skripte.`);
+}
+
 createApp({
     setup() {
         const state = window.MTGStateModule.createState(Vue, typeLabels);

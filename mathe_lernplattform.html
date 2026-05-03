@@ -1,0 +1,781 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathe OS Sachsen</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --c-bg: #ffffff; --c-bg2: #f8f7f4; --c-bg3: #f0eeea;
+    --c-text: #1a1a18; --c-text2: #5a5a56; --c-text3: #9a9a94;
+    --c-border: rgba(0,0,0,0.10); --c-border2: rgba(0,0,0,0.18);
+    --c-accent: #4a4aff; --c-accent-bg: #eeeeff; --c-accent-text: #2a2ab0;
+    --c-hs: #e8f5ee; --c-hs-text: #1a6e3a; --c-hs-border: #a8d8be;
+    --c-rs: #e8eeff; --c-rs-text: #1a3a9e; --c-rs-border: #a8b8f0;
+    --c-task: #fff8e8; --c-task-text: #7a4e00; --c-task-border: #f0d080;
+    --radius: 10px; --sidebar-w: 240px; --header-h: 56px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --c-bg: #1c1c1a; --c-bg2: #242422; --c-bg3: #2c2c2a;
+      --c-text: #e8e8e4; --c-text2: #a0a09a; --c-text3: #68685e;
+      --c-border: rgba(255,255,255,0.10); --c-border2: rgba(255,255,255,0.18);
+      --c-accent-bg: #1a1a44; --c-accent-text: #9090ff;
+      --c-hs: #0e2a18; --c-hs-text: #5acc8a; --c-hs-border: #1e5234;
+      --c-rs: #0e1a3a; --c-rs-text: #7090e8; --c-rs-border: #1e3070;
+      --c-task: #2a2000; --c-task-text: #e8c060; --c-task-border: #604800;
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--c-bg3); color: var(--c-text); font-size: 15px; line-height: 1.6; }
+  #app { display: flex; flex-direction: column; min-height: 100vh; }
+
+  .header { position: sticky; top: 0; z-index: 100; background: var(--c-bg); border-bottom: 0.5px solid var(--c-border); height: var(--header-h); display: flex; align-items: center; padding: 0 20px; gap: 12px; }
+  .header-logo { font-size: 17px; font-weight: 500; color: var(--c-text); }
+  .header-logo span { color: var(--c-accent); }
+  .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--c-text); }
+
+  .layout { display: flex; flex: 1; }
+
+  .sidebar { width: var(--sidebar-w); flex-shrink: 0; background: var(--c-bg); border-right: 0.5px solid var(--c-border); position: sticky; top: var(--header-h); height: calc(100vh - var(--header-h)); overflow-y: auto; padding: 16px 0; }
+  .sidebar-overlay { display: none; }
+
+  .nav-grade { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; font-size: 12px; font-weight: 500; color: var(--c-text2); cursor: pointer; user-select: none; letter-spacing: 0.04em; text-transform: uppercase; }
+  .nav-grade:hover { background: var(--c-bg2); }
+  .nav-grade.open { color: var(--c-text); }
+  .nav-grade .chevron { transition: transform 0.2s; font-size: 11px; }
+  .nav-grade.open .chevron { transform: rotate(90deg); }
+  .nav-sub { display: flex; align-items: center; gap: 8px; padding: 6px 16px 6px 24px; font-size: 13.5px; color: var(--c-text2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-sub:hover { background: var(--c-bg2); color: var(--c-text); }
+  .nav-sub.active { background: var(--c-accent-bg); color: var(--c-accent-text); font-weight: 500; }
+  .badge-hs { font-size: 10px; padding: 1px 5px; border-radius: 4px; background: var(--c-hs); color: var(--c-hs-text); flex-shrink: 0; }
+  .badge-rs { font-size: 10px; padding: 1px 5px; border-radius: 4px; background: var(--c-rs); color: var(--c-rs-text); flex-shrink: 0; }
+
+  .main { flex: 1; padding: 32px 40px; max-width: 780px; }
+
+  .placeholder-card { background: var(--c-bg); border: 0.5px solid var(--c-border); border-radius: var(--radius); padding: 32px; text-align: center; }
+  .placeholder-card h2 { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+  .placeholder-card p { color: var(--c-text2); font-size: 14px; }
+
+  .page-header { margin-bottom: 28px; }
+  .page-header h1 { font-size: 22px; font-weight: 500; margin-bottom: 6px; }
+  .meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .tag { font-size: 12px; padding: 3px 8px; border-radius: 6px; font-weight: 500; }
+  .tag-grade { background: var(--c-bg3); color: var(--c-text2); border: 0.5px solid var(--c-border); }
+  .tag-hs { background: var(--c-hs); color: var(--c-hs-text); }
+  .tag-rs { background: var(--c-rs); color: var(--c-rs-text); }
+
+  .section { margin-bottom: 28px; }
+  .section-label { font-size: 12px; font-weight: 500; color: var(--c-text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; border-bottom: 0.5px solid var(--c-border); padding-bottom: 8px; }
+
+  /* Goal card */
+  .goal-card { background: var(--c-bg); border: 0.5px solid var(--c-border); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px; }
+  .goal-card:last-child { margin-bottom: 0; }
+  .goal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .goal-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .goal-title { font-weight: 500; font-size: 15px; }
+  .video-link { font-size: 12px; color: var(--c-accent-text); background: var(--c-accent-bg); border-radius: 5px; padding: 2px 8px; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
+  .video-link:hover { opacity: 0.8; }
+  .task-btn { font-size: 12px; padding: 3px 10px; border-radius: 6px; border: 0.5px solid var(--c-task-border); background: var(--c-task); color: var(--c-task-text); cursor: pointer; white-space: nowrap; flex-shrink: 0; font-family: inherit; }
+  .task-btn:hover { filter: brightness(0.95); }
+  .goal-actions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+
+  /* "Ich kann" list */
+  .ik-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .ik-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: var(--c-text2); line-height: 1.5; }
+  .ik-list li::before { content: '✓'; color: #2a9a5a; font-size: 13px; margin-top: 1px; flex-shrink: 0; }
+
+  /* Glossar */
+  .chip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .chip { background: var(--c-bg); border: 0.5px solid var(--c-border); border-radius: 8px; padding: 8px 12px; font-size: 13.5px; cursor: pointer; text-align: center; color: var(--c-text); }
+  .chip:hover { border-color: var(--c-accent); background: var(--c-accent-bg); color: var(--c-accent-text); }
+
+  /* Modal backdrop */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.38); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .modal { background: var(--c-bg); border-radius: 14px; max-width: 460px; width: 100%; padding: 28px; position: relative; max-height: 90vh; overflow-y: auto; }
+  .modal-close { position: absolute; top: 14px; right: 14px; background: var(--c-bg2); border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 14px; color: var(--c-text2); display: flex; align-items: center; justify-content: center; }
+  .modal-close:hover { color: var(--c-text); }
+
+  /* Glossar modal */
+  .modal-term h3 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+  .modal-term .modal-tag { font-size: 12px; color: var(--c-text3); margin-bottom: 14px; }
+  .modal-term p { font-size: 15px; line-height: 1.7; color: var(--c-text2); }
+  .modal-example { margin-top: 14px; background: var(--c-bg2); border-radius: 8px; padding: 12px 14px; font-size: 14px; color: var(--c-text2); }
+  .modal-example strong { color: var(--c-text); font-weight: 500; }
+
+  /* Task modal */
+  .modal-task h3 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .modal-task .modal-subtag { font-size: 12px; color: var(--c-text3); margin-bottom: 16px; }
+  .task-item { background: var(--c-bg2); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+  .task-item:last-child { margin-bottom: 0; }
+  .task-q { font-size: 14px; font-weight: 500; margin-bottom: 8px; color: var(--c-text); }
+  .task-hint-btn { font-size: 12px; color: var(--c-accent-text); background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
+  .task-hint-btn--answer { margin-top: 6px; display: block; }
+  .task-hint { margin-top: 8px; font-size: 13px; color: var(--c-text2); background: var(--c-bg3); border-radius: 6px; padding: 8px 10px; }
+  .task-answer { margin-top: 8px; font-size: 13px; color: var(--c-task-text); background: var(--c-task); border-radius: 6px; padding: 8px 10px; font-weight: 500; }
+
+  @media (max-width: 680px) {
+    .hamburger { display: flex; }
+    .sidebar { position: fixed; top: 0; left: -100%; width: 280px; height: 100vh; z-index: 150; transition: left 0.25s; padding-top: calc(var(--header-h) + 16px); }
+    .sidebar.open { left: 0; }
+    .sidebar-overlay { display: block; position: fixed; inset: 0; z-index: 140; background: rgba(0,0,0,0.4); }
+    .main { padding: 20px 16px; }
+    .chip-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    .goal-header { flex-direction: column; gap: 8px; }
+  }
+</style>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/shell.css">
+    <link rel="stylesheet" href="css/placeholder.css">
+</head>
+<body>
+<div id="app">
+  <header class="header">
+    <button class="hamburger" @click="sidebarOpen = !sidebarOpen" aria-label="Menü">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="2" y="5" width="16" height="1.5" rx="1" fill="currentColor"/>
+        <rect x="2" y="9.25" width="16" height="1.5" rx="1" fill="currentColor"/>
+        <rect x="2" y="13.5" width="16" height="1.5" rx="1" fill="currentColor"/>
+      </svg>
+    </button>
+    <div class="header-logo">Mathe <span>OS Sachsen</span></div>
+  </header>
+
+  <div class="layout">
+    <div v-if="sidebarOpen" class="sidebar-overlay" @click="sidebarOpen = false"></div>
+    <nav class="sidebar" :class="{open: sidebarOpen}">
+      <div v-for="grade in grades" :key="grade.id">
+        <div class="nav-grade" :class="{open: openGrades[grade.id]}" @click="toggleGrade(grade.id)">
+          <span>{{ grade.label }}</span>
+          <span class="chevron">›</span>
+        </div>
+        <div v-show="openGrades[grade.id]">
+          <div v-for="item in grade.items" :key="item.id"
+            class="nav-sub" :class="{active: active === item.id}"
+            @click="navigate(item.id)">
+            <span class="badge-hs" v-if="item.level === 'hs'">HS</span>
+            <span class="badge-rs" v-if="item.level === 'rs'">RS</span>
+            <span>{{ item.label }}</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div v-if="!currentPage" class="placeholder-card">
+        <h2>Willkommen</h2>
+        <p>Wähle links eine Klassenstufe und einen Lernbereich aus, um loszulegen.</p>
+      </div>
+
+      <div v-if="currentPage">
+        <div class="page-header">
+          <h1>{{ currentPage.title }}</h1>
+          <div class="meta">
+            <span class="tag tag-grade">Klasse {{ currentPage.grade }}</span>
+            <span v-if="currentPage.level === 'hs'" class="tag tag-hs">Hauptschule</span>
+            <span v-if="currentPage.level === 'rs'" class="tag tag-rs">Realschule</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Kompetenzen</div>
+          <div v-for="goal in currentPage.goals" :key="goal.title" class="goal-card">
+            <div class="goal-header">
+              <div class="goal-title-row">
+                <span class="goal-title">{{ goal.title }}</span>
+                <a v-if="goal.video" :href="goal.video" target="_blank" rel="noopener noreferrer" class="video-link">▶ Video</a>
+              </div>
+              <div class="goal-actions">
+                <button v-if="goal.tasks && goal.tasks.length" class="task-btn" @click="openTaskModal(goal)">Aufgaben</button>
+              </div>
+            </div>
+            <ul class="ik-list">
+              <li v-for="ic in goal.ik" :key="ic">{{ ic }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section" v-if="currentPage.terms && currentPage.terms.length">
+          <div class="section-label">Fachbegriffe</div>
+          <div class="chip-grid">
+            <div v-for="term in currentPage.terms" :key="term.word" class="chip" @click="openTermModal(term)">{{ term.word }}</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Term modal -->
+  <div v-if="termModal" class="modal-backdrop" @click.self="termModal = null">
+    <div class="modal modal-term">
+      <button class="modal-close" @click="termModal = null">✕</button>
+      <h3>{{ termModal.word }}</h3>
+      <div class="modal-tag">{{ termModal.subject }}</div>
+      <p>{{ termModal.def }}</p>
+      <div v-if="termModal.example" class="modal-example">
+        <strong>Beispiel:</strong> {{ termModal.example }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Task modal -->
+  <div v-if="taskModal" class="modal-backdrop" @click.self="taskModal = null">
+    <div class="modal modal-task">
+      <button class="modal-close" @click="taskModal = null">✕</button>
+      <h3>{{ taskModal.title }}</h3>
+      <div class="modal-subtag">{{ taskModal.tasks.length }} Aufgabe{{ taskModal.tasks.length !== 1 ? 'n' : '' }}</div>
+      <div v-for="(t, i) in taskModal.tasks" :key="i" class="task-item">
+        <div class="task-q">{{ i + 1 }}. {{ t.q }}</div>
+        <button class="task-hint-btn" v-if="t.hint && !t._showHint" @click="t._showHint = true">Tipp anzeigen</button>
+        <div class="task-hint" v-if="t.hint && t._showHint">💡 {{ t.hint }}</div>
+        <button class="task-hint-btn task-hint-btn--answer" v-if="!t._showAnswer" @click="t._showAnswer = true">Lösung anzeigen</button>
+        <div class="task-answer" v-if="t._showAnswer">{{ t.answer }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createApp, reactive, ref, computed } = Vue;
+
+const PAGES = {
+
+  // ── Klasse 5 ─────────────────────────────────────────────────────────────
+  'k5-lb1': {
+    title: 'Natürliche Zahlen', grade: 5, level: null,
+    goals: [
+      {
+        title: 'Zahlen darstellen und ordnen',
+        video: 'https://www.youtube.com/watch?v=example1',
+        ik: [
+          'Ich kann natürliche Zahlen am Zahlenstrahl darstellen.',
+          'Ich kann große Zahlen vergleichen, schätzen und runden.',
+          'Ich kenne den Unterschied zwischen Stellen- und Zahlenwert.',
+        ],
+        tasks: [
+          { q: 'Runde 4 738 auf Hunderte.', hint: 'Schau dir die Zehner-Stelle an.', answer: '4 700', _showHint: false, _showAnswer: false },
+          { q: 'Ordne von klein nach groß: 3 201, 3 021, 3 210.', answer: '3 021 < 3 201 < 3 210', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Grundrechenarten',
+        ik: [
+          'Ich kann natürliche Zahlen schriftlich addieren, subtrahieren und multiplizieren.',
+          'Ich kann durch eine einstellige Zahl schriftlich dividieren.',
+          'Ich kenne Rechengesetze (Kommutativ-, Assoziativ-, Distributivgesetz) und Vorrangregeln.',
+        ],
+        tasks: [
+          { q: 'Berechne: 2 + 3 × 4.', hint: 'Denk an „Punkt vor Strich".', answer: '14 (nicht 20!)', _showHint: false, _showAnswer: false },
+          { q: 'Berechne schriftlich: 384 × 7.', answer: '2 688', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Quadratzahlen und Quadratwurzeln',
+        ik: [
+          'Ich kenne alle Quadratzahlen bis 20² = 400 auswendig.',
+          'Ich weiß, dass √ die Umkehrung des Quadrierens ist.',
+        ],
+        tasks: [
+          { q: 'Wie lautet 13²?', answer: '169', _showHint: false, _showAnswer: false },
+          { q: 'Was ist √144?', hint: 'Welche Zahl ergibt mit sich selbst multipliziert 144?', answer: '12', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Teilbarkeit',
+        ik: [
+          'Ich kann Vielfache und Teiler einer Zahl bestimmen.',
+          'Ich kenne die Teilbarkeitsregeln für 2, 3, 4, 5 und 6.',
+          'Ich kann erkennen, ob eine Zahl eine Primzahl ist.',
+        ],
+        tasks: [
+          { q: 'Ist 132 durch 3 teilbar? Begründe.', hint: 'Addiere die Quersumme: 1 + 3 + 2 = ?', answer: 'Ja, denn die Quersumme 1+3+2 = 6 ist durch 3 teilbar.', _showHint: false, _showAnswer: false },
+          { q: 'Nenne alle Primzahlen zwischen 10 und 20.', answer: '11, 13, 17, 19', _showHint: false, _showAnswer: false },
+        ]
+      },
+    ],
+    terms: [
+      { word: 'Natürliche Zahl', subject: 'Kl. 5 · LB 1', def: 'Die Zahlen 0, 1, 2, 3, … – sie beginnen bei 0 und haben kein Ende.', example: '42, 1000 sind natürliche Zahlen. –3 oder 1,5 nicht.' },
+      { word: 'Primzahl', subject: 'Kl. 5 · LB 1', def: 'Eine natürliche Zahl > 1, die nur durch 1 und sich selbst teilbar ist.', example: '2, 3, 5, 7, 11. Die 4 ist keine Primzahl (4 ÷ 2 = 2).' },
+      { word: 'Quadratzahl', subject: 'Kl. 5 · LB 1', def: 'Das Ergebnis, wenn man eine Zahl mit sich selbst multipliziert.', example: '5² = 25, also ist 25 eine Quadratzahl.' },
+      { word: 'Quadratwurzel', subject: 'Kl. 5 · LB 1', def: 'Die Umkehrung des Quadrierens. √25 fragt: Welche Zahl ergibt mit sich selbst 25?', example: '√25 = 5' },
+      { word: 'Vorrangregeln', subject: 'Kl. 5 · LB 1', def: 'Regeln, die bestimmen, welche Rechenoperation zuerst ausgeführt wird. Punkt vor Strich, Klammern zuerst.', example: '2 + 3 × 4 = 14 (nicht 20)' },
+    ]
+  },
+
+  'k5-lb2': {
+    title: 'Brüche, Dezimalzahlen und Größen', grade: 5, level: null,
+    goals: [
+      {
+        title: 'Brüche verstehen',
+        ik: [
+          'Ich kann einen Bruch an einer Figur, am Körper und am Zahlenstrahl darstellen.',
+          'Ich unterscheide echte und unechte Brüche.',
+          'Ich kann Brüche vergleichen und ordnen.',
+        ],
+        tasks: [
+          { q: 'Ist 2/5 größer oder kleiner als 3/4? Begründe kurz.', hint: '2/5 ist kleiner als ½, 3/4 ist größer als ½.', answer: '2/5 < 3/4, weil 2/5 < ½ < 3/4.', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Mit Dezimalzahlen rechnen',
+        ik: [
+          'Ich kann Dezimalzahlen addieren und subtrahieren.',
+          'Ich kann Dezimalzahlen mit natürlichen Zahlen multiplizieren und dividieren.',
+          'Ich kann Dezimalzahlen runden.',
+        ],
+        tasks: [
+          { q: 'Berechne: 2,4 × 6.', answer: '14,4', _showHint: false, _showAnswer: false },
+          { q: 'Runde 3,748 auf eine Nachkommastelle.', hint: 'Schau auf die zweite Nachkommastelle (4).', answer: '3,7', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Mit Größen rechnen',
+        ik: [
+          'Ich kann Größen (Länge, Masse, Währung, Zeit) in verschiedenen Einheiten angeben und umrechnen.',
+          'Ich kann Sachaufgaben mit Größen lösen und das Ergebnis sinnvoll runden.',
+        ],
+        tasks: [
+          { q: 'Schreibe 1 m 20 cm als Dezimalzahl in Metern.', answer: '1,2 m', _showHint: false, _showAnswer: false },
+          { q: '4 € und 3 Cent – wie viel Euro ist das?', answer: '4,03 €', _showHint: false, _showAnswer: false },
+        ]
+      },
+    ],
+    terms: [
+      { word: 'Bruch', subject: 'Kl. 5 · LB 2', def: 'Beschreibt einen Teil eines Ganzen. Oben: Zähler, unten: Nenner.', example: '¾: Ganze in 4 Teile, 3 davon.' },
+      { word: 'Dezimalzahl', subject: 'Kl. 5 · LB 2', def: 'Zahl mit Komma. Die Stellen hinter dem Komma sind Zehntel, Hundertstel usw.', example: '3,75 = 3 Einer + 7 Zehntel + 5 Hundertstel.' },
+      { word: 'Zähler', subject: 'Kl. 5 · LB 2', def: 'Die Zahl über dem Bruchstrich – wie viele Teile gemeint sind.', example: 'Bei ¾ ist 3 der Zähler.' },
+      { word: 'Nenner', subject: 'Kl. 5 · LB 2', def: 'Die Zahl unter dem Bruchstrich – in wie viele Teile das Ganze geteilt ist.', example: 'Bei ¾ ist 4 der Nenner.' },
+    ]
+  },
+
+  'k5-lb3': { title: 'Geometrische Grundformen', grade: 5, level: null, goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k5-lb4': { title: 'Symmetrie', grade: 5, level: null, goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+
+  // ── Klasse 6 Platzhalter ─────────────────────────────────────────────────
+  'k6-lb1': { title: 'Gebrochene Zahlen', grade: 6, level: null, goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k6-lb2': { title: 'Zuordnungen in der Umwelt', grade: 6, level: null, goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k6-lb3': { title: 'Geometrie in der Ebene', grade: 6, level: null, goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k6-lb4': { title: 'Geometrische Körper', grade: 6, level: null, goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k6-lb5': { title: 'Mathematik im Alltag', grade: 6, level: null, goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+
+  // ── Klasse 7 HS Platzhalter ───────────────────────────────────────────────
+  'k7hs-lb1': { title: 'Zusammengesetzte Flächen und Körper', grade: 7, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k7hs-lb2': { title: 'Anteile und Prozente', grade: 7, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k7hs-lb3': { title: 'Rationale Zahlen', grade: 7, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k7hs-lb4': { title: 'Vielecke und Prismen', grade: 7, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+
+  // ── Klasse 7 RS ──────────────────────────────────────────────────────────
+  'k7rs-lb1': {
+    title: 'Prozent- und Zinsrechnung', grade: 7, level: 'rs',
+    goals: [
+      {
+        title: 'Grundaufgaben der Prozentrechnung',
+        video: 'https://www.youtube.com/watch?v=example_pct',
+        ik: [
+          'Ich kann den Prozentwert berechnen (z. B. 20 % von 80 €).',
+          'Ich kann den Prozentsatz berechnen, wenn Prozentwert und Grundwert bekannt sind.',
+          'Ich kann den Grundwert berechnen, wenn Prozentwert und Prozentsatz bekannt sind.',
+          'Ich kann Anteile als Kreisdiagramm darstellen.',
+        ],
+        tasks: [
+          { q: 'Ein Pullover kostet 60 €. Er wird um 25 % reduziert. Was kostet er jetzt?', hint: '25 % von 60 € berechnen, dann subtrahieren.', answer: '25 % × 60 € = 15 €. Neuer Preis: 45 €.', _showHint: false, _showAnswer: false },
+          { q: 'In einer Klasse von 25 Schülern fahren 10 mit dem Fahrrad. Wie viel Prozent ist das?', answer: '10 ÷ 25 × 100 = 40 %', _showHint: false, _showAnswer: false },
+          { q: '15 € entsprechen 30 % eines Preises. Wie hoch ist der Grundwert?', hint: '15 ÷ 30 × 100 = ?', answer: '50 €', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Preisveränderungen',
+        ik: [
+          'Ich kann Preiserhöhungen und Preissenkungen in Euro und Prozent berechnen.',
+          'Ich kann Rabatt und Skonto in Alltagssituationen anwenden.',
+        ],
+        tasks: [
+          { q: 'Ein Artikel kostet 80 €. Der Händler gibt 15 % Rabatt. Wie viel zahlst du?', answer: '80 € – 12 € = 68 €', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Zinsrechnung',
+        ik: [
+          'Ich kann Jahreszinsen mit der Formel Z = K × p/100 berechnen.',
+          'Ich kann Tageszinsen berechnen.',
+          'Ich verstehe, was Zinseszins bedeutet.',
+        ],
+        tasks: [
+          { q: '500 € werden zu 4 % Zinsen pro Jahr angelegt. Wie viel Zinsen gibt es nach einem Jahr?', answer: 'Z = 500 × 4 / 100 = 20 €', _showHint: false, _showAnswer: false },
+          { q: 'Wie viel Zinsen fallen an, wenn 300 € für 90 Tage zu 5 % p.a. angelegt werden?', hint: 'Tageszins: Z = K × p × t / (100 × 360)', answer: 'Z = 300 × 5 × 90 / 36000 = 3,75 €', _showHint: false, _showAnswer: false },
+        ]
+      },
+    ],
+    terms: [
+      { word: 'Prozentsatz', subject: 'Kl. 7 RS · LB 1', def: 'Gibt an, wie viel von 100 Teilen gemeint ist.', example: '20 % = 20 von 100.' },
+      { word: 'Prozentwert', subject: 'Kl. 7 RS · LB 1', def: 'Der konkrete Anteil, also der Teil der Gesamtmenge.', example: '20 % von 50 € = 10 €.' },
+      { word: 'Grundwert', subject: 'Kl. 7 RS · LB 1', def: 'Die Gesamtmenge, von der ein Prozentsatz berechnet wird.', example: 'Wenn 10 € genau 20 % sind: Grundwert = 50 €.' },
+      { word: 'Zinsen', subject: 'Kl. 7 RS · LB 1', def: 'Preis für geliehenes Geld oder Belohnung für angelegtes Geld.', example: '100 € bei 5 %/Jahr → 5 € Zinsen.' },
+      { word: 'Zinssatz', subject: 'Kl. 7 RS · LB 1', def: 'Wie viel Prozent Zinsen pro Jahr für ein Kapital gezahlt werden.', example: '3 % Zinssatz: 100 € → 3 € Zinsen/Jahr.' },
+      { word: 'Zinseszins', subject: 'Kl. 7 RS · LB 1', def: 'Zinsen werden zum Kapital addiert und bringen im nächsten Jahr selbst Zinsen.', example: '100 € + 10 % → 110 € → 121 € (nicht 120 €).' },
+      { word: 'Dreisatz', subject: 'Kl. 7 RS · LB 1', def: 'Rechenverfahren: aus einem bekannten Verhältnis auf einen unbekannten Wert schließen.', example: '3 Stifte = 1,50 €. 5 Stifte = 2,50 €.' },
+    ]
+  },
+
+  'k7rs-lb2': {
+    title: 'Elemente der Stochastik', grade: 7, level: 'rs',
+    goals: [
+      {
+        title: 'Zufallsversuche auswerten',
+        ik: [
+          'Ich kann Ergebnisse eines Zufallsversuchs in einer Urliste und Strichliste erfassen.',
+          'Ich kann absolute und relative Häufigkeiten berechnen.',
+          'Ich erkenne, dass sich relative Häufigkeiten bei vielen Versuchen stabilisieren.',
+        ],
+        tasks: [
+          { q: 'Ein Würfel wird 40-mal geworfen. Die 6 fällt 8-mal. Berechne die relative Häufigkeit.', answer: '8 ÷ 40 = 0,2 = 20 %', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Wahrscheinlichkeit bestimmen',
+        ik: [
+          'Ich kenne den Begriff Wahrscheinlichkeit und weiß, dass P immer zwischen 0 und 1 liegt.',
+          'Ich kann bei Laplace-Versuchen Wahrscheinlichkeiten berechnen.',
+          'Ich kann Darstellungen statistischer Erhebungen kritisch beurteilen.',
+        ],
+        tasks: [
+          { q: 'Wie groß ist die Wahrscheinlichkeit, mit einem fairen Würfel eine Zahl > 4 zu würfeln?', hint: 'Günstige Ergebnisse: 5, 6.', answer: 'P = 2/6 = 1/3 ≈ 33 %', _showHint: false, _showAnswer: false },
+        ]
+      },
+    ],
+    terms: [
+      { word: 'Zufallsversuch', subject: 'Kl. 7 RS · LB 2', def: 'Versuch, bei dem das Ergebnis vom Zufall abhängt.', example: 'Würfeln, Münzwurf, Kugel ziehen.' },
+      { word: 'Ergebnismenge', subject: 'Kl. 7 RS · LB 2', def: 'Menge aller möglichen Ergebnisse.', example: 'Würfeln: {1, 2, 3, 4, 5, 6}' },
+      { word: 'Ereignis', subject: 'Kl. 7 RS · LB 2', def: 'Eine Teilmenge der Ergebnismenge.', example: '"Gerade Zahl" = {2, 4, 6}' },
+      { word: 'Relative Häufigkeit', subject: 'Kl. 7 RS · LB 2', def: 'Anteil als Dezimalzahl oder Prozent, wie oft ein Ergebnis auftrat.', example: '3 von 20: 3/20 = 0,15 = 15 %' },
+      { word: 'Wahrscheinlichkeit', subject: 'Kl. 7 RS · LB 2', def: 'Wert zwischen 0 (unmöglich) und 1 (sicher).', example: 'Faire Münze: P(Kopf) = 0,5.' },
+    ]
+  },
+
+  'k7rs-lb3': {
+    title: 'Rationale Zahlen und Gleichungen', grade: 7, level: 'rs',
+    goals: [
+      {
+        title: 'Rationale Zahlen kennen und ordnen',
+        video: 'https://www.youtube.com/watch?v=example_rat',
+        ik: [
+          'Ich kann positive und negative Zahlen auf der Zahlengeraden einordnen.',
+          'Ich kenne die Teilmengenbeziehungen: ℕ ⊂ ℤ ⊂ ℚ.',
+          'Ich kann rationale Zahlen vergleichen und ordnen.',
+        ],
+        tasks: [
+          { q: 'Ordne von klein nach groß: –3, 1,5, –0,5, 0, 2.', answer: '–3 < –0,5 < 0 < 1,5 < 2', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Mit rationalen Zahlen rechnen',
+        ik: [
+          'Ich kann rationale Zahlen addieren und subtrahieren.',
+          'Ich kann rationale Zahlen multiplizieren, dividieren und potenzieren.',
+          'Ich kenne die Vorzeichenregeln (minus × minus = plus).',
+        ],
+        tasks: [
+          { q: 'Berechne: –7 + 3.', answer: '–4', _showHint: false, _showAnswer: false },
+          { q: 'Berechne: (–4) × (–3).', hint: 'Minus mal Minus ergibt Plus.', answer: '12', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Lineare Gleichungen lösen',
+        ik: [
+          'Ich kann lineare Gleichungen durch Äquivalenzumformungen lösen.',
+          'Ich kann Gleichungen aufstellen, um Sachprobleme zu lösen.',
+          'Ich kann Formeln nach einer Variablen umstellen.',
+        ],
+        tasks: [
+          { q: 'Löse: 3x + 6 = 18.', hint: 'Erst –6, dann ÷3 auf beiden Seiten.', answer: 'x = 4', _showHint: false, _showAnswer: false },
+          { q: 'Stelle die Formel A = g × h nach h um.', answer: 'h = A ÷ g', _showHint: false, _showAnswer: false },
+        ]
+      },
+    ],
+    terms: [
+      { word: 'Rationale Zahl', subject: 'Kl. 7 RS · LB 3', def: 'Alle Zahlen, die als Bruch p/q darstellbar sind (q ≠ 0). Positiv, negativ, 0.', example: '–3, –½, 0, 0,75, 4.' },
+      { word: 'Ganze Zahl', subject: 'Kl. 7 RS · LB 3', def: '…, –3, –2, –1, 0, 1, 2, 3, … – ohne Kommazahlen.', example: '–5, 0, 7 sind ganze Zahlen.' },
+      { word: 'Term', subject: 'Kl. 7 RS · LB 3', def: 'Mathematischer Ausdruck mit Zahlen, Variablen und Operationen – ohne Gleichheitszeichen.', example: '3x + 5, 2(a – 1)' },
+      { word: 'Gleichung', subject: 'Kl. 7 RS · LB 3', def: 'Mathematische Aussage mit Gleichheitszeichen, bei der eine Variable gesucht wird.', example: '2x + 4 = 10 → x = 3' },
+      { word: 'Lösungsmenge', subject: 'Kl. 7 RS · LB 3', def: 'Alle Werte, die die Gleichung erfüllen.', example: 'Für 2x = 6: L = {3}' },
+    ]
+  },
+
+  'k7rs-lb4': {
+    title: 'Vielecke und Prismen', grade: 7, level: 'rs',
+    goals: [
+      {
+        title: 'Vielecke konstruieren und berechnen',
+        ik: [
+          'Ich kann Parallelogramme, Drachenvierecke und Trapeze konstruieren.',
+          'Ich kann Flächeninhalt und Umfang von Vielecken berechnen.',
+          'Ich kann Vielecke in bekannte Figuren zerlegen, um die Fläche zu bestimmen.',
+        ],
+        tasks: [
+          { q: 'Berechne den Flächeninhalt eines Trapezes mit a = 8 cm, c = 4 cm, h = 5 cm.', hint: 'Formel: A = (a + c) / 2 × h', answer: 'A = (8 + 4) / 2 × 5 = 30 cm²', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Prismen darstellen und berechnen',
+        ik: [
+          'Ich kann Netze, Schrägbilder und Seitenansichten von Prismen zeichnen.',
+          'Ich kann Oberfläche, Volumen und Masse von Prismen berechnen.',
+          'Ich kann Materialbedarf und Kosten für Verpackungen berechnen.',
+        ],
+        tasks: [
+          { q: 'Ein Prisma hat eine dreieckige Grundfläche (A = 12 cm²) und die Höhe 8 cm. Berechne das Volumen.', answer: 'V = 12 × 8 = 96 cm³', _showHint: false, _showAnswer: false },
+          { q: 'Ein Quader hat die Maße 5 cm × 3 cm × 4 cm. Berechne seine Oberfläche.', hint: 'O = 2(ab + bc + ac)', answer: 'O = 2(15 + 12 + 20) = 94 cm²', _showHint: false, _showAnswer: false },
+        ]
+      },
+    ],
+    terms: [
+      { word: 'Parallelogramm', subject: 'Kl. 7 RS · LB 4', def: 'Viereck, bei dem gegenüberliegende Seiten parallel und gleich lang sind.', example: 'Rechteck, Raute und Quadrat sind Sonderfälle.' },
+      { word: 'Trapez', subject: 'Kl. 7 RS · LB 4', def: 'Viereck mit genau einem Paar paralleler Seiten.', example: 'A = (a + c) / 2 × h' },
+      { word: 'Prisma', subject: 'Kl. 7 RS · LB 4', def: 'Körper mit zwei parallelen, deckungsgleichen Grundflächen und rechteckigen Seitenflächen.', example: 'Ein Quader ist ein Prisma mit Rechteck-Grundfläche.' },
+      { word: 'Mantelfläche', subject: 'Kl. 7 RS · LB 4', def: 'Die Seitenfläche eines Körpers, ohne Grundflächen.', example: 'Beim Prisma: Summe der Rechtecke.' },
+      { word: 'Dichte', subject: 'Kl. 7 RS · LB 4', def: 'Masse pro Volumen. Wie schwer ist ein Material?', example: 'Wasser: 1 g/cm³. Eisen: ~7,9 g/cm³.' },
+    ]
+  },
+
+  // ── Klasse 8 RS ──────────────────────────────────────────────────────────
+  'k8rs-lb1': {
+    title: 'Lineare Gleichungen', grade: 8, level: 'rs',
+    goals: [
+      {
+        title: 'Terme vereinfachen',
+        ik: [
+          'Ich kann Terme durch Ausmultiplizieren und Ausklammern vereinfachen.',
+          'Ich kann gleichartige Terme zusammenfassen.',
+        ],
+        tasks: [
+          { q: 'Vereinfache: 3(x + 4) – 2x.', hint: 'Erst Klammer auflösen, dann zusammenfassen.', answer: '3x + 12 – 2x = x + 12', _showHint: false, _showAnswer: false },
+          { q: 'Klammere aus: 6x + 9.', answer: '3(2x + 3)', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Lineare Gleichungen lösen',
+        video: 'https://www.youtube.com/watch?v=example_gleich',
+        ik: [
+          'Ich kann lineare Gleichungen durch Äquivalenzumformungen lösen.',
+          'Ich kann Formeln nach einer gesuchten Größe umstellen.',
+          'Ich kann Gleichungen nutzen, um Sachprobleme zu lösen.',
+        ],
+        tasks: [
+          { q: 'Löse: 3x – 45 = –12x + 30.', hint: 'Terme mit x auf eine Seite bringen.', answer: '15x = 75 → x = 5', _showHint: false, _showAnswer: false },
+          { q: 'Stelle um: A = g × h nach g.', answer: 'g = A ÷ h', _showHint: false, _showAnswer: false },
+        ]
+      },
+    ],
+    terms: [
+      { word: 'Äquivalenzumformung', subject: 'Kl. 8 RS · LB 1', def: 'Umformung, die die Lösungsmenge nicht verändert – beide Seiten gleich behandeln.', example: '2x + 4 = 10 → 2x = 6 → x = 3' },
+      { word: 'Ausklammern', subject: 'Kl. 8 RS · LB 1', def: 'Gemeinsamen Faktor vor die Klammer ziehen.', example: '6x + 9 = 3(2x + 3)' },
+      { word: 'Distributivgesetz', subject: 'Kl. 8 RS · LB 1', def: 'a(b + c) = ab + ac – Multiplikation vor Klammer.', example: '4(x – 3) = 4x – 12' },
+    ]
+  },
+
+  'k8rs-lb2': {
+    title: 'Lineare Funktionen und Gleichungssysteme', grade: 8, level: 'rs',
+    goals: [
+      {
+        title: 'Lineare Funktionen verstehen',
+        video: 'https://www.youtube.com/watch?v=example_funk',
+        ik: [
+          'Ich weiß, was eine Funktion ist: jedem x-Wert wird genau ein y-Wert zugeordnet.',
+          'Ich kenne Definitions- und Wertebereich.',
+          'Ich kann den Graphen von y = mx + n zeichnen.',
+          'Ich erkenne die Bedeutung von Steigung m und y-Achsenabschnitt n.',
+        ],
+        tasks: [
+          { q: 'Zeichne den Graphen von y = 2x – 1. Wo schneidet er die y-Achse?', answer: 'y-Achsenabschnitt: (0, –1). Steigung: 2.', _showHint: false, _showAnswer: false },
+          { q: 'Eine Funktion hat die Steigung 3 und den y-Achsenabschnitt –2. Wie lautet die Gleichung?', answer: 'y = 3x – 2', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Nullstellen und Gleichungssysteme',
+        ik: [
+          'Ich kann Nullstellen einer linearen Funktion rechnerisch bestimmen.',
+          'Ich kann lineare Gleichungssysteme zeichnerisch und rechnerisch lösen.',
+          'Ich kann Gleichungssysteme für Tarif- oder Preisvergleiche nutzen.',
+        ],
+        tasks: [
+          { q: 'Berechne die Nullstelle von y = 3x – 6.', hint: 'Setze y = 0 und löse nach x.', answer: '3x – 6 = 0 → x = 2', _showHint: false, _showAnswer: false },
+          { q: 'Löse: y = x + 2 und y = –x + 6.', answer: 'x + 2 = –x + 6 → 2x = 4 → x = 2, y = 4', _showHint: false, _showAnswer: false },
+        ]
+      },
+    ],
+    terms: [
+      { word: 'Funktion', subject: 'Kl. 8 RS · LB 2', def: 'Eindeutige Zuordnung: Jedem x genau ein y.', example: 'y = 2x + 1: x = 3 → y = 7.' },
+      { word: 'Steigung (m)', subject: 'Kl. 8 RS · LB 2', def: 'Gibt an, wie steil der Graph ist. m = Δy/Δx.', example: 'y = 2x + 1: für jedes x+1 steigt y um 2.' },
+      { word: 'y-Achsenabschnitt (n)', subject: 'Kl. 8 RS · LB 2', def: 'Wo der Graph die y-Achse schneidet (bei x = 0).', example: 'y = 2x + 1: Graph schneidet bei y = 1.' },
+      { word: 'Nullstelle', subject: 'Kl. 8 RS · LB 2', def: 'Der x-Wert, bei dem y = 0 – Graph schneidet x-Achse.', example: 'y = 2x – 4: Nullstelle bei x = 2.' },
+      { word: 'Gleichungssystem', subject: 'Kl. 8 RS · LB 2', def: 'Mehrere Gleichungen, die gleichzeitig gelten sollen.', example: 'y = x+2 und y = –x+6 → Schnittpunkt (2, 4).' },
+    ]
+  },
+
+  'k8rs-lb3': {
+    title: 'Kreis und Kreiszylinder', grade: 8, level: 'rs',
+    goals: [
+      {
+        title: 'Kreiseigenschaften und Satz des Thales',
+        ik: [
+          'Ich kenne Sehne, Sekante und Tangente und kann sie zeichnen.',
+          'Ich kann den Satz des Thales erklären und anwenden.',
+        ],
+        tasks: [
+          { q: 'Was besagt der Satz des Thales?', answer: 'Liegt der dritte Punkt eines Dreiecks auf einem Halbkreis, dessen Durchmesser die Hypotenuse ist, so ist der Winkel am dritten Punkt immer 90°.', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Kreis und Kreisring berechnen',
+        video: 'https://www.youtube.com/watch?v=example_kreis',
+        ik: [
+          'Ich kann Umfang und Flächeninhalt eines Kreises berechnen.',
+          'Ich kann den Flächeninhalt eines Kreisrings berechnen.',
+          'Ich weiß, dass π eine irrationale Zahl ist (≈ 3,14159).',
+        ],
+        tasks: [
+          { q: 'Berechne den Umfang eines Kreises mit r = 5 cm.', answer: 'U = 2 × π × 5 ≈ 31,4 cm', _showHint: false, _showAnswer: false },
+          { q: 'Ein Kreisring hat Außenradius R = 8 cm und Innenradius r = 5 cm. Berechne seine Fläche.', hint: 'A = π(R² – r²)', answer: 'A = π(64 – 25) = 39π ≈ 122,5 cm²', _showHint: false, _showAnswer: false },
+        ]
+      },
+      {
+        title: 'Kreiszylinder berechnen',
+        ik: [
+          'Ich kann Grundfläche, Mantelfläche und Oberfläche eines Kreiszylinders berechnen.',
+          'Ich kann Volumen und Masse eines Kreiszylinders berechnen.',
+        ],
+        tasks: [
+          { q: 'Berechne das Volumen eines Zylinders mit r = 4 cm und h = 10 cm.', hint: 'V = π × r² × h', answer: 'V = π × 16 × 10 ≈ 502,7 cm³', _showHint: false, _showAnswer: false },
+        ]
+      },
+    ],
+    terms: [
+      { word: 'Kreiszahl π', subject: 'Kl. 8 RS · LB 3', def: 'Irrationale Zahl ≈ 3,14159 – Verhältnis von Umfang zu Durchmesser.', example: 'U = π × d ≈ 3,14 × 6 ≈ 18,85 cm' },
+      { word: 'Tangente', subject: 'Kl. 8 RS · LB 3', def: 'Gerade, die den Kreis in genau einem Punkt berührt (senkrecht auf Radius).', example: 'Das Rad rollt auf der Straße – Kontaktpunkt ist eine Tangente.' },
+      { word: 'Sekante', subject: 'Kl. 8 RS · LB 3', def: 'Gerade, die den Kreis in genau zwei Punkten schneidet.', example: 'Schnitt durch eine Kreisscheibe.' },
+      { word: 'Kreisring', subject: 'Kl. 8 RS · LB 3', def: 'Fläche zwischen zwei konzentrischen Kreisen.', example: 'A = π(R² – r²)' },
+      { word: 'Satz des Thales', subject: 'Kl. 8 RS · LB 3', def: 'Dreieck im Halbkreis mit Durchmesser als Hypotenuse → Winkel gegenüber = immer 90°.', example: 'Egal wo der Punkt auf dem Halbkreis liegt.' },
+    ]
+  },
+
+  'k8rs-lb4': { title: 'Ähnlichkeit', grade: 8, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k8rs-lb5': { title: 'Zufällige Ereignisse', grade: 8, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+  'k8rs-lb6': { title: 'Mathematik im Alltag', grade: 8, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Dieser Lernbereich wird bald mit Inhalten gefüllt.'], tasks: [] }], terms: [] },
+
+  // ── HS/RS Kl. 8, 9, 10 Platzhalter ──────────────────────────────────────
+  'k8hs-lb1': { title: 'Wirtschaftliches Rechnen', grade: 8, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k8hs-lb2': { title: 'Formeln und Gleichungen', grade: 8, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k8hs-lb3': { title: 'Vom Vieleck zum Kreis', grade: 8, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k8hs-lb4': { title: 'Kreiszylinder', grade: 8, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k8hs-lb5': { title: 'Mathematik im Alltag', grade: 8, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k9hs-lb1': { title: 'Rechtwinklige Dreiecke', grade: 9, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k9hs-lb2': { title: 'Körperdarstellung', grade: 9, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k9hs-lb3': { title: 'Funktionale Zusammenhänge', grade: 9, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k9hs-lb4': { title: 'Mathematik im Alltag', grade: 9, level: 'hs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k9rs-lb1': { title: 'Rechtwinklige Dreiecke', grade: 9, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k9rs-lb2': { title: 'Pyramide, Kegel, Kugel', grade: 9, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k9rs-lb3': { title: 'Quadratische Funktionen', grade: 9, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k9rs-lb4': { title: 'Beschreibende Statistik', grade: 9, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k10-lb1': { title: 'Dreiecke und Vierecke', grade: 10, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k10-lb2': { title: 'Funktionale Zusammenhänge', grade: 10, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k10-lb3': { title: 'Zufallsgrößen', grade: 10, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+  'k10-lb4': { title: 'Mathematik im Alltag', grade: 10, level: 'rs', goals: [{ title: '🚧 Inhalt folgt', ik: ['Bald verfügbar.'], tasks: [] }], terms: [] },
+};
+
+const GRADES = [
+  { id: 'k5', label: 'Klasse 5', items: [
+    { id: 'k5-lb1', label: 'Natürliche Zahlen' },
+    { id: 'k5-lb2', label: 'Brüche und Dezimalzahlen' },
+    { id: 'k5-lb3', label: 'Geometrische Grundformen' },
+    { id: 'k5-lb4', label: 'Symmetrie' },
+  ]},
+  { id: 'k6', label: 'Klasse 6', items: [
+    { id: 'k6-lb1', label: 'Gebrochene Zahlen' },
+    { id: 'k6-lb2', label: 'Zuordnungen' },
+    { id: 'k6-lb3', label: 'Geometrie in der Ebene' },
+    { id: 'k6-lb4', label: 'Geometrische Körper' },
+    { id: 'k6-lb5', label: 'Mathematik im Alltag' },
+  ]},
+  { id: 'k7hs', label: 'Klasse 7 · Hauptschule', items: [
+    { id: 'k7hs-lb1', label: 'Flächen und Körper', level: 'hs' },
+    { id: 'k7hs-lb2', label: 'Anteile und Prozente', level: 'hs' },
+    { id: 'k7hs-lb3', label: 'Rationale Zahlen', level: 'hs' },
+    { id: 'k7hs-lb4', label: 'Vielecke und Prismen', level: 'hs' },
+  ]},
+  { id: 'k7rs', label: 'Klasse 7 · Realschule', items: [
+    { id: 'k7rs-lb1', label: 'Prozent- und Zinsrechnung', level: 'rs' },
+    { id: 'k7rs-lb2', label: 'Elemente der Stochastik', level: 'rs' },
+    { id: 'k7rs-lb3', label: 'Rationale Zahlen & Gleichungen', level: 'rs' },
+    { id: 'k7rs-lb4', label: 'Vielecke und Prismen', level: 'rs' },
+  ]},
+  { id: 'k8hs', label: 'Klasse 8 · Hauptschule', items: [
+    { id: 'k8hs-lb1', label: 'Wirtschaftliches Rechnen', level: 'hs' },
+    { id: 'k8hs-lb2', label: 'Formeln und Gleichungen', level: 'hs' },
+    { id: 'k8hs-lb3', label: 'Vom Vieleck zum Kreis', level: 'hs' },
+    { id: 'k8hs-lb4', label: 'Kreiszylinder', level: 'hs' },
+    { id: 'k8hs-lb5', label: 'Mathematik im Alltag', level: 'hs' },
+  ]},
+  { id: 'k8rs', label: 'Klasse 8 · Realschule', items: [
+    { id: 'k8rs-lb1', label: 'Lineare Gleichungen', level: 'rs' },
+    { id: 'k8rs-lb2', label: 'Lineare Funktionen', level: 'rs' },
+    { id: 'k8rs-lb3', label: 'Kreis und Kreiszylinder', level: 'rs' },
+    { id: 'k8rs-lb4', label: 'Ähnlichkeit', level: 'rs' },
+    { id: 'k8rs-lb5', label: 'Zufällige Ereignisse', level: 'rs' },
+    { id: 'k8rs-lb6', label: 'Mathematik im Alltag', level: 'rs' },
+  ]},
+  { id: 'k9hs', label: 'Klasse 9 · Hauptschule', items: [
+    { id: 'k9hs-lb1', label: 'Rechtwinklige Dreiecke', level: 'hs' },
+    { id: 'k9hs-lb2', label: 'Körperdarstellung', level: 'hs' },
+    { id: 'k9hs-lb3', label: 'Funktionale Zusammenhänge', level: 'hs' },
+    { id: 'k9hs-lb4', label: 'Mathematik im Alltag', level: 'hs' },
+  ]},
+  { id: 'k9rs', label: 'Klasse 9 · Realschule', items: [
+    { id: 'k9rs-lb1', label: 'Rechtwinklige Dreiecke', level: 'rs' },
+    { id: 'k9rs-lb2', label: 'Pyramide, Kegel, Kugel', level: 'rs' },
+    { id: 'k9rs-lb3', label: 'Quadratische Funktionen', level: 'rs' },
+    { id: 'k9rs-lb4', label: 'Beschreibende Statistik', level: 'rs' },
+  ]},
+  { id: 'k10', label: 'Klasse 10 · Realschule', items: [
+    { id: 'k10-lb1', label: 'Dreiecke und Vierecke', level: 'rs' },
+    { id: 'k10-lb2', label: 'Funktionale Zusammenhänge', level: 'rs' },
+    { id: 'k10-lb3', label: 'Zufallsgrößen', level: 'rs' },
+    { id: 'k10-lb4', label: 'Mathematik im Alltag', level: 'rs' },
+  ]},
+];
+
+createApp({
+  setup() {
+    const active = ref(null);
+    const termModal = ref(null);
+    const taskModal = ref(null);
+    const sidebarOpen = ref(false);
+    const openGrades = reactive({});
+    const grades = GRADES;
+
+    const currentPage = computed(() => active.value ? PAGES[active.value] : null);
+
+    function toggleGrade(id) { openGrades[id] = !openGrades[id]; }
+
+    function navigate(id) {
+      active.value = id;
+      sidebarOpen.value = false;
+      const g = GRADES.find(gr => gr.items.some(i => i.id === id));
+      if (g) openGrades[g.id] = true;
+    }
+
+    function openTermModal(term) { termModal.value = term; }
+
+    function openTaskModal(goal) {
+      goal.tasks.forEach(t => { t._showHint = false; t._showAnswer = false; });
+      taskModal.value = goal;
+    }
+
+    return { active, termModal, taskModal, sidebarOpen, openGrades, grades, currentPage, toggleGrade, navigate, openTermModal, openTaskModal };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,208 @@
+﻿       PORTAL STARTSEITE (index.html)
+       ===================================================================== */
+
+    .portal-body {
+        margin: 0;
+        font-family: 'Reddit Sans', system-ui, -apple-system, sans-serif;
+        background:
+            radial-gradient(circle at 15% 15%, rgba(167, 139, 250, 0.07), transparent 40%),
+            radial-gradient(circle at 85% 85%, rgba(34, 197, 94, 0.07), transparent 40%),
+            linear-gradient(180deg, #ffffff 0%, #f8f7ff 100%);
+        min-height: 100vh;
+        color: var(--slate-800);
+        overflow-x: hidden;
+    }
+
+    .portal-main {
+        padding: calc(var(--shell-header-h) + 48px) 28px 64px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* ---- Portal Hero ---- */
+    .portal-hero {
+        max-width: 780px;
+        margin: 0 auto 44px;
+        text-align: center;
+    }
+
+    .portal-hero-eyebrow {
+        font-size: 0.88rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin-bottom: 12px;
+    }
+
+    .portal-hero-title {
+        margin: 0 0 16px;
+        font-size: clamp(2.4rem, 6vw, 4rem);
+        line-height: 1;
+        color: var(--slate-800);
+    }
+
+    .portal-hero-desc {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: var(--slate-500);
+        margin: 0 auto;
+        max-width: 620px;
+    }
+
+    /* ---- Portal Card Grid ---- */
+    .portal-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    /* ---- Portal Card ---- */
+    .portal-card {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 28px;
+        border-radius: 24px;
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 18px 56px rgba(15, 23, 42, 0.07);
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        cursor: pointer;
+        outline-offset: 3px;
+    }
+
+    .portal-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 72px rgba(15, 23, 42, 0.12);
+        border-color: rgba(148, 163, 184, 0.5);
+    }
+
+    .portal-card-icon {
+        font-size: 2.4rem;
+        line-height: 1;
+    }
+
+    .portal-card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .portal-card-kicker {
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+    }
+
+    .portal-card-title {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 800;
+        line-height: 1.15;
+        color: var(--slate-800);
+    }
+
+    .portal-card-desc {
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.55;
+        color: var(--slate-500);
+    }
+
+    .portal-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: auto;
+    }
+
+    .portal-card-arrow {
+        font-size: 1.2rem;
+        color: var(--slate-300);
+        transition: transform 0.18s ease, color 0.18s ease;
+    }
+
+    .portal-card:hover .portal-card-arrow {
+        transform: translateX(4px);
+        color: var(--slate-500);
+    }
+
+    /* ---- Portal Badge ---- */
+    .portal-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .portal-badge--active {
+        background: rgba(0, 128, 0, 0.1);
+        color: var(--primary);
+    }
+
+    .portal-badge--wip {
+        background: rgba(148, 163, 184, 0.15);
+        color: var(--slate-500);
+    }
+
+    /* ---- Portal Card Pastell-Varianten ---- */
+    .portal-card--generator {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(220, 252, 231, 0.55) 100%);
+    }
+    .portal-card--generator .portal-card-kicker { color: #16a34a; }
+
+    .portal-card--generator-plus {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(237, 233, 254, 0.55) 100%);
+    }
+    .portal-card--generator-plus .portal-card-kicker { color: #7c3aed; }
+
+    .portal-card--visualisierung {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(219, 234, 254, 0.55) 100%);
+    }
+    .portal-card--visualisierung .portal-card-kicker { color: #2563eb; }
+
+    .portal-card--rechner {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(254, 243, 199, 0.55) 100%);
+    }
+    .portal-card--rechner .portal-card-kicker { color: #d97706; }
+
+    .portal-card--kompetenz {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 228, 230, 0.55) 100%);
+    }
+    .portal-card--kompetenz .portal-card-kicker { color: #e11d48; }
+
+
+    /* =====================================================================
+
+
+    @media (max-width: 900px) {
+        .portal-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 640px) {
+        .portal-main {
+            padding: calc(var(--shell-header-h) + 32px) 16px 48px;
+        }
+
+        .portal-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .portal-card {
+            padding: 20px;
+            border-radius: 18px;
+        }
+    }
+

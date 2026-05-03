@@ -44,12 +44,25 @@ window.MTGTaskGenerationModule = {
                 return String(value ?? '');
             };
 
-            return rawArray.map(item => ({
-                type: item.aufgabentyp || item.type || '',
-                textDisplay: sanitize(item.textDisplay ?? item.aufgabe ?? item.task ?? ''),
-                textPrint: sanitize(item.textPrint ?? item.aufgabe ?? item.task ?? ''),
-                solution: sanitize(item.loesung ?? item.solution ?? '')
-            }));
+            const knownTypes = (typeof typeLabels === 'object' && typeLabels) ? new Set(Object.keys(typeLabels)) : null;
+
+            return rawArray
+                .filter(item => {
+                    if (typeof item !== 'object' || item === null) return false;
+                    const rawText = item.textDisplay ?? item.aufgabe ?? item.task ?? '';
+                    if (!rawText && !(item.loesung ?? item.solution ?? '')) return false;
+                    const type = item.aufgabentyp || item.type || '';
+                    if (knownTypes && type && !knownTypes.has(type)) {
+                        console.warn(`MTG Import: Unbekannter Aufgabentyp "${type}" – Aufgabe wird trotzdem geladen.`);
+                    }
+                    return true;
+                })
+                .map(item => ({
+                    type: item.aufgabentyp || item.type || '',
+                    textDisplay: sanitize(item.textDisplay ?? item.aufgabe ?? item.task ?? ''),
+                    textPrint: sanitize(item.textPrint ?? item.aufgabe ?? item.task ?? ''),
+                    solution: sanitize(item.loesung ?? item.solution ?? '')
+                }));
         };
 
         const loadTasksFromJSON = (data) => {

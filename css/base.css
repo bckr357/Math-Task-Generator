@@ -1,0 +1,67 @@
+﻿:root {
+    --primary: #008000;
+    --primary-dark: #4ade80;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-500: #64748b;
+    --slate-300: #cbd5e1;
+    --slate-100: #f1f5f9;
+}
+
+body {
+    margin: 0;
+    font-family: 'Reddit Sans', system-ui, -apple-system, sans-serif;
+    background-color: white;
+    overflow-x: hidden;
+}
+
+button,
+select,
+input,
+textarea {
+    font-family: 'Reddit Sans', system-ui, -apple-system, sans-serif;
+}
+
+mjx-container[jax="CHTML"],
+mjx-container[jax="CHTML"][display="true"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+}
+
+mjx-mtext {
+    font-family: "Reddit Sans", system-ui, -apple-system, sans-serif !important;
+}
+
+.math-q {
+    font-size: 2.2rem;
+    font-weight: 400;
+    line-height: 1.25;
+}
+
+.math-a {
+    font-size: 2.2rem;
+    font-weight: 400;
+    color: var(--primary);
+    line-height: 1.25;
+}
+
+mjx-container[jax="CHTML"] mjx-math,
+mjx-container[jax="CHTML"] mjx-mrow,
+mjx-container[jax="CHTML"] mjx-mi,
+mjx-container[jax="CHTML"] mjx-mo,
+mjx-container[jax="CHTML"] mjx-mn,
+mjx-container[jax="CHTML"] mjx-mtext {
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    display: inline-block !important;
+}
+
+mjx-container[jax="CHTML"][display="true"] {
+    width: 100% !important;
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,261 @@
+﻿
+    /* =====================================================================
+       SITE SHELL â€“ gemeinsamer Header, Hamburger-MenÃ¼, Off-Canvas-Nav
+       ===================================================================== */
+
+    :root {
+        --shell-header-h: 56px;
+        --shell-nav-w: 300px;
+        --shell-header-bg: rgba(255, 255, 255, 0.97);
+        --shell-border: rgba(148, 163, 184, 0.18);
+        --shell-shadow: 0 1px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    /* ---- Site Header ---- */
+    .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--shell-header-h);
+        background: var(--shell-header-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--shell-border);
+        box-shadow: var(--shell-shadow);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 20px;
+        z-index: 60;
+    }
+
+    .site-header-brand {
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: var(--slate-800);
+        text-decoration: none;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+    }
+
+    .site-header-brand:hover {
+        color: var(--primary);
+    }
+
+    .site-header-sep {
+        color: var(--slate-300);
+        font-size: 1.1rem;
+        user-select: none;
+    }
+
+    .site-header-page {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--slate-500);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* ---- Hamburger Button ---- */
+    .site-hamburger {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        border: none;
+        background: transparent;
+        border-radius: 10px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background 0.15s ease;
+    }
+
+    .site-hamburger:hover {
+        background: var(--slate-100);
+    }
+
+    .site-hamburger-line {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: var(--slate-800);
+        border-radius: 2px;
+    }
+
+    /* ---- Off-Canvas Overlay ---- */
+    .site-nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.32);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.22s ease;
+        z-index: 90;
+    }
+
+    .site-nav-overlay.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* ---- Off-Canvas Nav Drawer ---- */
+    .site-nav-drawer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--shell-nav-w);
+        height: 100vh;
+        background: #ffffff;
+        border-right: 1px solid var(--shell-border);
+        box-shadow: 24px 0 60px rgba(15, 23, 42, 0.14);
+        transform: translateX(-100%);
+        transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .site-nav-drawer.is-open {
+        transform: translateX(0);
+    }
+
+    .site-nav-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 18px 14px;
+        border-bottom: 1px solid var(--shell-border);
+        flex-shrink: 0;
+    }
+
+    .site-nav-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--slate-800);
+    }
+
+    .site-nav-close {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1rem;
+        color: var(--slate-500);
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: background 0.15s ease;
+        flex-shrink: 0;
+    }
+
+    .site-nav-close:hover {
+        background: var(--slate-100);
+    }
+
+    .site-nav-list {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .site-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: var(--slate-800);
+        transition: background 0.15s ease;
+        outline-offset: 2px;
+    }
+
+    .site-nav-item:hover {
+        background: var(--slate-100);
+    }
+
+    .site-nav-item.is-active {
+        background: rgba(0, 128, 0, 0.08);
+        color: var(--primary);
+    }
+
+    .site-nav-item-icon {
+        font-size: 1.35rem;
+        width: 30px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .site-nav-item-text {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        min-width: 0;
+    }
+
+    .site-nav-item-text strong {
+        font-size: 0.92rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .site-nav-item-text span {
+        font-size: 0.76rem;
+        color: var(--slate-500);
+        line-height: 1.3;
+    }
+
+    .site-nav-item.is-active .site-nav-item-text span {
+        color: inherit;
+        opacity: 0.75;
+    }
+
+    /* ---- Generator-Toolbar: Hamburger neben Aufgabenauswahl ---- */
+    .toolbar-hamburger {
+        flex-shrink: 0;
+    }
+
+    /* ---- Generator-Home-Topbar ---- */
+    .generator-home-topbar {
+        max-width: 1180px;
+        margin: 0 auto 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .generator-home-back-link {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--slate-500);
+        text-decoration: none;
+        transition: color 0.15s ease;
+    }
+
+    .generator-home-back-link:hover {
+        color: var(--primary);
+    }
+
+
+
+
+    @media (max-width: 640px) {
+        .site-header {
+            padding: 0 14px;
+        }
+
+        .site-header-page {
+            display: none;
+        }
+    }
+
