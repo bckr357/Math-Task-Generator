@@ -33,13 +33,15 @@ const typesetMathJax = async () => {
     }
 };
 
+const quizEnabledByPage = window.MTG_DISABLE_QUIZ !== true;
+
 const requiredModules = [
     'MTGStateModule',
     'MTGTaskGenerationModule',
     'MTGTrainingModeModule',
     'MTGPresentationModeModule',
     'MTGWorksheetModeModule',
-    'MTGQuizModeModule',
+    ...(quizEnabledByPage ? ['MTGQuizModeModule'] : []),
     'MTGNavigationModule',
     'MTGSiteShellModule'
 ];
@@ -51,6 +53,10 @@ if (missingModules.length > 0) {
 createApp({
     setup() {
         const state = window.MTGStateModule.createState(Vue, typeLabels);
+        const isQuizEnabled = quizEnabledByPage && typeof window.MTGQuizModeModule?.createQuizMode === 'function';
+        const viewTabs = isQuizEnabled
+            ? state.viewTabs
+            : state.viewTabs.filter(tab => tab.key !== 'quiz');
         const allTypes = sortByTypeDefinitions(Object.keys(typeLabels));
         const selectedGrade = ref(10);
         const gradeOptions = [5, 6, 7, 8, 9, 10];
@@ -58,9 +64,9 @@ createApp({
         const classConfig = (typeof taskTypesByGrade === 'object' && taskTypesByGrade)
             ? taskTypesByGrade
             : {};
-        const quizClassConfig = (typeof quizTaskTypesByGrade === 'object' && quizTaskTypesByGrade)
+        const quizClassConfig = (isQuizEnabled && typeof quizTaskTypesByGrade === 'object' && quizTaskTypesByGrade)
             ? quizTaskTypesByGrade
-            : {};
+            : classConfig;
 
         const visibleTypeKeys = computed(() => {
             const configured = classConfig[`klasse${selectedGrade.value}`];
@@ -188,14 +194,25 @@ createApp({
             createJsonImportHandler
         });
 
-        const quizMode = window.MTGQuizModeModule.createQuizMode({
-            state,
-            taskGeneration,
-            nextTick,
-            typesetMathJax,
-            createJsonImportHandler,
-            getVisibleTypeKeys: () => quizVisibleTypeKeys.value
-        });
+        const quizMode = isQuizEnabled
+            ? window.MTGQuizModeModule.createQuizMode({
+                state,
+                taskGeneration,
+                nextTick,
+                typesetMathJax,
+                createJsonImportHandler,
+                getVisibleTypeKeys: () => quizVisibleTypeKeys.value
+            })
+            : {
+                showQuizSolutions: ref(false),
+                quizColumns: ref([]),
+                exportQuizJSON: () => {},
+                importQuizJSON: () => {},
+                openQuizImportDialog: () => {},
+                quizImportInput: ref(null),
+                generateQuiz: async () => {},
+                toggleQuizSolutions: async () => {}
+            };
 
         const activeSelectedTypes = computed({
             get: () => state.currentView.value === 'quiz'
@@ -890,6 +907,9 @@ createApp({
         };
 
         const selectAllQuizTypes = () => {
+            if (!isQuizEnabled) {
+                return;
+            }
             state.quizSelectedTypes.value = [...quizVisibleTypeKeys.value];
         };
 
@@ -920,7 +940,7 @@ createApp({
             }
         };
 
-        const allowedViews = new Set(state.viewTabs.map(tab => tab.key));
+        const allowedViews = new Set(viewTabs.map(tab => tab.key));
 
         const getViewFromUrl = () => {
             const url = new URL(window.location.href);
@@ -965,7 +985,7 @@ createApp({
         watch(() => state.currentView.value, view => {
             syncUrlWithView(view);
 
-            if (view === 'quiz') {
+            if (isQuizEnabled && view === 'quiz') {
                 if (state.quizSelectedTypes.value.length === 0 && state.selectedTypes.value.length > 0) {
                     state.quizSelectedTypes.value = state.selectedTypes.value
                         .filter(type => quizVisibleTypeKeys.value.includes(type));
@@ -1014,6 +1034,7 @@ createApp({
 
         return {
             ...state,
+            viewTabs,
             selectedGrade,
             gradeOptions,
             visibleTypeEntries,

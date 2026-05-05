@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aufgabengenerator – Mathe-Werkzeuge</title>
+    <title>Generator Plus – Mathe-Werkzeuge</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script>
         window.MathJax = {
@@ -28,9 +28,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,300..900;1,300..900&display=swap">
     
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/shell.css">
-    <link rel="stylesheet" href="css/generator.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/shell.css">
+    <link rel="stylesheet" href="../css/generator.css">
 </head>
 <body>
 
@@ -38,7 +38,7 @@
 
     <div v-if="currentView !== 'home' && currentView !== 'worksheet-builder'" :class="['settings-drawer-overlay', { 'is-open': isSettingsSidebarOpen }]" @click="closeSettingsSidebar"></div>
 
-    <aside v-if="currentView !== 'home' && currentView !== 'worksheet-builder'" :class="['settings-drawer', { 'is-open': isSettingsSidebarOpen, 'mode-training': currentView === 'training', 'mode-quiz': currentView === 'quiz' }]">
+    <aside v-if="currentView !== 'home' && currentView !== 'worksheet-builder'" :class="['settings-drawer', { 'is-open': isSettingsSidebarOpen, 'mode-training': currentView === 'training' }]">
         <div class="settings-drawer-header">
             <div class="settings-drawer-heading">
                 <h2 class="settings-drawer-title">Aufgabenauswahl</h2>
@@ -50,7 +50,7 @@
             <div class="settings-selection-bar">
                 <div class="settings-topbar-label settings-checkbox-group">
                     <label class="settings-checkbox-option"><input type="checkbox" v-model="activeMentalMathMode" class="settings-checkbox"><span>Easy-Mode</span></label>
-                    <label v-if="currentView !== 'quiz'" class="settings-checkbox-option"><input type="checkbox" v-model="weights" class="settings-checkbox"><span>Gewichtung</span></label>
+                    <label class="settings-checkbox-option"><input type="checkbox" v-model="weights" class="settings-checkbox"><span>Gewichtung</span></label>
                 </div>
                 <label v-if="currentView !== 'training'" class="settings-topbar-label">
                     <span>Anzahl</span>
@@ -84,7 +84,7 @@
                 <div v-for="([key, label]) in activeVisibleTypeEntries" :key="'drawer-'+key" class="type-option">
                     <label class="checkbox-label type-label">
                         <input type="checkbox" v-model="activeSelectedTypes" :value="key">
-                        <input v-if="weights && currentView !== 'quiz'" type="number" v-model.number="activeTaskWeights[key]" min="0" max="9" step="1" class="weight-input" title="Gewichtung (0 = einmal pro Satz)">
+                        <input v-if="weights" type="number" v-model.number="activeTaskWeights[key]" min="0" max="9" step="1" class="weight-input" title="Gewichtung (0 = einmal pro Satz)">
                         <span>{{ label }}</span>
                     </label>
                 </div>
@@ -99,7 +99,7 @@
                 <span class="site-hamburger-line"></span>
                 <span class="site-hamburger-line"></span>
             </button>
-            <a href="index.html" class="generator-home-back-link">&#8592; Mathe-Werkzeuge</a>
+            <a href="../index.html" class="generator-home-back-link">&#8592; Mathe-Werkzeuge</a>
         </div>
         <div class="home-hero">
             <div class="home-eyebrow">Mathe-Aufgaben-Generator</div>
@@ -132,17 +132,7 @@
                 <span>Einzelaufgaben nacheinander mit schneller Navigation und Lösungsumschaltung.</span>
             </button>
 
-            <button @click="switchView('quiz')" class="mode-card mode-card--quiz">
-                <span class="mode-card-kicker">Quiz Setup</span>
-                <strong>Quiz generieren</strong>
-                <span>Erzeuge Quiz-Aufgaben im 3-Spalten-Layout mit spaltenweiser Nummerierung.</span>
-            </button>
 
-            <a href="quiz.html" class="mode-card mode-card--import">
-                <span class="mode-card-kicker">Quiz Import</span>
-                <strong>Battle-Quiz laden</strong>
-                <span>Importiere eine Aufgaben-JSON und starte das Quiz direkt.</span>
-            </a>
         </div>
     </div>
 
@@ -314,7 +304,6 @@
             <div class="builder-sidebar-top">
                 <div class="builder-sidebar-controls">
                     <label class="settings-checkbox-option builder-inline-control"><input type="checkbox" v-model="activeMentalMathMode" class="settings-checkbox"><span>Easy-Mode</span></label>
-                    <label class="settings-checkbox-option builder-inline-control"><input type="checkbox" v-model="builderQuizMode" class="settings-checkbox"><span>Quiz-Mode</span></label>
                     <label class="settings-topbar-label builder-inline-control">
                         <span>Klasse</span>
                         <select v-model="selectedGrade" class="settings-input settings-grade-input">
@@ -556,86 +545,7 @@
         </div>
     </div>
 
-    <div v-else-if="currentView === 'quiz'" class="quiz-view">
-        <div class="worksheet-toolbar no-print quiz-top-bar">
-            <div class="toolbar-main-controls">
-                <button class="site-hamburger toolbar-hamburger" aria-label="Module wechseln" title="Zu anderen Modulen wechseln">
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                </button>
-                <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
-                <h3 class="settings-drawer-section-title">Modul:</h3>
-                <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
-                    <option v-for="tab in viewTabs" :key="'quiz-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
-                </select>
-            </div>
 
-            <div class="worksheet-toolbar-title">
-                <div class="settings-topbar-settings">
-                    <label class="settings-topbar-label">
-                        Aufgaben
-                        <input type="number" v-model.number="taskCount" min="1" max="300" class="settings-input settings-topbar-input">
-                    </label>
-                    <label class="settings-topbar-label">
-                        Quiz-Nr.
-                        <input type="text" v-model="quizNumber" class="settings-input settings-topbar-input" placeholder="z. B. A1">
-                    </label>
-                    <label class="settings-topbar-label">
-                        Anordnung
-                        <select v-model="taskArrangementMode" class="settings-input settings-select settings-topbar-select">
-                            <option value="ordered">sortiert</option>
-                            <option value="random">zufällig</option>
-                            <option value="random-ordered">zuf. sortiert</option>
-                        </select>
-                    </label>
-                </div>
-            </div>
-
-            <div class="worksheet-toolbar-actions top-bar-actions">
-                <button @click="toggleQuizSolutions" class="btn btn--toggle" :disabled="!hasGeneratedTasks">
-                    {{ showQuizSolutions ? 'Aufgaben' : 'Lösungen' }}
-                </button>
-                <button @click="generateQuiz" class="btn btn--primary" :disabled="!hasSelectedTypes">Erzeugen 🎲</button>
-                <button @click="builderResortTasks" class="btn btn--export" :disabled="!hasGeneratedTasks">Anordnen</button>
-                <button @click="openQuizImportDialog" class="btn btn--export">Öffnen</button>
-                <button @click="exportQuizJSON" class="btn btn--export" :disabled="!hasGeneratedTasks">Speichern</button>
-                <input type="file" ref="quizImportInput" @change="importQuizJSON" accept=".json" class="u-hidden-file-input">
-            </div>
-        </div>
-
-        <div v-if="!hasGeneratedTasks" class="empty-state empty-state--presentation">
-            <h2>Noch keine Quiz-Aufgaben erzeugt</h2>
-            <p>Wähle zuerst Aufgabentypen in der Aufgabenauswahl und erzeuge dann das Quiz.</p>
-            <div class="empty-state-actions">
-                <button @click="openSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
-                <button @click="openQuizImportDialog" class="btn btn--export">Datei öffnen</button>
-                <button @click="hasSelectedTypes ? generateQuiz() : (selectAllQuizTypes(), generateQuiz())" class="btn btn--primary">
-                    {{ hasSelectedTypes ? 'Quiz erzeugen' : 'Zufälliges Quiz erzeugen' }}
-                </button>
-            </div>
-        </div>
-
-        <div v-else class="quiz-sheet">
-            <div class="quiz-columns">
-                <div v-for="(column, columnIndex) in quizColumns" :key="'quiz-column-'+columnIndex" class="quiz-column">
-                    <div v-if="columnIndex === 0" class="quiz-row quiz-title-row">
-                        <div class="quiz-num"></div>
-                        <div class="quiz-content quiz-title-content">
-                            {{ (showQuizSolutions ? 'Quiz-Lösungen Nr. ' : 'Quiz-Aufgaben Nr. ') + quizNumber }}
-                        </div>
-                    </div>
-                    <div v-for="entry in column" :key="entry.key" class="quiz-row">
-                        <div class="quiz-num">{{ `${entry.number})` }}</div>
-                        <div class="quiz-content">
-                            <div v-if="!showQuizSolutions" class="quiz-math" v-html="entry.task.textDisplay"></div>
-                            <div v-else class="quiz-solution" v-html="entry.task.solution"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div v-else :class="['presentation-view', { 'dark-mode': isDarkMode }]">
         <div class="worksheet-toolbar no-print top-bar">
@@ -721,17 +631,19 @@
     </div>
 </div>
 
-    <script src="js/utils.js"></script>
-    <script src="js/tasks.js"></script>
-    <script src="js/modules/state.js"></script>
-    <script src="js/modules/task-generation.js"></script>
-    <script src="js/modules/training-mode.js"></script>
-    <script src="js/modules/presentation-mode.js"></script>
-    <script src="js/modules/worksheet-mode.js"></script>
-    <script src="js/modules/quiz-mode.js"></script>
-    <script src="js/modules/navigation.js"></script>
-    <script src="js/modules/site-shell.js"></script>
-    <script src="js/app.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/tasks-plus.js"></script>
+    <script src="../js/modules/state.js"></script>
+    <script src="../js/modules/task-generation.js"></script>
+    <script src="../js/modules/training-mode.js"></script>
+    <script src="../js/modules/presentation-mode.js"></script>
+    <script src="../js/modules/worksheet-mode.js"></script>
+    <script src="../js/modules/navigation.js"></script>
+    <script src="../js/modules/site-shell.js"></script>
+    <script>
+        window.MTG_DISABLE_QUIZ = true;
+    </script>
+    <script src="../js/app.js"></script>
 </body>
 </html>
 

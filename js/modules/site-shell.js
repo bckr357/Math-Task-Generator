@@ -17,35 +17,35 @@
             key: 'generator',
             label: 'Aufgabengenerator',
             icon: '📝',
-            url: 'generator.html',
+            url: 'generator/index.html',
             desc: 'Aufgaben generieren & üben'
         },
         {
             key: 'generator-plus',
             label: 'Generator Plus',
             icon: '✨',
-            url: 'generator-plus.html',
+            url: 'generator-plus/index.html',
             desc: 'Weitere Aufgabentypen'
         },
         {
             key: 'visualisierung',
             label: 'Visualisierung',
             icon: '📊',
-            url: 'visualisierung.html',
+            url: 'visualisierung/index.html',
             desc: 'Mathe-Konzepte visuell erkunden'
         },
         {
             key: 'rechner-tools',
             label: 'Rechner-Tools',
             icon: '🧮',
-            url: 'rechner-tools.html',
+            url: 'rechner-tools/index.html',
             desc: 'Flächen & Körper berechnen'
         },
         {
             key: 'kompetenzraster',
             label: 'Kompetenzraster',
             icon: '📋',
-            url: 'kompetenzraster.html',
+            url: 'kompetenzraster/index.html',
             desc: 'Klassen 5–10 im Überblick'
         }
     ];
@@ -59,22 +59,24 @@
         const path = window.location.pathname;
         const dir = path.substring(0, path.lastIndexOf('/'));
         const lastSegment = dir.split('/').filter(Boolean).pop() || '';
-        const SUBFOLDERS = ['kompetenzraster'];
+        const SUBFOLDERS = ['generator', 'generator-plus', 'quiz', 'kompetenzraster', 'rechner-tools', 'visualisierung'];
         return SUBFOLDERS.includes(lastSegment) ? '../' : '';
     }
 
     function getCurrentKey() {
-        const file = window.location.pathname.split('/').pop() || 'index.html';
-        const map = {
-            'index.html': 'home',
-            '': 'home',
-            'generator.html': 'generator',
-            'generator-plus.html': 'generator-plus',
-            'visualisierung.html': 'visualisierung',
-            'rechner-tools.html': 'rechner-tools',
-            'kompetenzraster.html': 'kompetenzraster'
+        // Erkennt die aktive Seite anhand des Verzeichnisses (alle Module sind jetzt index.html)
+        const path = window.location.pathname;
+        const dir = path.substring(0, path.lastIndexOf('/'));
+        const lastSegment = dir.split('/').filter(Boolean).pop() || '';
+        const dirMap = {
+            'generator': 'generator',
+            'generator-plus': 'generator-plus',
+            'quiz': 'quiz',
+            'kompetenzraster': 'kompetenzraster',
+            'rechner-tools': 'rechner-tools',
+            'visualisierung': 'visualisierung'
         };
-        return map[file] ?? '';
+        return dirMap[lastSegment] ?? 'home';
     }
 
     function openNav() {
