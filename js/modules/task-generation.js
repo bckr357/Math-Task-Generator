@@ -5,16 +5,20 @@ window.MTGTaskGenerationModule = {
                 return {
                     selectedTypes: state.quizSelectedTypes.value,
                     taskWeights: state.quizTaskWeights.value,
+                    taskCounts: null,
                     mentalMathMode: state.quizMentalMathMode.value,
-                    weightsEnabled: false
+                    weightsEnabled: false,
+                    countsEnabled: false
                 };
             }
 
             return {
                 selectedTypes: state.selectedTypes.value,
                 taskWeights: state.taskWeights.value,
+                taskCounts: state.taskCounts?.value ?? null,
                 mentalMathMode: state.mentalMathMode.value,
-                weightsEnabled: state.weights.value
+                weightsEnabled: state.weights.value,
+                countsEnabled: Boolean(state.taskCounts)
             };
         };
 
@@ -261,6 +265,47 @@ window.MTGTaskGenerationModule = {
             const config = getScopeConfig(scope);
 
             if (config.selectedTypes.length === 0) return false;
+
+            if (config.countsEnabled && config.taskCounts) {
+                const counts = Object.fromEntries(config.selectedTypes.map(type => {
+                    const rawCount = Number(config.taskCounts[type]);
+                    const count = Number.isFinite(rawCount)
+                        ? Math.max(0, Math.floor(rawCount))
+                        : 0;
+                    config.taskCounts[type] = count;
+                    return [type, count];
+                }));
+
+                const targetTotal = config.selectedTypes.reduce((sum, type) => sum + (counts[type] || 0), 0);
+                if (targetTotal <= 0) {
+                    return false;
+                }
+
+                let typePool = config.selectedTypes.flatMap(type => Array(counts[type]).fill(type));
+                const arrangementMode = state.taskArrangementMode.value;
+
+                if (arrangementMode === 'random' || arrangementMode === 'random-ordered') {
+                    for (let index = typePool.length - 1; index > 0; index--) {
+                        const swapIndex = Math.floor(Math.random() * (index + 1));
+                        [typePool[index], typePool[swapIndex]] = [typePool[swapIndex], typePool[index]];
+                    }
+                }
+
+                state.tasks.value = typePool.map(type => {
+                    const generated = createTask(type, config.mentalMathMode, getNumericGrade(), taskOptions);
+                    return {
+                        type,
+                        textDisplay: generated.textDisplay ?? '',
+                        textPrint: generated.textPrint ?? '',
+                        solution: generated.solution
+                    };
+                });
+
+                state.taskCount.value = state.tasks.value.length;
+                state.showSolutions.value = false;
+                state.showWorksheetSolutions.value = false;
+                return true;
+            }
 
             const normalizedWeights = Object.fromEntries(config.selectedTypes.map(type => {
                 const rawWeight = Number(config.taskWeights[type]);

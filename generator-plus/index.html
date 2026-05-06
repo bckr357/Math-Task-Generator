@@ -48,14 +48,10 @@
 
         <div class="settings-drawer-section">
             <div class="settings-selection-bar">
-                <div class="settings-topbar-label settings-checkbox-group">
-                    <label class="settings-checkbox-option"><input type="checkbox" v-model="activeMentalMathMode" class="settings-checkbox"><span>Easy-Mode</span></label>
-                    <label class="settings-checkbox-option"><input type="checkbox" v-model="weights" class="settings-checkbox"><span>Gewichtung</span></label>
+                <div class="settings-topbar-label settings-topbar-label--summary">
+                    <span>Aufgaben gesamt</span>
+                    <strong>{{ totalSelectedTaskCount }}</strong>
                 </div>
-                <label v-if="currentView !== 'training'" class="settings-topbar-label">
-                    <span>Anzahl</span>
-                    <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-count-input">
-                </label>
                 <label v-if="currentView !== 'training'" class="settings-topbar-label">
                     <!-- <span>Anordnung</span>
                     <select v-model="taskArrangementMode" class="settings-input settings-arrangement-input">
@@ -75,7 +71,6 @@
                     <strong>{{ activeSelectedTypesCount }}</strong>
                 </div>
                 <button @click="selectAllTypes" class="btn btn--export settings-compact-btn">Alle</button>
-                <button @click="randomizeTypeSelection" class="btn btn--export settings-compact-btn">Zufall</button>
                 <button @click="refreshCurrentView" class="btn btn--primary settings-quick-generate settings-compact-btn" :disabled="!hasSelectedTypes">
                     {{ currentView === 'training' ? 'Starten' : 'Erzeugen' }}
                 </button>
@@ -83,8 +78,7 @@
             <div class="type-grid settings-type-grid">
                 <div v-for="([key, label]) in activeVisibleTypeEntries" :key="'drawer-'+key" class="type-option">
                     <label class="checkbox-label type-label">
-                        <input type="checkbox" v-model="activeSelectedTypes" :value="key">
-                        <input v-if="weights" type="number" v-model.number="activeTaskWeights[key]" min="0" max="9" step="1" class="weight-input" title="Gewichtung (0 = einmal pro Satz)">
+                        <input type="number" v-model.number="activeTaskWeights[key]" min="0" max="50" step="1" class="weight-input" title="Konkrete Anzahl dieses Aufgabentyps">
                         <span>{{ label }}</span>
                     </label>
                 </div>
@@ -154,7 +148,7 @@
                 <div class="settings-topbar-settings">
                     <label class="settings-topbar-label">
                         Aufgaben
-                        <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-topbar-input">
+                        <input type="number" :value="totalSelectedTaskCount" class="settings-input settings-topbar-input" disabled>
                     </label>
                     <label class="settings-topbar-label">
                         Anordnung
@@ -566,7 +560,7 @@
                 <div class="settings-topbar-settings">
                     <label class="settings-topbar-label">
                         Aufgaben
-                        <input type="number" v-model.number="taskCount" min="1" max="200" class="settings-input settings-topbar-input">
+                        <input type="number" :value="totalSelectedTaskCount" class="settings-input settings-topbar-input" disabled>
                     </label>
                     <label class="settings-topbar-label">
                         Anordnung
@@ -643,7 +637,7 @@
     <script>
         window.MTG_DISABLE_QUIZ = true;
     </script>
-    <script src="../js/app.js"></script>
+    <script src="../js/app-plus.js"></script>
 </body>
 </html>
 

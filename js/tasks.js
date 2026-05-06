@@ -63,7 +63,7 @@ const taskTypesByGrade = {
 		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz',
-		'statistik', 'wkt', 'linear_function'
+		'statistik', 'wkt', 'linear_function', 'funktionen'
 	]
 };
 
@@ -157,7 +157,7 @@ const typeDefinitions = [
 	['frac_md', 'Brüche ×/÷', 'Brüche multiplizieren und dividieren'],
 	['frac_order', 'Brüche ordnen', 'Brüche der Größe nach sortieren'],
 	['round', 'Dezimalbrüche runden', 'Dezimalbrüche runden'],
-	// ['zahlengerade', 'Zahlenstrahl', 'Zahlenstrahl-Aufgaben lesen, eintragen und zeichnen'],
+	['zahlengerade', 'Zahlenstrahl', 'Zahlenstrahl-Aufgaben lesen, eintragen und zeichnen'],
 	
 	// Prozent / Proportionalität / Maßeinheiten
 	['anteile', 'Anteile berechnen', 'Anteile berechnen'],
@@ -182,7 +182,7 @@ const typeDefinitions = [
 	// Funktionen, Statistik & Wahrscheinlichkeiten
 	['wkt', 'Wahrscheinlichkeiten', 'Wahrscheinlichkeiten bestimmen'],
 	['linear_function', 'Lineare Funktionen zeichnen', 'Lineare Funktionen grafisch darstellen'],
-	// ['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
+	['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
 	['statistik', 'Statistik', 'Kenngrößen der Statistik bestimmen']
 ];
 
@@ -2433,8 +2433,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 	case 'zahlengerade': {
 		const isPositiveOnly = grade <= 6;
-		const tickBases = [1, 2, 3, 5];
-		const tickFactors = [1, 10, 100];
+		const tickBases = [2, 3, 5];
+		const tickFactors = [1, 5, 10, 50, 100];
 		const tickDistance = tickBases[randInt(0, tickBases.length - 1)] * tickFactors[randInt(0, tickFactors.length - 1)];
 		const tickCount = randInt(5, 7);
 		const startValue = isPositiveOnly ? 0 : randInt(-3, 2) * tickDistance;
@@ -2442,17 +2442,21 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		const formatValue = (value) => Number.isInteger(value) ? `${value}` : formatDecimal(value, 1);
 		const getValueAt = (position) => startValue + position * tickDistance;
 		const svgWidth = 520;
-		const svgHeight = 140;
-		const margin = 40;
-		const axisY = 80;
+		const svgHeight = 96;
+		const svgRenderWidthCm = 10;
+		const svgRenderHeightCm = 2;
+		const margin = 10;
+		const axisY = 52;
 		const arrowSize = 10;
 		const lineStart = margin;
 		const lineEnd = svgWidth - margin - arrowSize;
 		const unitPx = (lineEnd - lineStart) / tickCount;
 		const tickOffset = unitPx / 2;
 		const getX = (position) => lineStart + tickOffset + position * unitPx;
-		const renderNumberLine = ({ labels = {}, markers = [], letters = [] } = {}) => {
-			let content = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid #ccc; background: white;">`;
+		const renderNumberLine = ({ labels = {}, labelColors = {}, labelWeights = {}, scale = 1, widthCm } = {}) => {
+			const renderWidth = `${(widthCm ?? (svgRenderWidthCm * scale))}cm`;
+			const renderHeight = `${svgRenderHeightCm * scale}cm`;
+			let content = `<svg width="${renderWidth}" height="${renderHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
 			content += `<line x1="${lineStart}" y1="${axisY}" x2="${lineEnd}" y2="${axisY}" stroke="black" stroke-width="2"/>`;
 		content += `<polygon points="${svgWidth - margin},${axisY} ${lineEnd},${axisY - 6} ${lineEnd},${axisY + 6}" fill="black"/>`;
 			for (let i = 0; i < tickCount; i++) {
@@ -2460,81 +2464,53 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				content += `<line x1="${x}" y1="${axisY - 8}" x2="${x}" y2="${axisY + 8}" stroke="black" stroke-width="1"/>`;
 				const label = labels[i];
 				if (label !== undefined) {
-					content += `<text x="${x}" y="${axisY + 24}" text-anchor="middle" font-size="12" fill="black">${label}</text>`;
+					const labelColor = labelColors[i] || 'black';
+					const labelWeight = labelWeights[i] || '400';
+					content += `<text x="${x}" y="${axisY + 27}" text-anchor="middle" font-size="17" font-weight="${labelWeight}" fill="${labelColor}">${label}</text>`;
 				}
-			}
-			for (const marker of markers) {
-				const x = getX(marker.position);
-				content += `<circle cx="${x}" cy="${axisY - 18}" r="5" fill="#e74c3c"/>`;
-				if (marker.text) {
-					content += `<text x="${x}" y="${axisY - 28}" text-anchor="middle" font-size="12" fill="black">${marker.text}</text>`;
-				}
-			}
-			for (const letter of letters) {
-				const x = getX(letter.position);
-				content += `<text x="${x}" y="${axisY - 28}" text-anchor="middle" font-size="14" fill="#2c3e50">${letter.label}</text>`;
 			}
 			content += `</svg>`;
 			return content;
 		};
 
-		const subtype = randInt(0, 2);
-		let svgContent = '';
-		if (subtype === 0) {
-			const markerIndex = randInt(1, tickCount - 2);
-			const markerOffset = Math.random() < 0.5 ? 0 : 0.5;
-			const markerPosition = markerIndex + markerOffset;
-			const markerValue = getValueAt(markerPosition);
-			const labels = {
-				0: formatValue(startValue),
-				[tickCount - 1]: formatValue(endValue)
-			};
-			svgContent = renderNumberLine({ labels, markers: [{ position: markerPosition, text: 'P' }] });
-			textDisplay = `Auf der Zahlengerade sind nur die Zahlen ${formatValue(startValue)} und ${formatValue(endValue)} eingetragen. Welche Zahl liegt beim markierten Punkt P?`;
-			textPrint = `Trage die Zahl ein: \\( \\underline{\\hspace{3cm}} \\) <br>${svgContent}`;
-			s = `\\( ${formatValue(markerValue)} \\)`;
-		} else if (subtype === 1) {
-			const knownIndices = [0, tickCount - 1];
-			if (tickCount >= 6) {
-				const extra = randInt(1, tickCount - 2);
-				knownIndices.splice(1, 0, extra);
+		const givenPosA = randInt(0, tickCount - 1);
+		let givenPosB;
+		do {
+			givenPosB = randInt(0, tickCount - 1);
+		} while (Math.abs(givenPosA - givenPosB) <= 1);
+
+		const taskLabels = {
+			[givenPosA]: formatValue(getValueAt(givenPosA)),
+			[givenPosB]: formatValue(getValueAt(givenPosB))
+		};
+		const solutionLabels = {};
+		const missingPositions = [];
+		for (let i = 0; i < tickCount; i++) {
+			solutionLabels[i] = formatValue(getValueAt(i));
+			if (i !== givenPosA && i !== givenPosB) {
+				missingPositions.push(i);
 			}
-			const labels = {};
-			const missingValues = [];
-			for (let i = 0; i < tickCount; i++) {
-				if (knownIndices.includes(i)) {
-					labels[i] = formatValue(getValueAt(i));
-				} else {
-					labels[i] = '?';
-					missingValues.push(formatValue(getValueAt(i)));
-				}
-			}
-			svgContent = renderNumberLine({ labels });
-			textDisplay = `Trage die fehlenden Zahlen in die ?-Felder der Zahlengerade ein.`;
-			textPrint = `Vervollständige die Zahlengerade:<br>${svgContent}`;
-			s = `Die fehlenden Zahlen lauten: ${missingValues.map(value => `\\(${value}\\)`).join(', ')}`;
-		} else {
-			const possiblePositions = [];
-			for (let i = 1; i < tickCount - 1; i++) {
-				possiblePositions.push(i);
-				if (tickCount >= 6) {
-					possiblePositions.push(i + 0.5);
-				}
-			}
-			const shuffled = fisherYatesShuffle(possiblePositions);
-			const targetPositions = shuffled.slice(0, 3).sort((a, b) => a - b);
-			const letters = ['A', 'B', 'C'];
-			const values = targetPositions.map(pos => formatValue(getValueAt(pos)));
-			const letterMarkers = targetPositions.map((position, index) => ({ position, label: letters[index] }));
-			const labels = {
-				0: formatValue(startValue),
-				[tickCount - 1]: formatValue(endValue)
-			};
-			svgContent = renderNumberLine({ labels, letters: letterMarkers });
-			textDisplay = `Zeichne einen Zahlenstrahl von \\( ${formatValue(startValue)} \\) bis \\( ${formatValue(endValue)} \\) mit Abstand \\( ${formatValue(tickDistance)} \\). Trage die Zahlen ${values.map(v => `\\(${v}\\)`).join(', ')} an den passenden Punkten ein.`;
-			textPrint = `Zeichne den Zahlenstrahl und beschrifte die Punkte:<br>${svgContent}`;
-			s = letters.map((letter, index) => `${letter} = ${values[index]}`).join(', ');
 		}
+
+		const taskSvgDisplay = renderNumberLine({ labels: taskLabels, scale: 1.7 });
+		const taskSvgPrint = renderNumberLine({ labels: taskLabels, scale: 1, widthCm: 11 });
+
+		const solutionSvg = renderNumberLine({
+			labels: solutionLabels,
+			labelColors: missingPositions.reduce((acc, pos) => {
+				acc[pos] = '#1b5e20';
+				return acc;
+			}, {}),
+			labelWeights: missingPositions.reduce((acc, pos) => {
+				acc[pos] = '700';
+				return acc;
+			}, {}),
+			scale: 1.7
+		});
+
+		textDisplay = `Vervollständige den Zahlenstrahl anhand der zwei vorgegebenen Werte.<br>${taskSvgDisplay}`;
+		textPrint = `Vervollständige den Zahlenstrahl:<br>${taskSvgPrint}`;
+		s = `${solutionSvg}`;
 		break;
 	}
 
@@ -2655,7 +2631,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'funktionen': {
-			let subType = randInt(0, 6);
+			let subType = randInt(0, 5);
 			
 			// Hilfsvariablen für die Funktionserstellung
 			let isLinear = randInt(0, 1) === 0;
@@ -2687,18 +2663,18 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				}
 			}
 			
-			// 7 Teilaufgabentypen
+			// 6 Teilaufgabentypen
 			switch (subType) {
 				case 0: // Funktionswert berechnen
 				let xVal = randInt(-4, 4);
-					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Berechne den Funktionswert an der Stelle \\( x = ${xVal} \\).`;
+					textDisplay = `\\( ${funcStr} \\)<br>Berechne \\( f(${xVal}) \\).`;
 					s = `\\( f(${xVal}) = ${calcF(xVal)} \\)`;
 					break;
 					
 					case 1: // Argument berechnen
 					let targetX = randInt(-3, 3);
 					let targetY = calcF(targetX);
-					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Bestimme das Argument \\( x \\), für das der Funktionswert \\( y = ${targetY} \\) ist.`;
+					textDisplay = `\\( ${funcStr} \\)<br>Für welches \\( x \\) gilt \\( y = ${targetY} \\)?`;
 					if (!isLinear && targetX !== 0) {
 						s = `\\( x_1 = ${Math.abs(targetX)}, \\; x_2 = -${Math.abs(targetX)} \\)`;
 					} else {
@@ -2714,13 +2690,13 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						let mStr = myM === 1 ? "" : (myM === -1 ? "-" : fmt(myM));
 						let bStr = myB > 0 ? ` + ${myB}` : (myB < 0 ? ` - ${Math.abs(myB)}` : "");
 						funcStr = `f(x) = ${mStr}x${bStr}`;
-						textDisplay = `Berechne die Nullstelle der Funktion \\( ${funcStr} \\).`;
+						textDisplay = `Bestimme die Nullstelle von \\( ${funcStr} \\).`;
 						s = `\\( x = ${root} \\)`;
 					} else {
 						let root = randInt(1, 4);
 						let myB = -(root * root);
 						funcStr = `f(x) = x^2 - ${Math.abs(myB)}`;
-						textDisplay = `Berechne die Nullstellen der Funktion \\( ${funcStr} \\).`;
+						textDisplay = `Bestimme die Nullstellen von \\( ${funcStr} \\).`;
 						s = `\\( x_1 = ${root}, \\; x_2 = -${root} \\)`;
 					}
 					break;
@@ -2729,10 +2705,10 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					let px = randInt(-4, 4);
 					let py = calcF(px);
 					if (randInt(0, 1) === 0) {
-						textDisplay = `Der Punkt \\( P(${px} | y) \\) liegt auf dem Graphen der Funktion \\( ${funcStr} \\).<br>Bestimme die fehlende y-Koordinate.`;
+						textDisplay = `\\( P(${px} | y) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( y \\).`;
 						s = `\\( y = ${py} \\)`;
 					} else {
-						textDisplay = `Der Punkt \\( P(x | ${py}) \\) liegt auf dem Graphen der Funktion \\( ${funcStr} \\).<br>Bestimme die fehlende x-Koordinate.`;
+						textDisplay = `\\( P(x | ${py}) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( x \\).`;
 						if (!isLinear && px !== 0) {
 							s = `\\( x = ${Math.abs(px)} \\) oder \\( x = -${Math.abs(px)} \\)`;
 						} else {
@@ -2741,27 +2717,23 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					}
 					break;
 
-					case 4: // Wertetabelle erstellen
-					textDisplay = `Gegeben ist \\( ${funcStr} \\).<br>Erstelle eine Wertetabelle für \\( x \\in \\{-2; -1; 0; 1; 2\\} \\).`;
+					case 4: // Wertetabelle und Graph zeichnen
+					textDisplay = `\\( ${funcStr} \\)<br>Erstelle die Wertetabelle für \\( x \\in \\{-2; -1; 0; 1; 2\\} \\) und zeichne den Graphen.`;
 					s = `\\( x = -2 \\Rightarrow y = ${calcF(-2)} \\)<br>` +
 					`\\( x = -1 \\Rightarrow y = ${calcF(-1)} \\)<br>` +
 					`\\( x = 0 \\Rightarrow y = ${calcF(0)} \\)<br>` +
 					`\\( x = 1 \\Rightarrow y = ${calcF(1)} \\)<br>` +
-					`\\( x = 2 \\Rightarrow y = ${calcF(2)} \\)`;
+					`\\( x = 2 \\Rightarrow y = ${calcF(2)} \\)<br><br>` +
+					`Kontrolle: Punkte z. B. \\( P(0 | ${calcF(0)}) \\) und \\( Q(1 | ${calcF(1)}) \\).`;
 					break;
 					
-					case 5: // Graph zeichnen
-					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Zeichne den zugehörigen Funktionsgraphen.`;
-					s = `Kontrolle:<br>Der Graph verläuft u.a. durch die Punkte \\( P(0 | ${calcF(0)}) \\) und \\( Q(1 | ${calcF(1)}) \\).`;
-					break;
-					
-					case 6: // Punktprobe
+					case 5: // Punktprobe
 					let testX = randInt(-3, 3);
 					let isTrue = randInt(0, 1) === 0;
 					// Wenn isTrue false ist, addiere einen kleinen Störwert auf das echte y
 					let testY = isTrue ? calcF(testX) : calcF(testX) + randInt(1, 3) * (randInt(0, 1) === 0 ? 1 : -1);
 					
-					textDisplay = `Führe eine Punktprobe durch:<br>Liegt der Punkt \\( P(${testX} | ${testY}) \\) auf dem Graphen von \\( ${funcStr} \\)?`;
+					textDisplay = `Punktprobe:<br>Liegt \\( P(${testX} | ${testY}) \\) auf \\( ${funcStr} \\)?`;
 					if (isTrue) {
 						s = `Ja, denn \\( f(${testX}) = ${testY} \\) ist eine wahre Aussage.`;
 					} else {

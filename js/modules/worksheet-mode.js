@@ -58,6 +58,15 @@ window.MTGWorksheetModeModule = {
             loadTasks: taskGeneration.loadTasksFromJSON,
             getVisibleKeys: getVisibleTypeKeys,
             setSelectedTypes: types => {
+                if (state.taskCounts?.value) {
+                    const allowed = new Set(getVisibleTypeKeys());
+                    const selected = new Set(types.filter(type => allowed.has(type)));
+                    Object.keys(state.taskCounts.value).forEach(type => {
+                        if (allowed.has(type)) {
+                            state.taskCounts.value[type] = selected.has(type) ? 1 : 0;
+                        }
+                    });
+                }
                 state.selectedTypes.value = types;
             },
             onAfterLoad: async () => {

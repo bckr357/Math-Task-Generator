@@ -2081,6 +2081,9 @@ textarea {
 
     .home-view,
     .presentation-view,
+    .site-header,
+    .site-nav-drawer,
+    .site-nav-overlay,
     .settings-drawer,
     .settings-drawer-overlay,
     .no-print {

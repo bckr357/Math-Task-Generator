@@ -7,12 +7,17 @@ const comma = formatUtils.comma;
 const formatDecimal = formatUtils.formatDecimal;
 
 const taskCategories = {
-	arithmetic: ['round', 'zahlengerade'],
-	tables: ['table_add', 'table_mul', 'table_sub', 'table_terms'],
-	percent: ['anteile', 'prop', 'percent', 'pv', 'units'],
+	arithmetic: [],
+	percent: [
+		'anteile_easy', 'anteile_normal',
+		'prop_easy', 'prop_normal',
+		'percent_easy', 'percent_normal',
+		'pv_easy', 'pv_normal',
+		'units'
+	],
 	algebra: ['terme', 'equations', 'equations_adv', 'equations_system', 'formel_umstellen'],
-	geometry: ['geometry', 'winkel', 'schraegbild', 'kongruenz'],
-	functions: ['funktionen'],
+	geometry: ['geometry', 'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring', 'winkel', 'schraegbild', 'kongruenz'],
+	functions: ['linear_function'],
 	statistics: ['statistik', 'wkt']
 };
 
@@ -20,46 +25,56 @@ const taskCategories = {
 const taskTypesByGrade = {
 	klasse5: [
 		'units',
-		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'round', 'zahlengerade',
-		'geometry', 'winkel', 'schraegbild', 'statistik'
+		'geometry', 'geometry_rechteck', 'geometry_dreieck', 'winkel', 'schraegbild', 'statistik'
 	],
 	klasse6: [
 		'units',
-		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'round', 'zahlengerade',
-		'anteile', 'percent', 'geometry', 'winkel', 'schraegbild', 'statistik', 'wkt'
+		'anteile_easy', 'anteile_normal', 'percent_easy', 'percent_normal',
+		'geometry', 'geometry_rechteck', 'geometry_dreieck', 'winkel', 'schraegbild', 'statistik', 'wkt'
 	],
 	klasse7: [
 		'units',
-		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'anteile', 'prop', 'percent', 'pv',
-		'terme', 'word_terms', 'equations', 'equations_lin', 'formel_umstellen',
-		'round', 'zahlengerade', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
+		'anteile_easy', 'anteile_normal',
+		'prop_easy', 'prop_normal',
+		'percent_easy', 'percent_normal',
+		'pv_easy', 'pv_normal',
+		'terme', 'equations', 'equations_lin', 'formel_umstellen',
+		'geometry',
+		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez',
+		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
 	],
 	klasse8: [
 		'units',
-		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'round', 'zahlengerade',
-		'anteile', 'prop', 'percent', 'pv',
-		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
-		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
+		'anteile_easy', 'anteile_normal',
+		'prop_easy', 'prop_normal',
+		'percent_easy', 'percent_normal',
+		'pv_easy', 'pv_normal',
+		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
+		'geometry',
+		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
+		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
 	],
 	klasse9: [
 		'units',
-		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'round', 'zahlengerade',
-		'anteile', 'prop', 'percent', 'pv',
-		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
-		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
+		'anteile_easy', 'anteile_normal',
+		'prop_easy', 'prop_normal',
+		'percent_easy', 'percent_normal',
+		'pv_easy', 'pv_normal',
+		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
+		'geometry',
+		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
+		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
 	],
 	klasse10: [
 		'units',
-		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'round', 'zahlengerade',
-		'anteile', 'prop', 'percent', 'pv',
-		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
-		'geometry', 'winkel', 'schraegbild', 'kongruenz',
+		'anteile_easy', 'anteile_normal',
+		'prop_easy', 'prop_normal',
+		'percent_easy', 'percent_normal',
+		'pv_easy', 'pv_normal',
+		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
+		'geometry',
+		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
+		'winkel', 'schraegbild', 'kongruenz',
 		'statistik', 'wkt', 'linear_function'
 	]
 };
@@ -81,25 +96,19 @@ const taskTypesByGrade = {
 // Dreiteilige Typ-Definition: [key, Label fuer Einstellungen, Beschreibung fuer Training]
 const typeDefinitions = [
 	['units', 'Einheiten', 'Größen in verschiedene Einheiten umrechnen'],
-
-	// Tabellen / Kopfrechnen
-	['table_add', 'Additionstabelle', 'Tabellenaufgaben mit Summen'],
-	['table_sub', 'Subtraktionstabelle', 'Tabellenaufgaben mit Differenzen'],
-	['table_mul', 'Multiplikationstabelle', 'Tabellenaufgaben mit Produkten'],
-	['table_terms', 'Termtabelle', 'Terme mit Variablen'],
-	
-	['round', 'Dezimalbrüche runden', 'Dezimalbrüche runden'],
-	// ['zahlengerade', 'Zahlenstrahl', 'Zahlenstrahl-Aufgaben lesen, eintragen und zeichnen'],
 	
 	// Prozent / Proportionalität / Maßeinheiten
-	['anteile', 'Anteile berechnen', 'Anteile berechnen'],
-	['prop', 'Proportionalitäten', 'Aufgaben zur direkten Proportionalität'],
-	['percent', 'Prozentrechnung', 'Prozentwert, Grundwert und Prozentsatz berechnen'],
-	['pv', 'Prozentuale Veränderung', 'Prozentuale Zu- und Abnahmen berechnen'],
+	['anteile_easy', 'Anteile (einfach)', 'Anteile berechnen (einfach)'],
+	['anteile_normal', 'Anteile (normal)', 'Anteile berechnen (normal)'],
+	['prop_easy', 'Proportionalitäten (einfach)', 'Aufgaben zur direkten Proportionalität (einfach)'],
+	['prop_normal', 'Proportionalitäten (normal)', 'Aufgaben zur direkten Proportionalität (normal)'],
+	['percent_easy', 'Prozentrechnung (einfach)', 'Prozentwert, Grundwert und Prozentsatz berechnen (einfach)'],
+	['percent_normal', 'Prozentrechnung (normal)', 'Prozentwert, Grundwert und Prozentsatz berechnen (normal)'],
+	['pv_easy', 'Prozentuale Veränderung (einfach)', 'Prozentuale Zu- und Abnahmen berechnen (einfach)'],
+	['pv_normal', 'Prozentuale Veränderung (normal)', 'Prozentuale Zu- und Abnahmen berechnen (normal)'],
 
 	// Algebra / Terme / Gleichungen
 	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
-	['word_terms', 'Wortterme', 'Wortterme in mathematische Symbole übersetzen und berechnen'],
 	['equations', 'lin. Gl. ax+b = c', 'Lineare Gleichung der Form ax + b = c lösen'],
 	['equations_adv', 'lin. Gl. ax+b = cx+d', 'Lineare Gleichung der Form ax + b = cx + d lösen'],
 	['equations_lin', 'lin. Gl. umstellen', 'Lineare Gleichungen nach y umstellen'],
@@ -107,7 +116,13 @@ const typeDefinitions = [
 	['formel_umstellen', 'Formeln umstellen', 'Formeln nach einer anderen Variablen umstellen'],
 
 	// Geometrie
-	['geometry', 'A und u ebener Figuren', 'Flächeninhalte und Umfänge berechnen'],
+	['geometry', 'Geometrie (gemischt)', 'Gemischte Aufgaben zu Rechteck, Dreieck, Parallelogramm, Trapez, Kreis und Kreisring'],
+	['geometry_rechteck', 'Rechteck', 'Flächeninhalt und Umfang von Rechtecken berechnen'],
+	['geometry_dreieck', 'Dreieck (mit Höhe)', 'Flächeninhalt von Dreiecken mit Höhe berechnen'],
+	['geometry_parallelogramm', 'Parallelogramm', 'Flächeninhalt und Umfang von Parallelogrammen berechnen'],
+	['geometry_trapez', 'Trapez', 'Flächeninhalt von Trapezen berechnen'],
+	['geometry_kreis', 'Kreis', 'Flächeninhalt und Umfang von Kreisen berechnen'],
+	['geometry_kreisring', 'Kreisring', 'Flächeninhalt von Kreisringen berechnen'],
 	['winkel', 'Winkel', 'Winkel zeichnen und berechnen'],
 	['schraegbild', 'Schrägbilder', 'Schrägbilder von Körpern zeichnen'],
 	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren'],
@@ -142,10 +157,15 @@ function sortByTypeDefinitions(types) {
 // AUFGABEN-GENERATOR
 // ============================================================
 
-function createTask(type, isMentalMode, grade = 5, options = {}) {
+function createTask(type, isEasyMode, grade = 5, options = {}) {
 	if (!Number.isFinite(grade)) {
 		grade = 5;
 	}
+
+	const difficultyTypeMatch = typeof type === 'string' ? type.match(/^(.*)_(easy|normal)$/) : null;
+	const normalizedType = difficultyTypeMatch ? difficultyTypeMatch[1] : type;
+	const forcedEasyMode = difficultyTypeMatch ? difficultyTypeMatch[2] === 'easy' : null;
+	const effectiveEasyMode = forcedEasyMode === null ? isEasyMode : forcedEasyMode;
 
 	const isTraining = Boolean(options.training);
 	let s = '';
@@ -224,300 +244,81 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		return `<table class="two-column-task"><tr>${cellHtml}</tr></table>`;
 	};
 
-	// Beispiel für die Nutzung von isMentalMode:
-	// if (isMentalMode) { Z1 = rnd(2, 5); } else { Z1 = rnd(5, 20); }
+	// Beispiel für die Nutzung von isEasyMode:
+	// if (isEasyMode) { Z1 = rnd(2, 5); } else { Z1 = rnd(5, 20); }
 
 	let v1, v2;
 	let rd;
-	switch (type) {
-
-		case 'table_add':
-		case 'table_mul': {
-			const isAdd = type === 'table_add';
-			const min = isAdd ? -20 : -13;
-			const max = isAdd ? 20 : 13;
-			const allValues = pickDistinctIntegers(min, max, 7);
-			const rowHeaders = allValues.slice(0, 2);
-			const colHeaders = allValues.slice(2);
-
-			const cellValues = rowHeaders.map(r => colHeaders.map(c => isAdd ? r + c : r * c));
-
-			const hiddenRowIndex = 1;
-			const hiddenColIndex = randInt(2, 4);
-			const clueColIndex = hiddenColIndex === 0 ? 1 : 0;
-			const clueRowIndex = hiddenRowIndex === 0 ? 1 : 0;
-
-			const givenRowHeader = [true, true];
-			const givenColHeader = [true, true, true, true, true];
-			givenRowHeader[hiddenRowIndex] = false;
-			givenColHeader[hiddenColIndex] = false;
-
-			const givenCells = {
-				[`${hiddenRowIndex}-${clueColIndex}`]: true,
-				[`${clueRowIndex}-${hiddenColIndex}`]: true
-			};
-
-			const opSymbol = isAdd ? '+' : '×';
-
-			textDisplay = buildOpTableHTML({
-				colHeaders,
-				rowHeaders,
-				cellValues,
-				givenColHeader,
-				givenRowHeader,
-				givenCells,
-				opSymbol,
-			});
-
-			const solvedTableRows = rowHeaders.map((rowVal, rowIndex) => {
-				const rowCells = colHeaders.map((colVal, colIndex) => {
-					const result = cellValues[rowIndex][colIndex];
-					return `<td>${result}</td>`;
-				}).join('');
-				return `<tr><th>${rowVal}</th>${rowCells}</tr>`;
-			}).join('');
-
-			s = `
-				<div class="op-table-wrap">
-					<table class="op-table op-table--solution">
-						<tr><th class="op-corner">${opSymbol}</th>${colHeaders.map(c => `<th>${c}</th>`).join('')}</tr>
-						${solvedTableRows}
-					</table>
-				</div>
-			`;
-			break;
-		}
-
-		case 'table_sub': {
-			const min = -20, max = 20;
-			const allValues = pickDistinctIntegers(min, max, 7);
-			const rowHeaders = allValues.slice(0, 2);
-			const colHeaders = allValues.slice(2);
-
-			const cellValues = rowHeaders.map(r => colHeaders.map(c => r - c));
-
-			const hiddenRowIndex = 1;
-			const hiddenColIndex = randInt(2, 4);
-			const clueColIndex = hiddenColIndex === 0 ? 1 : 0;
-			const clueRowIndex = hiddenRowIndex === 0 ? 1 : 0;
-
-			const givenRowHeader = [true, true];
-			const givenColHeader = [true, true, true, true, true];
-			givenRowHeader[hiddenRowIndex] = false;
-			givenColHeader[hiddenColIndex] = false;
-
-			const givenCells = {
-				[`${hiddenRowIndex}-${clueColIndex}`]: true,
-				[`${clueRowIndex}-${hiddenColIndex}`]: true
-			};
-
-			const opSymbol = '&#8210';
-			textDisplay = buildOpTableHTML({
-				colHeaders,
-				rowHeaders,
-				cellValues,
-				givenColHeader,
-				givenRowHeader,
-				givenCells,
-				opSymbol,
-			});
-
-			const solvedTableRows = rowHeaders.map((rowVal, rowIndex) => {
-				const rowCells = colHeaders.map((colVal, colIndex) => {
-					const result = cellValues[rowIndex][colIndex];
-					return `<td>${result}</td>`;
-				}).join('');
-				return `<tr><th>${rowVal}</th>${rowCells}</tr>`;
-			}).join('');
-
-			s = `
-				<div class="op-table-wrap">
-					<table class="op-table op-table--solution">
-						<tr><th class="op-corner">${opSymbol}</th>${colHeaders.map(c => `<th>${c}</th>`).join('')}</tr>
-						${solvedTableRows}
-					</table>
-				</div>
-			`;
-			break;
-		}
-
-		case 'table_terms': {
-			const createTermDescriptor = (patternIndex = null) => {
-				const patterns = [
-					() => {
-						const a = rnd(-4, 4);
-						const b = rnd(-20, 20);
-						const expr = `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
-						return {
-							expr,
-							evalFn: x => a * x + b,
-							substitute: x => b >= 0 ? `${a*x} + ${Math.abs(b)}` : `${a*x} - ${Math.abs(b)}`,
-							// substitute: x => `${a}\\cdot${fmt(x)} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`
-						};
-					},
-					() => {
-						const a = rnd(-6, 6);
-						const b = rnd(-20, 20);
-						const expr = `${a}x^2 ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
-						return {
-							expr,
-							evalFn: x => a * x * x + b,
-							substitute: x => b >= 0 ? `${a*x*x} + ${Math.abs(b)}` : `${a*x*x} - ${Math.abs(b)}`,
-							// substitute: x => `${a}\\cdot${fmt(x)}^2 ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`
-						};
-					},
-					() => {
-						const a = rnd(-5, 5);
-						const b = rnd(-4, 4);
-						const expr = `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}x^2`;
-						return {
-							expr,
-							evalFn: x => a * x + (b >= 0 ? 1 : -1) * Math.abs(b) * x * x,
-							substitute: x => b >= 0 ? `${a*x} + ${Math.abs(b)*x*x}` : `${a*x} - ${Math.abs(b)*x*x}`,
-							// substitute: x => `${a}\\cdot${fmt(x)} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}\\cdot${fmt(x)}^2`
-						};
-					}
-				];
-
-				if (patternIndex === null) {
-					patternIndex = randInt(0, patterns.length - 1);
-				}
-
-				return patterns[patternIndex]();
-			};
-
-			const term1 = createTermDescriptor(0);
-			let term2 = createTermDescriptor(randInt(1, 2));
-			while (term1.expr === term2.expr) {
-				term2 = createTermDescriptor(randInt(1, 2));
-			}
-
-			const xValues = [rnd(2,5),rnd(-5,-2)];
-			const rawResults = [
-				[term1.evalFn(xValues[0]), term2.evalFn(xValues[0])],
-				[term1.evalFn(xValues[1]), term2.evalFn(xValues[1])]
-			];
-
-			const resultTable = rawResults.map(row => row.map(val => Number.isInteger(val) ? val : Number(val.toFixed(2))));
-
-			textDisplay = `
-				<div class="op-table-wrap">
-					<table class="op-table op-table--terms">
-						<tr>
-							<th class="op-corner">\\( x \\)</th>
-							<th>\\( ${term1.expr} \\)</th>
-							<th>\\( ${term2.expr} \\)</th>
-						</tr>
-						<tr>
-							<th>${xValues[0]}</th>
-							<td> </td>
-							<td> </td>
-						</tr>
-						<tr>
-							<th>${xValues[1]}</th>
-							<td> </td>
-							<td> </td>
-						</tr>
-					</table>
-				</div>
-			`;
-
-			s = `
-				<div class="op-table-wrap">
-					<table class="op-table op-table--solution op-table--terms">
-						<tr>
-							<th class="op-corner">x</th>
-							<th>\\( ${term1.expr} \\)</th>
-							<th>\\( ${term2.expr} \\)</th>
-						</tr>
-						<tr>
-							<th>${xValues[0]}</th>
-							<td>\\( ${term1.substitute(xValues[0])} = ${resultTable[0][0]} \\)</td>
-							<td>\\( ${term2.substitute(xValues[0])} = ${resultTable[0][1]} \\)</td>
-						</tr>
-						<tr>
-							<th>${xValues[1]}</th>
-							<td>\\( ${term1.substitute(xValues[1])} = ${resultTable[1][0]} \\)</td>
-							<td>\\( ${term2.substitute(xValues[1])} = ${resultTable[1][1]} \\)</td>
-						</tr>
-					</table>
-				</div>
-			`;
-			break;
-		}
+	const dec1 = (value) => formatDecimal(value, 1);
+	const dec2 = (value) => formatDecimal(value, 2);
+	switch (normalizedType) {
 
 		case 'percent':
-			let p, pVal;
-			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
+			let p;
+			let pVal;
+			const einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
 			rd = Math.random();
 			if (rd > 0.5) {
-				pVal = rnd(2, 11) * 100;
+				pVal = effectiveEasyMode ? rnd(2, 11) * 100 : randInt(250, 2800) / 10;
 				p = [3, 4, 5, 6, 7, 8, 9, 11, 12, 20, 25, 30, 35, 40, 60, 70, 80, 90][randInt(0, 17)];
-				textDisplay = `${p} % von ${pVal} ${einheit} sind ${blank(3)}`;
-				s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${p} % ≙ <b>${pVal / 100 * p} ${einheit}</b>`;
+				textDisplay = `${p} % von ${dec1(pVal)} ${einheit} sind ${blank(3)}`;
+				s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${p} % ≙ <b>${dec2((pVal / 100) * p)} ${einheit}</b>`;
 			} else if (rd > 0.3) {
 				p = [20, 25, 30, 40, 50, 60, 70, 80, 90][randInt(0, 8)];
-				pVal = rnd(2, 9) * p;
-				textDisplay = `${p} % sind ${pVal} ${einheit} von ${blank(3)}`;
-				s = `${p} % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / p} ${einheit}<br>100 % ≙ <b>${pVal / p * 100} ${einheit}</b>`;
+				if (effectiveEasyMode) {
+					pVal = rnd(2, 9) * p;
+				} else {
+					const baseValue = randInt(200, 4000) / 10;
+					pVal = (baseValue * p) / 100;
+				}
+				textDisplay = `${p} % sind ${dec2(pVal)} ${einheit} von ${blank(3)}`;
+				s = `${p} % ≙ ${dec2(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / p)} ${einheit}<br>100 % ≙ <b>${dec2((pVal / p) * 100)} ${einheit}</b>`;
 			} else {
-				// 1. Wähle einen "schönen" Prozentsatz p (z.B. 5, 10, 20, 25, 50...)
-				const p_list = isMentalMode ? [2, 3, 5, 10, 20, 25, 50, 75, 80, 90] : [2, 3, 5, 10, 15, 20, 25, 40, 50, 75, 80, 90, 95];
-				const p = p_list[randInt(0, p_list.length - 1)];
-
-				// 2. Wähle einen Multiplikator für den Prozentwert W, 
-				// damit die Zahlen nicht zu krumm werden
-				const multiplier = isMentalMode ? rnd(2, 10) : rnd(2, 15);
-				const W = p * multiplier;
-
-				// 3. Berechne den Grundwert G
-				// Formel: G = W / (p / 100)  => G = W * 100 / p
-				const G = (W * 100) / p;
-
-				// Aufgabe: W und G sind gegeben, p ist gesucht
-				textDisplay = ` ${comma(W)} ${einheit} von ${comma(G)} ${einheit} sind ${blank(2)} % `;
-
-				// Lösung: Zeigt den Rechenweg oder das Ergebnis
-				s = `100 % ≙ ${comma(G)} ${einheit}<br>1 % ≙ ${comma(G / 100)} ${einheit} <br><b>${p} %</b> ≙ ${comma(W)} ${einheit}`;
+				const pList = effectiveEasyMode ? [2, 3, 5, 10, 20, 25, 50, 75, 80, 90] : [2, 3, 5, 10, 15, 20, 25, 40, 50, 75, 80, 90, 95];
+				const p = pList[randInt(0, pList.length - 1)];
+				const G = effectiveEasyMode ? (rnd(2, 15) * 10) : (randInt(200, 4500) / 10);
+				const W = (G * p) / 100;
+				textDisplay = `${dec2(W)} ${einheit} von ${dec1(G)} ${einheit} sind ${blank(2)} %`;
+				s = `100 % ≙ ${dec1(G)} ${einheit}<br>1 % ≙ ${dec2(G / 100)} ${einheit}<br><b>${p} %</b> ≙ ${dec2(W)} ${einheit}`;
 			}
 			break;
 
 		case 'pv': {
-			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
+			const einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
 			let p = [3, 4, 5, 6, 7, 10, 20, 25, 50][randInt(0, 8)];
-			let pVal = rnd(2, 11) * 100;
-			type = randInt(0, 5); // 0: Erhöhung um p%, 1: Reduzierung um p%, 2: Erhöhung auf 100+p%, 3: Reduzierung auf 100-p%, 4: Rabatt-Fall 1, 5: Rabatt-Fall 2
-			switch (type) {
+			const pVal = effectiveEasyMode ? (rnd(2, 11) * 100) : (randInt(250, 3500) / 10);
+			const pvType = randInt(0, 5); // 0: Erhöhung um p%, 1: Reduzierung um p%, 2: Erhöhung auf 100+p%, 3: Reduzierung auf 100-p%, 4: Rabatt-Fall 1, 5: Rabatt-Fall 2
+			switch (pvType) {
 				case 0: // Erhöhung um p%
-					textDisplay = `${pVal} ${einheit} um ${p} % erhöht sind ${blank(3)}`;
-					s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${100 + p} % ≙ <b>${pVal + (pVal / 100 * p)} ${einheit}</b>`;
+					textDisplay = `${dec1(pVal)} ${einheit} um ${p} % erhöht sind ${blank(3)}`;
+					s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${100 + p} % ≙ <b>${dec2(pVal + ((pVal / 100) * p))} ${einheit}</b>`;
 					break;
 				case 1: // Reduzierung um p%
-					textDisplay = `${pVal} ${einheit} um ${p} % reduziert sind ${blank(3)}`;
-					s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${100 - p} % ≙ <b>${pVal - (pVal / 100 * p)} ${einheit}</b>`;
+					textDisplay = `${dec1(pVal)} ${einheit} um ${p} % reduziert sind ${blank(3)}`;
+					s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${100 - p} % ≙ <b>${dec2(pVal - ((pVal / 100) * p))} ${einheit}</b>`;
 					break;
 				case 2: // Erhöhung auf 100+p%
-					textDisplay = `${pVal} ${einheit} auf ${100 + p} % erhöht sind ${blank(3)}`;
-					s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${100 + p} % ≙ <b>${pVal + (pVal / 100 * p)} ${einheit}</b>`;
+					textDisplay = `${dec1(pVal)} ${einheit} auf ${100 + p} % erhöht sind ${blank(3)}`;
+					s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${100 + p} % ≙ <b>${dec2(pVal + ((pVal / 100) * p))} ${einheit}</b>`;
 					break;
 				case 3: // Reduzierung auf 100-p%
-					textDisplay = `${pVal} ${einheit} auf ${100 - p} % reduziert sind ${blank(3)}`;
-					s = `100 % ≙ ${pVal} ${einheit}<br>1 % ≙ ${pVal / 100} ${einheit}<br>${100 - p} % ≙ <b>${pVal - (pVal / 100 * p)} ${einheit}</b>`;
+					textDisplay = `${dec1(pVal)} ${einheit} auf ${100 - p} % reduziert sind ${blank(3)}`;
+					s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${100 - p} % ≙ <b>${dec2(pVal - ((pVal / 100) * p))} ${einheit}</b>`;
 					break;
 				case 4: {// Rabatt-Fall 1
 					p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
 					const originalPrice = pVal;
 					const discountedPrice = originalPrice - (originalPrice / 100 * p);
-					textDisplay = `${p} % Rabatt auf ${originalPrice} €. Neuer Preis: ${blank(3)}`;
-					s = `100 % ≙ ${originalPrice} €<br>1 % ≙ ${originalPrice / 100} €<br>${100 - p} % ≙ <b>${discountedPrice} €</b>`;
+					textDisplay = `${p} % Rabatt auf ${dec1(originalPrice)} €. Neuer Preis: ${blank(3)}`;
+					s = `100 % ≙ ${dec1(originalPrice)} €<br>1 % ≙ ${dec2(originalPrice / 100)} €<br>${100 - p} % ≙ <b>${dec2(discountedPrice)} €</b>`;
 					break;
 				}
 				case 5: {// Rabatt-Fall 2
-				    p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
+					p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
 					const originalPrice = pVal;
 					const discountedPrice = originalPrice - (originalPrice / 100 * p);
-					textDisplay = `Preissenkung von ${originalPrice} € auf ${discountedPrice} €. Rabatt: ${blank(2)} %`;
-					s = `100 % ≙ ${originalPrice} €<br>1 % ≙ ${originalPrice / 100} €<br><b>${p} %</b> ≙ ${(originalPrice - discountedPrice)} €`;					
+					textDisplay = `Preissenkung von ${dec1(originalPrice)} € auf ${dec2(discountedPrice)} €. Rabatt: ${blank(2)} %`;
+					s = `100 % ≙ ${dec1(originalPrice)} €<br>1 % ≙ ${dec2(originalPrice / 100)} €<br><b>${p} %</b> ≙ ${dec2(originalPrice - discountedPrice)} €`;
 					break;
 				}
 			}
@@ -608,92 +409,274 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			break;
 		}
 
-		case 'geometry':
-			const shapeType = randInt(0, grade >= 7 ? 2 : 1);
-			const goal = Math.random() > 0.5 ? 'A' : 'u';
-			const lengthUnits = ['cm', 'dm', 'm'];
+		case 'geometry_rechteck':
+		case 'geometry_dreieck':
+		case 'geometry_parallelogramm':
+		case 'geometry_trapez':
+		case 'geometry_kreis':
+		case 'geometry_kreisring':
+		case 'geometry': {
+			const lengthUnits = ['mm', 'cm', 'dm', 'm'];
 			const unit = lengthUnits[randInt(0, lengthUnits.length - 1)];
-			let sideA, sideB;
+			const rndD1 = (min, max) => randInt(Math.round(min * 10), Math.round(max * 10)) / 10;
+			const round2 = (val) => Math.round(val * 100) / 100;
+			const num1 = (val) => comma(formatDecimal(val, 1));
+			const num2 = (val) => comma(formatDecimal(val, 2));
+			const geometryShapeByType = {
+				geometry_rechteck: 'rechteck',
+				geometry_dreieck: 'dreieck',
+				geometry_parallelogramm: 'parallelogramm',
+				geometry_trapez: 'trapez',
+				geometry_kreis: 'kreis',
+				geometry_kreisring: 'kreisring'
+			};
+			const forcedShape = geometryShapeByType[normalizedType] || null;
+			const pickLen = (easyMin, easyMax, normalMin, normalMax) => {
+				const min = effectiveEasyMode ? easyMin : normalMin;
+				const max = effectiveEasyMode ? easyMax : normalMax;
+				if (Math.random() < 0.65) {
+					return rndD1(min, max);
+				}
+				return randInt(Math.ceil(min), Math.floor(max));
+			};
+			const shapePool = ['rechteck', 'dreieck'];
+			if (grade >= 7) {
+				shapePool.push('parallelogramm', 'trapez');
+			}
+			if (grade >= 8) {
+				shapePool.push('kreis', 'kreisring');
+			}
+			const shape = forcedShape || shapePool[randInt(0, shapePool.length - 1)];
+			const isInverse = !effectiveEasyMode && Math.random() < 0.5;
 
-			if (shapeType === 0) { // QUADRAT
-				sideA = rnd(3, 12);
-				if (goal === 'A') {
-					textDisplay = `Berechne den Flächeninhalt eines Quadrats mit \\( a = ${sideA} \\) ${unit}.`;
-					s = `\\( A = a \\cdot a = ${sideA} \\cdot ${sideA} = ${sideA * sideA} \\text{ ${unit}}^2 \\)`;
-				} else {
-					textDisplay = `Berechne den Umfang eines Quadrats mit \\( a = ${sideA} \\) ${unit}.`;
-					s = `\\( u = 4 \\cdot a = 4 \\cdot ${sideA} = ${sideA * 4} \\text{ ${unit}} \\)`;
+			switch (shape) {
+				case 'rechteck': {
+					if (isInverse) {
+						const goal = Math.random() < 0.5 ? 'A' : 'u';
+						const knownSide = pickLen(2, 9, 2, 14);
+						const missingSide = pickLen(2, 8, 2, 12);
+
+						if (goal === 'A') {
+							const area = round2(knownSide * missingSide);
+							textDisplay = `Bei einem Rechteck sind der Flächeninhalt \\( A = ${num2(area)} \\) ${unit}² und \\( a = ${num1(knownSide)} \\) ${unit} gegeben.<br>Bestimme die fehlende Seitenlänge \\( b \\).`;
+							textPrint = `Rechteck: A = ${num2(area)} ${unit}², a = ${num1(knownSide)} ${unit}. Bestimme b.${space(1.8)}`;
+							s = `\\[ \\begin{aligned}
+							A &= a \\cdot b \\\\
+							${num2(area)} &= ${num1(knownSide)} \\cdot b &&| : ${num1(knownSide)} \\\\
+							b &= ${num2(round2(area / knownSide))} \\text{ ${unit}}
+							\\end{aligned} \\]`;
+						} else {
+							const perimeter = round2(2 * (knownSide + missingSide));
+							textDisplay = `Bei einem Rechteck sind der Umfang \\( u = ${num2(perimeter)} \\) ${unit} und \\( a = ${num1(knownSide)} \\) ${unit} gegeben.<br>Bestimme die fehlende Seitenlänge \\( b \\).`;
+							textPrint = `Rechteck: u = ${num2(perimeter)} ${unit}, a = ${num1(knownSide)} ${unit}. Bestimme b.${space(1.8)}`;
+							s = `\\[ \\begin{aligned}
+							u &= 2 \\cdot (a+b) \\\\
+							${num2(perimeter)} &= 2 \\cdot (${num1(knownSide)} + b) &&| :2 \\\\
+							${num2(round2(perimeter / 2))} &= ${num1(knownSide)} + b &&| - ${num1(knownSide)} \\\\
+							b &= ${num2(round2(perimeter / 2 - knownSide))} \\text{ ${unit}}
+							\\end{aligned} \\]`;
+						}
+					} else {
+						const a = pickLen(2, 9, 2, 14);
+						let b = pickLen(2, 8, 2, 12);
+						if (Math.abs(a - b) < 0.1) {
+							b = round2(b + 0.7);
+						}
+						const goal = Math.random() < 0.5 ? 'A' : 'u';
+
+						if (goal === 'A') {
+							const area = round2(a * b);
+							textDisplay = `Berechne den Flächeninhalt eines Rechtecks mit <br>\\( a = ${num1(a)} \\) ${unit} und \\( b = ${num1(b)} \\) ${unit}.`;
+							textPrint = `Berechne den Flächeninhalt eines Rechtecks: a = ${num1(a)} ${unit}, b = ${num1(b)} ${unit}.${space(1.5)}`;
+							s = `\\[ \\begin{aligned}
+							A &= a \\cdot b \\\\
+							A &= ${num1(a)} \\cdot ${num1(b)} = ${num2(area)} \\text{ ${unit}}^2
+							\\end{aligned} \\]`;
+						} else {
+							const perimeter = round2(2 * (a + b));
+							textDisplay = `Berechne den Umfang eines Rechtecks mit <br>\\( a = ${num1(a)} \\) ${unit} und \\( b = ${num1(b)} \\) ${unit}.`;
+							textPrint = `Berechne den Umfang eines Rechtecks: a = ${num1(a)} ${unit}, b = ${num1(b)} ${unit}.${space(1.5)}`;
+							s = `\\[ \\begin{aligned}
+							u &= 2 \\cdot (a+b) \\\\
+							u &= 2 \\cdot (${num1(a)} + ${num1(b)}) = ${num2(perimeter)} \\text{ ${unit}}
+							\\end{aligned} \\]`;
+						}
+					}
+					break;
+				}
+
+				case 'dreieck': {
+					if (isInverse) {
+						const g = pickLen(2, 10, 2, 14);
+						const h = pickLen(2, 10, 2, 12);
+						const area = round2((g * h) / 2);
+						const askForG = Math.random() < 0.5;
+
+						if (askForG) {
+							textDisplay = `Bei einem Dreieck sind \\( A = ${num2(area)} \\) ${unit}² und \\( h = ${num1(h)} \\) ${unit} gegeben.<br>Bestimme die Grundseite \\( g \\).`;
+							textPrint = `Dreieck: A = ${num2(area)} ${unit}², h = ${num1(h)} ${unit}. Bestimme g.${space(1.8)}`;
+							s = `\\[ \\begin{aligned}
+							A &= \\frac{1}{2} \\cdot g \\cdot h \\\\
+							${num2(area)} &= \\frac{1}{2} \\cdot g \\cdot ${num1(h)} &&| \\cdot 2 \\\\
+							${num2(round2(area * 2))} &= g \\cdot ${num1(h)} &&| : ${num1(h)} \\\\
+							g &= ${num2(round2((area * 2) / h))} \\text{ ${unit}}
+							\\end{aligned} \\]`;
+						} else {
+							textDisplay = `Bei einem Dreieck sind \\( A = ${num2(area)} \\) ${unit}² und \\( g = ${num1(g)} \\) ${unit} gegeben.<br>Bestimme die Höhe \\( h \\).`;
+							textPrint = `Dreieck: A = ${num2(area)} ${unit}², g = ${num1(g)} ${unit}. Bestimme h.${space(1.8)}`;
+							s = `\\[ \\begin{aligned}
+							A &= \\frac{1}{2} \\cdot g \\cdot h \\\\
+							${num2(area)} &= \\frac{1}{2} \\cdot ${num1(g)} \\cdot h &&| \\cdot 2 \\\\
+							${num2(round2(area * 2))} &= ${num1(g)} \\cdot h &&| : ${num1(g)} \\\\
+							h &= ${num2(round2((area * 2) / g))} \\text{ ${unit}}
+							\\end{aligned} \\]`;
+						}
+					} else {
+						const g = pickLen(2, 10, 2, 14);
+						const h = pickLen(2, 10, 2, 12);
+						const area = round2((g * h) / 2);
+						textDisplay = `Berechne den Flächeninhalt eines Dreiecks mit <br>Grundseite \\( g = ${num1(g)} \\) ${unit} und Höhe \\( h = ${num1(h)} \\) ${unit}.`;
+						textPrint = `Berechne den Flächeninhalt eines Dreiecks: g = ${num1(g)} ${unit}, h = ${num1(h)} ${unit}.${space(1.5)}`;
+						s = `\\[ \\begin{aligned}
+						A &= \\frac{1}{2} \\cdot g \\cdot h \\\\
+						A &= \\frac{1}{2} \\cdot ${num1(g)} \\cdot ${num1(h)} = ${num2(area)} \\text{ ${unit}}^2
+						\\end{aligned} \\]`;
+					}
+					break;
+				}
+
+				case 'parallelogramm': {
+					if (isInverse) {
+						const g = pickLen(2, 10, 2, 14);
+						const h = pickLen(2, 10, 2, 12);
+						const area = round2(g * h);
+						textDisplay = `Bei einem Parallelogramm sind \\( A = ${num2(area)} \\) ${unit}² und \\( h = ${num1(h)} \\) ${unit} gegeben.<br>Bestimme die Grundseite \\( g \\).`;
+						textPrint = `Parallelogramm: A = ${num2(area)} ${unit}², h = ${num1(h)} ${unit}. Bestimme g.${space(1.8)}`;
+						s = `\\[ \\begin{aligned}
+						A &= g \\cdot h \\\\
+						${num2(area)} &= g \\cdot ${num1(h)} &&| : ${num1(h)} \\\\
+						g &= ${num2(round2(area / h))} \\text{ ${unit}}
+						\\end{aligned} \\]`;
+					} else {
+						const goal = Math.random() < 0.5 ? 'A' : 'u';
+						if (goal === 'A') {
+							const g = pickLen(2, 10, 2, 14);
+							const h = pickLen(2, 10, 2, 12);
+							const area = round2(g * h);
+							textDisplay = `Berechne den Flächeninhalt eines Parallelogramms mit <br>Grundseite \\( g = ${num1(g)} \\) ${unit} und Höhe \\( h = ${num1(h)} \\) ${unit}.`;
+							textPrint = `Berechne den Flächeninhalt eines Parallelogramms: g = ${num1(g)} ${unit}, h = ${num1(h)} ${unit}.${space(1.5)}`;
+							s = `\\[ \\begin{aligned}
+							A &= g \\cdot h \\\\
+							A &= ${num1(g)} \\cdot ${num1(h)} = ${num2(area)} \\text{ ${unit}}^2
+							\\end{aligned} \\]`;
+						} else {
+							const g = pickLen(2, 10, 2, 14);
+							const side = pickLen(2, 10, 2, 12);
+							const perimeter = round2(2 * (g + side));
+							textDisplay = `Berechne den Umfang eines Parallelogramms mit <br>\\( g = ${num1(g)} \\) ${unit} und Seitenlänge \\( s = ${num1(side)} \\) ${unit}.`;
+							textPrint = `Berechne den Umfang eines Parallelogramms: g = ${num1(g)} ${unit}, s = ${num1(side)} ${unit}.${space(1.5)}`;
+							s = `\\[ \\begin{aligned}
+							u &= 2 \\cdot (g+s) \\\\
+							u &= 2 \\cdot (${num1(g)} + ${num1(side)}) = ${num2(perimeter)} \\text{ ${unit}}
+							\\end{aligned} \\]`;
+						}
+					}
+					break;
+				}
+
+				case 'trapez': {
+					if (isInverse) {
+						const a = pickLen(2, 9, 2, 12);
+						const c = pickLen(2, 9, 2, 12);
+						const h = pickLen(2, 8, 2, 10);
+						const area = round2(((a + c) * h) / 2);
+						textDisplay = `Bei einem Trapez sind \\( A = ${num2(area)} \\) ${unit}², \\( c = ${num1(c)} \\) ${unit} und \\( h = ${num1(h)} \\) ${unit} gegeben.<br>Bestimme die Seite \\( a \\).`;
+						textPrint = `Trapez: A = ${num2(area)} ${unit}², c = ${num1(c)} ${unit}, h = ${num1(h)} ${unit}. Bestimme a.${space(2)}`;
+						s = `\\[ \\begin{aligned}
+						A &= \\frac{1}{2} \\cdot (a+c) \\cdot h \\\\
+						${num2(area)} &= \\frac{1}{2} \\cdot (a+${num1(c)}) \\cdot ${num1(h)} &&| \\cdot 2 \\\\
+						${num2(round2(area * 2))} &= (a+${num1(c)}) \\cdot ${num1(h)} &&| : ${num1(h)} \\\\
+						${num2(round2((area * 2) / h))} &= a+${num1(c)} &&| - ${num1(c)} \\\\
+						a &= ${num2(round2((area * 2) / h - c))} \\text{ ${unit}}
+						\\end{aligned} \\]`;
+					} else {
+						const a = pickLen(2, 9, 2, 12);
+						const c = pickLen(2, 9, 2, 12);
+						const h = pickLen(2, 8, 2, 10);
+						const area = round2(((a + c) * h) / 2);
+						textDisplay = `Berechne den Flächeninhalt eines Trapezes mit <br>\\( a = ${num1(a)} \\) ${unit}, \\( c = ${num1(c)} \\) ${unit} und \\( h = ${num1(h)} \\) ${unit}.`;
+						textPrint = `Berechne den Flächeninhalt eines Trapezes: a = ${num1(a)} ${unit}, c = ${num1(c)} ${unit}, h = ${num1(h)} ${unit}.${space(1.6)}`;
+						s = `\\[ \\begin{aligned}
+						A &= \\frac{1}{2} \\cdot (a+c) \\cdot h \\\\
+						A &= \\frac{1}{2} \\cdot (${num1(a)}+${num1(c)}) \\cdot ${num1(h)} = ${num2(area)} \\text{ ${unit}}^2
+						\\end{aligned} \\]`;
+					}
+					break;
+				}
+
+				case 'kreis': {
+					if (isInverse) {
+						const r = pickLen(1.5, 8, 1.2, 10);
+						if (Math.random() < 0.5) {
+							const area = round2(Math.PI * r * r);
+							textDisplay = `Bei einem Kreis ist der Flächeninhalt \\( A = ${num2(area)} \\) ${unit}² gegeben.<br>Bestimme den Radius \\( r \\).`;
+							textPrint = `Kreis: A = ${num2(area)} ${unit}². Bestimme r.${space(1.8)}`;
+							s = `\\[ \\begin{aligned}
+							A &= \\pi \\cdot r^2 \\\\
+							${num2(area)} &= \\pi \\cdot r^2 &&| :\\pi \\\\
+							${num2(round2(area / Math.PI))} &= r^2 &&| \\sqrt{\\phantom{0}} \\\\
+							r &= ${num2(round2(Math.sqrt(area / Math.PI)))} \\text{ ${unit}}
+							\\end{aligned} \\]`;
+						} else {
+							const perimeter = round2(2 * Math.PI * r);
+							textDisplay = `Bei einem Kreis ist der Umfang \\( u = ${num2(perimeter)} \\) ${unit} gegeben.<br>Bestimme den Radius \\( r \\).`;
+							textPrint = `Kreis: u = ${num2(perimeter)} ${unit}. Bestimme r.${space(1.8)}`;
+							s = `\\[ \\begin{aligned}
+							u &= 2 \\pi \\cdot r \\\\
+							${num2(perimeter)} &= 2 \\pi \\cdot r &&| :(2\\pi) \\\\
+							r &= ${num2(round2(perimeter / (2 * Math.PI)))} \\text{ ${unit}}
+							\\end{aligned} \\]`;
+						}
+					} else {
+						const r = pickLen(1.5, 8, 1.2, 10);
+						const goal = Math.random() < 0.5 ? 'A' : 'u';
+						if (goal === 'A') {
+							const area = round2(Math.PI * r * r);
+							textDisplay = `Berechne den Flächeninhalt eines Kreises mit \\( r = ${num1(r)} \\) ${unit}.`;
+							textPrint = `Berechne den Flächeninhalt eines Kreises: r = ${num1(r)} ${unit}.${space(1.5)}`;
+							s = `\\[ \\begin{aligned}
+							A &= \\pi \\cdot r^2 \\\\
+							A &= \\pi \\cdot ${num1(r)}^2 \\approx ${num2(area)} \\text{ ${unit}}^2
+							\\end{aligned} \\]`;
+						} else {
+							const perimeter = round2(2 * Math.PI * r);
+							textDisplay = `Berechne den Umfang eines Kreises mit \\( r = ${num1(r)} \\) ${unit}.`;
+							textPrint = `Berechne den Umfang eines Kreises: r = ${num1(r)} ${unit}.${space(1.5)}`;
+							s = `\\[ \\begin{aligned}
+							u &= 2 \\pi \\cdot r \\\\
+							u &= 2 \\pi \\cdot ${num1(r)} \\approx ${num2(perimeter)} \\text{ ${unit}}
+							\\end{aligned} \\]`;
+						}
+					}
+					break;
+				}
+
+				default: {
+					const innerR = pickLen(1.2, 6, 1, 7);
+					const outerR = round2(innerR + pickLen(0.8, 3, 0.8, 4));
+					const area = round2(Math.PI * (outerR * outerR - innerR * innerR));
+					textDisplay = `Berechne den Flächeninhalt eines Kreisrings mit <br>Außenradius \\( R = ${num1(outerR)} \\) ${unit} und Innenradius \\( r = ${num1(innerR)} \\) ${unit}.`;
+					textPrint = `Berechne den Flächeninhalt eines Kreisrings: R = ${num1(outerR)} ${unit}, r = ${num1(innerR)} ${unit}.${space(1.7)}`;
+					s = `\\[ \\begin{aligned}
+					A &= \\pi \\cdot (R^2-r^2) \\\\
+					A &= \\pi \\cdot (${num1(outerR)}^2-${num1(innerR)}^2) \\approx ${num2(area)} \\text{ ${unit}}^2
+					\\end{aligned} \\]`;
+					break;
 				}
 			}
-			else if (shapeType === 1) { // RECHTECK
-				sideA = rnd(2, 12); sideB = rnd(3, 7);
-				if (sideA === sideB) { sideB++ }
-				if (goal === 'A') {
-					textDisplay = `Berechne den Flächeninhalt eines Rechtecks mit <br>\\( a = ${sideA} \\) ${unit} und \\( b = ${sideB} \\) ${unit}.`;
-					s = `\\( A = a \\cdot b = ${sideA} \\cdot ${sideB} = ${sideA * sideB} \\text{ ${unit}}^2 \\)`;
-				} else {
-					textDisplay = `Berechne den Umfang eines Rechtecks mit <br>\\( a = ${sideA} \\) ${unit} und \\( b = ${sideB} \\) ${unit}.`;
-					s = `\\( u = 2 \\cdot (a+b) = 2 \\cdot (${sideA} + ${sideB}) = ${2 * (sideA + sideB)} \\text{ ${unit}} \\)`;
-				}
-			}
-			else { // DREIECK
-				sideA = rnd(2, 12); sideB = rnd(3, 7);
-				textDisplay = `Berechne den Flächeninhalt eines Dreiecks mit <br>Grundseite \\( g = ${sideA} \\) ${unit} und Höhe \\( h = ${sideB} \\) ${unit}.`;
-				s = `\\( A = \\frac{1}{2} \\cdot g \\cdot h = \\frac{1}{2} \\cdot ${sideA} \\cdot ${sideB} = ${(sideA * sideB) / 2} \\text{ ${unit}}^2 \\)`.replace('.', ',');
-			}
-			break;
-			
-		case 'round': {
-			const carryBias = 0.4; // Wahrscheinlichkeit für Übertrag (9 an der Rundungsstelle)
-			
-			rd = Math.random();
-			
-			let intPart = randInt(0, 9);
-			let d1, d2, d3;
-			
-			const useCarryCase = Math.random() < carryBias;
-			
-			if (rd > 0.8) {
-				d1 = randInt(2, 9); // Entscheidungsziffer (keine 0)
-				d2 = randInt(0, 9);
-				d3 = randInt(0, 9);
-				
-			} else if (rd > 0.4) {
-				// Rundung auf Zehntel → Rundungsstelle = d1
-				useCarryCase ? d1 = 9 : d1 = randInt(0, 9);
-				d2 = randInt(2, 9); // Entscheidungsziffer (keine 0)
-				d3 = randInt(1, 9);
-				
-			} else {
-				// Rundung auf Hundertstel → Rundungsstelle = d2
-				d1 = randInt(0, 9);
-				useCarryCase ? d2 = 9 : d2 = randInt(0, 9);
-				d3 = randInt(2, 9); // Entscheidungsziffer (keine 0)
-			}
-
-			let v1 = intPart + (d1 * 100 + d2 * 10 + d3) / 1000;
-			
-			let target, result, digits;
-			
-			if (rd > 0.8) {
-				target = "Ganze";
-				result = Math.round(v1);
-				digits = 0;
-			} else if (rd > 0.4) {
-				target = "Zehntel";
-				result = Math.round(v1 * 10) / 10;
-				digits = 1;
-			} else {
-				target = "Hundertstel";
-				result = Math.round(v1 * 100) / 100;
-				digits = 2;
-			}
-
-			textDisplay = `Runde auf ${target}: \\( \\quad ${comma(v1.toFixed(3))} \\approx \\) ${blank(2)}`;
-			s = `Runde auf ${target}: \\( \\; \\; ${comma(v1.toFixed(3))} \\approx ${comma(result.toFixed(digits))} \\)`;
 			break;
 		}
-		
+			
 		case 'equations': {
 			// 1. Bestimme die Lösung x (ein Vielfaches von 0,5)
 			// rnd(-20, 20) / 2 ergibt Werte wie -5, -4.5, -4, ..., 4.5, 5
@@ -1279,52 +1262,13 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			break;
 		}
 
-		case 'word_terms': {
-			const templates = [
-				{ text: (a, b) => `Addiere ${a} und ${b}.`, symbol: '+' },
-				{ text: (a, b) => `Subtrahiere ${b} von ${a}.`, symbol: '-' },
-				{ text: (a, b) => `Multipliziere ${a} und ${b}.`, symbol: '\\cdot' },
-				{ text: (a, b) => `Dividiere ${a} durch ${b}.`, symbol: ':' },
-				{ text: (a, b) => `Berechne die Summe von ${a} und ${b}.`, symbol: '+' },
-				{ text: (a, b) => `Berechne die Differenz von ${a} und ${b}.`, symbol: '-' },
-				{ text: (a, b) => `Berechne das Produkt von ${a} und ${b}.`, symbol: '\\cdot' },
-				{ text: (a, b) => `Berechne den Quotienten von ${a} und ${b}.`, symbol: ':' }
-			];
-
-			const template = templates[randInt(0, templates.length - 1)];
-
-			let a = rnd(-15, 15);
-			let b = rnd(-15, 15);
-			if (template.symbol === ':') {
-				b = 0;
-				while (b === 0) {
-					b = rnd(-12, 12);
-				}
-				const q = rnd(-12, 12);
-				a = b * q;
-			}
-
-			const result = template.symbol === '+'
-				? a + b
-				: template.symbol === '-'
-					? a - b
-					: template.symbol === '\\cdot'
-						? a * b
-						: a / b;
-
-			textDisplay = template.text(a, b);
-			textPrint = template.text(a, b);
-			s = `\\[ ${fmt(a)} ${template.symbol} ${fmt(b)} = ${result} \\]`;
-			break;
-		}
-
 		case 'linear_function': {
 			// Generiere eine zufällige lineare Funktion
 			let m;
-			let b = randInt(-8, 8) / 2; 
-			if (b >= 2) m = randInt(-6, -2) / 2;
-			else if (b <= -2) m = randInt(2, 6) / 2;
-			else m = randInt(-6, 6) / 2; 
+			let b = effectiveEasyMode ? randInt(-6, 6) / 2 : randInt(-8, 8) / 2;
+			if (b >= 2) m = effectiveEasyMode ? randInt(-4, -2) / 2 : randInt(-6, -2) / 2;
+			else if (b <= -2) m = effectiveEasyMode ? randInt(2, 4) / 2 : randInt(2, 6) / 2;
+			else m = effectiveEasyMode ? randInt(-4, 4) / 2 : randInt(-6, 6) / 2;
 
 			// Funktion
 			const f = (x) => m * x + b;
@@ -1457,113 +1401,6 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			</div>`;
 			break;
 		}
-
-	case 'zahlengerade': {
-		const isPositiveOnly = grade <= 6;
-		const tickBases = [1, 2, 3, 5];
-		const tickFactors = [1, 10, 100];
-		const tickDistance = tickBases[randInt(0, tickBases.length - 1)] * tickFactors[randInt(0, tickFactors.length - 1)];
-		const tickCount = randInt(5, 7);
-		const startValue = isPositiveOnly ? 0 : randInt(-3, 2) * tickDistance;
-		const endValue = startValue + tickDistance * (tickCount - 1);
-		const formatValue = (value) => Number.isInteger(value) ? `${value}` : formatDecimal(value, 1);
-		const getValueAt = (position) => startValue + position * tickDistance;
-		const svgWidth = 520;
-		const svgHeight = 140;
-		const margin = 40;
-		const axisY = 80;
-		const arrowSize = 10;
-		const lineStart = margin;
-		const lineEnd = svgWidth - margin - arrowSize;
-		const unitPx = (lineEnd - lineStart) / tickCount;
-		const tickOffset = unitPx / 2;
-		const getX = (position) => lineStart + tickOffset + position * unitPx;
-		const renderNumberLine = ({ labels = {}, markers = [], letters = [] } = {}) => {
-			let content = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid #ccc; background: white;">`;
-			content += `<line x1="${lineStart}" y1="${axisY}" x2="${lineEnd}" y2="${axisY}" stroke="black" stroke-width="2"/>`;
-		content += `<polygon points="${svgWidth - margin},${axisY} ${lineEnd},${axisY - 6} ${lineEnd},${axisY + 6}" fill="black"/>`;
-			for (let i = 0; i < tickCount; i++) {
-				const x = getX(i);
-				content += `<line x1="${x}" y1="${axisY - 8}" x2="${x}" y2="${axisY + 8}" stroke="black" stroke-width="1"/>`;
-				const label = labels[i];
-				if (label !== undefined) {
-					content += `<text x="${x}" y="${axisY + 24}" text-anchor="middle" font-size="12" fill="black">${label}</text>`;
-				}
-			}
-			for (const marker of markers) {
-				const x = getX(marker.position);
-				content += `<circle cx="${x}" cy="${axisY - 18}" r="5" fill="#e74c3c"/>`;
-				if (marker.text) {
-					content += `<text x="${x}" y="${axisY - 28}" text-anchor="middle" font-size="12" fill="black">${marker.text}</text>`;
-				}
-			}
-			for (const letter of letters) {
-				const x = getX(letter.position);
-				content += `<text x="${x}" y="${axisY - 28}" text-anchor="middle" font-size="14" fill="#2c3e50">${letter.label}</text>`;
-			}
-			content += `</svg>`;
-			return content;
-		};
-
-		const subtype = randInt(0, 2);
-		let svgContent = '';
-		if (subtype === 0) {
-			const markerIndex = randInt(1, tickCount - 2);
-			const markerOffset = Math.random() < 0.5 ? 0 : 0.5;
-			const markerPosition = markerIndex + markerOffset;
-			const markerValue = getValueAt(markerPosition);
-			const labels = {
-				0: formatValue(startValue),
-				[tickCount - 1]: formatValue(endValue)
-			};
-			svgContent = renderNumberLine({ labels, markers: [{ position: markerPosition, text: 'P' }] });
-			textDisplay = `Auf der Zahlengerade sind nur die Zahlen ${formatValue(startValue)} und ${formatValue(endValue)} eingetragen. Welche Zahl liegt beim markierten Punkt P?`;
-			textPrint = `Trage die Zahl ein: \\( \\underline{\\hspace{3cm}} \\) <br>${svgContent}`;
-			s = `\\( ${formatValue(markerValue)} \\)`;
-		} else if (subtype === 1) {
-			const knownIndices = [0, tickCount - 1];
-			if (tickCount >= 6) {
-				const extra = randInt(1, tickCount - 2);
-				knownIndices.splice(1, 0, extra);
-			}
-			const labels = {};
-			const missingValues = [];
-			for (let i = 0; i < tickCount; i++) {
-				if (knownIndices.includes(i)) {
-					labels[i] = formatValue(getValueAt(i));
-				} else {
-					labels[i] = '?';
-					missingValues.push(formatValue(getValueAt(i)));
-				}
-			}
-			svgContent = renderNumberLine({ labels });
-			textDisplay = `Trage die fehlenden Zahlen in die ?-Felder der Zahlengerade ein.`;
-			textPrint = `Vervollständige die Zahlengerade:<br>${svgContent}`;
-			s = `Die fehlenden Zahlen lauten: ${missingValues.map(value => `\\(${value}\\)`).join(', ')}`;
-		} else {
-			const possiblePositions = [];
-			for (let i = 1; i < tickCount - 1; i++) {
-				possiblePositions.push(i);
-				if (tickCount >= 6) {
-					possiblePositions.push(i + 0.5);
-				}
-			}
-			const shuffled = fisherYatesShuffle(possiblePositions);
-			const targetPositions = shuffled.slice(0, 3).sort((a, b) => a - b);
-			const letters = ['A', 'B', 'C'];
-			const values = targetPositions.map(pos => formatValue(getValueAt(pos)));
-			const letterMarkers = targetPositions.map((position, index) => ({ position, label: letters[index] }));
-			const labels = {
-				0: formatValue(startValue),
-				[tickCount - 1]: formatValue(endValue)
-			};
-			svgContent = renderNumberLine({ labels, letters: letterMarkers });
-			textDisplay = `Zeichne einen Zahlenstrahl von \\( ${formatValue(startValue)} \\) bis \\( ${formatValue(endValue)} \\) mit Abstand \\( ${formatValue(tickDistance)} \\). Trage die Zahlen ${values.map(v => `\\(${v}\\)`).join(', ')} an den passenden Punkten ein.`;
-			textPrint = `Zeichne den Zahlenstrahl und beschrifte die Punkte:<br>${svgContent}`;
-			s = letters.map((letter, index) => `${letter} = ${values[index]}`).join(', ');
-		}
-		break;
-	}
 
 	case 'wkt': {
 			let mode = randInt(0, 4); // 0: Urne (3 Farben), 1: Rel. Häufigkeit, 2: 12-seitiger Würfel, 3: Glücksrad, 4: Würfel 
@@ -1857,7 +1694,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			}
 
 			let sortedData = [...data].sort((a, b) => a - b);
-			let displayData = isMentalMode ? sortedData : data;
+			let displayData = effectiveEasyMode ? sortedData : data;
 
 			// Bestimmung der einen gesuchten Kenngröße
 			let taskType = randInt(0, 3);
@@ -1874,7 +1711,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					if (n === 5) {
 						// Bei 5 Daten: Genau der 3. Wert
 						let median = sortedData[2];
-						loesung = isMentalMode ?
+						loesung = effectiveEasyMode ?
 						`${displayData.join(', ')}<br>Zentralwert (Median) = ${median}.` :
 						`geordnete Liste: ${sortedData.join(', ')}<br>Zentralwert (Median) = ${median}`;
 					} else {
@@ -1884,7 +1721,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 						let median = (m1 + m2) / 2;
 						let medianStr = median.toString().replace('.', ',');
 						
-						loesung = isMentalMode ?
+						loesung = effectiveEasyMode ?
 							`${sortedData.join(', ')}<br>Zentralwert = (${m1} + ${m2}) : 2 = ${medianStr}` :
 							`geordnete Liste: ${sortedData.join(', ')}<br>Zentralwert = (${m1} + ${m2}) : 2 = ${medianStr}`;
 						}
@@ -2183,8 +2020,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'anteile': {
-			let einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
-			let rd = Math.random();
+			const einheit = ['€', 'm', 'kg', 't', 'g', 'm²', 'm³', 'ha', 's', 'h'][randInt(0, 9)];
+			const rd = Math.random();
 
 			// 1. Definition "schöner" Brüche (Zähler z, Nenner n)
 			const fractions = [
@@ -2193,44 +2030,47 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			];
 			
 			// Wähle einen zufälligen Bruch aus dem Pool
-			let frac = fractions[randInt(0, fractions.length - 1)];
-			let z = frac.z;
-			let n = frac.n;
+			const frac = fractions[randInt(0, fractions.length - 1)];
+			const z = frac.z;
+			const n = frac.n;
 			
 			if (rd > 0.6) {
 				// TYP 1: Anteil berechnen (Bruch von Ganzem)
 				// Damit es glatt aufgeht, muss das Ganze ein Vielfaches des Nenners sein.
-				let scale = Math.random() > 0.5 ? 10 : 1; // Sorgt manchmal für Hunderter/Zehner-Werte
-				let multiplier = isMentalMode ? rnd(2, 9) : rnd(3, 13);
-				let G = n * multiplier * scale; // Das Ganze (Grundwert)
-				let W = (G / n) * z;            // Der Anteil (Prozentwert)
+				const scale = Math.random() > 0.5 ? 10 : 1; // Sorgt manchmal für Hunderter/Zehner-Werte
+				const multiplier = effectiveEasyMode ? rnd(2, 9) : rnd(3, 13);
+				const normalFactor = effectiveEasyMode ? 1 : (randInt(10, 25) / 10);
+				const G = n * multiplier * scale * normalFactor; // Das Ganze (Grundwert)
+				const W = (G / n) * z;                           // Der Anteil
 
-				textDisplay = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)} ${einheit} sind ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)}  ${einheit} sind ${comma(W)} ${einheit}<br>
-				\\((${comma(G)} : ${n} \\cdot ${z} = ${comma(W)})\\)`;
+				textDisplay = `\\( \\frac{${z}}{${n}} \\) von ${dec1(G)} ${einheit} sind ${blank(3)}`;
+				s = `\\( \\frac{${z}}{${n}} \\) von ${dec1(G)} ${einheit} sind ${dec2(W)} ${einheit}<br>
+				\\((${dec1(G)} : ${n} \\cdot ${z} = ${dec2(W)})\\)`;
 
 			} else if (rd > 0.3) {
 				// TYP 2: Ganzes berechnen (Bruch sind Anteil von...)
 				// Damit es glatt aufgeht, muss der Anteil ein Vielfaches des Zählers sein.
-				let scale = Math.random() > 0.5 ? 10 : 1;
-				let multiplier = isMentalMode ? rnd(2, 9) : rnd(3, 13);
-				let W = z * multiplier * scale; // Der Anteil
-				let G = (W / z) * n;            // Das Ganze
+				const scale = Math.random() > 0.5 ? 10 : 1;
+				const multiplier = effectiveEasyMode ? rnd(2, 9) : rnd(3, 13);
+				const normalFactor = effectiveEasyMode ? 1 : (randInt(10, 25) / 10);
+				const W = z * multiplier * scale * normalFactor; // Der Anteil
+				const G = (W / z) * n;                            // Das Ganze
 				
-				textDisplay = `\\( \\frac{${z}}{${n}} \\)  sind ${comma(W)} ${einheit} von ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\) sind ${comma(W)} ${einheit} von ${comma(G)} ${einheit}<br>
-				\\((${comma(W)} : ${z} \\cdot ${n} = ${comma(G)})\\)`;
+				textDisplay = `\\( \\frac{${z}}{${n}} \\) sind ${dec2(W)} ${einheit} von ${blank(3)}`;
+				s = `\\( \\frac{${z}}{${n}} \\) sind ${dec2(W)} ${einheit} von ${dec2(G)} ${einheit}<br>
+				\\((${dec2(W)} : ${z} \\cdot ${n} = ${dec2(G)})\\)`;
 
 			} else {
 				// TYP 3: Bruch berechnen (Anteil von Ganzem sind...)
 				// Wir nehmen den generierten Bruch und erzeugen dazu passende glatte Werte.
-				let multiplier = isMentalMode ? rnd(2, 9) : rnd(3, 13);
+				const multiplier = effectiveEasyMode ? rnd(2, 9) : rnd(3, 13);
+				const normalFactor = effectiveEasyMode ? 1 : (randInt(10, 20) / 10);
 				
-				let W = z * multiplier;
-				let G = n * multiplier;
+				const W = z * multiplier * normalFactor;
+				const G = n * multiplier * normalFactor;
 				
-				textDisplay = `${comma(W)} ${einheit} von ${comma(G)}  ${einheit} sind ${blank(3)} (als gekürzter Bruch)`;
-				s = `${comma(W)}  ${einheit} von  ${comma(G)}  ${einheit} sind  \\(\\dfrac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\dfrac{${z}}{${n}} \\)`;
+				textDisplay = `${dec2(W)} ${einheit} von ${dec2(G)} ${einheit} sind ${blank(3)} (als gekürzter Bruch)`;
+				s = `${dec2(W)} ${einheit} von ${dec2(G)} ${einheit} sind \\(\\dfrac{${dec2(W)}}{${dec2(G)}}\\)`;
 			}
 			break;
 		}
@@ -2246,11 +2086,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 			const sz = szenarien[randInt(0, szenarien.length - 1)];
 			
-			// Hilfsfunktion für deutsches Zahlenformat
-			const de = (num) => {
-				if (sz.type === 'food' || sz.type === 'job') return comma(num.toFixed(2));
-				return Math.round(num).toString();
-			};
+			const de = (num) => dec2(num);
 
 			let menge1 = randInt(3, 6);
 			let menge2
@@ -2260,7 +2096,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			let einzelwert;
 			
 			// Realistische Werte je nach Typ festlegen
-			if (isMentalMode) {
+			if (effectiveEasyMode) {
 				if (sz.type === 'print') {
 					einzelwert = randInt(5, 15); // 5 bis 15 Seiten pro Minute
 				} else if (sz.type === 'job') {
@@ -2270,16 +2106,16 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				}
 			} else {
 				if (sz.type === 'print') {
-					einzelwert = randInt(5, 20); // 5 bis 20 Seiten pro Minute
+					einzelwert = randInt(50, 200) / 10; // 5,0 bis 20,0 Seiten pro Minute
 				} else if (sz.type === 'job') {
-					einzelwert = randInt(5, 9) + (Math.random() < 0.5 ? 0.5 : 0); // 5,00€ bis 9,50€ Stundenlohn
+					einzelwert = randInt(50, 95) / 10; // 5,0€ bis 9,5€ Stundenlohn
 				} else {
-					einzelwert = randInt(1, 7) * 0.2; // 0,20€ bis 1,40€ für Lebensmittel
+					einzelwert = randInt(2, 40) / 10; // 0,2€ bis 4,0€ für Lebensmittel
 				}
 			}
 
-			let wert1 = menge1 * einzelwert;
-			let wert2 = menge2 * einzelwert;
+			const wert1 = Number((menge1 * einzelwert).toFixed(2));
+			const wert2 = Number((menge2 * einzelwert).toFixed(2));
 
 			// 50% Chance, dass die Aufgabe umgedreht wird (Geld/Seiten -> Menge/Zeit)
 			let reverseQuestion = Math.random() < 0.3;
@@ -2393,7 +2229,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			};
 		
 			const pickSimpleValue = () => {
-				if (isMentalMode) {
+				if (effectiveEasyMode) {
 					if (Math.random() < 0.8) {
 						return randInt(1, 12); // bevorzugt ganze Zahlen
 					}
