@@ -181,6 +181,11 @@
     }
     .portal-card--kompetenz .portal-card-kicker { color: #e11d48; }
 
+    .portal-card--quiz-battle {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(254, 226, 226, 0.55) 100%);
+    }
+    .portal-card--quiz-battle .portal-card-kicker { color: #dc2626; }
+
 
     /* =====================================================================
 
