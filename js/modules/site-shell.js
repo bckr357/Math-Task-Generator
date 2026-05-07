@@ -17,35 +17,35 @@
             key: 'generator',
             label: 'Aufgabengenerator',
             icon: '📝',
-            url: 'generator/index.html',
+            url: 'generator/generator.html',
             desc: 'Aufgaben generieren & üben'
         },
         {
             key: 'generator-plus',
             label: 'Generator Plus',
             icon: '✨',
-            url: 'generator-plus/index.html',
+            url: 'generator-plus/generator-plus.html',
             desc: 'Weitere Aufgabentypen'
         },
         {
             key: 'visualisierung',
             label: 'Visualisierung',
             icon: '📊',
-            url: 'visualisierung/index.html',
+            url: 'visualisierung/visualisierung.html',
             desc: 'Mathe-Konzepte visuell erkunden'
         },
         {
             key: 'rechner-tools',
             label: 'Rechner-Tools',
             icon: '🧮',
-            url: 'rechner-tools/index.html',
+            url: 'rechner-tools/rechner-tools.html',
             desc: 'Flächen & Körper berechnen'
         },
         {
             key: 'kompetenzraster',
             label: 'Kompetenzraster',
             icon: '📋',
-            url: 'kompetenzraster/index.html',
+            url: 'kompetenzraster/kompetenzraster.html',
             desc: 'Klassen 5–10 im Überblick'
         }
     ];
