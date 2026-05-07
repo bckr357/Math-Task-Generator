@@ -7,7 +7,7 @@ const comma = formatUtils.comma;
 const formatDecimal = formatUtils.formatDecimal;
 
 const taskCategories = {
-	arithmetic: ['z_as', 'z_md', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'db_as', 'db_md', 'pow10', 'round', 'zahlengerade', 'vorrang'],
+	arithmetic: ['z_as', 'z_md', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'db_as', 'db_md', 'pow10', 'round', 'ueberschlag', 'zahlengerade', 'vorrang'],
 	tables: ['table_add', 'table_mul', 'table_sub', 'table_terms'],
 	fractions: ['frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'frac_order'],
 	percent: ['anteile', 'prop', 'percent', 'pv', 'units'],
@@ -23,13 +23,13 @@ const taskTypesByGrade = {
 	klasse5: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'geometry', 'winkel', 'schraegbild', 'statistik'
 	],
 	klasse6: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'anteile', 'percent', 'geometry', 'winkel', 'schraegbild', 'statistik', 'wkt'
 	],
 	klasse7: [
@@ -38,12 +38,12 @@ const taskTypesByGrade = {
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
 		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'word_terms', 'equations', 'equations_lin', 'formel_umstellen',
-		'round', 'zahlengerade', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
+		'round', 'ueberschlag', 'zahlengerade', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
 	],
 	klasse8: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
@@ -51,7 +51,7 @@ const taskTypesByGrade = {
 	klasse9: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
@@ -59,7 +59,7 @@ const taskTypesByGrade = {
 	klasse10: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'terme', 'word_terms', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz',
@@ -71,13 +71,13 @@ const quizTaskTypesByGrade = {
 	klasse5: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'geometry', 'winkel', 'schraegbild', 'statistik'
 	],
 	klasse6: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add',  'table_sub', 'table_mul','table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'anteile', 'percent', 'geometry', 'winkel', 'schraegbild', 'statistik', 'wkt'
 	],
 	klasse7: [
@@ -86,12 +86,12 @@ const quizTaskTypesByGrade = {
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
 		'anteile', 'prop', 'percent', 'pv', 
 		'equations', 'equations_lin', 'formel_umstellen',
-		'round', 'zahlengerade', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
+		'round', 'ueberschlag', 'zahlengerade', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse8: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
@@ -99,14 +99,14 @@ const quizTaskTypesByGrade = {
 	klasse9: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'schriftlich_as', 'schriftlich_md', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'table_add', 'table_sub', 'table_mul', 'table_terms',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 
 		'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse10: [
 		'teiler', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang', 'primzahlen',
-		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'zahlengerade',
+		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag', 'zahlengerade',
 		'anteile', 'prop', 'percent', 'pv', 'word_terms',
 		'equations', 'geometry', 'winkel', 'statistik', 'wkt'
 	]
@@ -143,6 +143,7 @@ const typeDefinitions = [
 	['db_md', 'Dezimalbrüche ×/÷', 'Dezimalbrüche multiplizieren und dividieren'],
 	['pow10', 'Zehnerpotenzen ×/÷', 'Multiplikation und Division mit Zehnerpotenzen'],
 	['vorrang', 'Vorrangregeln', 'Terme mit Vorrangregeln berechnen'],
+	['ueberschlag', 'Überschlag', 'Sinnvolle Überschläge für Grundrechenaufgaben bilden'],
 	
 	// Tabellen / Kopfrechnen
 	['table_add', 'Additionstabelle', 'Tabellenaufgaben mit Summen'],
@@ -1721,6 +1722,82 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 			textDisplay = `Runde auf ${target}: \\( \\quad ${comma(v1.toFixed(3))} \\approx \\) ${blank(2)}`;
 			s = `Runde auf ${target}: \\( \\; \\; ${comma(v1.toFixed(3))} \\approx ${comma(result.toFixed(digits))} \\)`;
+			break;
+		}
+
+		case 'ueberschlag': {
+			const trim2 = (value) => Number(value.toFixed(2));
+			const isOneDecimal = (value) => Math.abs(value * 10 - Math.round(value * 10)) < 1e-9;
+			const fmtNum = (value) => {
+				const v = trim2(value);
+				if (Number.isInteger(v)) return `${v}`;
+				return comma(v.toFixed(isOneDecimal(v) ? 1 : 2));
+			};
+			const fmtInt = (value) => `${Math.round(value)}`;
+
+			const applyOperator = (acc, operator, val) => (operator === '+' ? acc + val : acc - val);
+			const offsetPool = [-0.2, -0.1, -0.05, 0.05, 0.1, 0.2];
+
+			const addOffset = (value) => {
+				let shifted = value;
+				for (let tries = 0; tries < 15; tries++) {
+					const delta = offsetPool[randInt(0, offsetPool.length - 1)];
+					const next = trim2(value + delta);
+					if (next > 0 && Math.abs(next - value) >= 0.01) {
+						shifted = next;
+						break;
+					}
+				}
+				return shifted;
+			};
+
+			const makeBaseInt = () => rnd(8, 180);
+
+			const mode = ['addsub', 'mul', 'div'][randInt(0, 2)];
+			let taskExpr = '';
+			let roundedExpr = '';
+			let estimateResult = 0;
+
+			if (mode === 'addsub') {
+				const termCount = randInt(3, 5);
+				const baseTerms = Array.from({ length: termCount }, () => makeBaseInt());
+				const operators = Array.from({ length: termCount - 1 }, () => (Math.random() < 0.35 ? '-' : '+'));
+
+				const taskTerms = baseTerms.map((v) => addOffset(v));
+
+				estimateResult = baseTerms.slice(1).reduce(
+					(acc, val, idx) => applyOperator(acc, operators[idx], val),
+					baseTerms[0]
+				);
+
+				taskExpr = `${fmtNum(taskTerms[0])} ${taskTerms.slice(1).map((val, idx) => `${operators[idx]} ${fmtNum(val)}`).join(' ')}`;
+				roundedExpr = `${fmtNum(baseTerms[0])} ${baseTerms.slice(1).map((val, idx) => `${operators[idx]} ${fmtNum(val)}`).join(' ')}`;
+			} else if (mode === 'mul') {
+				const baseA = makeBaseInt();
+				const baseB = makeBaseInt();
+				const taskA = addOffset(baseA);
+				const taskB = addOffset(baseB);
+
+				estimateResult = baseA * baseB;
+
+				taskExpr = `${fmtNum(taskA)} \\cdot ${fmtNum(taskB)}`;
+				roundedExpr = `${fmtNum(baseA)} \\cdot ${fmtNum(baseB)}`;
+			} else {
+				const baseDivisor = rnd(3, 18);
+				const baseQuotient = rnd(3, 40);
+				const baseDividend = trim2(baseDivisor * baseQuotient);
+
+				const taskDividend = addOffset(baseDividend);
+				const taskDivisor = addOffset(baseDivisor);
+
+				estimateResult = baseDividend / baseDivisor;
+
+				taskExpr = `${fmtNum(taskDividend)} : ${fmtNum(taskDivisor)}`;
+				roundedExpr = `${fmtNum(baseDividend)} : ${fmtNum(baseDivisor)}`;
+			}
+
+			textDisplay = `Bilde nur einen sinnvollen Überschlag: <br>\\( ${taskExpr} \\)`;
+			s = `Überschlag: \\( ${roundedExpr} \\approx ${fmtInt(estimateResult)} \\)`;
 			break;
 		}
 		
