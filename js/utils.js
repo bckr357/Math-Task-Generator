@@ -64,6 +64,30 @@ const formatUtils = {
         return Number(val.toFixed(maxDecimals)).toString().replace('.', ',');
     },
 
+    // Gibt eine Zahl mit genau `decimals` Nachkommastellen zurück.
+    // Beispiel: 2 -> "2,00" bei decimals=2.
+    formatFixedDecimal: (val, decimals = 2) => {
+        if (typeof val !== 'number' || !isFinite(val)) {
+            return String(val);
+        }
+        return Number(val).toFixed(decimals).replace('.', ',');
+    },
+
+    // Formatiert Werte einheitenabhängig.
+    // Für Euro wird immer fest auf 2 Nachkommastellen formatiert.
+    // Für andere Einheiten werden maxDecimals (ohne unnötige Nullen) verwendet.
+    formatByUnit: (val, unit, maxDecimals = 2) => {
+        if (unit === '€') {
+            return formatUtils.formatFixedDecimal(val, 2);
+        }
+        return formatUtils.formatDecimal(val, maxDecimals);
+    },
+
+    // Formatiert einen Prozentwert mit fester Nachkommastellenzahl.
+    formatPercent: (val, decimals = 2) => {
+        return `${formatUtils.formatFixedDecimal(val, decimals)} %`;
+    },
+
     /**
      * Formatiert eine Zahl mit Vorzeichen für mathematische Ausdrücke
      * @param {number} value - Die zu formatierende Zahl

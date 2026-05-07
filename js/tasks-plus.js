@@ -5,6 +5,9 @@
 const fmt = formatUtils.fmt;
 const comma = formatUtils.comma;
 const formatDecimal = formatUtils.formatDecimal;
+const formatFixedDecimal = formatUtils.formatFixedDecimal;
+const formatByUnit = formatUtils.formatByUnit;
+const formatPercent = formatUtils.formatPercent;
 
 const taskCategories = {
 	arithmetic: [],
@@ -17,7 +20,7 @@ const taskCategories = {
 	],
 	algebra: ['terme', 'equations', 'equations_adv', 'equations_system', 'formel_umstellen'],
 	geometry: ['geometry', 'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring', 'winkel', 'schraegbild', 'kongruenz'],
-	functions: ['linear_function'],
+	functions: ['linear_function', 'funktionen_linear', 'funktionen_quadratisch'],
 	statistics: ['statistik', 'wkt']
 };
 
@@ -41,7 +44,7 @@ const taskTypesByGrade = {
 		'terme', 'equations', 'equations_lin', 'formel_umstellen',
 		'geometry',
 		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez',
-		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
+		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
 	],
 	klasse8: [
 		'units',
@@ -52,7 +55,7 @@ const taskTypesByGrade = {
 		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
 		'geometry',
 		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
-		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
+		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
 	],
 	klasse9: [
 		'units',
@@ -63,7 +66,7 @@ const taskTypesByGrade = {
 		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
 		'geometry',
 		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
-		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function'
+		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
 	],
 	klasse10: [
 		'units',
@@ -75,7 +78,7 @@ const taskTypesByGrade = {
 		'geometry',
 		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
 		'winkel', 'schraegbild', 'kongruenz',
-		'statistik', 'wkt', 'linear_function'
+		'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
 	]
 };
 
@@ -130,7 +133,8 @@ const typeDefinitions = [
 	// Funktionen, Statistik & Wahrscheinlichkeiten
 	['wkt', 'Wahrscheinlichkeiten', 'Wahrscheinlichkeiten bestimmen'],
 	['linear_function', 'Lineare Funktionen zeichnen', 'Lineare Funktionen grafisch darstellen'],
-	// ['funktionen', 'Funktionen', 'Funktionswerte, Argumente und Eigenschaften von Funktionen bestimmen'],
+	['funktionen_linear', 'Lineare Funktionen berechnen', 'Funktionswerte, Argumente und Eigenschaften linearer Funktionen bestimmen'],
+	['funktionen_quadratisch', 'Quadratische Funktionen berechnen', 'Funktionswerte, Argumente und Eigenschaften quadratischer Funktionen bestimmen'],
 	['statistik', 'Statistik', 'Kenngrößen der Statistik bestimmen']
 ];
 
@@ -249,8 +253,6 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 
 	let v1, v2;
 	let rd;
-	const dec1 = (value) => formatDecimal(value, 1);
-	const dec2 = (value) => formatDecimal(value, 2);
 	switch (normalizedType) {
 
 		case 'percent':
@@ -261,8 +263,8 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 			if (rd > 0.5) {
 				pVal = effectiveEasyMode ? rnd(2, 11) * 100 : randInt(250, 2800) / 10;
 				p = [3, 4, 5, 6, 7, 8, 9, 11, 12, 20, 25, 30, 35, 40, 60, 70, 80, 90][randInt(0, 17)];
-				textDisplay = `${p} % von ${dec1(pVal)} ${einheit} sind ${blank(3)}`;
-				s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${p} % ≙ <b>${dec2((pVal / 100) * p)} ${einheit}</b>`;
+				textDisplay = `${p} % von ${formatByUnit(pVal, einheit, 1)} ${einheit} sind ${blank(3)}`;
+				s = `100 % ≙ ${formatByUnit(pVal, einheit, 1)} ${einheit}<br>1 % ≙ ${formatByUnit(pVal / 100, einheit, 2)} ${einheit}<br>${p} % ≙ <b>${formatByUnit((pVal / 100) * p, einheit, 2)} ${einheit}</b>`;
 			} else if (rd > 0.3) {
 				p = [20, 25, 30, 40, 50, 60, 70, 80, 90][randInt(0, 8)];
 				if (effectiveEasyMode) {
@@ -271,15 +273,15 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 					const baseValue = randInt(200, 4000) / 10;
 					pVal = (baseValue * p) / 100;
 				}
-				textDisplay = `${p} % sind ${dec2(pVal)} ${einheit} von ${blank(3)}`;
-				s = `${p} % ≙ ${dec2(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / p)} ${einheit}<br>100 % ≙ <b>${dec2((pVal / p) * 100)} ${einheit}</b>`;
+				textDisplay = `${p} % sind ${formatByUnit(pVal, einheit, 2)} ${einheit} von ${blank(3)}`;
+				s = `${p} % ≙ ${formatByUnit(pVal, einheit, 2)} ${einheit}<br>1 % ≙ ${formatByUnit(pVal / p, einheit, 2)} ${einheit}<br>100 % ≙ <b>${formatByUnit((pVal / p) * 100, einheit, 2)} ${einheit}</b>`;
 			} else {
 				const pList = effectiveEasyMode ? [2, 3, 5, 10, 20, 25, 50, 75, 80, 90] : [2, 3, 5, 10, 15, 20, 25, 40, 50, 75, 80, 90, 95];
 				const p = pList[randInt(0, pList.length - 1)];
 				const G = effectiveEasyMode ? (rnd(2, 15) * 10) : (randInt(200, 4500) / 10);
 				const W = (G * p) / 100;
-				textDisplay = `${dec2(W)} ${einheit} von ${dec1(G)} ${einheit} sind ${blank(2)} %`;
-				s = `100 % ≙ ${dec1(G)} ${einheit}<br>1 % ≙ ${dec2(G / 100)} ${einheit}<br><b>${p} %</b> ≙ ${dec2(W)} ${einheit}`;
+				textDisplay = `${formatByUnit(W, einheit, 2)} ${einheit} von ${formatByUnit(G, einheit, 1)} ${einheit} sind ${blank(2)} %`;
+				s = `100 % ≙ ${formatByUnit(G, einheit, 1)} ${einheit}<br>1 % ≙ ${formatByUnit(G / 100, einheit, 2)} ${einheit}<br><b>${p} %</b> ≙ ${formatByUnit(W, einheit, 2)} ${einheit}`;
 			}
 			break;
 
@@ -290,35 +292,35 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 			const pvType = randInt(0, 5); // 0: Erhöhung um p%, 1: Reduzierung um p%, 2: Erhöhung auf 100+p%, 3: Reduzierung auf 100-p%, 4: Rabatt-Fall 1, 5: Rabatt-Fall 2
 			switch (pvType) {
 				case 0: // Erhöhung um p%
-					textDisplay = `${dec1(pVal)} ${einheit} um ${p} % erhöht sind ${blank(3)}`;
-					s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${100 + p} % ≙ <b>${dec2(pVal + ((pVal / 100) * p))} ${einheit}</b>`;
+					textDisplay = `${formatByUnit(pVal, einheit, 1)} ${einheit} um ${p} % erhöht sind ${blank(3)}`;
+					s = `100 % ≙ ${formatByUnit(pVal, einheit, 1)} ${einheit}<br>1 % ≙ ${formatByUnit(pVal / 100, einheit, 2)} ${einheit}<br>${100 + p} % ≙ <b>${formatByUnit(pVal + ((pVal / 100) * p), einheit, 2)} ${einheit}</b>`;
 					break;
 				case 1: // Reduzierung um p%
-					textDisplay = `${dec1(pVal)} ${einheit} um ${p} % reduziert sind ${blank(3)}`;
-					s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${100 - p} % ≙ <b>${dec2(pVal - ((pVal / 100) * p))} ${einheit}</b>`;
+					textDisplay = `${formatByUnit(pVal, einheit, 1)} ${einheit} um ${p} % reduziert sind ${blank(3)}`;
+					s = `100 % ≙ ${formatByUnit(pVal, einheit, 1)} ${einheit}<br>1 % ≙ ${formatByUnit(pVal / 100, einheit, 2)} ${einheit}<br>${100 - p} % ≙ <b>${formatByUnit(pVal - ((pVal / 100) * p), einheit, 2)} ${einheit}</b>`;
 					break;
 				case 2: // Erhöhung auf 100+p%
-					textDisplay = `${dec1(pVal)} ${einheit} auf ${100 + p} % erhöht sind ${blank(3)}`;
-					s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${100 + p} % ≙ <b>${dec2(pVal + ((pVal / 100) * p))} ${einheit}</b>`;
+					textDisplay = `${formatByUnit(pVal, einheit, 1)} ${einheit} auf ${100 + p} % erhöht sind ${blank(3)}`;
+					s = `100 % ≙ ${formatByUnit(pVal, einheit, 1)} ${einheit}<br>1 % ≙ ${formatByUnit(pVal / 100, einheit, 2)} ${einheit}<br>${100 + p} % ≙ <b>${formatByUnit(pVal + ((pVal / 100) * p), einheit, 2)} ${einheit}</b>`;
 					break;
 				case 3: // Reduzierung auf 100-p%
-					textDisplay = `${dec1(pVal)} ${einheit} auf ${100 - p} % reduziert sind ${blank(3)}`;
-					s = `100 % ≙ ${dec1(pVal)} ${einheit}<br>1 % ≙ ${dec2(pVal / 100)} ${einheit}<br>${100 - p} % ≙ <b>${dec2(pVal - ((pVal / 100) * p))} ${einheit}</b>`;
+					textDisplay = `${formatByUnit(pVal, einheit, 1)} ${einheit} auf ${100 - p} % reduziert sind ${blank(3)}`;
+					s = `100 % ≙ ${formatByUnit(pVal, einheit, 1)} ${einheit}<br>1 % ≙ ${formatByUnit(pVal / 100, einheit, 2)} ${einheit}<br>${100 - p} % ≙ <b>${formatByUnit(pVal - ((pVal / 100) * p), einheit, 2)} ${einheit}</b>`;
 					break;
 				case 4: {// Rabatt-Fall 1
 					p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
 					const originalPrice = pVal;
 					const discountedPrice = originalPrice - (originalPrice / 100 * p);
-					textDisplay = `${p} % Rabatt auf ${dec1(originalPrice)} €. Neuer Preis: ${blank(3)}`;
-					s = `100 % ≙ ${dec1(originalPrice)} €<br>1 % ≙ ${dec2(originalPrice / 100)} €<br>${100 - p} % ≙ <b>${dec2(discountedPrice)} €</b>`;
+					textDisplay = `${p} % Rabatt auf ${formatFixedDecimal(originalPrice, 2)} €. Neuer Preis: ${blank(3)}`;
+					s = `100 % ≙ ${formatFixedDecimal(originalPrice, 2)} €<br>1 % ≙ ${formatFixedDecimal(originalPrice / 100, 2)} €<br>${100 - p} % ≙ <b>${formatFixedDecimal(discountedPrice, 2)} €</b>`;
 					break;
 				}
 				case 5: {// Rabatt-Fall 2
 					p = [3, 4, 5, 6, 7, 10, 20, 25][randInt(0, 7)];
 					const originalPrice = pVal;
 					const discountedPrice = originalPrice - (originalPrice / 100 * p);
-					textDisplay = `Preissenkung von ${dec1(originalPrice)} € auf ${dec2(discountedPrice)} €. Rabatt: ${blank(2)} %`;
-					s = `100 % ≙ ${dec1(originalPrice)} €<br>1 % ≙ ${dec2(originalPrice / 100)} €<br><b>${p} %</b> ≙ ${dec2(originalPrice - discountedPrice)} €`;
+					textDisplay = `Preissenkung von ${formatFixedDecimal(originalPrice, 2)} € auf ${formatFixedDecimal(discountedPrice, 2)} €. Rabatt: ${blank(2)} %`;
+					s = `100 % ≙ ${formatFixedDecimal(originalPrice, 2)} €<br>1 % ≙ ${formatFixedDecimal(originalPrice / 100, 2)} €<br><b>${p} %</b> ≙ ${formatFixedDecimal(originalPrice - discountedPrice, 2)} €`;
 					break;
 				}
 			}
@@ -420,8 +422,8 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 			const unit = lengthUnits[randInt(0, lengthUnits.length - 1)];
 			const rndD1 = (min, max) => randInt(Math.round(min * 10), Math.round(max * 10)) / 10;
 			const round2 = (val) => Math.round(val * 100) / 100;
-			const num1 = (val) => comma(formatDecimal(val, 1));
-			const num2 = (val) => comma(formatDecimal(val, 2));
+			const num1 = (val) => formatDecimal(val, 1);
+			const num2 = (val) => formatDecimal(val, 2);
 			const geometryShapeByType = {
 				geometry_rechteck: 'rechteck',
 				geometry_dreieck: 'dreieck',
@@ -747,7 +749,7 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 			const forms = ['ax+by=c', 'ax+c=by', 'ax=by+c', 'by=ax+c'];
 			const form = forms[randInt(0, forms.length - 1)];
 
-			const formatHalf = (val) => Number.isInteger(val) ? `${val}` : comma(val.toFixed(1));
+			const formatHalf = (val) => Number.isInteger(val) ? `${val}` : formatFixedDecimal(val, 1);
 			const cleanHalf = (val) => Math.round(val * 2) / 2;
 			const varTerm = (coef, variable, withSign = false) => {
 				const abs = Math.abs(coef);
@@ -1391,7 +1393,7 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 			textDisplay = `Zeichne den Graphen und gib die Nullstelle an: \\( ${funcStr} \\)`;
 			textPrint = `Zeichne und gib die Nullstelle an: \\( \\; ${funcStr} \\) ${karo(11, 20)}` ;
 
-			const x0 = comma(formatDecimal(xIntercept, 2));
+			const x0 = formatDecimal(xIntercept, 2);
 			s = `<div style="display:flex; justify-content: center; align-items:center; gap:20px;">
 				<div style="min-width:180px;">
 					<span>\\( ${funcStr} \\)</span><br><br>
@@ -1436,7 +1438,7 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 				
 				taskStr = `${sz.txt} ${gesamt} ${sz.einheit} ${treffer} ${sz.e}.<br>Nenne die relative Häufigkeit in %.`;
 				let prozent = (treffer / gesamt) * 100;
-				resStr = `h = \\( \\dfrac{${treffer}}{${gesamt}} \\) = ${prozent.toFixed(0).replace('.', ',')} %`;
+				resStr = `h = \\( \\dfrac{${treffer}}{${gesamt}} \\) = ${formatFixedDecimal(prozent, 0)} %`;
 				
 			} else if (mode === 2) {
 				// --- TYP: 12-SEITIGER WÜRFEL (D12) ---
@@ -1518,120 +1520,410 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 			break;
 		}
 
-		case 'funktionen': {
-			let subType = randInt(0, 6);
-			
-			// Hilfsvariablen für die Funktionserstellung
-			let isLinear = randInt(0, 1) === 0;
-			let m = randInt(-4, 4);
-			if (m === 0) m = 2; // Steigung 0 vermeiden
-			let b = randInt(-5, 5);
-			
-			let funcStr = "";
-			let calcF = (x) => 0;
-			
-			// Funktion generieren (Linear oder Quadratisch)
-			if (isLinear) {
-				calcF = (x) => m * x + b;
-				let mStr = m === 1 ? "" : (m === -1 ? "-" : fmt(m));
-				let bStr = b > 0 ? ` + ${b}` : (b < 0 ? ` - ${Math.abs(b)}` : "");
-				funcStr = `f(x) = ${mStr}x${bStr}`;
-			} else {
-				let quadType = randInt(0, 1);
-				if (quadType === 0) {
-					// Normalparabel verschoben: x^2 + c
-					calcF = (x) => x * x + b;
-					let bStr = b > 0 ? ` + ${b}` : (b < 0 ? ` - ${Math.abs(b)}` : "");
-					funcStr = `f(x) = x^2${bStr}`;
-				} else {
-					// Gestreckte/Gestauchte Parabel: a*x^2
-					let a = randInt(2, 4) * (randInt(0, 1) === 0 ? 1 : -1);
-					calcF = (x) => a * x * x;
-					funcStr = `f(x) = ${a}x^2`;
+		// ── Lineare Funktionen ──────────────────────────────────────────────────
+		case 'funktionen_linear': {
+			const fmtFunctionNumber = (value) => comma(value);
+			const choose = (values) => values[randInt(0, values.length - 1)];
+			const appendConstant = (expr, value) => {
+				if (value > 0) return `${expr} + ${fmtFunctionNumber(value)}`;
+				if (value < 0) return `${expr} - ${fmtFunctionNumber(Math.abs(value))}`;
+				return expr;
+			};
+			const oppositeOperation = (value) => value >= 0
+				? `- ${fmtFunctionNumber(Math.abs(value))}`
+				: `+ ${fmtFunctionNumber(Math.abs(value))}`;
+			const buildLinearExpression = (slope, intercept) => {
+				const mStr = slope === 1 ? '' : (slope === -1 ? '-' : fmtFunctionNumber(slope));
+				return appendConstant(`${mStr}x`, intercept);
+			};
+			const buildValueTable = (calcF, isFilled, isCentered = true) => {
+				const xValues = [-2, -1, 0, 1, 2];
+				const xRow = xValues.map((x, idx) => `<td style="padding:6px 10px; text-align:center; min-width:40px; border-bottom:1px solid #333; ${idx < xValues.length - 1 ? 'border-right:1px solid #333;' : ''}">${fmtFunctionNumber(x)}</td>`).join('');
+				const yRow = xValues.map((x, idx) => {
+					const value = isFilled ? `${fmtFunctionNumber(calcF(x))}` : '&nbsp;';
+					return `<td style="padding:6px 10px; text-align:center; min-width:34px; ${idx < xValues.length - 1 ? 'border-right:1px solid #333;' : ''}">${value}</td>`;
+				}).join('');
+				return `<table style="border-collapse:separate; border-spacing:0; margin:${isCentered ? '8px auto 0 auto' : '8px 0 0 0'};">` +
+					`<tr><th style="padding:6px 10px; min-width:30px; font-weight:400; border-right:1px solid #333; border-bottom:1px solid #333;">x</th>${xRow}</tr>` +
+					`<tr><th style="padding:6px 10px; min-width:30px; font-weight:400; border-right:1px solid #333;">y</th>${yRow}</tr>` +
+				`</table>`;
+			};
+			const buildLinearFunction = () => {
+				const slope = choose([-4, -3, -2, -1, 1, 2, 3, 4]);
+				const root = randInt(-8, 8) / 2;
+				const intercept = -slope * root;
+				const exprStr = buildLinearExpression(slope, intercept);
+				return {
+					slope,
+					intercept,
+					root,
+					exprStr,
+					funcStr: `f(x) = ${exprStr}`,
+					calcF: (x) => slope * x + intercept
+				};
+			};
+
+			const subType = choose([0, 1, 2, 3, 4, 5]);
+			let functionData = buildLinearFunction();
+			let funcStr = functionData.funcStr;
+			let calcF = functionData.calcF;
+			let exprStr = functionData.exprStr;
+
+			switch (subType) {
+				case 0: {
+					const xVal = randInt(-8, 8) / 2;
+					textDisplay = `Berechne bei der Funktion \\( ${funcStr} \\) den Funktionswert zum Argument \\( ${fmtFunctionNumber(xVal)} \\).`;
+					s = `\\( f(${fmtFunctionNumber(xVal)}) = ${exprStr.replace(/x/g, `(${fmtFunctionNumber(xVal)})`)} = ${fmtFunctionNumber(calcF(xVal))} \\)`;
+					break;
+				}
+				case 1: {
+					const targetX = randInt(-8, 8) / 2;
+					const targetY = calcF(targetX);
+					const lines = [];
+					if (functionData.intercept !== 0) {
+						lines.push(`${fmtFunctionNumber(targetY)} &= ${exprStr} &&| \\, ${oppositeOperation(functionData.intercept)}`);
+						lines.push(`${fmtFunctionNumber(targetY - functionData.intercept)} &= ${functionData.slope === 1 ? '' : (functionData.slope === -1 ? '-' : fmtFunctionNumber(functionData.slope))}x &&| \\, : ${fmtFunctionNumber(functionData.slope)}`);
+					} else {
+						lines.push(`${fmtFunctionNumber(targetY)} &= ${functionData.slope === 1 ? '' : (functionData.slope === -1 ? '-' : fmtFunctionNumber(functionData.slope))}x &&| \\, : ${fmtFunctionNumber(functionData.slope)}`);
+					}
+					lines.push(`x &= ${fmtFunctionNumber(targetX)}`);
+					textDisplay = `Berechne bei der Funktion \\( ${funcStr} \\) das Argument zum Funktionswert \\( ${fmtFunctionNumber(targetY)} \\).`;
+					s = `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]`;
+					break;
+				}
+				case 2: {
+					functionData = buildLinearFunction();
+					funcStr = functionData.funcStr;
+					exprStr = functionData.exprStr;
+					const lines = [];
+					if (functionData.intercept !== 0) {
+						lines.push(`${exprStr} &= 0 &&| \\, ${oppositeOperation(functionData.intercept)}`);
+						lines.push(`${functionData.slope === 1 ? '' : (functionData.slope === -1 ? '-' : fmtFunctionNumber(functionData.slope))}x &= ${fmtFunctionNumber(-functionData.intercept)} &&| \\, : ${fmtFunctionNumber(functionData.slope)}`);
+					} else {
+						lines.push(`${functionData.slope === 1 ? '' : (functionData.slope === -1 ? '-' : fmtFunctionNumber(functionData.slope))}x &= 0 &&| \\, : ${fmtFunctionNumber(functionData.slope)}`);
+					}
+					lines.push(`x &= ${fmtFunctionNumber(functionData.root)}`);
+					textDisplay = `Bestimme die Nullstelle von \\( ${funcStr} \\).`;
+					s = `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]`;
+					break;
+				}
+				case 3: {
+					const px = randInt(-4, 4) / 2;
+					const py = calcF(px);
+					if (randInt(0, 1) === 0) {
+						textDisplay = `\\( P(${fmtFunctionNumber(px)} | y) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( y \\).`;
+						s = `\\( y = f(${fmtFunctionNumber(px)}) = ${exprStr.replace(/x/g, `(${fmtFunctionNumber(px)})`)} = ${fmtFunctionNumber(py)} \\)`;
+					} else {
+						const lines = [];
+						textDisplay = `\\( P(x | ${fmtFunctionNumber(py)}) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( x \\).`;
+						if (functionData.intercept !== 0) {
+							lines.push(`${fmtFunctionNumber(py)} &= ${exprStr} &&| \\, ${oppositeOperation(functionData.intercept)}`);
+							lines.push(`${fmtFunctionNumber(py - functionData.intercept)} &= ${functionData.slope === 1 ? '' : (functionData.slope === -1 ? '-' : fmtFunctionNumber(functionData.slope))}x &&| \\, : ${fmtFunctionNumber(functionData.slope)}`);
+						} else {
+							lines.push(`${fmtFunctionNumber(py)} &= ${functionData.slope === 1 ? '' : (functionData.slope === -1 ? '-' : fmtFunctionNumber(functionData.slope))}x &&| \\, : ${fmtFunctionNumber(functionData.slope)}`);
+						}
+						lines.push(`x &= ${fmtFunctionNumber(px)}`);
+						s = `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]`;
+					}
+					break;
+				}
+				case 4: {
+					textDisplay = `Fülle die Wertetabelle für \\( ${funcStr} \\) aus. Nutze die x-Werte \\( -2, -1, 0, 1, 2 \\).`;
+					textPrint = `Fülle die Wertetabelle für \\( ${funcStr} \\) aus. Nutze die x-Werte \\( -2, -1, 0, 1, 2 \\).`;
+					s = `${buildValueTable(calcF, true)}<br>Kontrolle: Trage z. B. die Punkte \\( P(-1|${fmtFunctionNumber(calcF(-1))}) \\), \\( Q(0|${fmtFunctionNumber(calcF(0))}) \\) und \\( R(1|${fmtFunctionNumber(calcF(1))}) \\) in das Koordinatensystem ein.`;
+					break;
+				}
+				case 5: {
+					const testX = randInt(-6, 6) / 2;
+					const isTrue = randInt(0, 1) === 0;
+					const realY = calcF(testX);
+					const testY = isTrue ? realY : realY + choose([-2, -1, 1, 2]);
+					textDisplay = `Punktprobe:<br>Liegt \\( P(${fmtFunctionNumber(testX)} | ${fmtFunctionNumber(testY)}) \\) auf \\( ${funcStr} \\)?`;
+					if (isTrue) {
+						s = `\\( f(${fmtFunctionNumber(testX)}) = ${fmtFunctionNumber(realY)} = ${fmtFunctionNumber(testY)} \\)<br>Ja, der Punkt liegt auf dem Graphen.`;
+					} else {
+						s = `\\( f(${fmtFunctionNumber(testX)}) = ${fmtFunctionNumber(realY)} \\neq ${fmtFunctionNumber(testY)} \\)<br>Nein, der Punkt liegt nicht auf dem Graphen.`;
+					}
+					break;
 				}
 			}
-			
-			// 7 Teilaufgabentypen
+			break;
+		}
+
+		// ── Quadratische Funktionen ──────────────────────────────────────────────
+		case 'funktionen_quadratisch': {
+			const fmtFunctionNumber = (value) => comma(value);
+			const choose = (values) => values[randInt(0, values.length - 1)];
+			const appendConstant = (expr, value) => {
+				if (value > 0) return `${expr} + ${fmtFunctionNumber(value)}`;
+				if (value < 0) return `${expr} - ${fmtFunctionNumber(Math.abs(value))}`;
+				return expr;
+			};
+			const oppositeOperation = (value) => value >= 0
+				? `- ${fmtFunctionNumber(Math.abs(value))}`
+				: `+ ${fmtFunctionNumber(Math.abs(value))}`;
+			const buildQuadraticNormalExpression = (p, q) => {
+				let expr = 'x^2';
+				if (p > 0) expr += p === 1 ? ' + x' : ` + ${fmtFunctionNumber(p)}x`;
+				else if (p < 0) expr += p === -1 ? ' - x' : ` - ${fmtFunctionNumber(Math.abs(p))}x`;
+				if (q > 0) expr += ` + ${fmtFunctionNumber(q)}`;
+				else if (q < 0) expr += ` - ${fmtFunctionNumber(Math.abs(q))}`;
+				return expr;
+			};
+			const buildVertexExpression = (h, k) => {
+				const squareExpr = h === 0
+					? 'x^2'
+					: `(x ${h >= 0 ? '-' : '+'} ${fmtFunctionNumber(Math.abs(h))})^2`;
+				return appendConstant(squareExpr, k);
+			};
+			const formatSolutionSet = (solutions) => {
+				const sorted = [...solutions].sort((a, b) => a - b);
+				if (sorted.length === 1) return `x &= ${fmtFunctionNumber(sorted[0])}`;
+				return `x_1 &= ${fmtFunctionNumber(sorted[0])} \\\\ \n\t\t\t\tx_2 &= ${fmtFunctionNumber(sorted[1])}`;
+			};
+			const buildValueTable = (calcF, isFilled, isCentered = true) => {
+				const xValues = [-2, -1, 0, 1, 2];
+				const xRow = xValues.map((x, idx) => `<td style="padding:6px 10px; text-align:center; min-width:40px; border-bottom:1px solid #333; ${idx < xValues.length - 1 ? 'border-right:1px solid #333;' : ''}">${fmtFunctionNumber(x)}</td>`).join('');
+				const yRow = xValues.map((x, idx) => {
+					const value = isFilled ? `${fmtFunctionNumber(calcF(x))}` : '&nbsp;';
+					return `<td style="padding:6px 10px; text-align:center; min-width:34px; ${idx < xValues.length - 1 ? 'border-right:1px solid #333;' : ''}">${value}</td>`;
+				}).join('');
+				return `<table style="border-collapse:separate; border-spacing:0; margin:${isCentered ? '8px auto 0 auto' : '8px 0 0 0'};">` +
+					`<tr><th style="padding:6px 10px; min-width:30px; font-weight:400; border-right:1px solid #333; border-bottom:1px solid #333;">x</th>${xRow}</tr>` +
+					`<tr><th style="padding:6px 10px; min-width:30px; font-weight:400; border-right:1px solid #333;">y</th>${yRow}</tr>` +
+				`</table>`;
+			};
+			const buildGenericQuadraticFunction = () => {
+				const variant = choose(['shifted', 'scaled', 'normal', 'vertex']);
+				if (variant === 'shifted') {
+					const c = rnd(-6, 6);
+					const exprStr = appendConstant('x^2', c);
+					return { variant, exprStr, funcStr: `f(x) = ${exprStr}`, calcF: (x) => x * x + c };
+				}
+				if (variant === 'scaled') {
+					const a = choose([-4, -3, -2, 2, 3, 4]);
+					const exprStr = a === 1 ? 'x^2' : (a === -1 ? '-x^2' : `${fmtFunctionNumber(a)}x^2`);
+					return { variant, exprStr, funcStr: `f(x) = ${exprStr}`, calcF: (x) => a * x * x };
+				}
+				if (variant === 'normal') {
+					const r1 = randInt(-4, 4);
+					const r2 = randInt(-4, 4);
+					const p = -(r1 + r2);
+					const q = r1 * r2;
+					const exprStr = buildQuadraticNormalExpression(p, q);
+					return { variant, exprStr, funcStr: `f(x) = ${exprStr}`, calcF: (x) => x * x + p * x + q };
+				}
+				const h = randInt(-3, 3);
+				const k = rnd(-6, 6);
+				const exprStr = buildVertexExpression(h, k);
+				return { variant: 'vertex', exprStr, funcStr: `f(x) = ${exprStr}`, calcF: (x) => (x - h) * (x - h) + k };
+			};
+			const buildQuadraticArgumentTask = () => {
+				const variant = choose(['shifted', 'scaled', 'normal', 'vertex']);
+				if (variant === 'shifted') {
+					const xTarget = randInt(-4, 4);
+					const c = rnd(-6, 6);
+					const targetY = xTarget * xTarget + c;
+					const exprStr = appendConstant('x^2', c);
+					const lines = [];
+					if (c !== 0) {
+						lines.push(`${fmtFunctionNumber(targetY)} &= ${exprStr} &&| \\, ${oppositeOperation(c)}`);
+						lines.push(`${fmtFunctionNumber(targetY - c)} &= x^2`);
+					} else {
+						lines.push(`${fmtFunctionNumber(targetY)} &= x^2`);
+					}
+					lines.push(formatSolutionSet(xTarget === 0 ? [0] : [-Math.abs(xTarget), Math.abs(xTarget)]));
+					return { funcStr: `f(x) = ${exprStr}`, targetY, solution: `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]` };
+				}
+				if (variant === 'scaled') {
+					const a = choose([-4, -3, -2, 2, 3, 4]);
+					const xTarget = randInt(-4, 4);
+					const targetY = a * xTarget * xTarget;
+					const exprStr = a === -1 ? '-x^2' : `${fmtFunctionNumber(a)}x^2`;
+					const lines = [
+						`${fmtFunctionNumber(targetY)} &= ${exprStr} &&| \\, : ${fmtFunctionNumber(a)}`,
+						`${fmtFunctionNumber(xTarget * xTarget)} &= x^2`,
+						formatSolutionSet(xTarget === 0 ? [0] : [-Math.abs(xTarget), Math.abs(xTarget)])
+					];
+					return { funcStr: `f(x) = ${exprStr}`, targetY, solution: `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]` };
+				}
+				if (variant === 'normal') {
+					let x1 = randInt(-4, 4);
+					let x2 = randInt(-4, 4);
+					const targetY = rnd(-4, 4);
+					if (Math.random() < 0.7) {
+						while (x2 === x1) x2 = randInt(-4, 4);
+					}
+					const p = -(x1 + x2);
+					const q = x1 * x2 + targetY;
+					const exprStr = buildQuadraticNormalExpression(p, q);
+					const reducedExpr = buildQuadraticNormalExpression(p, q - targetY);
+					const lines = [
+						`${fmtFunctionNumber(targetY)} &= ${exprStr} &&| \\, ${oppositeOperation(targetY)}`,
+						`0 &= ${reducedExpr}`,
+						formatSolutionSet(x1 === x2 ? [x1] : [x1, x2])
+					];
+					return { funcStr: `f(x) = ${exprStr}`, targetY, solution: `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]` };
+				}
+				const h = randInt(-3, 3);
+				const distance = randInt(0, 3);
+				const k = rnd(-5, 5);
+				const targetY = distance * distance + k;
+				const exprStr = buildVertexExpression(h, k);
+				const squareExpr = h === 0 ? 'x^2' : `(x ${h >= 0 ? '-' : '+'} ${fmtFunctionNumber(Math.abs(h))})^2`;
+				const solutions = distance === 0 ? [h] : [h - distance, h + distance];
+				const lines = [];
+				if (k !== 0) {
+					lines.push(`${fmtFunctionNumber(targetY)} &= ${exprStr} &&| \\, ${oppositeOperation(k)}`);
+					lines.push(`${fmtFunctionNumber(targetY - k)} &= ${squareExpr}`);
+				} else {
+					lines.push(`${fmtFunctionNumber(targetY)} &= ${squareExpr}`);
+				}
+				lines.push(formatSolutionSet(solutions));
+				return { funcStr: `f(x) = ${exprStr}`, targetY, solution: `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]` };
+			};
+			const buildQuadraticRootTask = () => {
+				const variant = choose(['shifted', 'scaled', 'normal', 'vertex']);
+				if (variant === 'shifted') {
+					const root = randInt(0, 4);
+					const c = -(root * root);
+					const exprStr = appendConstant('x^2', c);
+					const lines = [
+						`${exprStr} &= 0 &&| \\, ${oppositeOperation(c)}`,
+						`x^2 &= ${fmtFunctionNumber(root * root)}`,
+						formatSolutionSet(root === 0 ? [0] : [-root, root])
+					];
+					return { funcStr: `f(x) = ${exprStr}`, solution: `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]` };
+				}
+				if (variant === 'scaled') {
+					const a = choose([-4, -3, -2, 2, 3, 4]);
+					const exprStr = a === -1 ? '-x^2' : `${fmtFunctionNumber(a)}x^2`;
+					const lines = [
+						`${exprStr} &= 0 &&| \\, : ${fmtFunctionNumber(a)}`,
+						`x^2 &= 0`,
+						`x &= 0`
+					];
+					return { funcStr: `f(x) = ${exprStr}`, solution: `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]` };
+				}
+				if (variant === 'normal') {
+					let r1 = randInt(-4, 4);
+					let r2 = randInt(-4, 4);
+					if (Math.random() < 0.7) {
+						while (r2 === r1) r2 = randInt(-4, 4);
+					}
+					const p = -(r1 + r2);
+					const q = r1 * r2;
+					const exprStr = buildQuadraticNormalExpression(p, q);
+					const lines = [
+						`${exprStr} &= 0`,
+						formatSolutionSet(r1 === r2 ? [r1] : [r1, r2])
+					];
+					return { funcStr: `f(x) = ${exprStr}`, solution: `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]` };
+				}
+				const h = randInt(-3, 3);
+				const distance = randInt(0, 3);
+				const k = -(distance * distance);
+				const exprStr = buildVertexExpression(h, k);
+				const squareExpr = h === 0 ? 'x^2' : `(x ${h >= 0 ? '-' : '+'} ${fmtFunctionNumber(Math.abs(h))})^2`;
+				const solutions = distance === 0 ? [h] : [h - distance, h + distance];
+				const lines = [
+					`${exprStr} &= 0 &&| \\, ${oppositeOperation(k)}`,
+					`${squareExpr} &= ${fmtFunctionNumber(distance * distance)}`,
+					formatSolutionSet(solutions)
+				];
+				return { funcStr: `f(x) = ${exprStr}`, solution: `\\[ \\begin{aligned}\n\t\t\t\t${lines.join(' \\\\ \n\t\t\t\t')}\n\t\t\t\\end{aligned} \\]` };
+			};
+
+			const subType = choose([0, 1, 2, 3, 4, 5, 6]);
+			let functionData = buildGenericQuadraticFunction();
+			let funcStr = functionData.funcStr;
+			let calcF = functionData.calcF;
+			let exprStr = functionData.exprStr;
+
 			switch (subType) {
-				case 0: // Funktionswert berechnen
-				let xVal = randInt(-4, 4);
-					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Berechne den Funktionswert an der Stelle \\( x = ${xVal} \\).`;
-					s = `\\( f(${xVal}) = ${calcF(xVal)} \\)`;
+				case 0: {
+					const xVal = randInt(-4, 4);
+					textDisplay = `Berechne bei der Funktion \\( ${funcStr} \\) den Funktionswert zum Argument \\( ${fmtFunctionNumber(xVal)} \\).`;
+					s = `\\( f(${fmtFunctionNumber(xVal)}) = ${exprStr.replace(/x/g, `(${fmtFunctionNumber(xVal)})`)} = ${fmtFunctionNumber(calcF(xVal))} \\)`;
 					break;
-					
-					case 1: // Argument berechnen
-					let targetX = randInt(-3, 3);
-					let targetY = calcF(targetX);
-					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Bestimme das Argument \\( x \\), für das der Funktionswert \\( y = ${targetY} \\) ist.`;
-					if (!isLinear && targetX !== 0) {
-						s = `\\( x_1 = ${Math.abs(targetX)}, \\; x_2 = -${Math.abs(targetX)} \\)`;
-					} else {
-						s = `\\( x = ${targetX} \\)`;
-					}
+				}
+				case 1: {
+					const argumentTask = buildQuadraticArgumentTask();
+					textDisplay = `Berechne bei der Funktion \\( ${argumentTask.funcStr} \\) das Argument zum Funktionswert \\( ${fmtFunctionNumber(argumentTask.targetY)} \\).`;
+					s = argumentTask.solution;
 					break;
-					
-					case 2: // Nullstelle berechnen (erzwingt glatte Ergebnisse)
-					if (isLinear) {
-						let root = randInt(-4, 4);
-						let myM = randInt(1, 3) * (randInt(0, 1) === 0 ? 1 : -1);
-						let myB = -myM * root;
-						let mStr = myM === 1 ? "" : (myM === -1 ? "-" : fmt(myM));
-						let bStr = myB > 0 ? ` + ${myB}` : (myB < 0 ? ` - ${Math.abs(myB)}` : "");
-						funcStr = `f(x) = ${mStr}x${bStr}`;
-						textDisplay = `Berechne die Nullstelle der Funktion \\( ${funcStr} \\).`;
-						s = `\\( x = ${root} \\)`;
-					} else {
-						let root = randInt(1, 4);
-						let myB = -(root * root);
-						funcStr = `f(x) = x^2 - ${Math.abs(myB)}`;
-						textDisplay = `Berechne die Nullstellen der Funktion \\( ${funcStr} \\).`;
-						s = `\\( x_1 = ${root}, \\; x_2 = -${root} \\)`;
-					}
+				}
+				case 2: {
+					const rootTask = buildQuadraticRootTask();
+					textDisplay = `Bestimme die Nullstellen von \\( ${rootTask.funcStr} \\).`;
+					s = rootTask.solution;
 					break;
-
-					case 3: // Fehlende Koordinate
-					let px = randInt(-4, 4);
-					let py = calcF(px);
+				}
+				case 3: {
+					const px = randInt(-4, 4);
+					const py = calcF(px);
 					if (randInt(0, 1) === 0) {
-						textDisplay = `Der Punkt \\( P(${px} | y) \\) liegt auf dem Graphen der Funktion \\( ${funcStr} \\).<br>Bestimme die fehlende y-Koordinate.`;
-						s = `\\( y = ${py} \\)`;
+						textDisplay = `\\( P(${fmtFunctionNumber(px)} | y) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( y \\).`;
+						s = `\\( y = f(${fmtFunctionNumber(px)}) = ${exprStr.replace(/x/g, `(${fmtFunctionNumber(px)})`)} = ${fmtFunctionNumber(py)} \\)`;
 					} else {
-						textDisplay = `Der Punkt \\( P(x | ${py}) \\) liegt auf dem Graphen der Funktion \\( ${funcStr} \\).<br>Bestimme die fehlende x-Koordinate.`;
-						if (!isLinear && px !== 0) {
-							s = `\\( x = ${Math.abs(px)} \\) oder \\( x = -${Math.abs(px)} \\)`;
-						} else {
-							s = `\\( x = ${px} \\)`;
-						}
+						const argumentTask = buildQuadraticArgumentTask();
+						textDisplay = `\\( P(x | ${fmtFunctionNumber(argumentTask.targetY)}) \\) liegt auf \\( ${argumentTask.funcStr} \\).<br>Bestimme \\( x \\).`;
+						s = argumentTask.solution;
 					}
 					break;
-
-					case 4: // Wertetabelle erstellen
-					textDisplay = `Gegeben ist \\( ${funcStr} \\).<br>Erstelle eine Wertetabelle für \\( x \\in \\{-2; -1; 0; 1; 2\\} \\).`;
-					s = `\\( x = -2 \\Rightarrow y = ${calcF(-2)} \\)<br>` +
-					`\\( x = -1 \\Rightarrow y = ${calcF(-1)} \\)<br>` +
-					`\\( x = 0 \\Rightarrow y = ${calcF(0)} \\)<br>` +
-					`\\( x = 1 \\Rightarrow y = ${calcF(1)} \\)<br>` +
-					`\\( x = 2 \\Rightarrow y = ${calcF(2)} \\)`;
+				}
+				case 4: {
+					textDisplay = `Fülle die Wertetabelle für \\( ${funcStr} \\) aus. Nutze die x-Werte \\( -2, -1, 0, 1, 2 \\).`;
+					textPrint = `Fülle die Wertetabelle für \\( ${funcStr} \\) aus. Nutze die x-Werte \\( -2, -1, 0, 1, 2 \\).`;
+					s = `${buildValueTable(calcF, true)}<br>Kontrolle: Trage z. B. die Punkte \\( P(-1|${fmtFunctionNumber(calcF(-1))}) \\), \\( Q(0|${fmtFunctionNumber(calcF(0))}) \\) und \\( R(1|${fmtFunctionNumber(calcF(1))}) \\) in das Koordinatensystem ein.`;
 					break;
-					
-					case 5: // Graph zeichnen
-					textDisplay = `Gegeben ist die Funktion \\( ${funcStr} \\).<br>Zeichne den zugehörigen Funktionsgraphen.`;
-					s = `Kontrolle:<br>Der Graph verläuft u.a. durch die Punkte \\( P(0 | ${calcF(0)}) \\) und \\( Q(1 | ${calcF(1)}) \\).`;
-					break;
-					
-					case 6: // Punktprobe
-					let testX = randInt(-3, 3);
-					let isTrue = randInt(0, 1) === 0;
-					// Wenn isTrue false ist, addiere einen kleinen Störwert auf das echte y
-					let testY = isTrue ? calcF(testX) : calcF(testX) + randInt(1, 3) * (randInt(0, 1) === 0 ? 1 : -1);
-					
-					textDisplay = `Führe eine Punktprobe durch:<br>Liegt der Punkt \\( P(${testX} | ${testY}) \\) auf dem Graphen von \\( ${funcStr} \\)?`;
+				}
+				case 5: {
+					const testX = randInt(-3, 3);
+					const isTrue = randInt(0, 1) === 0;
+					const realY = calcF(testX);
+					const testY = isTrue ? realY : realY + choose([-2, -1, 1, 2]);
+					textDisplay = `Punktprobe:<br>Liegt \\( P(${fmtFunctionNumber(testX)} | ${fmtFunctionNumber(testY)}) \\) auf \\( ${funcStr} \\)?`;
 					if (isTrue) {
-						s = `Ja, denn \\( f(${testX}) = ${testY} \\) ist eine wahre Aussage.`;
+						s = `\\( f(${fmtFunctionNumber(testX)}) = ${fmtFunctionNumber(realY)} = ${fmtFunctionNumber(testY)} \\)<br>Ja, der Punkt liegt auf dem Graphen.`;
 					} else {
-						s = `Nein, denn \\( f(${testX}) = ${calcF(testX)} \\neq ${testY} \\).`;
+						s = `\\( f(${fmtFunctionNumber(testX)}) = ${fmtFunctionNumber(realY)} \\neq ${fmtFunctionNumber(testY)} \\)<br>Nein, der Punkt liegt nicht auf dem Graphen.`;
 					}
 					break;
+				}
+				case 6: {
+					const variant = choose(['shifted', 'scaled', 'normal', 'vertex']);
+					let localFuncStr = '';
+					let sx = 0;
+					let sy = 0;
+					if (variant === 'shifted') {
+						const c = rnd(-6, 6);
+						sy = c;
+						localFuncStr = `f(x) = ${appendConstant('x^2', c)}`;
+					} else if (variant === 'scaled') {
+						const a = choose([-4, -3, -2, 2, 3, 4]);
+						localFuncStr = `f(x) = ${fmtFunctionNumber(a)}x^2`;
+						sx = 0;
+						sy = 0;
+					} else if (variant === 'normal') {
+						const d = randInt(-3, 3);
+						const e = rnd(-6, 6);
+						const p = -2 * d;
+						const q = d * d + e;
+						localFuncStr = `f(x) = ${buildQuadraticNormalExpression(p, q)}`;
+						sx = d;
+						sy = e;
+					} else {
+						const d = randInt(-3, 3);
+						const e = rnd(-6, 6);
+						localFuncStr = `f(x) = ${buildVertexExpression(d, e)}`;
+						sx = d;
+						sy = e;
+					}
+					textDisplay = `Bestimme den Scheitelpunkt der Funktion \\( ${localFuncStr} \\).`;
+					s = `\\( S(${fmtFunctionNumber(sx)} | ${fmtFunctionNumber(sy)}) \\)`;
+					break;
+				}
 			}
 			break;
 		}
@@ -1675,13 +1967,13 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 				// Wichtig: Erst hier wird das Array auf die volle Länge n gebracht!
 				data.push(lastVal);
 				sum = currentSum + lastVal;
-				mean = (sum / n).toString().replace('.', ',');
+				mean = formatDecimal(sum / n, 2);
 				
 				if (lastVal <= 13) {
 					sum = currentSum + lastVal;
 					// Prüfe: Entweder glatt teilbar ODER (bei n=6) Rest ist 3
 					if (sum % n === 0 || (n === 6 && sum % n === 3)) {
-						mean = (sum / n).toString().replace('.', ',');
+						mean = formatDecimal(sum / n, 2);
 						break;
 					}
 				}
@@ -1719,7 +2011,7 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 						let m1 = sortedData[2];
 						let m2 = sortedData[3];
 						let median = (m1 + m2) / 2;
-						let medianStr = median.toString().replace('.', ',');
+						let medianStr = formatDecimal(median, 2);
 						
 						loesung = effectiveEasyMode ?
 							`${sortedData.join(', ')}<br>Zentralwert = (${m1} + ${m2}) : 2 = ${medianStr}` :
@@ -2026,7 +2318,8 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 			// 1. Definition "schöner" Brüche (Zähler z, Nenner n)
 			const fractions = [
 				{ z: 2, n: 3 }, { z: 3, n: 4 }, { z: 2, n: 5 }, { z: 3, n: 5 }, { z: 4, n: 5 },
-				{ z: 5, n: 6 }, { z: 3, n: 8 }, { z: 3, n: 10 }, { z: 7, n: 10 }, { z: 9, n: 10 }
+				{ z: 5, n: 6 }, { z: 3, n: 8 }, { z: 3, n: 10 }, { z: 7, n: 10 }, { z: 9, n: 10 }, 
+				{ z: 2, n: 7 }, { z: 4, n: 3 }, { z: 5, n: 4 }, { z: 7, n: 5 }, { z: 3, n: 11 }
 			];
 			
 			// Wähle einen zufälligen Bruch aus dem Pool
@@ -2038,39 +2331,43 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 				// TYP 1: Anteil berechnen (Bruch von Ganzem)
 				// Damit es glatt aufgeht, muss das Ganze ein Vielfaches des Nenners sein.
 				const scale = Math.random() > 0.5 ? 10 : 1; // Sorgt manchmal für Hunderter/Zehner-Werte
-				const multiplier = effectiveEasyMode ? rnd(2, 9) : rnd(3, 13);
+				const multiplier = effectiveEasyMode ? rnd(2, 9) : rnd(3, 15);
 				const normalFactor = effectiveEasyMode ? 1 : (randInt(10, 25) / 10);
 				const G = n * multiplier * scale * normalFactor; // Das Ganze (Grundwert)
 				const W = (G / n) * z;                           // Der Anteil
 
-				textDisplay = `\\( \\frac{${z}}{${n}} \\) von ${dec1(G)} ${einheit} sind ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\) von ${dec1(G)} ${einheit} sind ${dec2(W)} ${einheit}<br>
-				\\((${dec1(G)} : ${n} \\cdot ${z} = ${dec2(W)})\\)`;
+				textDisplay = `\\( \\frac{${z}}{${n}} \\) von ${formatByUnit(G, einheit, 1)} ${einheit} sind ${blank(3)}`;
+				s = `\\( \\frac{${z}}{${n}} \\) von ${formatByUnit(G, einheit, 1)} ${einheit} sind ${formatByUnit(W, einheit, 2)} ${einheit}<br>
+				\\((${formatByUnit(G, einheit, 1)} : ${n} \\cdot ${z} = ${formatByUnit(W, einheit, 2)})\\)`;
 
 			} else if (rd > 0.3) {
 				// TYP 2: Ganzes berechnen (Bruch sind Anteil von...)
 				// Damit es glatt aufgeht, muss der Anteil ein Vielfaches des Zählers sein.
 				const scale = Math.random() > 0.5 ? 10 : 1;
-				const multiplier = effectiveEasyMode ? rnd(2, 9) : rnd(3, 13);
+				const multiplier = effectiveEasyMode ? rnd(2, 9) : rnd(3, 15);
 				const normalFactor = effectiveEasyMode ? 1 : (randInt(10, 25) / 10);
 				const W = z * multiplier * scale * normalFactor; // Der Anteil
 				const G = (W / z) * n;                            // Das Ganze
 				
-				textDisplay = `\\( \\frac{${z}}{${n}} \\) sind ${dec2(W)} ${einheit} von ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\) sind ${dec2(W)} ${einheit} von ${dec2(G)} ${einheit}<br>
-				\\((${dec2(W)} : ${z} \\cdot ${n} = ${dec2(G)})\\)`;
+				textDisplay = `\\( \\frac{${z}}{${n}} \\) sind ${formatByUnit(W, einheit, 2)} ${einheit} von ${blank(3)}`;
+				s = `\\( \\frac{${z}}{${n}} \\) sind ${formatByUnit(W, einheit, 2)} ${einheit} von ${formatByUnit(G, einheit, 2)} ${einheit}<br>
+				\\((${formatByUnit(W, einheit, 2)} : ${z} \\cdot ${n} = ${formatByUnit(G, einheit, 2)})\\)`;
 
 			} else {
 				// TYP 3: Bruch berechnen (Anteil von Ganzem sind...)
 				// Wir nehmen den generierten Bruch und erzeugen dazu passende glatte Werte.
-				const multiplier = effectiveEasyMode ? rnd(2, 9) : rnd(3, 13);
-				const normalFactor = effectiveEasyMode ? 1 : (randInt(10, 20) / 10);
-				
-				const W = z * multiplier * normalFactor;
-				const G = n * multiplier * normalFactor;
-				
-				textDisplay = `${dec2(W)} ${einheit} von ${dec2(G)} ${einheit} sind ${blank(3)} (als gekürzter Bruch)`;
-				s = `${dec2(W)} ${einheit} von ${dec2(G)} ${einheit} sind \\(\\dfrac{${dec2(W)}}{${dec2(G)}}\\)`;
+				const multiplier = rnd(2, 9);
+				const W = z * multiplier;
+				const G = n * multiplier;
+				const Wint = Math.round(W);
+				const Gint = Math.round(G);
+				const gcd = mathUtils.getGcd(Math.abs(Wint), Math.abs(Gint));
+				const zK = Wint / gcd;
+				const nK = Gint / gcd;
+				const pK = (zK / nK) * 100;
+				textDisplay = `${formatByUnit(W, einheit, 2)} ${einheit} von ${formatByUnit(G, einheit, 2)} ${einheit} sind ${blank(3)} (als max. gek. Bruch)`;
+				s = `${formatByUnit(W, einheit, 2)} ${einheit} von ${formatByUnit(G, einheit, 2)} ${einheit} sind \\(\\dfrac{${Wint}}{${Gint}} = \\dfrac{${zK}}{${nK}}\\)`;
+
 			}
 			break;
 		}
@@ -2086,7 +2383,7 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 
 			const sz = szenarien[randInt(0, szenarien.length - 1)];
 			
-			const de = (num) => dec2(num);
+			const de = (num, unit = sz.einheit2) => formatByUnit(num, unit, 2);
 
 			let menge1 = randInt(3, 6);
 			let menge2
@@ -2223,10 +2520,7 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 				h: [0.5, 1, 1.5, 2, 2.5, 3]
 			};
 		
-			const fmtNum = (num) => {
-				const rounded = Number((Math.round(num * 10) / 10).toFixed(1).replace(/\.0$/, ''));
-				return comma(rounded);
-			};
+			const fmtNum = (num) => formatDecimal(num, 1);
 		
 			const pickSimpleValue = () => {
 				if (effectiveEasyMode) {

@@ -2631,13 +2631,13 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 		}
 
 		case 'funktionen': {
-			let subType = randInt(0, 5);
-			
+			let subType = randInt(0,2);
+		
 			// Hilfsvariablen für die Funktionserstellung
 			let isLinear = randInt(0, 1) === 0;
-			let m = randInt(-4, 4);
-			if (m === 0) m = 2; // Steigung 0 vermeiden
-			let b = randInt(-5, 5);
+			let m = rnd(-8, 8) / 2;
+			let b = rnd(-5, 5);
+			const fmtFunctionNumber = (value) => comma(value);
 			
 			let funcStr = "";
 			let calcF = (x) => 0;
@@ -2645,99 +2645,72 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			// Funktion generieren (Linear oder Quadratisch)
 			if (isLinear) {
 				calcF = (x) => m * x + b;
-				let mStr = m === 1 ? "" : (m === -1 ? "-" : fmt(m));
-				let bStr = b > 0 ? ` + ${b}` : (b < 0 ? ` - ${Math.abs(b)}` : "");
+				let mStr = m === 1 ? "" : (m === -1 ? "-" : fmtFunctionNumber(m));
+				let bStr = b > 0 ? ` + ${fmtFunctionNumber(b)}` : (b < 0 ? ` - ${fmtFunctionNumber(Math.abs(b))}` : "");
 				funcStr = `f(x) = ${mStr}x${bStr}`;
 			} else {
 				let quadType = randInt(0, 1);
 				if (quadType === 0) {
 					// Normalparabel verschoben: x^2 + c
 					calcF = (x) => x * x + b;
-					let bStr = b > 0 ? ` + ${b}` : (b < 0 ? ` - ${Math.abs(b)}` : "");
+					let bStr = b > 0 ? ` + ${fmtFunctionNumber(b)}` : (b < 0 ? ` - ${fmtFunctionNumber(Math.abs(b))}` : "");
 					funcStr = `f(x) = x^2${bStr}`;
 				} else {
 					// Gestreckte/Gestauchte Parabel: a*x^2
 					let a = randInt(2, 4) * (randInt(0, 1) === 0 ? 1 : -1);
 					calcF = (x) => a * x * x;
-					funcStr = `f(x) = ${a}x^2`;
+					funcStr = `f(x) = ${fmtFunctionNumber(a)}x^2`;
 				}
 			}
 			
-			// 6 Teilaufgabentypen
+			// Verfügbare Teilaufgabentypen: 0, 3, 4, 5
 			switch (subType) {
 				case 0: // Funktionswert berechnen
-				let xVal = randInt(-4, 4);
-					textDisplay = `\\( ${funcStr} \\)<br>Berechne \\( f(${xVal}) \\).`;
-					s = `\\( f(${xVal}) = ${calcF(xVal)} \\)`;
+					let xVal = randInt(-4, 4);
+					const rhsCase0 = funcStr.replace('f(x) = ', '');
+					textDisplay = `Berechne bei der Funktion \\( ${funcStr} \\) den Funktionswert zum Argument \\( ${fmtFunctionNumber(xVal)} \\).`;
+					s = `\\( f(${fmtFunctionNumber(xVal)}) = ${rhsCase0.replace(/x/g, `(${fmtFunctionNumber(xVal)})`)} = ${fmtFunctionNumber(calcF(xVal))} \\)`;
 					break;
 					
-					case 1: // Argument berechnen
-					let targetX = randInt(-3, 3);
-					let targetY = calcF(targetX);
-					textDisplay = `\\( ${funcStr} \\)<br>Für welches \\( x \\) gilt \\( y = ${targetY} \\)?`;
-					if (!isLinear && targetX !== 0) {
-						s = `\\( x_1 = ${Math.abs(targetX)}, \\; x_2 = -${Math.abs(targetX)} \\)`;
-					} else {
-						s = `\\( x = ${targetX} \\)`;
-					}
-					break;
-					
-					case 2: // Nullstelle berechnen (erzwingt glatte Ergebnisse)
-					if (isLinear) {
-						let root = randInt(-4, 4);
-						let myM = randInt(1, 3) * (randInt(0, 1) === 0 ? 1 : -1);
-						let myB = -myM * root;
-						let mStr = myM === 1 ? "" : (myM === -1 ? "-" : fmt(myM));
-						let bStr = myB > 0 ? ` + ${myB}` : (myB < 0 ? ` - ${Math.abs(myB)}` : "");
-						funcStr = `f(x) = ${mStr}x${bStr}`;
-						textDisplay = `Bestimme die Nullstelle von \\( ${funcStr} \\).`;
-						s = `\\( x = ${root} \\)`;
-					} else {
-						let root = randInt(1, 4);
-						let myB = -(root * root);
-						funcStr = `f(x) = x^2 - ${Math.abs(myB)}`;
-						textDisplay = `Bestimme die Nullstellen von \\( ${funcStr} \\).`;
-						s = `\\( x_1 = ${root}, \\; x_2 = -${root} \\)`;
-					}
-					break;
-
-					case 3: // Fehlende Koordinate
+				case 1: // Fehlende Koordinate
 					let px = randInt(-4, 4);
 					let py = calcF(px);
-					if (randInt(0, 1) === 0) {
-						textDisplay = `\\( P(${px} | y) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( y \\).`;
-						s = `\\( y = ${py} \\)`;
-					} else {
-						textDisplay = `\\( P(x | ${py}) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( x \\).`;
-						if (!isLinear && px !== 0) {
-							s = `\\( x = ${Math.abs(px)} \\) oder \\( x = -${Math.abs(px)} \\)`;
-						} else {
-							s = `\\( x = ${px} \\)`;
-						}
-					}
+					const rhsCase3 = funcStr.replace('f(x) = ', '');
+					textDisplay = `\\( P(${fmtFunctionNumber(px)} | y) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( y \\).`;
+					s = `\\( y = f(${fmtFunctionNumber(px)}) = ${rhsCase3.replace(/x/g, `(${fmtFunctionNumber(px)})`)} = ${fmtFunctionNumber(py)} \\)`;
 					break;
 
-					case 4: // Wertetabelle und Graph zeichnen
-					textDisplay = `\\( ${funcStr} \\)<br>Erstelle die Wertetabelle für \\( x \\in \\{-2; -1; 0; 1; 2\\} \\) und zeichne den Graphen.`;
-					s = `\\( x = -2 \\Rightarrow y = ${calcF(-2)} \\)<br>` +
-					`\\( x = -1 \\Rightarrow y = ${calcF(-1)} \\)<br>` +
-					`\\( x = 0 \\Rightarrow y = ${calcF(0)} \\)<br>` +
-					`\\( x = 1 \\Rightarrow y = ${calcF(1)} \\)<br>` +
-					`\\( x = 2 \\Rightarrow y = ${calcF(2)} \\)<br><br>` +
-					`Kontrolle: Punkte z. B. \\( P(0 | ${calcF(0)}) \\) und \\( Q(1 | ${calcF(1)}) \\).`;
+				case 2: // Wertetabelle 
+					const xValues = [-2, -1, 0, 1, 2];
+					const buildValueTable = (isFilled, isCentered = true) => {
+							const xRow = xValues.map((x, idx) => `<td style="padding:6px 10px; text-align:center; min-width:40px; border-bottom:1px solid #333; ${idx < xValues.length - 1 ? 'border-right:1px solid #333;' : ''}">${fmtFunctionNumber(x)}</td>`).join('');
+						const yRow = xValues.map(x => {
+								const value = isFilled ? `${fmtFunctionNumber(calcF(x))}` : '&nbsp;';
+							return `<td style="padding:6px 10px; text-align:center; min-width:34px; ${x < xValues[xValues.length - 1] ? 'border-right:1px solid #333;' : ''}">${value}</td>`;
+						}).join('');
+
+						return `<table style="border-collapse:separate; border-spacing:0; margin:${isCentered ? '8px auto 0 auto' : '8px 0 0 0'};">` +
+							`<tr><th style="padding:6px 10px; min-width:30px; font-weight:400; border-right:1px solid #333; border-bottom:1px solid #333;">x</th>${xRow}</tr>` +
+							`<tr><th style="padding:6px 10px; min-width:30px; font-weight:400; border-right:1px solid #333;">y</th>${yRow}</tr>` +
+						`</table>`;
+					};
+
+					textDisplay = `Fülle die Wertetabelle für \\( ${funcStr} \\) aus.<br>${buildValueTable(false)}`;
+					textPrint = `Fülle die Wertetabelle für \\( ${funcStr} \\) aus.<br>${buildValueTable(false, false)}`;
+					s = `${buildValueTable(true)}<br>Kontrolle: Trage z. B. die Punkte \\( P(-1|${fmtFunctionNumber(calcF(-1))}) \\), \\( Q(0|${fmtFunctionNumber(calcF(0))}) \\) und \\( R(1|${fmtFunctionNumber(calcF(1))}) \\) in das Koordinatensystem ein.`;
 					break;
 					
 					case 5: // Punktprobe
 					let testX = randInt(-3, 3);
 					let isTrue = randInt(0, 1) === 0;
 					// Wenn isTrue false ist, addiere einen kleinen Störwert auf das echte y
-					let testY = isTrue ? calcF(testX) : calcF(testX) + randInt(1, 3) * (randInt(0, 1) === 0 ? 1 : -1);
+					let testY = isTrue ? calcF(testX) : calcF(testX) + randInt(1, 3) * (Math.random() < 0.5 ? 1 : -1);
 					
-					textDisplay = `Punktprobe:<br>Liegt \\( P(${testX} | ${testY}) \\) auf \\( ${funcStr} \\)?`;
+						textDisplay = `Punktprobe: Prüfe, ob der Punkt \\( P(\\,${fmtFunctionNumber(testX)} \\, | ${fmtFunctionNumber(testY)}\\,) \\) auf dem Graphen von \\( ${funcStr} \\) liegt.`;
 					if (isTrue) {
-						s = `Ja, denn \\( f(${testX}) = ${testY} \\) ist eine wahre Aussage.`;
+								s = `\\( f(${fmtFunctionNumber(testX)}) = ${fmtFunctionNumber(calcF(testX))} \\rightarrow\\) Ja, P liegt auf dem Graphen.`;
 					} else {
-						s = `Nein, denn \\( f(${testX}) = ${calcF(testX)} \\neq ${testY} \\).`;
+								s = `\\( f(${fmtFunctionNumber(testX)}) = ${fmtFunctionNumber(calcF(testX))} \\neq ${fmtFunctionNumber(testY)} \\rightarrow\\) Nein, P liegt nicht auf dem Graphen.`;
 					}
 					break;
 			}
