@@ -16,24 +16,51 @@ const taskCategories = {
 		'prop_easy', 'prop_normal',
 		'percent_easy', 'percent_normal',
 		'pv_easy', 'pv_normal',
+		'zinsrechnung_tr', 'zinseszins_tr', 'wirtschaftliches_rechnen_tr',
 		'units'
 	],
 	algebra: ['terme', 'equations', 'equations_adv', 'equations_system', 'formel_umstellen'],
-	geometry: ['geometry', 'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring', 'winkel', 'schraegbild', 'kongruenz'],
+	geometry: [
+		'geometry',
+		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'geometry_koerper_prisma_dreieck_easy', 'geometry_koerper_prisma_dreieck_normal',
+		'geometry_koerper_zylinder_easy', 'geometry_koerper_zylinder_normal',
+		'geometry_koerper_pyramide_easy', 'geometry_koerper_pyramide_normal',
+		'geometry_koerper_kegel_easy', 'geometry_koerper_kegel_normal',
+		'geometry_koerper_kugel_easy', 'geometry_koerper_kugel_normal',
+		'winkel', 'schraegbild', 'kongruenz', 'trigonometrie_rechtwinklig', 'sinus_kosinus_satz'
+	],
 	functions: ['linear_function', 'funktionen_linear', 'funktionen_quadratisch'],
 	statistics: ['statistik', 'wkt']
 };
+
+// Dichtewerte aus der Formelsammlung in g/cm^3
+const bodyMaterialDensities = [
+	{ name: 'Aluminium', rho: 2.7 },
+	{ name: 'Blei', rho: 11.34 },
+	{ name: 'Gold', rho: 19.3 },
+	{ name: 'Kupfer', rho: 8.96 },
+	{ name: 'Beton', rho: 2.3 },
+	{ name: 'Eisen', rho: 7.86 },
+	{ name: 'Silber', rho: 10.50 },
+	{ name: 'Stahl', rho: 7.8 }
+];
 
 // Sichtbare Aufgabentypen je Klassenstufe (wird vom UI-Dropdown genutzt)
 const taskTypesByGrade = {
 	klasse5: [
 		'units',
-		'geometry', 'geometry_rechteck', 'geometry_dreieck', 'winkel', 'schraegbild', 'statistik'
+		'geometry', 'geometry_rechteck', 'geometry_dreieck', 'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal', 'winkel', 'schraegbild', 'statistik'
 	],
 	klasse6: [
 		'units',
 		'anteile_easy', 'anteile_normal', 'percent_easy', 'percent_normal',
-		'geometry', 'geometry_rechteck', 'geometry_dreieck', 'winkel', 'schraegbild', 'statistik', 'wkt'
+		'geometry', 'geometry_rechteck', 'geometry_dreieck',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'winkel', 'schraegbild', 'statistik', 'wkt'
 	],
 	klasse7: [
 		'units',
@@ -41,9 +68,13 @@ const taskTypesByGrade = {
 		'prop_easy', 'prop_normal',
 		'percent_easy', 'percent_normal',
 		'pv_easy', 'pv_normal',
+		'zinsrechnung_tr', 'zinseszins_tr',
 		'terme', 'equations', 'equations_lin', 'formel_umstellen',
 		'geometry',
 		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'geometry_koerper_prisma_dreieck_easy', 'geometry_koerper_prisma_dreieck_normal',
 		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
 	],
 	klasse8: [
@@ -52,9 +83,14 @@ const taskTypesByGrade = {
 		'prop_easy', 'prop_normal',
 		'percent_easy', 'percent_normal',
 		'pv_easy', 'pv_normal',
+		'zinsrechnung_tr', 'zinseszins_tr', 'wirtschaftliches_rechnen_tr',
 		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
 		'geometry',
 		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'geometry_koerper_prisma_dreieck_easy', 'geometry_koerper_prisma_dreieck_normal',
+		'geometry_koerper_zylinder_easy', 'geometry_koerper_zylinder_normal',
 		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
 	],
 	klasse9: [
@@ -63,10 +99,19 @@ const taskTypesByGrade = {
 		'prop_easy', 'prop_normal',
 		'percent_easy', 'percent_normal',
 		'pv_easy', 'pv_normal',
+		'zinsrechnung_tr', 'zinseszins_tr', 'wirtschaftliches_rechnen_tr',
 		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
 		'geometry',
 		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
-		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'geometry_koerper_prisma_dreieck_easy', 'geometry_koerper_prisma_dreieck_normal',
+		'geometry_koerper_zylinder_easy', 'geometry_koerper_zylinder_normal',
+		'geometry_koerper_pyramide_easy', 'geometry_koerper_pyramide_normal',
+		'geometry_koerper_kegel_easy', 'geometry_koerper_kegel_normal',
+		'geometry_koerper_kugel_easy', 'geometry_koerper_kugel_normal',
+		'winkel', 'schraegbild', 'kongruenz', 'trigonometrie_rechtwinklig',
+		'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
 	],
 	klasse10: [
 		'units',
@@ -74,10 +119,112 @@ const taskTypesByGrade = {
 		'prop_easy', 'prop_normal',
 		'percent_easy', 'percent_normal',
 		'pv_easy', 'pv_normal',
+		'zinsrechnung_tr', 'zinseszins_tr', 'wirtschaftliches_rechnen_tr',
 		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
 		'geometry',
 		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
-		'winkel', 'schraegbild', 'kongruenz',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'geometry_koerper_prisma_dreieck_easy', 'geometry_koerper_prisma_dreieck_normal',
+		'geometry_koerper_zylinder_easy', 'geometry_koerper_zylinder_normal',
+		'geometry_koerper_pyramide_easy', 'geometry_koerper_pyramide_normal',
+		'geometry_koerper_kegel_easy', 'geometry_koerper_kegel_normal',
+		'geometry_koerper_kugel_easy', 'geometry_koerper_kugel_normal',
+		'winkel', 'schraegbild', 'kongruenz', 'trigonometrie_rechtwinklig', 'sinus_kosinus_satz',
+		'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
+	]
+};
+
+/* TODO / Roadmap 
+	{ name: 'Beton', rho: 2.3 },
+	{ name: 'Eisen', rho: 7.86 },
+	{ name: 'Silber', rho: 10.50 },
+	{ name: 'Stahl', rho: 7.8 }
+];
+
+// Sichtbare Aufgabentypen je Klassenstufe (wird vom UI-Dropdown genutzt)
+const taskTypesByGrade = {
+	klasse5: [
+		'units',
+		'geometry', 'geometry_rechteck', 'geometry_dreieck', 'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal', 'winkel', 'schraegbild', 'statistik'
+	],
+	klasse6: [
+		'units',
+		'anteile_easy', 'anteile_normal', 'percent_easy', 'percent_normal',
+		'geometry', 'geometry_rechteck', 'geometry_dreieck',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'winkel', 'schraegbild', 'statistik', 'wkt'
+	],
+	klasse7: [
+		'units',
+		'anteile_easy', 'anteile_normal',
+		'prop_easy', 'prop_normal',
+		'percent_easy', 'percent_normal',
+		'pv_easy', 'pv_normal',
+		'zinsrechnung_tr', 'zinseszins_tr',
+		'terme', 'equations', 'equations_lin', 'formel_umstellen',
+		'geometry',
+		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'geometry_koerper_prisma_dreieck_easy', 'geometry_koerper_prisma_dreieck_normal',
+		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
+	],
+	klasse8: [
+		'units',
+		'anteile_easy', 'anteile_normal',
+		'prop_easy', 'prop_normal',
+		'percent_easy', 'percent_normal',
+		'pv_easy', 'pv_normal',
+		'zinsrechnung_tr', 'zinseszins_tr', 'wirtschaftliches_rechnen_tr',
+		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
+		'geometry',
+		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'geometry_koerper_prisma_dreieck_easy', 'geometry_koerper_prisma_dreieck_normal',
+		'geometry_koerper_zylinder_easy', 'geometry_koerper_zylinder_normal',
+		'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
+	],
+	klasse9: [
+		'units',
+		'anteile_easy', 'anteile_normal',
+		'prop_easy', 'prop_normal',
+		'percent_easy', 'percent_normal',
+		'pv_easy', 'pv_normal',
+		'zinsrechnung_tr', 'zinseszins_tr', 'wirtschaftliches_rechnen_tr',
+		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
+		'geometry',
+		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'geometry_koerper_prisma_dreieck_easy', 'geometry_koerper_prisma_dreieck_normal',
+		'geometry_koerper_zylinder_easy', 'geometry_koerper_zylinder_normal',
+		'geometry_koerper_pyramide_easy', 'geometry_koerper_pyramide_normal',
+		'geometry_koerper_kegel_easy', 'geometry_koerper_kegel_normal',
+		'geometry_koerper_kugel_easy', 'geometry_koerper_kugel_normal',
+		'winkel', 'schraegbild', 'kongruenz', 'trigonometrie_rechtwinklig',
+		'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
+	],
+	klasse10: [
+		'units',
+		'anteile_easy', 'anteile_normal',
+		'prop_easy', 'prop_normal',
+		'percent_easy', 'percent_normal',
+		'pv_easy', 'pv_normal',
+		'zinsrechnung_tr', 'zinseszins_tr', 'wirtschaftliches_rechnen_tr',
+		'terme', 'equations', 'equations_adv', 'equations_lin', 'equations_system', 'formel_umstellen',
+		'geometry',
+		'geometry_rechteck', 'geometry_dreieck', 'geometry_parallelogramm', 'geometry_trapez', 'geometry_kreis', 'geometry_kreisring',
+		'geometry_koerper_wuerfel_easy', 'geometry_koerper_wuerfel_normal',
+		'geometry_koerper_quader_easy', 'geometry_koerper_quader_normal',
+		'geometry_koerper_prisma_dreieck_easy', 'geometry_koerper_prisma_dreieck_normal',
+		'geometry_koerper_zylinder_easy', 'geometry_koerper_zylinder_normal',
+		'geometry_koerper_pyramide_easy', 'geometry_koerper_pyramide_normal',
+		'geometry_koerper_kegel_easy', 'geometry_koerper_kegel_normal',
+		'geometry_koerper_kugel_easy', 'geometry_koerper_kugel_normal',
+		'winkel', 'schraegbild', 'kongruenz', 'trigonometrie_rechtwinklig', 'sinus_kosinus_satz',
 		'statistik', 'wkt', 'linear_function', 'funktionen_linear', 'funktionen_quadratisch'
 	]
 };
@@ -109,6 +256,9 @@ const typeDefinitions = [
 	['percent_normal', 'Prozentrechnung (normal)', 'Prozentwert, Grundwert und Prozentsatz berechnen (normal)'],
 	['pv_easy', 'Prozentuale Veränderung (einfach)', 'Prozentuale Zu- und Abnahmen berechnen (einfach)'],
 	['pv_normal', 'Prozentuale Veränderung (normal)', 'Prozentuale Zu- und Abnahmen berechnen (normal)'],
+	['zinsrechnung_tr', 'Zinsrechnung (TR)', 'Kapital, Zinsen, Zinssatz und Laufzeit mit Taschenrechner berechnen'],
+	['zinseszins_tr', 'Zinseszins (TR)', 'Zinseszinsaufgaben mit Endkapital, Anfangskapital und Zinssatz berechnen'],
+	['wirtschaftliches_rechnen_tr', 'Wirtschaftliches Rechnen (TR)', 'Rabatt, Skonto, Mehrwertsteuer und Preisänderungen mit Taschenrechner berechnen'],
 
 	// Algebra / Terme / Gleichungen
 	['terme', 'Terme', 'Terme zusammenfassen und Klammern auflösen'],
@@ -126,9 +276,25 @@ const typeDefinitions = [
 	['geometry_trapez', 'Trapez', 'Flächeninhalt von Trapezen berechnen'],
 	['geometry_kreis', 'Kreis', 'Flächeninhalt und Umfang von Kreisen berechnen'],
 	['geometry_kreisring', 'Kreisring', 'Flächeninhalt von Kreisringen berechnen'],
+	['geometry_koerper_wuerfel_easy', 'Körper Würfel (easy)', 'Würfel: nur Volumen und Oberfläche berechnen'],
+	['geometry_koerper_wuerfel_normal', 'Körper Würfel (normal)', 'Würfel: Volumen, Oberfläche, Masse und ggf. Formelumstellung'],
+	['geometry_koerper_quader_easy', 'Körper Quader (easy)', 'Quader: nur Volumen und Oberfläche berechnen'],
+	['geometry_koerper_quader_normal', 'Körper Quader (normal)', 'Quader: Volumen, Oberfläche, Masse und ggf. Formelumstellung'],
+	['geometry_koerper_prisma_dreieck_easy', 'Körper Dreiecksprisma (easy)', 'Dreiecksprisma: nur Volumen und Oberfläche berechnen'],
+	['geometry_koerper_prisma_dreieck_normal', 'Körper Dreiecksprisma (normal)', 'Dreiecksprisma: Volumen, Oberfläche, Masse und ggf. Formelumstellung'],
+	['geometry_koerper_zylinder_easy', 'Körper Kreiszylinder (easy)', 'Kreiszylinder: nur Volumen und Oberfläche berechnen'],
+	['geometry_koerper_zylinder_normal', 'Körper Kreiszylinder (normal)', 'Kreiszylinder: Volumen, Oberfläche, Masse und ggf. Formelumstellung'],
+	['geometry_koerper_pyramide_easy', 'Körper Pyramide (easy)', 'Pyramide: nur Volumen und Oberfläche berechnen'],
+	['geometry_koerper_pyramide_normal', 'Körper Pyramide (normal)', 'Pyramide: Volumen, Oberfläche, Masse und ggf. Formelumstellung'],
+	['geometry_koerper_kegel_easy', 'Körper Kreiskegel (easy)', 'Kreiskegel: nur Volumen und Oberfläche berechnen'],
+	['geometry_koerper_kegel_normal', 'Körper Kreiskegel (normal)', 'Kreiskegel: Volumen, Oberfläche, Masse und ggf. Formelumstellung'],
+	['geometry_koerper_kugel_easy', 'Körper Kugel (easy)', 'Kugel: nur Volumen und Oberfläche berechnen'],
+	['geometry_koerper_kugel_normal', 'Körper Kugel (normal)', 'Kugel: Volumen, Oberfläche, Masse und ggf. Formelumstellung'],
 	['winkel', 'Winkel', 'Winkel zeichnen und berechnen'],
 	['schraegbild', 'Schrägbilder', 'Schrägbilder von Körpern zeichnen'],
 	['kongruenz', 'Kongruenzsätze', 'Dreiecke mit Kongruenzsätzen konstruieren'],
+	['trigonometrie_rechtwinklig', 'Trigonometrie rechtwinklig', 'Seiten und Winkel im rechtwinkligen Dreieck mit Sinus, Kosinus und Tangens berechnen'],
+	['sinus_kosinus_satz', 'Sinus- und Kosinussatz', 'Seiten und Winkel in beliebigen Dreiecken mit Sinus- und Kosinussatz berechnen'],
 
 	// Funktionen, Statistik & Wahrscheinlichkeiten
 	['wkt', 'Wahrscheinlichkeiten', 'Wahrscheinlichkeiten bestimmen'],
@@ -162,21 +328,6 @@ function sortByTypeDefinitions(types) {
 // ============================================================
 
 function createTask(type, isEasyMode, grade = 5, options = {}) {
-	if (!Number.isFinite(grade)) {
-		grade = 5;
-	}
-
-	const difficultyTypeMatch = typeof type === 'string' ? type.match(/^(.*)_(easy|normal)$/) : null;
-	const normalizedType = difficultyTypeMatch ? difficultyTypeMatch[1] : type;
-	const forcedEasyMode = difficultyTypeMatch ? difficultyTypeMatch[2] === 'easy' : null;
-	const effectiveEasyMode = forcedEasyMode === null ? isEasyMode : forcedEasyMode;
-
-	const isTraining = Boolean(options.training);
-	let s = '';
-	let textDisplay = '', textPrint = '';
-
-	const blank = (cmWidth = 3) => `\\(\\underline{\\hspace{${cmWidth}cm}}\\)`;
-	const space = (cmWidth = 1) => `<div style="margin-bottom: ${cmWidth}cm;"></div>`;
 	const karo = (rows = 4, cols = 10, cellSizeCm = 0.5) => {
 		let rowsHtml = '';
 		for (let r = 0; r < rows; r++) {
@@ -200,8 +351,6 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 	};
 
 	const valueOrBlank = (value, isGiven, cmWidth = 1.5) => {
-		// Bei alleinstehenden Kopf- oder Zellenwerten keine Klammerung;
-		// nur leere Felder als Unterstreichung darstellen.
 		return isGiven ? `${value}` : '';
 	};
 
@@ -247,6 +396,14 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 
 		return `<table class="two-column-task"><tr>${cellHtml}</tr></table>`;
 	};
+
+	const choose = (values) => values[randInt(0, values.length - 1)];
+	const round2 = (value) => Math.round(value * 100) / 100;
+	const num2 = (value) => formatDecimal(value, 2);
+	const num1 = (value) => formatDecimal(value, 1);
+	const formatMoney = (value) => `${formatFixedDecimal(value, 2)} €`;
+	const toRadians = (degrees) => degrees * Math.PI / 180;
+	const toDegrees = (radians) => radians * 180 / Math.PI;
 
 	// Beispiel für die Nutzung von isEasyMode:
 	// if (isEasyMode) { Z1 = rnd(2, 5); } else { Z1 = rnd(5, 20); }
@@ -323,6 +480,146 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 					s = `100 % ≙ ${formatFixedDecimal(originalPrice, 2)} €<br>1 % ≙ ${formatFixedDecimal(originalPrice / 100, 2)} €<br><b>${p} %</b> ≙ ${formatFixedDecimal(originalPrice - discountedPrice, 2)} €`;
 					break;
 				}
+			}
+			break;
+		}
+
+		case 'zinsrechnung_tr': {
+			const subType = randInt(0, 3);
+			if (subType === 0) {
+				const K = randInt(800, 6000) / 2;
+				const p = choose([1.5, 1.8, 2.2, 2.5, 2.8, 3.2, 3.5, 3.8, 4.2, 4.5]);
+				const t = choose([1, 2, 3, 4, 5]);
+				const Z = round2(K * p / 100 * t);
+				textDisplay = `Auf einem Konto liegen \\( K = ${formatMoney(K)} \\) zu \\( p = ${num2(p)} \\% \\) für \\( ${t} \\) Jahre.<br>Berechne die Zinsen \\(Z\\).`;
+				textPrint = `Zinsrechnung: K = ${formatMoney(K)}, p = ${num2(p)} %, t = ${t} Jahre. Berechne Z.${space(1.8)}`;
+				s = `\\[ \\begin{aligned}
+				Z &= K \\cdot \\frac{p}{100} \\cdot t \\\\
+				Z &= ${num2(K)} \\cdot \\frac{${num2(p)}}{100} \\cdot ${t} \\\\
+				Z &= ${formatMoney(Z)}
+				\\end{aligned} \\]`;
+			} else if (subType === 1) {
+				const K = randInt(1200, 9000) / 2;
+				const p = choose([1.2, 1.5, 2.0, 2.4, 2.8, 3.0, 3.6, 4.0]);
+				const months = choose([3, 6, 9, 12, 18, 24]);
+				const t = months / 12;
+				const Z = round2(K * p / 100 * t);
+				textDisplay = `Ein Kapital von \\( K = ${formatMoney(K)} \\) ist für \\( ${months} \\) Monate zu \\( p = ${num2(p)} \\% \\) angelegt.<br>Berechne die Zinsen \\(Z\\).`;
+				textPrint = `Zinsrechnung: K = ${formatMoney(K)}, p = ${num2(p)} %, Laufzeit ${months} Monate. Berechne Z.${space(1.8)}`;
+				s = `\\[ \\begin{aligned}
+				t &= ${months} : 12 = ${num2(t)} \\text{ Jahre} \\\\
+				Z &= K \\cdot \\frac{p}{100} \\cdot t \\\\
+				Z &= ${num2(K)} \\cdot \\frac{${num2(p)}}{100} \\cdot ${num2(t)} \\\\
+				Z &= ${formatMoney(Z)}
+				\\end{aligned} \\]`;
+			} else if (subType === 2) {
+				const K = randInt(1000, 8000) / 2;
+				const p = choose([1.5, 2.0, 2.5, 3.0, 3.5, 4.0]);
+				const t = choose([2, 3, 4, 5]);
+				const Z = round2(K * p / 100 * t);
+				textDisplay = `Gegeben sind \\( K = ${formatMoney(K)} \\), \\( Z = ${formatMoney(Z)} \\) und eine Laufzeit von \\( ${t} \\) Jahren.<br>Berechne den Zinssatz \\(p\\).`;
+				textPrint = `Zinsrechnung: K = ${formatMoney(K)}, Z = ${formatMoney(Z)}, t = ${t} Jahre. Berechne p.${space(1.8)}`;
+				s = `\\[ \\begin{aligned}
+				Z &= K \\cdot \\frac{p}{100} \\cdot t \\\\
+				p &= \\frac{100 \\cdot Z}{K \\cdot t} = \\frac{100 \\cdot ${num2(Z)}}{${num2(K)} \\cdot ${t}} = ${num2(p)} \\%
+				\\end{aligned} \\]`;
+			} else {
+				const K = randInt(1200, 9000) / 2;
+				const p = choose([1.5, 2.0, 2.4, 2.8, 3.2, 3.5]);
+				const t = choose([1, 2, 3, 4]);
+				const Z = round2(K * p / 100 * t);
+				textDisplay = `Gegeben sind \\( K = ${formatMoney(K)} \\), \\( p = ${num2(p)} \\% \\) und \\( Z = ${formatMoney(Z)} \\).<br>Berechne die Laufzeit \\(t\\) in Jahren.`;
+				textPrint = `Zinsrechnung: K = ${formatMoney(K)}, p = ${num2(p)} %, Z = ${formatMoney(Z)}. Berechne t.${space(1.8)}`;
+				s = `\\[ \\begin{aligned}
+				t &= \\frac{Z}{K \\cdot p/100} = \\frac{${num2(Z)}}{${num2(K)} \\cdot ${num2(p)}/100} = ${num2(t)} \\text{ Jahre}
+				\\end{aligned} \\]`;
+			}
+			break;
+		}
+
+		case 'zinseszins_tr': {
+			const subType = randInt(0, 2);
+			if (subType === 0) {
+				const K0 = randInt(800, 5000) / 2;
+				const p = choose([1.5, 1.8, 2.2, 2.5, 2.8, 3.0, 3.5, 4.0]);
+				const n = choose([2, 3, 4, 5, 6]);
+				const q = 1 + p / 100;
+				const Kn = round2(K0 * q ** n);
+				textDisplay = `Ein Kapital von \\( K_0 = ${formatMoney(K0)} \\) wird \\( ${n} \\) Jahre lang zu \\( p = ${num2(p)} \\% \\) mit Zinseszins angelegt.<br>Berechne das Endkapital \\( K_n \\).`;
+				textPrint = `Zinseszins: K0 = ${formatMoney(K0)}, p = ${num2(p)} %, n = ${n}. Berechne Kn.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				q &= 1 + \\frac{p}{100} = ${num2(q)} \\\\
+				K_n &= K_0 \\cdot q^n = ${num2(K0)} \\cdot ${num2(q)}^{${n}} \\\\
+				K_n &\\approx ${formatMoney(Kn)}
+				\\end{aligned} \\]`;
+			} else if (subType === 1) {
+				const K0 = randInt(900, 4000) / 2;
+				const p = choose([1.5, 2.0, 2.4, 2.8, 3.2, 3.6]);
+				const n = choose([2, 3, 4, 5]);
+				const q = 1 + p / 100;
+				const Kn = round2(K0 * q ** n);
+				textDisplay = `Nach \\( ${n} \\) Jahren beträgt das Endkapital \\( K_n = ${formatMoney(Kn)} \\).<br>Der Zinssatz lag bei \\( p = ${num2(p)} \\% \\). Berechne das Anfangskapital \\( K_0 \\).`;
+				textPrint = `Zinseszins: Kn = ${formatMoney(Kn)}, p = ${num2(p)} %, n = ${n}. Berechne K0.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				q &= 1 + \\frac{${num2(p)}}{100} = ${num2(q)} \\\\
+				K_0 &= \\frac{K_n}{q^n} = \\frac{${num2(Kn)}}{${num2(q)}^{${n}}} \\\\
+				K_0 &\\approx ${formatMoney(K0)}
+				\\end{aligned} \\]`;
+			} else {
+				const K0 = randInt(1000, 3500) / 2;
+				const p = choose([1.5, 2.0, 2.5, 3.0, 3.5]);
+				const n = choose([2, 3, 4, 5]);
+				const q = 1 + p / 100;
+				const Kn = round2(K0 * q ** n);
+				textDisplay = `Ein Kapital wächst in \\( ${n} \\) Jahren von \\( ${formatMoney(K0)} \\) auf \\( ${formatMoney(Kn)} \\).<br>Berechne den jährlichen Zinssatz \\(p\\) beim Zinseszins.`;
+				textPrint = `Zinseszins: K0 = ${formatMoney(K0)}, Kn = ${formatMoney(Kn)}, n = ${n}. Berechne p.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				q^n &= \\frac{K_n}{K_0} = \\frac{${num2(Kn)}}{${num2(K0)}} \\\\
+				q &= \\sqrt[${n}]{\\frac{${num2(Kn)}}{${num2(K0)}}} = ${num2(q)} \\\\
+				p &= (q - 1) \\cdot 100 = ${num2(p)} \\%
+				\\end{aligned} \\]`;
+			}
+			break;
+		}
+
+		case 'wirtschaftliches_rechnen_tr': {
+			const subType = randInt(0, 2);
+			if (subType === 0) {
+				const original = randInt(3500, 18000) / 100;
+				const rabatt = choose([10, 12, 15, 20, 25]);
+				const mwst = choose([7, 19]);
+				const nachRabatt = round2(original * (100 - rabatt) / 100);
+				const endpreis = round2(nachRabatt * (100 + mwst) / 100);
+				textDisplay = `Ein Artikel kostet netto \\( ${formatMoney(original)} \\).<br>Zuerst werden \\( ${rabatt} \\% \\) Rabatt gewährt, danach werden \\( ${mwst} \\% \\) Mehrwertsteuer berechnet.<br>Bestimme den Endpreis.`;
+				textPrint = `Wirtschaftliches Rechnen: Netto ${formatMoney(original)}, ${rabatt}% Rabatt, ${mwst}% MwSt. Bestimme den Endpreis.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				P_1 &= ${num2(original)} \\cdot ${num2((100 - rabatt) / 100)} = ${formatMoney(nachRabatt)} \\\\
+				P_2 &= ${num2(nachRabatt)} \\cdot ${num2((100 + mwst) / 100)} = ${formatMoney(endpreis)}
+				\\end{aligned} \\]`;
+			} else if (subType === 1) {
+				const listenpreis = randInt(5000, 25000) / 100;
+				const rabatt = choose([5, 8, 10, 12, 15]);
+				const skonto = choose([2, 3]);
+				const zielpreis = round2(listenpreis * (100 - rabatt) / 100);
+				const barpreis = round2(zielpreis * (100 - skonto) / 100);
+				textDisplay = `Ein Listenpreis beträgt \\( ${formatMoney(listenpreis)} \\).<br>Es gibt \\( ${rabatt} \\% \\) Rabatt und anschließend \\( ${skonto} \\% \\) Skonto.<br>Berechne den Barzahlungspreis.`;
+				textPrint = `Wirtschaftliches Rechnen: Listenpreis ${formatMoney(listenpreis)}, ${rabatt}% Rabatt, ${skonto}% Skonto. Berechne den Barzahlungspreis.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				Z &= ${num2(listenpreis)} \\cdot ${num2((100 - rabatt) / 100)} = ${formatMoney(zielpreis)} \\\\
+				B &= ${num2(zielpreis)} \\cdot ${num2((100 - skonto) / 100)} = ${formatMoney(barpreis)}
+				\\end{aligned} \\]`;
+			} else {
+				const alterPreis = randInt(4000, 15000) / 100;
+				const erhoehung = choose([4, 5, 6, 8, 10]);
+				const senkung = choose([10, 12, 15, 20]);
+				const zwischenpreis = round2(alterPreis * (100 + erhoehung) / 100);
+				const endpreis = round2(zwischenpreis * (100 - senkung) / 100);
+				textDisplay = `Ein Preis wird zuerst um \\( ${erhoehung} \\% \\) erhöht und danach um \\( ${senkung} \\% \\) gesenkt.<br>Der Anfangspreis beträgt \\( ${formatMoney(alterPreis)} \\). Berechne den Endpreis.`;
+				textPrint = `Preisänderungen: Startpreis ${formatMoney(alterPreis)}, +${erhoehung}%, danach -${senkung}%. Berechne den Endpreis.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				P_1 &= ${num2(alterPreis)} \\cdot ${num2((100 + erhoehung) / 100)} = ${formatMoney(zwischenpreis)} \\\\
+				P_2 &= ${num2(zwischenpreis)} \\cdot ${num2((100 - senkung) / 100)} = ${formatMoney(endpreis)}
+				\\end{aligned} \\]`;
 			}
 			break;
 		}
@@ -675,6 +972,490 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 					\\end{aligned} \\]`;
 					break;
 				}
+			}
+			break;
+		}
+
+		case 'geometry_koerper_wuerfel': {
+			const unitL = 'cm';
+			const unitV = 'cm^3';
+			const unitO = 'cm^2';
+			const round2 = (val) => Math.round(val * 100) / 100;
+			const num2 = (val) => formatDecimal(val, 2);
+			const pickInt = (easyMin, easyMax, normalMin, normalMax) => randInt(effectiveEasyMode ? easyMin : normalMin, effectiveEasyMode ? easyMax : normalMax);
+			const material = bodyMaterialDensities[randInt(0, bodyMaterialDensities.length - 1)];
+			const rho = material.rho;
+			const isRearrange = !effectiveEasyMode && Math.random() < 0.5;
+
+			if (!isRearrange) {
+				const a = pickInt(2, 8, 3, 14);
+				const V = round2(a ** 3);
+				const O = round2(6 * a * a);
+
+				if (effectiveEasyMode) {
+					textDisplay = `Ein Würfel hat die Kantenlänge \\( a = ${a} \\) ${unitL}.<br>Berechne Volumen \\(V\\) und Oberfläche \\(O\\).`;
+					textPrint = `Würfel: a = ${a} ${unitL}. Berechne V und O.${space(1.8)}`;
+					s = `\\[ \\begin{aligned}
+					V &= a^3 = ${a}^3 = ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= 6a^2 = 6 \\cdot ${a}^2 = ${num2(O)} \\text{ ${unitO}}
+					\\end{aligned} \\]`;
+				} else {
+					const m = round2(rho * V);
+					textDisplay = `Ein Würfel hat die Kantenlänge \\( a = ${a} \\) ${unitL}.<br>Der Stoff ist ${material.name} mit \\( \\rho = ${num2(rho)} \\) g/cm³.<br>Berechne \\(V\\), \\(O\\) und die Masse \\(m\\).`;
+					textPrint = `Würfel: a = ${a} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Berechne V, O und m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					V &= a^3 = ${a}^3 = ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= 6a^2 = 6 \\cdot ${a}^2 = ${num2(O)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+					\\end{aligned} \\]`;
+				}
+			} else {
+				const a = pickInt(3, 12, 3, 12);
+				const V = round2(a ** 3);
+				const O = round2(6 * a * a);
+				const m = round2(rho * V);
+
+				textDisplay = `Ein Würfel aus ${material.name} hat das Volumen \\( V = ${num2(V)} \\) ${unitV}.<br>Gegeben ist \\( \\rho = ${num2(rho)} \\) g/cm³. Bestimme zuerst die Kantenlänge \\(a\\), danach \\(O\\) und \\(m\\).`;
+				textPrint = `Würfel (Umstellen): V = ${num2(V)} ${unitV}, rho = ${num2(rho)} g/cm^3. Bestimme a, dann O und m.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				V &= a^3 \\\\
+				${num2(V)} &= a^3 \\quad |\\sqrt[3]{\\phantom{0}} \\\\
+				a &= ${num2(a)} \\text{ ${unitL}} \\\\
+				O &= 6a^2 = 6 \\cdot ${num2(a)}^2 = ${num2(O)} \\text{ ${unitO}} \\\\
+				m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+				\\end{aligned} \\]`;
+			}
+			break;
+		}
+
+		case 'geometry_koerper_quader': {
+			const unitL = 'cm';
+			const unitV = 'cm^3';
+			const unitO = 'cm^2';
+			const round2 = (val) => Math.round(val * 100) / 100;
+			const num2 = (val) => formatDecimal(val, 2);
+			const pickInt = (easyMin, easyMax, normalMin, normalMax) => randInt(effectiveEasyMode ? easyMin : normalMin, effectiveEasyMode ? easyMax : normalMax);
+			const material = bodyMaterialDensities[randInt(0, bodyMaterialDensities.length - 1)];
+			const rho = material.rho;
+			const isRearrange = !effectiveEasyMode && Math.random() < 0.5;
+
+			if (!isRearrange) {
+				const a = pickInt(2, 8, 3, 14);
+				const b = pickInt(2, 8, 3, 12);
+				const c = pickInt(2, 8, 3, 10);
+				const V = round2(a * b * c);
+				const O = round2(2 * (a * b + a * c + b * c));
+
+				if (effectiveEasyMode) {
+					textDisplay = `Ein Quader hat \\( a = ${a} \\) ${unitL}, \\( b = ${b} \\) ${unitL}, \\( c = ${c} \\) ${unitL}.<br>Berechne Volumen \\(V\\) und Oberfläche \\(O\\).`;
+					textPrint = `Quader: a = ${a} ${unitL}, b = ${b} ${unitL}, c = ${c} ${unitL}. Berechne V und O.${space(1.8)}`;
+					s = `\\[ \\begin{aligned}
+					V &= a \\cdot b \\cdot c = ${a} \\cdot ${b} \\cdot ${c} = ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= 2(ab+ac+bc) = 2(${a}\\cdot${b} + ${a}\\cdot${c} + ${b}\\cdot${c}) = ${num2(O)} \\text{ ${unitO}}
+					\\end{aligned} \\]`;
+				} else {
+					const m = round2(rho * V);
+					textDisplay = `Ein Quader hat \\( a = ${a} \\) ${unitL}, \\( b = ${b} \\) ${unitL}, \\( c = ${c} \\) ${unitL}.<br>Der Stoff ist ${material.name} mit \\( \\rho = ${num2(rho)} \\) g/cm³.<br>Berechne \\(V\\), \\(O\\) und \\(m\\).`;
+					textPrint = `Quader: a = ${a}, b = ${b}, c = ${c} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Berechne V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					V &= a \\cdot b \\cdot c = ${a} \\cdot ${b} \\cdot ${c} = ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= 2(ab+ac+bc) = 2(${a}\\cdot${b} + ${a}\\cdot${c} + ${b}\\cdot${c}) = ${num2(O)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+					\\end{aligned} \\]`;
+				}
+			} else {
+				const a = pickInt(3, 10, 3, 10);
+				const b = pickInt(3, 10, 3, 10);
+				const c = pickInt(2, 9, 2, 9);
+				const V = round2(a * b * c);
+				const O = round2(2 * (a * b + a * c + b * c));
+				const m = round2(rho * V);
+
+				textDisplay = `Ein Quader aus ${material.name} hat \\( V = ${num2(V)} \\) ${unitV}, \\( a = ${a} \\) ${unitL} und \\( b = ${b} \\) ${unitL}.<br>Bestimme zuerst \\(c\\), dann \\(O\\) und \\(m\\). Gegeben: \\( \\rho = ${num2(rho)} \\) g/cm³.`;
+				textPrint = `Quader (Umstellen): V = ${num2(V)} ${unitV}, a = ${a} ${unitL}, b = ${b} ${unitL}, rho = ${num2(rho)} g/cm^3. Bestimme c, O, m.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				V &= a \\cdot b \\cdot c \\\\
+				${num2(V)} &= ${a} \\cdot ${b} \\cdot c \\quad | :(${a}\\cdot${b}) \\\\
+				c &= ${num2(V)} : ${num2(a * b)} = ${num2(c)} \\text{ ${unitL}} \\\\
+				O &= 2(ab+ac+bc) = ${num2(O)} \\text{ ${unitO}} \\\\
+				m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+				\\end{aligned} \\]`;
+			}
+			break;
+		}
+
+		case 'geometry_koerper_prisma_dreieck': {
+			const unitL = 'cm';
+			const unitV = 'cm^3';
+			const unitO = 'cm^2';
+			const round2 = (val) => Math.round(val * 100) / 100;
+			const num2 = (val) => formatDecimal(val, 2);
+			const pickInt = (easyMin, easyMax, normalMin, normalMax) => randInt(effectiveEasyMode ? easyMin : normalMin, effectiveEasyMode ? easyMax : normalMax);
+			const material = bodyMaterialDensities[randInt(0, bodyMaterialDensities.length - 1)];
+			const rho = material.rho;
+			const isRearrange = !effectiveEasyMode && Math.random() < 0.5;
+			const useHeightTask = !effectiveEasyMode && !isRearrange && Math.random() < 0.4;
+
+			if (!isRearrange) {
+				const g = pickInt(3, 10, 3, 12);
+				const hG = pickInt(3, 9, 3, 11);
+				const H = pickInt(3, 10, 4, 14);
+				const G = round2(0.5 * g * hG);
+				const c = round2(Math.sqrt(g * g + hG * hG));
+				const uG = round2(g + hG + c);
+				const V = round2(G * H);
+				const O = round2(2 * G + uG * H);
+
+				if (effectiveEasyMode) {
+					textDisplay = `Ein Prisma hat ein rechtwinkliges Dreieck als Grundfläche mit \\( g = ${g} \\) ${unitL}, \\( h_g = ${hG} \\) ${unitL} und Höhe \\( H = ${H} \\) ${unitL}.<br>Berechne Volumen \\(V\\) und Oberfläche \\(O\\).`;
+					textPrint = `Dreiecksprisma: g = ${g} ${unitL}, h_g = ${hG} ${unitL}, H = ${H} ${unitL}. Berechne V und O.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					G &= \\frac{1}{2}gh_g = \\frac{1}{2} \\cdot ${g} \\cdot ${hG} = ${num2(G)} \\text{ ${unitO}} \\\\
+					V &= G \\cdot H = ${num2(G)} \\cdot ${H} = ${num2(V)} \\text{ ${unitV}} \\\\
+					c &= \\sqrt{g^2+h_g^2} = \\sqrt{${g}^2+${hG}^2} = ${num2(c)} \\text{ ${unitL}} \\\\
+					u_G &= g+h_g+c = ${g}+${hG}+${num2(c)} = ${num2(uG)} \\text{ ${unitL}} \\\\
+					O &= 2G + u_G \\cdot H = 2 \\cdot ${num2(G)} + ${num2(uG)} \\cdot ${H} = ${num2(O)} \\text{ ${unitO}}
+					\\end{aligned} \\]`;
+				} else if (useHeightTask) {
+					const g2 = pickInt(3, 8, 3, 8);
+					const hG2 = pickInt(3, 8, 3, 8);
+					const H2 = pickInt(4, 10, 4, 12);
+					const c2 = round2(Math.sqrt(g2 * g2 + hG2 * hG2));
+					const G2 = round2(0.5 * g2 * hG2);
+					const uG2 = round2(g2 + hG2 + c2);
+					const V2 = round2(G2 * H2);
+					const O2 = round2(2 * G2 + uG2 * H2);
+					const m2 = round2(rho * V2);
+					textDisplay = `Ein Dreiecksprisma hat ein rechtwinkliges Grunddreieck mit Grundseite \\( g = ${g2} \\) ${unitL}, Hypotenuse \\( c = ${num2(c2)} \\) ${unitL} und Prismahöhe \\( H = ${H2} \\) ${unitL}.<br>Stoff: ${material.name}, \\( \\rho = ${num2(rho)} \\) g/cm³. Bestimme zuerst \\( h_g \\), danach \\(V\\), \\(O\\) und \\(m\\).`;
+					textPrint = `Dreiecksprisma: g = ${g2}, c = ${num2(c2)}, H = ${H2} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Bestimme h_g, V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					h_g &= \\sqrt{c^2-g^2} = \\sqrt{${num2(c2)}^2-${g2}^2} = ${num2(hG2)} \\text{ ${unitL}} \\\\
+					G &= \\frac{1}{2}gh_g = \\frac{1}{2} \\cdot ${g2} \\cdot ${num2(hG2)} = ${num2(G2)} \\text{ ${unitO}} \\\\
+					V &= G \\cdot H = ${num2(G2)} \\cdot ${H2} = ${num2(V2)} \\text{ ${unitV}} \\\\
+					u_G &= ${g2} + ${num2(hG2)} + ${num2(c2)} = ${num2(uG2)} \\text{ ${unitL}} \\\\
+					O &= 2G + u_G \\cdot H = ${num2(O2)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V2)} = ${num2(m2)} \\text{ g}
+					\\end{aligned} \\]`;
+				} else {
+					const m = round2(rho * V);
+					textDisplay = `Ein Dreiecksprisma hat ein rechtwinkliges Grunddreieck mit \\( g = ${g} \\) ${unitL}, \\( h_g = ${hG} \\) ${unitL} und Prismahöhe \\( H = ${H} \\) ${unitL}.<br>Stoff: ${material.name}, \\( \\rho = ${num2(rho)} \\) g/cm³. Berechne \\(V\\), \\(O\\), \\(m\\).`;
+					textPrint = `Dreiecksprisma: g = ${g}, h_g = ${hG}, H = ${H} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Berechne V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					G &= \\frac{1}{2}gh_g = ${num2(G)} \\text{ ${unitO}} \\\\
+					V &= G \\cdot H = ${num2(G)} \\cdot ${H} = ${num2(V)} \\text{ ${unitV}} \\\\
+					c &= \\sqrt{g^2+h_g^2} = ${num2(c)} \\text{ ${unitL}} \\\\
+					u_G &= ${num2(uG)} \\text{ ${unitL}} \\\\
+					O &= 2G + u_G \\cdot H = ${num2(O)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+					\\end{aligned} \\]`;
+				}
+			} else {
+				const g = pickInt(3, 10, 3, 10);
+				const hG = pickInt(3, 9, 3, 9);
+				const H = pickInt(4, 12, 4, 12);
+				const G = round2(0.5 * g * hG);
+				const V = round2(G * H);
+				const c = round2(Math.sqrt(g * g + hG * hG));
+				const uG = round2(g + hG + c);
+				const O = round2(2 * G + uG * H);
+				const m = round2(rho * V);
+
+				textDisplay = `Ein Dreiecksprisma aus ${material.name} hat \\( V = ${num2(V)} \\) ${unitV}, \\( h_g = ${hG} \\) ${unitL} und \\( H = ${H} \\) ${unitL}.<br>Bestimme zuerst die Grundseite \\(g\\), danach \\(O\\) und \\(m\\). Gegeben: \\( \\rho = ${num2(rho)} \\) g/cm³.`;
+				textPrint = `Dreiecksprisma (Umstellen): V = ${num2(V)} ${unitV}, h_g = ${hG} ${unitL}, H = ${H} ${unitL}, rho = ${num2(rho)} g/cm^3. Bestimme g, O, m.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				V &= \\frac{1}{2} g h_g H \\\\
+				${num2(V)} &= \\frac{1}{2} \\cdot g \\cdot ${hG} \\cdot ${H} \\quad | \\cdot 2 \\\\
+				${num2(2 * V)} &= g \\cdot ${num2(hG * H)} \\quad | :${num2(hG * H)} \\\\
+				g &= ${num2(g)} \\text{ ${unitL}} \\\\
+				c &= \\sqrt{g^2+h_g^2} = ${num2(c)} \\text{ ${unitL}} \\\\
+				u_G &= ${num2(g)} + ${num2(hG)} + ${num2(c)} = ${num2(uG)} \\text{ ${unitL}} \\\\
+				O &= 2G + u_G \\cdot H = ${num2(O)} \\text{ ${unitO}} \\\\
+				m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+				\\end{aligned} \\]`;
+			}
+			break;
+		}
+
+		case 'geometry_koerper_zylinder': {
+			const unitL = 'cm';
+			const unitV = 'cm^3';
+			const unitO = 'cm^2';
+			const round2 = (val) => Math.round(val * 100) / 100;
+			const num2 = (val) => formatDecimal(val, 2);
+			const pickInt = (easyMin, easyMax, normalMin, normalMax) => randInt(effectiveEasyMode ? easyMin : normalMin, effectiveEasyMode ? easyMax : normalMax);
+			const material = bodyMaterialDensities[randInt(0, bodyMaterialDensities.length - 1)];
+			const rho = material.rho;
+			const isRearrange = !effectiveEasyMode && Math.random() < 0.5;
+			const useHeightTask = !effectiveEasyMode && !isRearrange && Math.random() < 0.4;
+
+			if (!isRearrange) {
+				const r = pickInt(2, 7, 2, 11);
+				const h = pickInt(3, 10, 3, 14);
+				const V = round2(Math.PI * r * r * h);
+				const O = round2(2 * Math.PI * r * (r + h));
+
+				if (effectiveEasyMode) {
+					textDisplay = `Ein Kreiszylinder hat Radius \\( r = ${r} \\) ${unitL} und Höhe \\( h = ${h} \\) ${unitL}.<br>Berechne Volumen \\(V\\) und Oberfläche \\(O\\).`;
+					textPrint = `Kreiszylinder: r = ${r} ${unitL}, h = ${h} ${unitL}. Berechne V und O.${space(1.8)}`;
+					s = `\\[ \\begin{aligned}
+					V &= \\pi r^2 h = \\pi \\cdot ${r}^2 \\cdot ${h} \\approx ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= 2\\pi r(r+h) = 2\\pi \\cdot ${r} \\cdot (${r}+${h}) \\approx ${num2(O)} \\text{ ${unitO}}
+					\\end{aligned} \\]`;
+				} else if (useHeightTask) {
+					const r2 = pickInt(2, 8, 2, 8);
+					const h2 = pickInt(4, 12, 4, 12);
+					const d2 = round2(Math.sqrt((2 * r2) ** 2 + h2 ** 2));
+					const V2 = round2(Math.PI * r2 * r2 * h2);
+					const O2 = round2(2 * Math.PI * r2 * (r2 + h2));
+					const m2 = round2(rho * V2);
+					textDisplay = `Ein Kreiszylinder hat Radius \\( r = ${r2} \\) ${unitL}. Die Diagonale des Axialschnitts beträgt \\( d = ${num2(d2)} \\) ${unitL}.<br>Stoff: ${material.name}, \\( \\rho = ${num2(rho)} \\) g/cm³. Bestimme zuerst die Höhe \\(h\\), danach \\(V\\), \\(O\\) und \\(m\\).`;
+					textPrint = `Kreiszylinder: r = ${r2} ${unitL}, Diagonale d = ${num2(d2)} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Bestimme h, V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					h &= \\sqrt{d^2-(2r)^2} = \\sqrt{${num2(d2)}^2-${2 * r2}^2} = ${num2(h2)} \\text{ ${unitL}} \\\\
+					V &= \\pi r^2 h = \\pi \\cdot ${r2}^2 \\cdot ${num2(h2)} \\approx ${num2(V2)} \\text{ ${unitV}} \\\\
+					O &= 2\\pi r(r+h) = 2\\pi \\cdot ${r2} \\cdot (${r2}+${num2(h2)}) \\approx ${num2(O2)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V2)} = ${num2(m2)} \\text{ g}
+					\\end{aligned} \\]`;
+				} else {
+					const m = round2(rho * V);
+					textDisplay = `Ein Kreiszylinder hat \\( r = ${r} \\) ${unitL}, \\( h = ${h} \\) ${unitL}.<br>Stoff: ${material.name}, \\( \\rho = ${num2(rho)} \\) g/cm³. Berechne \\(V\\), \\(O\\), \\(m\\).`;
+					textPrint = `Kreiszylinder: r = ${r} ${unitL}, h = ${h} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Berechne V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					V &= \\pi r^2 h = \\pi \\cdot ${r}^2 \\cdot ${h} \\approx ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= 2\\pi r(r+h) = 2\\pi \\cdot ${r} \\cdot (${r}+${h}) \\approx ${num2(O)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+					\\end{aligned} \\]`;
+				}
+			} else {
+				const r = pickInt(2, 9, 2, 9);
+				const h = pickInt(3, 12, 3, 12);
+				const vPiFactor = r * r * h;
+				const V = round2(Math.PI * vPiFactor);
+				const O = round2(2 * Math.PI * r * (r + h));
+				const m = round2(rho * V);
+
+				textDisplay = `Ein Kreiszylinder aus ${material.name} hat \\( V = ${vPiFactor}\\pi \\) ${unitV} und Radius \\( r = ${r} \\) ${unitL}.<br>Bestimme zuerst die Höhe \\(h\\), danach \\(O\\) und \\(m\\). Gegeben: \\( \\rho = ${num2(rho)} \\) g/cm³.`;
+				textPrint = `Kreiszylinder (Umstellen): V = ${vPiFactor}pi ${unitV}, r = ${r} ${unitL}, rho = ${num2(rho)} g/cm^3. Bestimme h, O, m.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				V &= \\pi r^2 h \\\\
+				${vPiFactor}\\pi &= \\pi \\cdot ${r}^2 \\cdot h \\quad | :\\pi \\\\
+				${vPiFactor} &= ${r * r} \\cdot h \\quad | :${r * r} \\\\
+				h &= ${num2(h)} \\text{ ${unitL}} \\\\
+				O &= 2\\pi r(r+h) = 2\\pi \\cdot ${r} \\cdot (${r}+${num2(h)}) \\approx ${num2(O)} \\text{ ${unitO}} \\\\
+				m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+				\\end{aligned} \\]`;
+			}
+			break;
+		}
+
+		case 'geometry_koerper_pyramide': {
+			const unitL = 'cm';
+			const unitV = 'cm^3';
+			const unitO = 'cm^2';
+			const round2 = (val) => Math.round(val * 100) / 100;
+			const num2 = (val) => formatDecimal(val, 2);
+			const pickInt = (easyMin, easyMax, normalMin, normalMax) => randInt(effectiveEasyMode ? easyMin : normalMin, effectiveEasyMode ? easyMax : normalMax);
+			const material = bodyMaterialDensities[randInt(0, bodyMaterialDensities.length - 1)];
+			const rho = material.rho;
+			const isRearrange = !effectiveEasyMode && Math.random() < 0.5;
+			const useHeightTask = !effectiveEasyMode && !isRearrange && Math.random() < 0.45;
+
+			if (!isRearrange) {
+				const a = pickInt(3, 8, 3, 10);
+				const h = 3 * pickInt(1, 3, 1, 4);
+				const G = round2(a * a);
+				const V = round2((G * h) / 3);
+				const sMantel = round2(Math.sqrt((a / 2) ** 2 + h ** 2));
+				const O = round2(G + 2 * a * sMantel);
+
+				if (effectiveEasyMode) {
+					textDisplay = `Eine regelmäßige quadratische Pyramide hat \\( a = ${a} \\) ${unitL} und Höhe \\( h = ${h} \\) ${unitL}.<br>Berechne Volumen \\(V\\) und Oberfläche \\(O\\).`;
+					textPrint = `Pyramide: a = ${a} ${unitL}, h = ${h} ${unitL}. Berechne V und O.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					G &= a^2 = ${a}^2 = ${num2(G)} \\text{ ${unitO}} \\\\
+					V &= \\frac{1}{3} G h = \\frac{1}{3} \\cdot ${num2(G)} \\cdot ${h} = ${num2(V)} \\text{ ${unitV}} \\\\
+					s &= \\sqrt{(a/2)^2+h^2} = \\sqrt{(${a}/2)^2+${h}^2} = ${num2(sMantel)} \\text{ ${unitL}} \\\\
+					O &= G + 2as = ${num2(G)} + 2 \\cdot ${a} \\cdot ${num2(sMantel)} = ${num2(O)} \\text{ ${unitO}}
+					\\end{aligned} \\]`;
+				} else if (useHeightTask) {
+					const a2 = pickInt(3, 8, 3, 8);
+					const h2 = 3 * pickInt(1, 3, 1, 3);
+					const s2 = round2(Math.sqrt((a2 / 2) ** 2 + h2 ** 2));
+					const G2 = round2(a2 * a2);
+					const V2 = round2((G2 * h2) / 3);
+					const O2 = round2(G2 + 2 * a2 * s2);
+					const m2 = round2(rho * V2);
+					textDisplay = `Eine quadratische Pyramide hat Grundkante \\( a = ${a2} \\) ${unitL} und Seitenhöhe \\( s = ${num2(s2)} \\) ${unitL}.<br>Stoff: ${material.name}, \\( \\rho = ${num2(rho)} \\) g/cm³. Bestimme zuerst die Körperhöhe \\(h\\), danach \\(V\\), \\(O\\) und \\(m\\).`;
+					textPrint = `Pyramide: a = ${a2} ${unitL}, Seitenhöhe s = ${num2(s2)} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Bestimme h, V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					h &= \\sqrt{s^2-(a/2)^2} = \\sqrt{${num2(s2)}^2-(${a2}/2)^2} = ${num2(h2)} \\text{ ${unitL}} \\\\
+					G &= a^2 = ${a2}^2 = ${num2(G2)} \\text{ ${unitO}} \\\\
+					V &= \\frac{1}{3}Gh = \\frac{1}{3} \\cdot ${num2(G2)} \\cdot ${num2(h2)} = ${num2(V2)} \\text{ ${unitV}} \\\\
+					O &= G + 2as = ${num2(G2)} + 2 \\cdot ${a2} \\cdot ${num2(s2)} = ${num2(O2)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V2)} = ${num2(m2)} \\text{ g}
+					\\end{aligned} \\]`;
+				} else {
+					const m = round2(rho * V);
+					textDisplay = `Eine quadratische Pyramide hat \\( a = ${a} \\) ${unitL}, \\( h = ${h} \\) ${unitL}.<br>Stoff: ${material.name}, \\( \\rho = ${num2(rho)} \\) g/cm³. Berechne \\(V\\), \\(O\\), \\(m\\).`;
+					textPrint = `Pyramide: a = ${a} ${unitL}, h = ${h} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Berechne V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					G &= a^2 = ${num2(G)} \\text{ ${unitO}} \\\\
+					V &= \\frac{1}{3}Gh = ${num2(V)} \\text{ ${unitV}} \\\\
+					s &= \\sqrt{(a/2)^2+h^2} = ${num2(sMantel)} \\text{ ${unitL}} \\\\
+					O &= G + 2as = ${num2(O)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+					\\end{aligned} \\]`;
+				}
+			} else {
+				const a = pickInt(3, 9, 3, 9);
+				const h = 3 * pickInt(1, 4, 1, 4);
+				const G = round2(a * a);
+				const V = round2((G * h) / 3);
+				const sMantel = round2(Math.sqrt((a / 2) ** 2 + h ** 2));
+				const O = round2(G + 2 * a * sMantel);
+				const m = round2(rho * V);
+
+				textDisplay = `Eine quadratische Pyramide aus ${material.name} hat \\( V = ${num2(V)} \\) ${unitV} und Grundkante \\( a = ${a} \\) ${unitL}.<br>Bestimme zuerst die Höhe \\(h\\), danach \\(O\\) und \\(m\\). Gegeben: \\( \\rho = ${num2(rho)} \\) g/cm³.`;
+				textPrint = `Pyramide (Umstellen): V = ${num2(V)} ${unitV}, a = ${a} ${unitL}, rho = ${num2(rho)} g/cm^3. Bestimme h, O, m.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				V &= \\frac{1}{3}a^2h \\\\
+				${num2(V)} &= \\frac{1}{3} \\cdot ${a}^2 \\cdot h \\quad | \\cdot 3 \\\\
+				${num2(3 * V)} &= ${a * a} \\cdot h \\quad | :${a * a} \\\\
+				h &= ${num2(h)} \\text{ ${unitL}} \\\\
+				s &= \\sqrt{(a/2)^2+h^2} = \\sqrt{(${a}/2)^2+${num2(h)}^2} = ${num2(sMantel)} \\text{ ${unitL}} \\\\
+				O &= a^2 + 2as = ${num2(O)} \\text{ ${unitO}} \\\\
+				m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+				\\end{aligned} \\]`;
+			}
+			break;
+		}
+
+		case 'geometry_koerper_kegel': {
+			const unitL = 'cm';
+			const unitV = 'cm^3';
+			const unitO = 'cm^2';
+			const round2 = (val) => Math.round(val * 100) / 100;
+			const num2 = (val) => formatDecimal(val, 2);
+			const pickInt = (easyMin, easyMax, normalMin, normalMax) => randInt(effectiveEasyMode ? easyMin : normalMin, effectiveEasyMode ? easyMax : normalMax);
+			const material = bodyMaterialDensities[randInt(0, bodyMaterialDensities.length - 1)];
+			const rho = material.rho;
+			const isRearrange = !effectiveEasyMode && Math.random() < 0.5;
+			const useHeightTask = !effectiveEasyMode && !isRearrange && Math.random() < 0.45;
+
+			if (!isRearrange) {
+				const r = pickInt(2, 7, 2, 10);
+				const h = 3 * pickInt(1, 3, 1, 4);
+				const sMantel = round2(Math.sqrt(r * r + h * h));
+				const V = round2((Math.PI * r * r * h) / 3);
+				const O = round2(Math.PI * r * (r + sMantel));
+
+				if (effectiveEasyMode) {
+					textDisplay = `Ein Kreiskegel hat Radius \\( r = ${r} \\) ${unitL} und Höhe \\( h = ${h} \\) ${unitL}.<br>Berechne Volumen \\(V\\) und Oberfläche \\(O\\).`;
+					textPrint = `Kreiskegel: r = ${r} ${unitL}, h = ${h} ${unitL}. Berechne V und O.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					s &= \\sqrt{r^2+h^2} = \\sqrt{${r}^2+${h}^2} = ${num2(sMantel)} \\text{ ${unitL}} \\\\
+					V &= \\frac{1}{3}\\pi r^2 h = \\frac{1}{3}\\pi \\cdot ${r}^2 \\cdot ${h} \\approx ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= \\pi r(r+s) = \\pi \\cdot ${r} \\cdot (${r}+${num2(sMantel)}) \\approx ${num2(O)} \\text{ ${unitO}}
+					\\end{aligned} \\]`;
+				} else if (useHeightTask) {
+					const r2 = pickInt(2, 7, 2, 7);
+					const h2 = 3 * pickInt(1, 3, 1, 3);
+					const s2 = round2(Math.sqrt(r2 * r2 + h2 * h2));
+					const V2 = round2((Math.PI * r2 * r2 * h2) / 3);
+					const O2 = round2(Math.PI * r2 * (r2 + s2));
+					const m2 = round2(rho * V2);
+					textDisplay = `Ein Kreiskegel hat Radius \\( r = ${r2} \\) ${unitL} und Mantellinie \\( s = ${num2(s2)} \\) ${unitL}.<br>Stoff: ${material.name}, \\( \\rho = ${num2(rho)} \\) g/cm³. Bestimme zuerst die Höhe \\(h\\), danach \\(V\\), \\(O\\) und \\(m\\).`;
+					textPrint = `Kreiskegel: r = ${r2} ${unitL}, Mantellinie s = ${num2(s2)} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Bestimme h, V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					h &= \\sqrt{s^2-r^2} = \\sqrt{${num2(s2)}^2-${r2}^2} = ${num2(h2)} \\text{ ${unitL}} \\\\
+					V &= \\frac{1}{3}\\pi r^2 h = \\frac{1}{3}\\pi \\cdot ${r2}^2 \\cdot ${num2(h2)} \\approx ${num2(V2)} \\text{ ${unitV}} \\\\
+					O &= \\pi r(r+s) = \\pi \\cdot ${r2} \\cdot (${r2}+${num2(s2)}) \\approx ${num2(O2)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V2)} = ${num2(m2)} \\text{ g}
+					\\end{aligned} \\]`;
+				} else {
+					const m = round2(rho * V);
+					textDisplay = `Ein Kreiskegel hat \\( r = ${r} \\) ${unitL}, \\( h = ${h} \\) ${unitL}.<br>Stoff: ${material.name}, \\( \\rho = ${num2(rho)} \\) g/cm³. Berechne \\(V\\), \\(O\\), \\(m\\).`;
+					textPrint = `Kreiskegel: r = ${r} ${unitL}, h = ${h} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Berechne V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					s &= \\sqrt{r^2+h^2} = ${num2(sMantel)} \\text{ ${unitL}} \\\\
+					V &= \\frac{1}{3}\\pi r^2 h \\approx ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= \\pi r(r+s) \\approx ${num2(O)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+					\\end{aligned} \\]`;
+				}
+			} else {
+				const r = pickInt(2, 8, 2, 8);
+				const h = 3 * pickInt(1, 4, 1, 4);
+				const vPiFactor = round2((r * r * h) / 3);
+				const sMantel = round2(Math.sqrt(r * r + h * h));
+				const V = round2(Math.PI * vPiFactor);
+				const O = round2(Math.PI * r * (r + sMantel));
+				const m = round2(rho * V);
+
+				textDisplay = `Ein Kreiskegel aus ${material.name} hat \\( V = ${num2(vPiFactor)}\\pi \\) ${unitV} und Radius \\( r = ${r} \\) ${unitL}.<br>Bestimme zuerst die Höhe \\(h\\), danach \\(O\\) und \\(m\\). Gegeben: \\( \\rho = ${num2(rho)} \\) g/cm³.`;
+				textPrint = `Kreiskegel (Umstellen): V = ${num2(vPiFactor)}pi ${unitV}, r = ${r} ${unitL}, rho = ${num2(rho)} g/cm^3. Bestimme h, O, m.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				V &= \\frac{1}{3}\\pi r^2 h \\\\
+				${num2(vPiFactor)}\\pi &= \\frac{1}{3}\\pi \\cdot ${r}^2 \\cdot h \\quad | \\cdot 3 : \\pi \\\\
+				${num2(3 * vPiFactor)} &= ${r * r} \\cdot h \\quad | :${r * r} \\\\
+				h &= ${num2(h)} \\text{ ${unitL}} \\\\
+				s &= \\sqrt{r^2+h^2} = ${num2(sMantel)} \\text{ ${unitL}} \\\\
+				O &= \\pi r(r+s) \\approx ${num2(O)} \\text{ ${unitO}} \\\\
+				m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+				\\end{aligned} \\]`;
+			}
+			break;
+		}
+
+		case 'geometry_koerper_kugel': {
+			const unitL = 'cm';
+			const unitV = 'cm^3';
+			const unitO = 'cm^2';
+			const round2 = (val) => Math.round(val * 100) / 100;
+			const num2 = (val) => formatDecimal(val, 2);
+			const pickInt = (easyMin, easyMax, normalMin, normalMax) => randInt(effectiveEasyMode ? easyMin : normalMin, effectiveEasyMode ? easyMax : normalMax);
+			const material = bodyMaterialDensities[randInt(0, bodyMaterialDensities.length - 1)];
+			const rho = material.rho;
+			const isRearrange = !effectiveEasyMode && Math.random() < 0.5;
+
+			if (!isRearrange) {
+				const r = pickInt(2, 8, 2, 10);
+				const V = round2((4 / 3) * Math.PI * r ** 3);
+				const O = round2(4 * Math.PI * r * r);
+
+				if (effectiveEasyMode) {
+					textDisplay = `Eine Kugel hat Radius \\( r = ${r} \\) ${unitL}.<br>Berechne Volumen \\(V\\) und Oberfläche \\(O\\).`;
+					textPrint = `Kugel: r = ${r} ${unitL}. Berechne V und O.${space(1.8)}`;
+					s = `\\[ \\begin{aligned}
+					V &= \\frac{4}{3}\\pi r^3 = \\frac{4}{3}\\pi \\cdot ${r}^3 \\approx ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= 4\\pi r^2 = 4\\pi \\cdot ${r}^2 \\approx ${num2(O)} \\text{ ${unitO}}
+					\\end{aligned} \\]`;
+				} else {
+					const m = round2(rho * V);
+					textDisplay = `Eine Kugel hat Radius \\( r = ${r} \\) ${unitL}.<br>Stoff: ${material.name}, \\( \\rho = ${num2(rho)} \\) g/cm³. Berechne \\(V\\), \\(O\\), \\(m\\).`;
+					textPrint = `Kugel: r = ${r} ${unitL}, Stoff: ${material.name}, rho = ${num2(rho)} g/cm^3. Berechne V, O, m.${space(2)}`;
+					s = `\\[ \\begin{aligned}
+					V &= \\frac{4}{3}\\pi r^3 \\approx ${num2(V)} \\text{ ${unitV}} \\\\
+					O &= 4\\pi r^2 \\approx ${num2(O)} \\text{ ${unitO}} \\\\
+					m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+					\\end{aligned} \\]`;
+				}
+			} else {
+				const r = pickInt(2, 9, 2, 9);
+				const O = round2(4 * Math.PI * r * r);
+				const V = round2((4 / 3) * Math.PI * r ** 3);
+				const m = round2(rho * V);
+
+				textDisplay = `Eine Kugel aus ${material.name} hat die Oberfläche \\( O = ${num2(O)} \\) ${unitO}.<br>Bestimme zuerst den Radius \\(r\\), danach \\(V\\) und \\(m\\). Gegeben: \\( \\rho = ${num2(rho)} \\) g/cm³.`;
+				textPrint = `Kugel (Umstellen): O = ${num2(O)} ${unitO}, rho = ${num2(rho)} g/cm^3. Bestimme r, V, m.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				O &= 4\\pi r^2 \\\\
+				${num2(O)} &= 4\\pi r^2 \\quad | : (4\\pi) \\\\
+				r^2 &= ${num2(round2(O / (4 * Math.PI)))} \\quad | \\sqrt{\\phantom{0}} \\\\
+				r &= ${num2(r)} \\text{ ${unitL}} \\\\
+				V &= \\frac{4}{3}\\pi r^3 = \\frac{4}{3}\\pi \\cdot ${num2(r)}^3 \\approx ${num2(V)} \\text{ ${unitV}} \\\\
+				m &= \\rho \\cdot V = ${num2(rho)} \\cdot ${num2(V)} = ${num2(m)} \\text{ g}
+				\\end{aligned} \\]`;
 			}
 			break;
 		}
@@ -1517,6 +2298,102 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 			} 
 			textDisplay = taskStr;
 			s = `${resStr}`;
+			break;
+		}
+
+		case 'trigonometrie_rechtwinklig': {
+			const subType = randInt(0, 4);
+			if (subType === 0) {
+				const c = randInt(70, 180) / 10;
+				const alpha = choose([24, 28, 32, 35, 41, 47, 53, 58, 64]);
+				const a = round2(c * Math.sin(toRadians(alpha)));
+				textDisplay = `Ein rechtwinkliges Dreieck hat Hypotenuse \\( c = ${num2(c)} \\) cm und Gegenkathete \\( a = ${num2(a)} \\) cm.<br>Berechne den Winkel \\( \\alpha \\).`;
+				textPrint = `Rechtwinkliges Dreieck: c = ${num2(c)} cm, a = ${num2(a)} cm. Berechne alpha.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				\\sin(\\alpha) &= \\frac{a}{c} = \\frac{${num2(a)}}{${num2(c)}} \\\\
+				\\alpha &= \\sin^{-1}\\left(\\frac{${num2(a)}}{${num2(c)}}\\right) \\approx ${num1(alpha)}^\\circ
+				\\end{aligned} \\]`;
+			} else if (subType === 1) {
+				const c = randInt(80, 200) / 10;
+				const alpha = choose([21, 27, 33, 39, 45, 52, 57, 63]);
+				const b = round2(c * Math.cos(toRadians(alpha)));
+				textDisplay = `Ein rechtwinkliges Dreieck hat Hypotenuse \\( c = ${num2(c)} \\) cm und Ankathete \\( b = ${num2(b)} \\) cm.<br>Berechne den Winkel \\( \\alpha \\).`;
+				textPrint = `Rechtwinkliges Dreieck: c = ${num2(c)} cm, b = ${num2(b)} cm. Berechne alpha.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				\\cos(\\alpha) &= \\frac{b}{c} = \\frac{${num2(b)}}{${num2(c)}} \\\\
+				\\alpha &= \\cos^{-1}\\left(\\frac{${num2(b)}}{${num2(c)}}\\right) \\approx ${num1(alpha)}^\\circ
+				\\end{aligned} \\]`;
+			} else if (subType === 2) {
+				const b = randInt(60, 160) / 10;
+				const alpha = choose([18, 24, 29, 34, 38, 43, 49, 56, 61]);
+				const a = round2(b * Math.tan(toRadians(alpha)));
+				textDisplay = `Ein rechtwinkliges Dreieck hat Ankathete \\( b = ${num2(b)} \\) cm und Gegenkathete \\( a = ${num2(a)} \\) cm.<br>Berechne den Winkel \\( \\alpha \\).`;
+				textPrint = `Rechtwinkliges Dreieck: b = ${num2(b)} cm, a = ${num2(a)} cm. Berechne alpha.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				\\tan(\\alpha) &= \\frac{a}{b} = \\frac{${num2(a)}}{${num2(b)}} \\\\
+				\\alpha &= \\tan^{-1}\\left(\\frac{${num2(a)}}{${num2(b)}}\\right) \\approx ${num1(alpha)}^\\circ
+				\\end{aligned} \\]`;
+			} else if (subType === 3) {
+				const c = randInt(90, 220) / 10;
+				const alpha = choose([24, 30, 36, 42, 48, 54, 60]);
+				const a = round2(c * Math.sin(toRadians(alpha)));
+				const b = round2(c * Math.cos(toRadians(alpha)));
+				textDisplay = `Ein rechtwinkliges Dreieck hat Hypotenuse \\( c = ${num2(c)} \\) cm und Winkel \\( \\alpha = ${alpha}^\\circ \\).<br>Berechne Gegenkathete \\(a\\) und Ankathete \\(b\\).`;
+				textPrint = `Rechtwinkliges Dreieck: c = ${num2(c)} cm, alpha = ${alpha}°. Berechne a und b.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				a &= c \\cdot \\sin(\\alpha) = ${num2(c)} \\cdot \\sin(${alpha}^\\circ) \\approx ${num2(a)} \\text{ cm} \\\\
+				b &= c \\cdot \\cos(\\alpha) = ${num2(c)} \\cdot \\cos(${alpha}^\\circ) \\approx ${num2(b)} \\text{ cm}
+				\\end{aligned} \\]`;
+			} else {
+				const b = randInt(70, 160) / 10;
+				const alpha = choose([22, 27, 31, 37, 44, 51, 59]);
+				const c = round2(b / Math.cos(toRadians(alpha)));
+				const a = round2(b * Math.tan(toRadians(alpha)));
+				textDisplay = `Ein rechtwinkliges Dreieck hat Ankathete \\( b = ${num2(b)} \\) cm und Winkel \\( \\alpha = ${alpha}^\\circ \\).<br>Berechne Hypotenuse \\(c\\) und Gegenkathete \\(a\\).`;
+				textPrint = `Rechtwinkliges Dreieck: b = ${num2(b)} cm, alpha = ${alpha}°. Berechne c und a.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				c &= \\frac{b}{\\cos(\\alpha)} = \\frac{${num2(b)}}{\\cos(${alpha}^\\circ)} \\approx ${num2(c)} \\text{ cm} \\\\
+				a &= b \\cdot \\tan(\\alpha) = ${num2(b)} \\cdot \\tan(${alpha}^\\circ) \\approx ${num2(a)} \\text{ cm}
+				\\end{aligned} \\]`;
+			}
+			break;
+		}
+
+		case 'sinus_kosinus_satz': {
+			const subType = randInt(0, 1);
+			if (subType === 0) {
+				const alpha = choose([32, 38, 44, 51, 57, 63]);
+				const beta = choose([41, 47, 53, 58, 64, 69]);
+				const gamma = 180 - alpha - beta;
+				const a = randInt(70, 180) / 10;
+				const b = round2(a * Math.sin(toRadians(beta)) / Math.sin(toRadians(alpha)));
+				const c = round2(a * Math.sin(toRadians(gamma)) / Math.sin(toRadians(alpha)));
+				textDisplay = `In einem Dreieck sind \\( a = ${num2(a)} \\) cm, \\( \\alpha = ${alpha}^\\circ \\) und \\( \\beta = ${beta}^\\circ \\) gegeben.<br>Berechne \\( \\gamma \\), \\(b\\) und \\(c\\) mit dem Sinussatz.`;
+				textPrint = `Dreieck: a = ${num2(a)} cm, alpha = ${alpha}°, beta = ${beta}°. Berechne gamma, b und c.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				\\gamma &= 180^\\circ - ${alpha}^\\circ - ${beta}^\\circ = ${gamma}^\\circ \\\\
+				\\frac{a}{\\sin(\\alpha)} &= \\frac{b}{\\sin(\\beta)} = \\frac{c}{\\sin(\\gamma)} \\\\
+				b &= \\frac{a \\cdot \\sin(\\beta)}{\\sin(\\alpha)} = \\frac{${num2(a)} \\cdot \\sin(${beta}^\\circ)}{\\sin(${alpha}^\\circ)} \\approx ${num2(b)} \\text{ cm} \\\\
+				c &= \\frac{a \\cdot \\sin(\\gamma)}{\\sin(\\alpha)} = \\frac{${num2(a)} \\cdot \\sin(${gamma}^\\circ)}{\\sin(${alpha}^\\circ)} \\approx ${num2(c)} \\text{ cm}
+				\\end{aligned} \\]`;
+			} else {
+				const a = randInt(60, 140) / 10;
+				const b = randInt(70, 160) / 10;
+				const gamma = choose([38, 46, 54, 61, 68, 75]);
+				const c = round2(Math.sqrt(a * a + b * b - 2 * a * b * Math.cos(toRadians(gamma))));
+				const alpha = round2(toDegrees(Math.asin((a * Math.sin(toRadians(gamma))) / c)));
+				const beta = round2(180 - gamma - alpha);
+				textDisplay = `In einem Dreieck sind \\( a = ${num2(a)} \\) cm, \\( b = ${num2(b)} \\) cm und \\( \\gamma = ${gamma}^\\circ \\) gegeben.<br>Berechne zunächst \\(c\\) mit dem Kosinussatz und danach \\( \\alpha \\) und \\( \\beta \\).`;
+				textPrint = `Dreieck: a = ${num2(a)} cm, b = ${num2(b)} cm, gamma = ${gamma}°. Berechne c, alpha und beta.${space(2)}`;
+				s = `\\[ \\begin{aligned}
+				c^2 &= a^2+b^2-2ab \\cos(\\gamma) \\\\
+				c^2 &= ${num2(a)}^2+${num2(b)}^2-2 \\cdot ${num2(a)} \\cdot ${num2(b)} \\cdot \\cos(${gamma}^\\circ) \\\\
+				c &\\approx ${num2(c)} \\text{ cm} \\\\
+				\\frac{a}{\\sin(\\alpha)} &= \\frac{c}{\\sin(\\gamma)} \\\\
+				\\alpha &= \\sin^{-1}\\left(\\frac{${num2(a)} \\cdot \\sin(${gamma}^\\circ)}{${num2(c)}}\\right) \\approx ${num2(alpha)}^\\circ \\\\
+				\\beta &= 180^\\circ - ${gamma}^\\circ - ${num2(alpha)}^\\circ \\approx ${num2(beta)}^\\circ
+				\\end{aligned} \\]`;
+			}
 			break;
 		}
 

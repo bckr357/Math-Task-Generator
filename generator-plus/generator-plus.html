@@ -79,7 +79,7 @@
                 <div v-for="([key, label]) in activeVisibleTypeEntries" :key="'drawer-'+key" class="type-option">
                     <label class="checkbox-label type-label">
                         <input type="number" v-model.number="activeTaskWeights[key]" min="0" max="50" step="1" class="weight-input" title="Konkrete Anzahl dieses Aufgabentyps">
-                        <span>{{ label }}</span>
+                        <span @click="incrementActiveTaskWeight(key)">{{ label }}</span>
                     </label>
                 </div>
             </div>

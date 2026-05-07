@@ -827,6 +827,21 @@ createApp({
             ? state.quizTaskWeights
             : taskCounts;
 
+        const incrementActiveTaskWeight = type => {
+            if (!type) {
+                return;
+            }
+
+            const taskWeightsRef = getActiveTaskWeightsRef();
+            const currentValue = Number(taskWeightsRef.value[type]);
+            const normalizedValue = Number.isFinite(currentValue)
+                ? Math.max(0, Math.floor(currentValue))
+                : 0;
+
+            taskWeightsRef.value[type] = Math.min(50, normalizedValue + 1);
+            syncSelectedTypesFromCounts(activeVisibleTypeKeys.value);
+        };
+
         const selectAllTypes = () => {
             const selectedTypesRef = getActiveSelectedTypesRef();
             const allSelected = activeVisibleTypeKeys.value.length === selectedTypesRef.value.length &&
@@ -1029,6 +1044,7 @@ createApp({
             activeMentalMathMode,
             activeTaskWeights,
             activeSelectedTypesCount,
+            incrementActiveTaskWeight,
             selectAllTypes,
             startTrainingFromTrainingView,
             randomizeTypeSelection,
