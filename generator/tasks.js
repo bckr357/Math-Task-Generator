@@ -664,13 +664,64 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 		case 'pow10': {
 			const createPow10Entry = () => {
+				const normalizeDecimalString = (value) => {
+					let [intPart, fracPart = ''] = value.split('.');
+					intPart = intPart.replace(/^0+(?=\d)/, '');
+					if (intPart === '') {
+						intPart = '0';
+					}
+					fracPart = fracPart.replace(/0+$/, '');
+					return fracPart ? `${intPart}.${fracPart}` : intPart;
+				};
+
+				const fromScaledInteger = (raw, decimals) => {
+					if (decimals <= 0) {
+						return String(raw);
+					}
+					const padded = String(raw).padStart(decimals + 1, '0');
+					const intPart = padded.slice(0, -decimals);
+					const fracPart = padded.slice(-decimals);
+					return normalizeDecimalString(`${intPart}.${fracPart}`);
+				};
+
+				const shiftDecimalString = (value, shift) => {
+					let [intPart, fracPart = ''] = value.split('.');
+					let digits = `${intPart}${fracPart}`;
+					if (!digits) {
+						return '0';
+					}
+					const originalDecimalPos = intPart.length;
+					const newDecimalPos = originalDecimalPos + shift;
+
+					if (newDecimalPos <= 0) {
+						digits = `${'0'.repeat(-newDecimalPos)}${digits}`;
+						return normalizeDecimalString(`0.${digits}`);
+					}
+
+					if (newDecimalPos >= digits.length) {
+						digits = `${digits}${'0'.repeat(newDecimalPos - digits.length)}`;
+						return normalizeDecimalString(digits);
+					}
+
+					return normalizeDecimalString(`${digits.slice(0, newDecimalPos)}.${digits.slice(newDecimalPos)}`);
+				};
+
+				const powerExponents = {
+					0.01: -2,
+					0.1: -1,
+					10: 1,
+					100: 2,
+					1000: 3
+				};
+
 				// Zehnerpotenzen: natürliche Zahl oder Dezimalbruch mit 10, 100 oder 1000
 				const powers = [0.1, 0.01, 10, 10, 100, 100, 1000];
 				const power = powers[randInt(0, 6)];
+				const exponent = powerExponents[power];
 				const isMult = Math.random() > 0.5;
 
 				// Operand: entweder natürliche Zahl oder Dezimalbruch (1-2 Stellen)
-				let operand;
+				let operandStrRaw;
 				let isDecimal;
 
 				if (Math.random() > 0.5) {
@@ -678,31 +729,24 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					isDecimal = true;
 					const isDec2 = Math.random() > 0.5;
 					if (isDec2) {
-						operand = rnd(111, 14999) / 100; // 1,11 bis 149,99
+						const raw = rnd(111, 14999); // 1,11 bis 149,99
+						operandStrRaw = fromScaledInteger(raw, 2);
 					} else {
-						operand = rnd(2, 1499) / 10; // 0,2 bis 149,9
+						const raw = rnd(2, 1499); // 0,2 bis 149,9
+						operandStrRaw = fromScaledInteger(raw, 1);
 					}
 				} else {
 					// Natürliche Zahl
 					isDecimal = false;
-					operand = rnd(2, 299);
+					operandStrRaw = String(rnd(2, 299));
 				}
 
 				const op = isMult ? '\\cdot' : ':';
-				let result;
-				let resultStr;
-
-				if (isMult) {
-					result = operand * power;
-					resultStr = formatDecimal(result, 2);
-				} else {
-					result = operand / power;
-					// Bei Division: immer mit angemessener Dezimalgenauigkeit
-					resultStr = formatDecimal(result, 4);
-				}
+				const shift = isMult ? exponent : -exponent;
+				const resultStrRaw = shiftDecimalString(operandStrRaw, shift);
 
 				// Formatierung des Operanden
-				const operandStr = isDecimal ? comma(operand) : operand.toString();
+				const operandStr = isDecimal ? comma(operandStrRaw) : operandStrRaw;
 
 				// Aufgabe
 				const expr = `\\[ ${operandStr} ${op} ${comma(power)} =\\]`;
@@ -713,9 +757,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				// const shiftDescription = `(Komma ${shiftCount} x ${shiftDirection})`;
 				let solution;
 				// const solution = `\\( ${operandStr} ${op} ${power} = ${comma(resultStr)} \\quad \\text{${shiftDescription}}\\)`;
-				if (power < 1 && isMult) solution = `\\[ ${operandStr} ${op} ${comma(power)} = ${comma(resultStr)} \\quad ( : ${1 / power} )\\]`;
-				else if (power < 1 && !isMult) solution = `\\[ ${operandStr} ${op} ${comma(power)} = ${comma(resultStr)} \\quad ( \\cdot ${1 / power} )\\]`;
-				else solution = `\\[ ${operandStr} ${op} ${comma(power)} = ${comma(resultStr)} \\]`;
+				if (power < 1 && isMult) solution = `\\[ ${operandStr} ${op} ${comma(power)} = ${comma(resultStrRaw)} \\quad ( : ${1 / power} )\\]`;
+				else if (power < 1 && !isMult) solution = `\\[ ${operandStr} ${op} ${comma(power)} = ${comma(resultStrRaw)} \\quad ( \\cdot ${1 / power} )\\]`;
+				else solution = `\\[ ${operandStr} ${op} ${comma(power)} = ${comma(resultStrRaw)} \\]`;
 				return { expr, solution };
 			};
 
@@ -2203,8 +2247,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					}
 				});
 				resStr = resParts.length === 0 ? '0' : resParts.join(' ').trim();
-				textDisplay = `Vereinfache den Term: <br>\\( ${taskStr} \\)`;
-				textPrint = `Vereinfache den Term: \\(\\quad ${taskStr} \\) ${space(0.5)}`;
+				textDisplay = `Fasse zusammen: <br>\\( ${taskStr} \\)`;
+				textPrint = `Fasse zusammen: \\(\\quad ${taskStr} = \\) ${space(0.5)}`;
 
 			} else if (mode === 1) {
 				// --- TYP: KLAMMER AUFLÖSEN ---
