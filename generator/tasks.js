@@ -2797,7 +2797,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					let px = randInt(-4, 4);
 					let py = calcF(px);
 					const rhsCase3 = funcStr.replace('f(x) = ', '');
-					textDisplay = `\\( P(${fmtFunctionNumber(px)} | y) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( y \\).`;
+					textDisplay = `\\( P(\\;${fmtFunctionNumber(px)} \\;|\\; y\\;) \\) liegt auf \\( ${funcStr} \\).<br>Bestimme \\( y \\).`;
 					s = `\\( y = f(${fmtFunctionNumber(px)}) = ${rhsCase3.replace(/x/g, `(${fmtFunctionNumber(px)})`)} = ${fmtFunctionNumber(py)} \\)`;
 					break;
 
@@ -3190,7 +3190,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let c = randInt(2, 6);
 				textDisplay = `Zeichne das Schrägbild eines Quaders mit<br> a = ${a} cm, b = ${b} cm, c = ${c} cm.`;
 				textPrint = `Zeichne das Schrägbild eines Quaders mit a = ${a} cm, b = ${b} cm, c = ${c} cm. ${space(a + 1)}`;
-				s = `<img src="img/schraegbild_quader.png" alt="Quader" style="max-width:40%; height:auto;">`;
+				s = `<img src="../img/schraegbild_quader.png" alt="Quader" style="max-width:40%; height:auto;">`;
 				//s = `${space(5)}`;
 				
 			} else if (type === 1) {
