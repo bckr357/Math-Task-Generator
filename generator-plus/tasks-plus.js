@@ -2989,161 +2989,152 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 		}
 		
 		case 'kongruenz': {
-			// Permutation bleibt: Zuordnung von Seiten-/Winkelnamen wird zufaellig gemischt.
-			let p = [0, 1, 2];
-			for (let i = 2; i > 0; i--) {
-				const j = Math.floor(Math.random() * (i + 1));
-				[p[i], p[j]] = [p[j], p[i]];
-			}
-			
-			const type = randInt(0, 3); // 0: SSS, 1: SWS, 2: WSW, 3: SsW
-			const kongruenzsatz = ['SSS', 'SWS', 'WSW', 'SsW'][type];
 			const cm = (x) => formatDecimal(x, 1);
-			const pickDecNoZeroTenth = (minTenths, maxTenths) => {
-				let n;
-				do {
-					n = randInt(minTenths, maxTenths);
-				} while (n % 10 === 0);
-				return n / 10;
-			};
+			const pickDec = (minTenths, maxTenths) => randInt(minTenths, maxTenths) / 10;
 
-			let givenStr = '';
-			let givenSides = [false, false, false];
-			let givenAngles = [false, false, false];
-			let s1, s2, s3, a1, a2, a3;
-			const deg = Math.PI / 180;
-			const computeTriangleHeight = (sides, angles, given) => {
-				const givenSideIndexes = [0, 1, 2].filter((i) => given[i]);
-				if (!givenSideIndexes.length) return 0;
-				const baseIndex = givenSideIndexes.reduce((maxIdx, idx) =>
-					sides[idx] > sides[maxIdx] ? idx : maxIdx,
-					givenSideIndexes[0]
-				);
-				if (baseIndex === 0) return sides[1] * Math.sin(angles[2] * deg);
-				if (baseIndex === 1) return sides[0] * Math.sin(angles[2] * deg);
-				if (baseIndex === 2) return sides[0] * Math.sin(angles[1] * deg);
-				return 0;
-			};
-			const buildGivenStr = () => {
-				const parts = [];
-				if (givenSides[0]) parts.push(`a=${cm(resS[0])}\\,\\text{cm}`);
-				if (givenSides[1]) parts.push(`b=${cm(resS[1])}\\,\\text{cm}`);
-				if (givenSides[2]) parts.push(`c=${cm(resS[2])}\\,\\text{cm}`);
-				if (givenAngles[0]) parts.push(`\\alpha=${resA[0]}^\\circ`);
-				if (givenAngles[1]) parts.push(`\\beta=${resA[1]}^\\circ`);
-				if (givenAngles[2]) parts.push(`\\gamma=${resA[2]}^\\circ`);
-				return parts.length ? `\\( \\; ${parts.join('; \\; ')} \\)` : '';
-			};
+			// Typen:
+			// Gültig: 0: SSS, 1: SWS, 2: WSW, 3: SsW
+			// Kein Satz: 4: WWW, 5: WWS (nicht anliegend), 6: sSw (Winkel ggü. kleinerer Seite), 7: Dreiecksungleichung verletzt
+			const mode = randInt(0, 7);
 
-			if (type === 0) {
-				// SSS
-				do {
-					s1 = pickDecNoZeroTenth(31, 69);
-					s2 = pickDecNoZeroTenth(31, 69);
-					const minS3 = Math.abs(s1 - s2) + 1.5;
-					const maxS3 = Math.min(s1 + s2 - 1.5, 10);
-					const minS3Tenths = Math.ceil(minS3 * 10);
-					const maxS3Tenths = Math.floor(maxS3 * 10);
-					if (minS3Tenths > maxS3Tenths) continue;
-					
-					s3 = pickDecNoZeroTenth(minS3Tenths, maxS3Tenths);
-					
-					a1 = Math.round(Math.acos((s2 * s2 + s3 * s3 - s1 * s1) / (2 * s2 * s3)) * 180 / Math.PI);
-					a2 = Math.round(Math.acos((s1 * s1 + s3 * s3 - s2 * s2) / (2 * s1 * s3)) * 180 / Math.PI);
-					a3 = 180 - a1 - a2;
-					givenSides = [true, true, true];
-					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
-				} while (Math.max(s1, s2, s3) > 9 || triangleHeight > 4 || triangleHeight < 2);
+			let givenParts = [];
+			let theoremName = '';
+			let explanation = '';
 
-			} else if (type === 1) {
-				// SWS
+			if (mode === 0) {
+				// SSS: 3 Seiten mit gültiger Dreiecksungleichung
+				let s1, s2, s3;
 				do {
-					givenSides = [false, false, false];
-					givenAngles = [false, false, false];
-					s1 = pickDecNoZeroTenth(31, 69);
-					s2 = pickDecNoZeroTenth(31, 69);
-					a3 = randInt(25, 125);
-					
-					s3 = Math.sqrt(s1 * s1 + s2 * s2 - 2 * s1 * s2 * Math.cos(a3 * Math.PI / 180));
-					a1 = Math.round(Math.acos((s2 * s2 + s3 * s3 - s1 * s1) / (2 * s2 * s3)) * 180 / Math.PI);
-					s3 = Math.round(s3 * 10) / 10;
-					a2 = 180 - a3 - a1;
-					givenSides[p[0]] = true;
-					givenSides[p[1]] = true;
-					givenAngles[p[2]] = true;
-					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
-				} while (Math.max(s1, s2, s3) > 9 || a2 <= 0 || triangleHeight > 4 || triangleHeight < 2);
-			} else if (type === 2) {
-				// WSW
-				do {
-					givenSides = [false, false, false];
-					givenAngles = [false, false, false];
-					s3 = pickDecNoZeroTenth(31, 69);
-					a1 = randInt(25, 50);
-					a2 = randInt(90, 120);
-					a3 = 180 - a1 - a2;
-					
-					s1 = Math.round((s3 * Math.sin(a1 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
-					s2 = Math.round((s3 * Math.sin(a2 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
-					givenSides[p[2]] = true;
-					givenAngles[p[0]] = true;
-					givenAngles[p[1]] = true;
-					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
-				} while (a3 < 10 || Math.max(s1, s2, s3) > 9 || triangleHeight > 4 || triangleHeight < 2);
+					s1 = pickDec(30, 80);
+					s2 = pickDec(30, 80);
+					s3 = pickDec(30, 80);
+				} while (s1 + s2 <= s3 || s1 + s3 <= s2 || s2 + s3 <= s1);
 
+				givenParts = [
+					`a = ${cm(s1)}\\,\\text{cm}`,
+					`b = ${cm(s2)}\\,\\text{cm}`,
+					`c = ${cm(s3)}\\,\\text{cm}`
+				];
+				theoremName = 'SSS';
+				explanation = 'Drei Seiten gegeben, Dreiecksungleichung erfüllt.';
+			} else if (mode === 1) {
+				// SWS: 2 Seiten und der eingeschlossene Winkel
+				const pairIdx = randInt(0, 2); // 0: (a,b)->gamma, 1: (b,c)->alpha, 2: (a,c)->beta
+				const s1 = pickDec(30, 80);
+				const s2 = pickDec(30, 80);
+				const ang = randInt(25, 120);
+
+				if (pairIdx === 0) {
+					givenParts = [`a = ${cm(s1)}\\,\\text{cm}`, `b = ${cm(s2)}\\,\\text{cm}`, `\\gamma = ${ang}^\\circ`];
+				} else if (pairIdx === 1) {
+					givenParts = [`b = ${cm(s1)}\\,\\text{cm}`, `c = ${cm(s2)}\\,\\text{cm}`, `\\alpha = ${ang}^\\circ`];
+				} else {
+					givenParts = [`a = ${cm(s1)}\\,\\text{cm}`, `c = ${cm(s2)}\\,\\text{cm}`, `\\beta = ${ang}^\\circ`];
+				}
+				theoremName = 'SWS';
+				explanation = 'Zwei Seiten und der von ihnen eingeschlossene Winkel sind gegeben.';
+			} else if (mode === 2) {
+				// WSW: 1 Seite und die beiden anliegenden Winkel
+				const sideIdx = randInt(0, 2); // 0: a mit beta/gamma, 1: b mit alpha/gamma, 2: c mit alpha/beta
+				const sVal = pickDec(30, 80);
+				let a1 = randInt(25, 75);
+				let a2 = randInt(25, 75);
+
+				if (sideIdx === 0) {
+					givenParts = [`a = ${cm(sVal)}\\,\\text{cm}`, `\\beta = ${a1}^\\circ`, `\\gamma = ${a2}^\\circ`];
+				} else if (sideIdx === 1) {
+					givenParts = [`b = ${cm(sVal)}\\,\\text{cm}`, `\\alpha = ${a1}^\\circ`, `\\gamma = ${a2}^\\circ`];
+				} else {
+					givenParts = [`c = ${cm(sVal)}\\,\\text{cm}`, `\\alpha = ${a1}^\\circ`, `\\beta = ${a2}^\\circ`];
+				}
+				theoremName = 'WSW';
+				explanation = 'Eine Seite und die beiden anliegenden Winkel sind gegeben.';
+			} else if (mode === 3) {
+				// SsW: 2 Seiten und der Winkel gegenüber der GRÖSSEREN Seite
+				const pairIdx = randInt(0, 2); // 0: a, b; 1: b, c; 2: a, c
+				let sBig = pickDec(55, 85);
+				let sSmall = pickDec(30, 50);
+				const ang = randInt(35, 95);
+
+				if (pairIdx === 0) {
+					// a > b, Winkel alpha
+					givenParts = [`a = ${cm(sBig)}\\,\\text{cm}`, `b = ${cm(sSmall)}\\,\\text{cm}`, `\\alpha = ${ang}^\\circ`];
+				} else if (pairIdx === 1) {
+					// b > c, Winkel beta
+					givenParts = [`b = ${cm(sBig)}\\,\\text{cm}`, `c = ${cm(sSmall)}\\,\\text{cm}`, `\\beta = ${ang}^\\circ`];
+				} else {
+					// c > a, Winkel gamma
+					givenParts = [`c = ${cm(sBig)}\\,\\text{cm}`, `a = ${cm(sSmall)}\\,\\text{cm}`, `\\gamma = ${ang}^\\circ`];
+				}
+				theoremName = 'SsW';
+				explanation = 'Zwei Seiten und der Gegenwinkel der größeren Seite sind gegeben.';
+			} else if (mode === 4) {
+				// WWW: 3 Winkel
+				let a1 = randInt(30, 80);
+				let a2 = randInt(30, 80);
+				let a3 = 180 - a1 - a2;
+				if (a3 <= 10) {
+					a1 = 50; a2 = 60; a3 = 70;
+				}
+				givenParts = [`\\alpha = ${a1}^\\circ`, `\\beta = ${a2}^\\circ`, `\\gamma = ${a3}^\\circ`];
+				theoremName = 'kein';
+				explanation = 'Drei gegebene Winkel (WWW) legen nur die Form fest, nicht aber die Größe des Dreiecks.';
+			} else if (mode === 5) {
+				// WWS / SWW: 2 Winkel und eine nicht-anliegende bzw. nicht-eingeschlossene Seite
+				const sVal = pickDec(30, 80);
+				let a1 = randInt(25, 75);
+				let a2 = randInt(25, 75);
+				const variant = randInt(0, 2);
+				if (variant === 0) {
+					givenParts = [`a = ${cm(sVal)}\\,\\text{cm}`, `\\alpha = ${a1}^\\circ`, `\\beta = ${a2}^\\circ`];
+				} else if (variant === 1) {
+					givenParts = [`b = ${cm(sVal)}\\,\\text{cm}`, `\\beta = ${a1}^\\circ`, `\\gamma = ${a2}^\\circ`];
+				} else {
+					givenParts = [`c = ${cm(sVal)}\\,\\text{cm}`, `\\alpha = ${a1}^\\circ`, `\\gamma = ${a2}^\\circ`];
+				}
+				theoremName = 'kein';
+				explanation = 'WWS/SWW ist kein Kongruenzsatz (die Seite liegt nicht zwischen den beiden Winkeln).';
+			} else if (mode === 6) {
+				// sSw: 2 Seiten und der Winkel gegenüber der KLEINEREN Seite
+				const pairIdx = randInt(0, 2);
+				let sSmall = pickDec(30, 48);
+				let sBig = pickDec(55, 85);
+				const ang = randInt(35, 75);
+
+				if (pairIdx === 0) {
+					// a < b, aber Winkel alpha (gegenüber a)
+					givenParts = [`a = ${cm(sSmall)}\\,\\text{cm}`, `b = ${cm(sBig)}\\,\\text{cm}`, `\\alpha = ${ang}^\\circ`];
+				} else if (pairIdx === 1) {
+					// b < c, aber Winkel beta (gegenüber b)
+					givenParts = [`b = ${cm(sSmall)}\\,\\text{cm}`, `c = ${cm(sBig)}\\,\\text{cm}`, `\\beta = ${ang}^\\circ`];
+				} else {
+					// a < c, aber Winkel alpha (gegenüber a)
+					givenParts = [`a = ${cm(sSmall)}\\,\\text{cm}`, `c = ${cm(sBig)}\\,\\text{cm}`, `\\alpha = ${ang}^\\circ`];
+				}
+				theoremName = 'kein';
+				explanation = 'Der gegebene Winkel liegt der kleineren Seite gegenüber (sSw ist kein Kongruenzsatz).';
 			} else {
-				// SsW
-				do {
-					givenSides = [false, false, false];
-					givenAngles = [false, false, false];
-					s1 = pickDecNoZeroTenth(51, 69);
-					s2 = pickDecNoZeroTenth(31, 49);
-					a1 = randInt(25, 110);
-					
-					const sinA2 = (s2 * Math.sin(a1 * Math.PI / 180)) / s1;
-					if (sinA2 >= 1 || sinA2 <= -1) {
-						a2 = NaN;
-						a3 = NaN;
-						s3 = NaN;
-						continue;
-					}
-
-					a2 = Math.round(Math.asin(sinA2) * 180 / Math.PI);
-					a3 = 180 - a1 - a2;
-					s3 = Math.round((s1 * Math.sin(a3 * Math.PI / 180) / Math.sin(a1 * Math.PI / 180)) * 10) / 10;
-					givenSides[p[0]] = true;
-					givenSides[p[1]] = true;
-					givenAngles[p[0]] = true;
-					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
-				} while (!Number.isFinite(s3) || a3 < 10 || Math.max(s1, s2, s3) > 9 || triangleHeight > 4 || triangleHeight < 2);
-
+				// Dreiecksungleichung verletzt: 3 Seiten
+				let s1 = pickDec(20, 35);
+				let s2 = pickDec(20, 35);
+				let s3 = pickDec(75, 95); // s1 + s2 < s3
+				givenParts = [`a = ${cm(s1)}\\,\\text{cm}`, `b = ${cm(s2)}\\,\\text{cm}`, `c = ${cm(s3)}\\,\\text{cm}`];
+				theoremName = 'kein';
+				explanation = 'Die Dreiecksungleichung ist verletzt (Summe zweier Seiten ist kleiner als die dritte Seite).';
 			}
 
-			const resS = [], resA = [];
-			resS[p[0]] = s1; resS[p[1]] = s2; resS[p[2]] = s3;
-			resA[p[0]] = a1; resA[p[1]] = a2; resA[p[2]] = a3;
+			// Reihenfolge der gegebenen Angaben zufällig mischen
+			const displayGiven = fisherYatesShuffle(givenParts).join('; \\; ');
+			const displayPrompt = 'Welcher Kongruenzsatz liegt vor? (SSS, SWS, WSW, SsW oder kein)';
 
-			givenStr = buildGivenStr();
+			textDisplay = `${displayPrompt} <br>\\( ${displayGiven} \\)`;
+			textPrint = `${displayPrompt} \\( ${displayGiven} \\)`;
 
-			// Höhe des zu zeichnenden Dreiecks berechnen (bei längster gegebener Seite als Grundseite).
-			// Über Heron: A = sqrt(u(u-a)(u-b)(u-c)), dann h = 2A/g.
-			const sideA = resS[0], sideB = resS[1], sideC = resS[2];
-			const givenSideValues = [];
-			if (givenSides[0]) givenSideValues.push(sideA);
-			if (givenSides[1]) givenSideValues.push(sideB);
-			if (givenSides[2]) givenSideValues.push(sideC);
-			const base = givenSideValues.length ? Math.max(...givenSideValues) : Math.max(sideA, sideB, sideC);
-			const semi = (sideA + sideB + sideC) / 2;
-			const areaSq = semi * (semi - sideA) * (semi - sideB) * (semi - sideC);
-			const area = Math.sqrt(Math.max(0, areaSq));
-			const computedHeight = base > 0 ? (2 * area) / base : 0;
-			const reservedHeight = Number(computedHeight + 0.5).toFixed(1);
-			
-			textDisplay = `Skizziere eine Planfigur, zeichne und beschrifte das Dreieck und miss alle Größen: <br>${givenStr}`;
-			textPrint = `Skizziere eine Planfigur, zeichne und beschrifte das Dreieck und miss alle Größen: ${givenStr}${space(reservedHeight)}`;
-			s = `Kongruenzsatz ${kongruenzsatz}, alle Maße:<br>\\[ \\begin{aligned}
-				a &= ${cm(resS[0])}\\,\\text{cm}; &\\quad b &= ${cm(resS[1])}\\,\\text{cm}; &\\quad c &= ${cm(resS[2])}\\,\\text{cm} \\\\ \\alpha &= ${resA[0]}^\\circ; &\\quad \\beta &= ${resA[1]}^\\circ; &\\quad \\gamma &= ${resA[2]}^\\circ
-			\\end{aligned} \\]`;
+			if (theoremName === 'kein') {
+				s = `\\[ \\text{Kein Kongruenzsatz} \\] (${explanation})`;
+			} else {
+				s = `\\[ \\text{Kongruenzsatz } \\mathbf{${theoremName}} \\] (${explanation})`;
+			}
 			break;
 		}
 

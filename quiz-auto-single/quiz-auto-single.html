@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz-Auto (Einzelfragen) – Mathe-Werkzeuge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,300..900;1,300..900&display=swap">
+
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/shell.css">
+    <link rel="stylesheet" href="./quiz-auto-single.css">
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['\\(', '\\)']] },
+            chtml: { mtextInheritFont: true, matchFontHeight: false, scale: 1 },
+            output: { font: 'mathjax-stix2' }
+        };
+    </script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+    <button class="site-hamburger" aria-label="Hauptmenü öffnen" title="Module">
+        <span class="site-hamburger-line"></span>
+        <span class="site-hamburger-line"></span>
+        <span class="site-hamburger-line"></span>
+    </button>
+    <a href="../index.html" class="site-header-brand">Mathe-Werkzeuge</a>
+</header>
+
+<div id="app">
+    <main class="quiz-single-main">
+        <div class="quiz-single-header">
+            <h1 class="quiz-single-title">🎯 Quiz-Auto (Einzelfragen)</h1>
+            <p class="quiz-single-subtitle">Endlosmodus mit automatischer Auswertung, Streaks und Musterlösungen.</p>
+        </div>
+
+        <!-- SETUP BEREICH -->
+        <section v-if="!quizStarted" class="quiz-single-setup">
+            <div class="quiz-single-setup-row">
+                <label>
+                    Klassenstufe
+                    <select v-model.number="grade" @change="onGradeChange">
+                        <option v-for="g in [5,6,7,8,9,10]" :key="g" :value="g">Klasse {{ g }}</option>
+                    </select>
+                </label>
+            </div>
+
+            <div style="margin-bottom: 12px; font-weight: 600; color: var(--slate-700);">
+                Aufgabentypen auswählen:
+            </div>
+
+            <div class="quiz-single-type-grid">
+                <label v-for="type in availableTypes" :key="type" class="quiz-single-type-chip">
+                    <input type="checkbox" :value="type" v-model="selectedTypes">
+                    {{ typeLabels[type] || type }}
+                </label>
+            </div>
+
+            <div class="quiz-single-setup-actions">
+                <button class="btn" type="button" @click="selectDefaultTypes">Standard (Einfach)</button>
+                <button class="btn" type="button" @click="selectAllTypes">Alle auswählen</button>
+                <button class="btn" type="button" @click="clearTypes">Keine auswählen</button>
+                <button class="btn btn--primary" type="button" @click="startQuiz" :disabled="selectedTypes.length === 0">Quiz starten 🎲</button>
+            </div>
+        </section>
+
+        <!-- QUIZ ENDLOS-BEREICH -->
+        <section v-else-if="currentTask">
+            <!-- STATS & STREAK BAR -->
+            <div class="quiz-single-stats-bar">
+                <div class="quiz-single-stat-group">
+                    <div class="quiz-single-stat-item">
+                        <span>🎯 Richtig:</span>
+                        <span class="quiz-single-stat-value">{{ stats.correct }}</span>
+                    </div>
+                    <div class="quiz-single-stat-item">
+                        <span>📊 Geprüft:</span>
+                        <span class="quiz-single-stat-value">{{ stats.totalChecked }}</span>
+                    </div>
+                    <div class="quiz-single-stat-item">
+                        <span>📈 Quote:</span>
+                        <span class="quiz-single-stat-value">{{ successRate }}%</span>
+                    </div>
+                </div>
+
+                <div class="quiz-single-stat-group">
+                    <div class="quiz-single-streak-badge" title="Aktueller Streak (aufeinanderfolgende richtige Antworten)">
+                        🔥 Streak: {{ stats.streak }}
+                    </div>
+                    <button type="button" class="quiz-single-btn-reset" @click="resetCurrentStats" title="Laufende Zähler auf 0 zurücksetzen">🔄 Reset Zähler</button>
+                </div>
+            </div>
+
+            <!-- AUFGABENKARTE -->
+            <div
+                class="quiz-single-card"
+                :class="{
+                    'quiz-single-card--correct': currentTask.checked && currentTask.correct,
+                    'quiz-single-card--incorrect': currentTask.checked && !currentTask.correct
+                }"
+            >
+                <div class="quiz-single-card-header">
+                    <span>Frage #{{ taskCounter }}</span>
+                    <span class="quiz-single-task-type-tag">{{ typeLabels[currentTask.type] || currentTask.type }}</span>
+                </div>
+
+                <div class="quiz-single-task-text" v-html="currentTask.textDisplay"></div>
+
+                <div class="quiz-single-answer-section">
+                    <math-key-input
+                        v-model="currentTask.userInput"
+                        @confirm="checkCurrentTask"
+                        :disabled="currentTask.checked"
+                    ></math-key-input>
+                    <button
+                        class="btn btn--primary quiz-single-check-button"
+                        type="button"
+                        @click="checkCurrentTask"
+                        :disabled="currentTask.checked"
+                    >
+                        Prüfen
+                    </button>
+
+                    <div v-if="currentTask.checked" class="quiz-single-feedback" :class="currentTask.correct ? 'quiz-single-feedback--correct' : 'quiz-single-feedback--incorrect'">
+                        {{ currentTask.correct ? '✅ Richtig!' : '❌ Falsch' }}
+                    </div>
+                </div>
+
+                <!-- MUSTERLÖSUNG -->
+                <div v-if="currentTask.checked" class="quiz-single-solution-box">
+                    <div class="quiz-single-solution-title">Musterlösung:</div>
+                    <div class="quiz-single-solution-content" v-html="currentTask.solution"></div>
+                </div>
+            </div>
+
+            <!-- CONTROLS UNTEN -->
+            <div class="quiz-single-controls">
+                <button class="btn" type="button" @click="exitQuiz">⬅ Quiz beenden</button>
+                <button
+                    class="btn btn--primary"
+                    type="button"
+                    @click="nextTask"
+                    :disabled="!currentTask.checked"
+                >
+                    Nächste Aufgabe ➔
+                </button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="../js/utils.js"></script>
+<script src="./tasks.js"></script>
+<script src="./grading.js"></script>
+<script src="./mathKeyInput.js"></script>
+<script src="./quiz-auto-single.js"></script>
+<script src="../js/modules/site-shell.js"></script>
+</body>
+</html>

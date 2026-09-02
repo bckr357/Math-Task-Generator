@@ -47,6 +47,13 @@
             icon: '📋',
             url: 'kompetenzraster/kompetenzraster.html',
             desc: 'Klassen 5–10 im Überblick'
+        },
+        {
+            key: 'quiz-auto-single',
+            label: 'Quiz-Auto Single',
+            icon: '🎯',
+            url: 'quiz-auto-single/quiz-auto-single.html',
+            desc: 'Endlos-Training mit Einzelfragen'
         }
     ];
 
@@ -59,7 +66,7 @@
         const path = window.location.pathname;
         const dir = path.substring(0, path.lastIndexOf('/'));
         const lastSegment = dir.split('/').filter(Boolean).pop() || '';
-        const SUBFOLDERS = ['generator', 'generator-plus', 'quiz', 'kompetenzraster', 'rechner-tools', 'visualisierung'];
+        const SUBFOLDERS = ['generator', 'generator-plus', 'quiz', 'quiz-auto', 'quiz-auto-single', 'kompetenzraster', 'rechner-tools', 'visualisierung'];
         return SUBFOLDERS.includes(lastSegment) ? '../' : '';
     }
 
@@ -72,6 +79,8 @@
             'generator': 'generator',
             'generator-plus': 'generator-plus',
             'quiz': 'quiz',
+            'quiz-auto': 'quiz-auto',
+            'quiz-auto-single': 'quiz-auto-single',
             'kompetenzraster': 'kompetenzraster',
             'rechner-tools': 'rechner-tools',
             'visualisierung': 'visualisierung'

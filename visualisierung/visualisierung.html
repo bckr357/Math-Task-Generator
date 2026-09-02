@@ -11,6 +11,207 @@
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/shell.css">
     <link rel="stylesheet" href="../css/placeholder.css">
+    <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+    <style>
+        /* Zusätzliches Styling für das interaktive Auswahl-System */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+            margin-top: 24px;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary-color, #4f46e5);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.1);
+        }
+
+        .category-card.active {
+            border-color: var(--primary-color, #4f46e5);
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.12);
+        }
+
+        .category-card-icon {
+            font-size: 2.5rem;
+        }
+
+        .category-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--slate-800);
+            margin: 0;
+        }
+
+        /* Animations-Liste */
+        .animation-list-section {
+            display: none;
+            margin-bottom: 32px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .animation-list-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        .animation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .animation-card {
+            background: #ffffff;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .animation-card:hover {
+            border-color: var(--primary-color, #4f46e5);
+            background: rgba(248, 250, 252, 0.8);
+        }
+
+        .animation-card.active {
+            background: var(--primary-color, #4f46e5);
+            border-color: var(--primary-color, #4f46e5);
+            color: #ffffff;
+        }
+
+        .animation-card.active .animation-title {
+            color: #ffffff;
+        }
+
+        .animation-card.active .animation-desc {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .animation-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--slate-800);
+            margin: 0;
+        }
+
+        .animation-desc {
+            font-size: 0.85rem;
+            color: var(--slate-500);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* GeoGebra Container */
+        .viewer-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+            text-align: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .viewer-header {
+            margin-bottom: 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+            padding-bottom: 12px;
+        }
+
+        .viewer-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--slate-800);
+            margin: 0 0 4px 0;
+        }
+
+        .viewer-desc {
+            font-size: 0.95rem;
+            color: var(--slate-500);
+            margin: 0;
+        }
+
+        .ggb-outer-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fafafa;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+        }
+
+        #ggb-element {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(148, 163, 184, 0.2);
+            border-top: 5px solid var(--primary-color, #4f46e5);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+            z-index: 10;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .placeholder-main {
+                padding: calc(var(--shell-header-h) + 24px) 16px 48px;
+            }
+        }
+    </style>
 </head>
 <body class="placeholder-body">
 
@@ -28,46 +229,179 @@
 <main class="placeholder-main">
     <div class="placeholder-hero">
         <div class="placeholder-hero-icon" aria-hidden="true">📊</div>
-        <div class="placeholder-hero-badge">In Vorbereitung</div>
+        <div class="placeholder-hero-badge">Interaktiv</div>
         <h1 class="placeholder-hero-title">Mathematik verstehen</h1>
-        <p class="placeholder-hero-desc">Interaktive Visualisierungen mathematischer Konzepte und Sachverhalte – für ein anschauliches Verständnis im Unterricht und beim Lernen.</p>
+        <p class="placeholder-hero-desc">Wähle ein Thema und entdecke interaktive Visualisierungen, die mathematische Konzepte direkt begreifbar machen.</p>
     </div>
 
-    <div class="placeholder-content">
-        <p class="placeholder-content-title">Geplante Themenbereiche</p>
-        <p>Dieses Modul wird interaktive, dynamische Darstellungen mathematischer Sachverhalte bereitstellen.</p>
-
-        <div class="placeholder-viz-grid">
-            <div class="placeholder-viz-item">
-                <span class="placeholder-viz-item-icon" aria-hidden="true">📈</span>
-                Funktionen & Graphen
-            </div>
-            <div class="placeholder-viz-item">
-                <span class="placeholder-viz-item-icon" aria-hidden="true">📐</span>
-                Geometrie & Konstruktionen
-            </div>
-            <div class="placeholder-viz-item">
-                <span class="placeholder-viz-item-icon" aria-hidden="true">🔢</span>
-                Zahlentheorie & Mengen
-            </div>
-            <div class="placeholder-viz-item">
-                <span class="placeholder-viz-item-icon" aria-hidden="true">📦</span>
-                Körper & Volumen
-            </div>
-            <div class="placeholder-viz-item">
-                <span class="placeholder-viz-item-icon" aria-hidden="true">🔄</span>
-                Transformationen & Symmetrie
-            </div>
-            <div class="placeholder-viz-item">
-                <span class="placeholder-viz-item-icon" aria-hidden="true">🎲</span>
-                Stochastik & Wahrscheinlichkeit
-            </div>
+    <!-- Kategorie-Karten -->
+    <div class="category-grid">
+        <div class="category-card" onclick="selectCategory('geometrie')" id="cat-geometrie">
+            <span class="category-card-icon" aria-hidden="true">📐</span>
+            <h2 class="category-card-title">Geometrie</h2>
+        </div>
+        <div class="category-card" onclick="selectCategory('arithmetik')" id="cat-arithmetik">
+            <span class="category-card-icon" aria-hidden="true">🔢</span>
+            <h2 class="category-card-title">Arithmetik</h2>
+        </div>
+        <div class="category-card" onclick="selectCategory('funktionen')" id="cat-funktionen">
+            <span class="category-card-icon" aria-hidden="true">📈</span>
+            <h2 class="category-card-title">Funktionen</h2>
         </div>
     </div>
+
+    <!-- Animations-Liste (wird dynamisch befüllt) -->
+    <section class="animation-list-section" id="animation-list-section">
+        <p class="animation-list-title" id="animation-list-heading">Verfügbare Visualisierungen</p>
+        <div class="animation-grid" id="animation-grid"></div>
+    </section>
+
+    <!-- Visualisierungs-Bereich (GeoGebra) -->
+    <section class="viewer-section" id="viewer-section">
+        <div class="viewer-header">
+            <h3 class="viewer-title" id="active-title">Satz des Pythagoras</h3>
+            <p class="viewer-desc" id="active-desc">Beschreibung der Visualisierung.</p>
+        </div>
+        <div class="ggb-outer-wrapper">
+            <div class="spinner" id="ggb-spinner"></div>
+            <div id="ggb-element"></div>
+        </div>
+    </section>
+
 </main>
+
+<script>
+    // Datenstruktur für alle Kategorien und deren Animationen (GeoGebra)
+    const categoriesData = {
+        geometrie: {
+            title: "Geometrie & Konstruktionen",
+            animations: [
+                { id: "w5ymws7e", title: "Satz des Pythagoras", desc: "Interaktiver, geometrischer Beweis des Satzes von Pythagoras am rechtwinkligen Dreieck.", width: 670, height: 870 },
+                { id: "qarryhzh", title: "Winkelsumme im Dreieck", desc: "Veranschaulichung, dass die Summe der Innenwinkel in jedem Dreieck exakt 180° beträgt.", width: 850, height: 850 }
+            ]
+        },
+        arithmetik: {
+            title: "Arithmetik & Zahlendarstellung",
+            animations: [
+                { id: "kyg7g7df", title: "Bruchteile am Kreis & Rechteck", desc: "Verstehe Brüche anschaulich anhand einstellbarer Kreissektoren und Rasterflächen.", width: 800, height: 600 },
+                { id: "vdytm6sn", title: "Primfaktorzerlegung", desc: "Zahlen spielerisch und interaktiv in ihre Primfaktoren zerlegen.", width: 800, height: 500 }
+            ]
+        },
+        funktionen: {
+            title: "Funktionen & Graphen",
+            animations: [
+                { id: "vscfup8f", title: "Lineare Funktionen", desc: "Untersuche direkt den Einfluss der Steigung (m) und des y-Achsenabschnitts (t).", width: 800, height: 600 },
+                { id: "cuxv3hqu", title: "Quadratische Funktionen", desc: "Erforsche die Parameter der Scheitelpunktform und beobachte die Parabel-Veränderung.", width: 800, height: 600 }
+            ]
+        }
+    };
+
+    let activeCategory = null;
+    let activeAnimation = null;
+    let currentApplet = null;
+
+    function selectCategory(categoryKey) {
+        // Markiere Kategorie-Karte als aktiv
+        document.querySelectorAll('.category-card').forEach(card => card.classList.remove('active'));
+        document.getElementById(`cat-${categoryKey}`).classList.add('active');
+
+        activeCategory = categoryKey;
+        const data = categoriesData[categoryKey];
+
+        // Setze Titel der Sektion
+        document.getElementById('animation-list-heading').textContent = `Themenbereich: ${data.title}`;
+
+        // Befülle die Animations-Liste
+        const grid = document.getElementById('animation-grid');
+        grid.innerHTML = '';
+
+        data.animations.forEach(anim => {
+            const card = document.createElement('div');
+            card.className = 'animation-card';
+            card.id = `anim-${anim.id}`;
+            card.onclick = () => selectAnimation(anim);
+
+            card.innerHTML = `
+                <h4 class="animation-title">${anim.title}</h4>
+                <p class="animation-desc">${anim.desc}</p>
+            `;
+            grid.appendChild(card);
+        });
+
+        // Zeige die Animations-Liste an
+        const listSection = document.getElementById('animation-list-section');
+        listSection.style.display = 'block';
+        listSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        // Falls bereits eine Animation geladen war, diese nicht zwingend zurücksetzen, aber
+        // falls gewünscht, können wir die erste der neuen Kategorie automatisch laden.
+        if (data.animations.length > 0) {
+            selectAnimation(data.animations[0]);
+        }
+    }
+
+    function selectAnimation(anim) {
+        // Markiere Animations-Karte als aktiv
+        document.querySelectorAll('.animation-card').forEach(card => card.classList.remove('active'));
+        const activeCard = document.getElementById(`anim-${anim.id}`);
+        if (activeCard) {
+            activeCard.classList.add('active');
+        }
+
+        activeAnimation = anim;
+
+        // Setze Titel und Beschreibung im Viewer
+        document.getElementById('active-title').textContent = anim.title;
+        document.getElementById('active-desc').textContent = anim.desc;
+
+        // Zeige den Viewer-Bereich
+        const viewerSection = document.getElementById('viewer-section');
+        viewerSection.style.display = 'block';
+
+        // Lade GeoGebra-Applet
+        loadGeoGebraApplet(anim);
+    }
+
+    function loadGeoGebraApplet(anim) {
+        // Zeige Spinner
+        const spinner = document.getElementById('ggb-spinner');
+        spinner.style.display = 'block';
+
+        // Container leeren für sauberen Neuaufbau
+        const container = document.getElementById('ggb-element');
+        container.innerHTML = '';
+
+        const width = anim.width || 800;
+        const height = anim.height || 600;
+
+        const params = {
+            "appName": "geometry",
+            "material_id": anim.id,
+            "width": width,
+            "height": height,
+            "language": "de",
+            "country": "DE",
+            "showMenuBar": false,
+            "showToolBar": false,
+            "showAlgebraInput": false,
+            "showResetIcon": true,
+            "showStyleBar": false,
+            "enableRightClick": false,
+            "enableLabelDrags": false,
+            "enableShiftDragZoom": true,
+            "showToolBarHelp": false,
+            "appletOnLoad": function() {
+                // Ausblenden des Spinners, wenn geladen
+                spinner.style.display = 'none';
+            }
+        };
+
+        // GGBApplet initialisieren
+        currentApplet = new GGBApplet(params, true);
+        currentApplet.inject('ggb-element');
+    }
+</script>
 
 <script src="../js/modules/site-shell.js"></script>
 </body>
 </html>
-
-
