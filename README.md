@@ -1,7 +1,6 @@
 # Math-Task-Generator
 
-Ein leichtgewichtiges, client-seitiges Tool zum Erzeugen von Mathematik-Aufgaben (Training, Quiz und Arbeitsblätter).
-https://bckr357.github.io/Math-Task-Generator/
+Ein leichtgewichtiges, client-seitiges Tool zum Erzeugen von Mathematik-Aufgaben (Training, Quiz und Arbeitsblätter) und vielem mehr.
 
 ## Features
 - Generiert Aufgaben aus vielen Themenbereichen: Arithmetik, Brüche, Geometrie, Wahrscheinlichkeiten, Funktionen, Statistik u.v.m.
