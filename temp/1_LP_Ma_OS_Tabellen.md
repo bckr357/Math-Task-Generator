@@ -1,46 +1,46 @@
-# Kompetenzraster Mathematik – Oberschule Sachsen (Klasse 5–10)
+# Kompetenzraster Mathematik â€“ Oberschule Sachsen (Klasse 5â€“10)
 
 ---
 
 ## Klassenstufe 5
 
-### Lernbereich 1: Natürliche Zahlen
+### Lernbereich 1: NatÃ¼rliche Zahlen
 
-* (1) Ich kann natürliche Zahlen am Zahlenstrahl veranschaulichen, vergleichen und ordnen.
-* (2) Ich kann natürliche Zahlen in der Stellenwerttafel darstellen.
-* (3) Ich kann natürliche Zahlen schätzen und auf vorgegebene Stellen runden.
-* (4) Ich kann natürliche Zahlen mündlich, halbschriftlich und schriftlich addieren, subtrahieren und multiplizieren.
-* (5) Ich kann natürliche Zahlen schriftlich durch einen einstelligen Divisor dividieren.
-* (6) Ich kann einen Überschlag zur Kontrolle meiner Rechenergebnisse nutzen.
-* (7) Ich kann Rechenstrategien, Rechenvorteile und Rechengesetze einschließlich der Vorrangregeln anwenden.
-* (8) Ich kann Quadratzahlen (bis 20²) und Quadratwurzeln berechnen.
-* (9) Ich kann einfache Gleichungen und Ungleichungen durch systematisches Probieren und mithilfe von Umkehroperationen lösen.
+* (1) Ich kann natÃ¤rliche Zahlen am Zahlenstrahl veranschaulichen, vergleichen und ordnen.
+* (2) Ich kann natÃ¤rliche Zahlen in der Stellenwerttafel darstellen.
+* (3) Ich kann natÃ¤rliche Zahlen schÃ¤tzen und auf vorgegebene Stellen runden.
+* (4) Ich kann natÃ¤rliche Zahlen mÃ¼ndlich, halbschriftlich und schriftlich addieren, subtrahieren und multiplizieren.
+* (5) Ich kann natÃ¤rliche Zahlen schriftlich durch einen einstelligen Divisor dividieren.
+* (6) Ich kann einen Ãœberschlag zur Kontrolle meiner Rechenergebnisse nutzen.
+* (7) Ich kann Rechenstrategien, Rechenvorteile und Rechengesetze einschlieÃ¤lich der Vorrangregeln anwenden.
+* (8) Ich kann Quadratzahlen (bis 20Â²) und Quadratwurzeln berechnen.
+* (9) Ich kann einfache Gleichungen und Ungleichungen durch systematisches Probieren und mithilfe von Umkehroperationen lÃ¶sen.
 * (10) Ich kann zu Sachsituationen Textgleichungen formulieren.
-* (11) Ich kann Vielfache und Teiler einer natürlichen Zahl bestimmen.
-* (12) Ich kann die Teilbarkeitsregeln für 3, 4 und 6 anwenden.
-* (13) Ich kann Primzahlen bestimmen und das Sieb des Eratosthenes erklären.
+* (11) Ich kann Vielfache und Teiler einer natÃ¤rlichen Zahl bestimmen.
+* (12) Ich kann die Teilbarkeitsregeln fÃ¼r 3, 4 und 6 anwenden.
+* (13) Ich kann Primzahlen bestimmen und das Sieb des Eratosthenes erklÃ¤ren.
 
-**Fachbegriffe:** Natürliche Zahl, Zahlenstrahl, Stellenwerttafel, Überschlag, Vorrangregel, Quadratzahl, Quadratwurzel, Gleichung, Ungleichung, Variable, Umkehroperation, Vielfaches, Teiler, Teilbarkeitsregel, Primzahl, Sieb des Eratosthenes.
+**Fachbegriffe:** NatÃ¼rliche Zahl, Zahlenstrahl, Stellenwerttafel, Ãœberschlag, Vorrangregel, Quadratzahl, Quadratwurzel, Gleichung, Ungleichung, Variable, Umkehroperation, Vielfaches, Teiler, Teilbarkeitsregel, Primzahl, Sieb des Eratosthenes.
 
 ---
 
-### Lernbereich 2: Gemeine Brüche, Dezimalzahlen und Größen
+### Lernbereich 2: Gemeine BrÃ¼che, Dezimalzahlen und GrÃ¶ÃŸen
 
-* (1) Ich kann Brüche an geometrischen Figuren und Körpern sowie am Zahlenstrahl darstellen.
-* (2) Ich kann echte und unechte Brüche erkennen und darstellen.
-* (3) Ich kann Zehnerbrüche und endliche Dezimalzahlen ineinander umwandeln.
-* (4) Ich kann Brüche und Dezimalzahlen vergleichen und ordnen.
-* (5) Ich kann gemeine Brüche abschätzen.
+* (1) Ich kann BrÃ¼che an geometrischen Figuren und KÃ¶rpern sowie am Zahlenstrahl darstellen.
+* (2) Ich kann echte und unechte BrÃ¼che erkennen und darstellen.
+* (3) Ich kann ZehnerbrÃ¤che und endliche Dezimalzahlen ineinander umwandeln.
+* (4) Ich kann BrÃ¼che und Dezimalzahlen vergleichen und ordnen.
+* (5) Ich kann gemeine BrÃ¼che abschÃ¤tzen.
 * (6) Ich kann Dezimalzahlen runden.
 * (7) Ich kann Dezimalzahlen addieren und subtrahieren.
-* (8) Ich kann Dezimalzahlen mit einstelligen natürlichen Zahlen und Zehnerpotenzen vervielfachen.
-* (9) Ich kann Dezimalzahlen durch einstellige natürliche Zahlen und Zehnerpotenzen dividieren.
+* (8) Ich kann Dezimalzahlen mit einstelligen natÃ¤rlichen Zahlen und Zehnerpotenzen vervielfachen.
+* (9) Ich kann Dezimalzahlen durch einstellige natÃ¤rliche Zahlen und Zehnerpotenzen dividieren.
 * (10) Ich kann einfache Prozentanteile (0,01; 0,1; 0,2; 0,25; 0,5; 0,75; 1) in Prozentschreibweise darstellen.
-* (11) Ich kann Sachaufgaben mit den Größen Währung, Länge, Masse und Zeit lösen.
-* (12) Ich kann Größenangaben in verschiedenen Schreibweisen darstellen und Einheiten umrechnen.
-* (13) Ich kann mit den Vorsätzen Dezi, Zenti und Milli arbeiten.
+* (11) Ich kann Sachaufgaben mit den GrÃ¶ÃŸen WÃ¤hrung, LÃ¤nge, Masse und Zeit lÃ¶sen.
+* (12) Ich kann GrÃ¶ÃŸenangaben in verschiedenen Schreibweisen darstellen und Einheiten umrechnen.
+* (13) Ich kann mit den VorsÃ¤tzen Dezi, Zenti und Milli arbeiten.
 
-**Fachbegriffe:** Bruch, Zähler, Nenner, echter Bruch, unechter Bruch, Dezimalzahl, Zehnerbruch, Stellenwerttafel, Prozent, Überschlag, Währung, Länge, Masse, Zeit, Einheit, Dezi, Zenti, Milli.
+**Fachbegriffe:** Bruch, ZÃ¤hler, Nenner, echter Bruch, unechter Bruch, Dezimalzahl, Zehnerbruch, Stellenwerttafel, Prozent, Ãœberschlag, WÃ¤hrung, LÃ¤nge, Masse, Zeit, Einheit, Dezi, Zenti, Milli.
 
 ---
 
@@ -49,13 +49,13 @@
 * (1) Ich kann Koordinaten in einem Koordinatensystem (erster Quadrant) ablesen und eintragen.
 * (2) Ich kann geometrische Grundformen erzeugen und beschreiben (parallel, senkrecht, schneidend).
 * (3) Ich kann Winkel messen und zeichnen sowie Winkelarten unterscheiden.
-* (4) Ich kann Würfel skizzieren und ihr Körpernetz zeichnen.
-* (5) Ich kann das Schrägbild eines Würfels mit Verkürzungsverhältnis q = 0,5 und Verzerrungswinkel a = 45° zeichnen.
+* (4) Ich kann WÃ¼rfel skizzieren und ihr KÃ¶rpernetz zeichnen.
+* (5) Ich kann das SchrÃ¤gbild eines WÃ¼rfels mit VerkÃ¤rzungsverhÃ¤ltnis q = 0,5 und Verzerrungswinkel a = 45Â° zeichnen.
 * (6) Ich kann den Umfang von zusammengesetzten Rechteckfiguren berechnen.
-* (7) Ich kann den Flächeninhalt von Figuren, die in Rechtecke zerlegt werden können, berechnen.
-* (8) Ich kann die Oberfläche und das Volumen eines Würfels berechnen.
+* (7) Ich kann den FlÃ¤cheninhalt von Figuren, die in Rechtecke zerlegt werden kÃ¤nnen, berechnen.
+* (8) Ich kann die OberflÃ¤che und das Volumen eines WÃ¼rfels berechnen.
 
-**Fachbegriffe:** Koordinate, Koordinatensystem, Quadrant, parallele Geraden, senkrecht, Winkel, Winkelart, Schrägbild, Körpernetz, Verkürzungsverhältnis, Verzerrungswinkel, Umfang, Flächeninhalt, Flächeninhaltseinheit, Oberfläche, Volumen, Volumeneinheit.
+**Fachbegriffe:** Koordinate, Koordinatensystem, Quadrant, parallele Geraden, senkrecht, Winkel, Winkelart, SchrÃ¤gbild, KÃ¶rpernetz, VerkÃ¤rzungsverhÃ¤ltnis, Verzerrungswinkel, Umfang, FlÃ¤cheninhalt, FlÃ¤cheninhaltseinheit, OberflÃ¤che, Volumen, Volumeneinheit.
 
 ---
 
@@ -77,18 +77,18 @@
 ### Lernbereich 1: Gebrochene Zahlen
 
 * (1) Ich kann gebrochene Zahlen am Zahlenstrahl veranschaulichen.
-* (2) Ich kann Brüche erweitern und kürzen.
-* (3) Ich kann gemeine Brüche in Dezimalzahlen und umgekehrt umwandeln.
+* (2) Ich kann BrÃ¼che erweitern und kÃ¼rzen.
+* (3) Ich kann gemeine BrÃ¼che in Dezimalzahlen und umgekehrt umwandeln.
 * (4) Ich kann gebrochene Zahlen vergleichen und ordnen.
 * (5) Ich kann gebrochene Zahlen addieren und subtrahieren.
 * (6) Ich kann gebrochene Zahlen multiplizieren und dividieren.
-* (7) Ich kann Rechenstrategien, Rechenvorteile und Rechengesetze einschließlich der Vorrangregeln auf gebrochene Zahlen anwenden.
-* (8) Ich kann gebrochene Zahlen überschlagen, abschätzen und runden.
+* (7) Ich kann Rechenstrategien, Rechenvorteile und Rechengesetze einschlieÃ¤lich der Vorrangregeln auf gebrochene Zahlen anwenden.
+* (8) Ich kann gebrochene Zahlen Ãœberschlagen, abschÃ¤tzen und runden.
 * (9) Ich kann das arithmetische Mittel berechnen.
-* (10) Ich kann Sachaufgaben mithilfe von Gleichungen und Ungleichungen mit gebrochenen Zahlen lösen.
-* (11) Ich kann Verhältnisgleichungen aufstellen und lösen.
+* (10) Ich kann Sachaufgaben mithilfe von Gleichungen und Ungleichungen mit gebrochenen Zahlen lÃ¶sen.
+* (11) Ich kann VerhÃ¤ltnisgleichungen aufstellen und lÃ¶sen.
 
-**Fachbegriffe:** Gebrochene Zahl, Bruch, Dezimalzahl, endliche Dezimalzahl, periodische Dezimalzahl, Erweitern, Kürzen, Gleichnamig machen, arithmetisches Mittel, Verhältnisgleichung.
+**Fachbegriffe:** Gebrochene Zahl, Bruch, Dezimalzahl, endliche Dezimalzahl, periodische Dezimalzahl, Erweitern, KÃ¤rzen, Gleichnamig machen, arithmetisches Mittel, VerhÃ¤ltnisgleichung.
 
 ---
 
@@ -97,80 +97,80 @@
 * (1) Ich kann eindeutige, eineindeutige und mehrdeutige Zuordnungen aus der Erfahrungswelt erkennen und unterscheiden.
 * (2) Ich kann direkt proportionale, indirekt proportionale und nicht proportionale Zuordnungen erkennen.
 * (3) Ich kann Zuordnungen in Wortform, Tabellenform, als Graph im Koordinatensystem, als Pfeildarstellung und als Gleichung darstellen.
-* (4) Ich kann den Dreisatz für direkte und indirekte Proportionalitäten anwenden.
-* (5) Ich kann Sachaufgaben zur direkten und indirekten Proportionalität lösen.
+* (4) Ich kann den Dreisatz fÃ¼r direkte und indirekte ProportionalitÃ¤ten anwenden.
+* (5) Ich kann Sachaufgaben zur direkten und indirekten ProportionalitÃ¤t lÃ¶sen.
 
-**Fachbegriffe:** Zuordnung, eindeutig, eineindeutig, mehrdeutig, direkte Proportionalität, indirekte Proportionalität, Dreisatz, Koordinatensystem, Pfeildarstellung, Tabelle.
+**Fachbegriffe:** Zuordnung, eindeutig, eineindeutig, mehrdeutig, direkte ProportionalitÃ¤t, indirekte ProportionalitÃ¤t, Dreisatz, Koordinatensystem, Pfeildarstellung, Tabelle.
 
 ---
 
 ### Lernbereich 3: Geometrie in der Ebene
 
 * (1) Ich kann Winkelbeziehungen untersuchen und Vermutungen dazu aufstellen.
-* (2) Ich kann den Nebenwinkelsatz und den Scheitelwinkelsatz erklären und anwenden.
-* (3) Ich kann den Stufenwinkelsatz und den Wechselwinkelsatz an geschnittenen Parallelen erklären und anwenden.
-* (4) Ich kann den Innenwinkelsatz für Dreiecke erklären und anwenden.
+* (2) Ich kann den Nebenwinkelsatz und den Scheitelwinkelsatz erklÃ¤ren und anwenden.
+* (3) Ich kann den Stufenwinkelsatz und den Wechselwinkelsatz an geschnittenen Parallelen erklÃ¤ren und anwenden.
+* (4) Ich kann den Innenwinkelsatz fÃ¼r Dreiecke erklÃ¤ren und anwenden.
 * (5) Ich kann Dreiecke nach Seiten und Winkeln einteilen und benennen.
-* (6) Ich kann die Kongruenzsätze für Dreiecke erklären.
-* (7) Ich kann mithilfe der Seiten-Winkel-Relation und der Dreiecksungleichung beurteilen, ob eine Dreieckskonstruktion lösbar und eindeutig ist.
-* (8) Ich kann den Flächeninhalt von Dreiecken berechnen.
-* (9) Ich kann den Flächeninhalt von Parallelogrammen berechnen.
-* (10) Ich kann den Flächeninhalt von Drachenvierecken berechnen.
-* (11) Ich kann den Flächeninhalt von Trapezen berechnen.
+* (6) Ich kann die KongruenzsÃ¤tze fÃ¼r Dreiecke erklÃ¤ren.
+* (7) Ich kann mithilfe der Seiten-Winkel-Relation und der Dreiecksungleichung beurteilen, ob eine Dreieckskonstruktion lÃ¤sbar und eindeutig ist.
+* (8) Ich kann den FlÃ¤cheninhalt von Dreiecken berechnen.
+* (9) Ich kann den FlÃ¤cheninhalt von Parallelogrammen berechnen.
+* (10) Ich kann den FlÃ¤cheninhalt von Drachenvierecken berechnen.
+* (11) Ich kann den FlÃ¤cheninhalt von Trapezen berechnen.
 * (12) Ich kann den Umfang von Dreiecken und Vierecken berechnen.
 
-**Fachbegriffe:** Nebenwinkelsatz, Scheitelwinkelsatz, Stufenwinkelsatz, Wechselwinkelsatz, Innenwinkelsatz, Kongruenzsatz, Seiten-Winkel-Relation, Dreiecksungleichung, Grundseite, Höhe, Parallelogramm, Drachen­viereck, Trapez, Umfang, Flächeninhalt.
+**Fachbegriffe:** Nebenwinkelsatz, Scheitelwinkelsatz, Stufenwinkelsatz, Wechselwinkelsatz, Innenwinkelsatz, Kongruenzsatz, Seiten-Winkel-Relation, Dreiecksungleichung, Grundseite, HÃ¶he, Parallelogramm, Drachenviereck, Trapez, Umfang, FlÃ¤cheninhalt.
 
 ---
 
-### Lernbereich 4: Geometrische Körper
+### Lernbereich 4: Geometrische KÃ¶rper
 
-* (1) Ich kann reale Objekte mithilfe geometrischer Begriffe zu bekannten Körpern in Beziehung setzen.
-* (2) Ich kann Quader und aus Quadern zusammengesetzte Körper im Grundriss, in verschiedenen Seitenansichten, als Schrägbild und als Körpernetz darstellen.
+* (1) Ich kann reale Objekte mithilfe geometrischer Begriffe zu bekannten KÃ¶rpern in Beziehung setzen.
+* (2) Ich kann Quader und aus Quadern zusammengesetzte KÃ¶rper im Grundriss, in verschiedenen Seitenansichten, als SchrÃ¤gbild und als KÃ¶rpernetz darstellen.
 * (3) Ich kann gerade Prismen zeichnerisch darstellen.
-* (4) Ich kann Flächeninhalte und Volumen von aus Quadern zusammengesetzten Körpern berechnen.
+* (4) Ich kann FlÃ¤cheninhalte und Volumen von aus Quadern zusammengesetzten KÃ¶rpern berechnen.
 
-**Fachbegriffe:** Quader, Prisma, Grundriss, Seitenansicht, Schrägbild, Körpernetz, Oberfläche, Volumen, Eckpunkt, Kante, Fläche.
+**Fachbegriffe:** Quader, Prisma, Grundriss, Seitenansicht, SchrÃ¤gbild, KÃ¶rpernetz, OberflÃ¤che, Volumen, Eckpunkt, Kante, FlÃ¤che.
 
 ---
 
 ### Lernbereich 5: Mathematik im Alltag
 
-* (1) Ich kann Problemlösestrategien (systematisches Probieren, Zurückführen auf Bekanntes) auf vielfältige Sachverhalte anwenden.
-* (2) Ich kann Zufallsversuche durchführen und deren Ergebnisse mit absoluter und relativer Häufigkeit auswerten.
-* (3) Ich kann Zuordnungen und geometrische Kenntnisse auf Alltagssituationen übertragen und mit „wenn-dann"- und „je-desto"-Formulierungen beschreiben.
-* (4) Ich kann eine Präsentation zu geometrischen Figuren und Körpern in der Umwelt anfertigen.
+* (1) Ich kann ProblemlÃ¤sestrategien (systematisches Probieren, ZurÃ¤ckfÃ¤hren auf Bekanntes) auf vielfÃ¤ltige Sachverhalte anwenden.
+* (2) Ich kann Zufallsversuche durchfÃ¤hren und deren Ergebnisse mit absoluter und relativer HÃ¤ufigkeit auswerten.
+* (3) Ich kann Zuordnungen und geometrische Kenntnisse auf Alltagssituationen Ã¼bertragen und mit â€wenn-dannâ€œ- und â€je-destoâ€œ-Formulierungen beschreiben.
+* (4) Ich kann eine PrÃ¤sentation zu geometrischen Figuren und KÃ¶rpern in der Umwelt anfertigen.
 
-**Fachbegriffe:** Zufallsversuch, Ergebnis, absolute Häufigkeit, relative Häufigkeit, Problemlösestrategie, wenn-dann, je-desto.
+**Fachbegriffe:** Zufallsversuch, Ergebnis, absolute HÃ¤ufigkeit, relative HÃ¤ufigkeit, ProblemlÃ¤sestrategie, wenn-dann, je-desto.
 
 ---
 
-## Klassenstufe 7 – Hauptschulbildungsgang
+## Klassenstufe 7 â€“ Hauptschulbildungsgang
 
-### Lernbereich 1: Zusammengesetzte Flächen und Körper
+### Lernbereich 1: Zusammengesetzte FlÃ¤chen und KÃ¶rper
 
-* (1) Ich kann Körpernetze, verschiedene Seitenansichten und Schrägbilder bekannter Körper zeichnen.
-* (2) Ich kann Modelle geometrischer Körper herstellen.
-* (3) Ich kann Flächeninhalte und Volumen zusammengesetzter Figuren und Körper berechnen.
+* (1) Ich kann KÃ¶rpernetze, verschiedene Seitenansichten und SchrÃ¤gbilder bekannter KÃ¶rper zeichnen.
+* (2) Ich kann Modelle geometrischer KÃ¶rper herstellen.
+* (3) Ich kann FlÃ¤cheninhalte und Volumen zusammengesetzter Figuren und KÃ¶rper berechnen.
 
-**Fachbegriffe:** Körpernetz, Seitenansicht, Schrägbild, Flächeninhalt, Volumen, zusammengesetzter Körper.
+**Fachbegriffe:** KÃ¶rpernetz, Seitenansicht, SchrÃ¤gbild, FlÃ¤cheninhalt, Volumen, zusammengesetzter KÃ¶rper.
 
 ---
 
 ### Lernbereich 2: Anteile und Prozente
 
-* (1) Ich kann gemeine Brüche, Dezimalzahlen und Prozente zur Angabe von Anteilen verwenden und ineinander umwandeln.
+* (1) Ich kann gemeine BrÃ¼che, Dezimalzahlen und Prozente zur Angabe von Anteilen verwenden und ineinander umwandeln.
 * (2) Ich kann Anteile vergleichen.
 * (3) Ich kann Anteile grafisch darstellen, auch im Kreisdiagramm.
 * (4) Ich kann Anteile aus grafischen Darstellungen ermitteln.
-* (5) Ich kann die Begriffe Prozent, Prozentwert, Prozentsatz und Grundwert erklären.
-* (6) Ich kann Grundaufgaben der Prozentrechnung mithilfe bequemer Prozentsätze lösen.
+* (5) Ich kann die Begriffe Prozent, Prozentwert, Prozentsatz und Grundwert erklÃ¤ren.
+* (6) Ich kann Grundaufgaben der Prozentrechnung mithilfe bequemer ProzentsÃ¤tze lÃ¶sen.
 * (7) Ich kann den Dreisatz bei Aufgaben zur Prozentrechnung anwenden.
-* (8) Ich kann Zufallsversuche durchführen, auswerten und die Ergebnisse mit absoluter und relativer Häufigkeit angeben.
+* (8) Ich kann Zufallsversuche durchfÃ¤hren, auswerten und die Ergebnisse mit absoluter und relativer HÃ¤ufigkeit angeben.
 * (9) Ich kann gleichwahrscheinliche und nicht gleichwahrscheinliche Ergebnisse unterscheiden.
-* (10) Ich kann die Chancen einzelner Versuchsausgänge abschätzen.
+* (10) Ich kann die Chancen einzelner VersuchsausgÃ¤nge abschÃ¤tzen.
 
-**Fachbegriffe:** Anteil, Prozent, Prozentwert, Prozentsatz, Grundwert, bequemer Prozentsatz, Kreisdiagramm, absolute Häufigkeit, relative Häufigkeit, Wahrscheinlichkeit, gleichwahrscheinlich.
+**Fachbegriffe:** Anteil, Prozent, Prozentwert, Prozentsatz, Grundwert, bequemer Prozentsatz, Kreisdiagramm, absolute HÃ¤ufigkeit, relative HÃ¤ufigkeit, Wahrscheinlichkeit, gleichwahrscheinlich.
 
 ---
 
@@ -178,10 +178,10 @@
 
 * (1) Ich kann rationale Zahlen auf der Zahlengeraden veranschaulichen.
 * (2) Ich kann rationale Zahlen vergleichen und ordnen.
-* (3) Ich kann rationale Zahlen addieren, subtrahieren und mit einer natürlichen Zahl vervielfachen.
-* (4) Ich kann rationale Zahlen durch eine natürliche Zahl dividieren.
+* (3) Ich kann rationale Zahlen addieren, subtrahieren und mit einer natÃ¤rlichen Zahl vervielfachen.
+* (4) Ich kann rationale Zahlen durch eine natÃ¤rliche Zahl dividieren.
 * (5) Ich kann Termwerte mit rationalen Zahlen berechnen.
-* (6) Ich kann einfache Gleichungen und Zahlenrätsel mithilfe rationaler Zahlen inhaltlich lösen.
+* (6) Ich kann einfache Gleichungen und ZahlenrÃ¤tsel mithilfe rationaler Zahlen inhaltlich lÃ¶sen.
 * (7) Ich kann Punktkoordinaten im Koordinatensystem (alle vier Quadranten) eintragen und ablesen.
 
 **Fachbegriffe:** Rationale Zahl, Zahlengerade, negativer Wert, Termwert, Gleichung, Koordinatensystem, Quadrant, Koordinate.
@@ -193,28 +193,28 @@
 * (1) Ich kann geometrische Begriffe zur Beschreibung von realen Objekten verwenden.
 * (2) Ich kann Dreiecke konstruieren.
 * (3) Ich kann Parallelogramme und Drachenvierecke konstruieren.
-* (4) Ich kann Flächeninhalte und Umfänge von Dreiecken und Vierecken mithilfe von Formeln berechnen.
-* (5) Ich kann Flächeninhalte von Vielecken durch Zerlegen berechnen.
-* (6) Ich kann Körpernetze, Schrägbilder und verschiedene Seitenansichten von Prismen zeichnen.
-* (7) Ich kann Grund-, Mantel- und Oberflächeninhalt von Prismen berechnen.
+* (4) Ich kann FlÃ¤cheninhalte und UmfÃ¤nge von Dreiecken und Vierecken mithilfe von Formeln berechnen.
+* (5) Ich kann FlÃ¤cheninhalte von Vielecken durch Zerlegen berechnen.
+* (6) Ich kann KÃ¶rpernetze, SchrÃ¤gbilder und verschiedene Seitenansichten von Prismen zeichnen.
+* (7) Ich kann Grund-, Mantel- und OberflÃ¤cheninhalt von Prismen berechnen.
 * (8) Ich kann das Volumen und die Masse von Prismen berechnen.
 
-**Fachbegriffe:** Vieleck, Parallelogramm, Drachenviereck, Trapez, Diagonale, Prisma, Grundfläche, Mantelfläche, Oberfläche, Volumen, Masse, Dichte.
+**Fachbegriffe:** Vieleck, Parallelogramm, Drachenviereck, Trapez, Diagonale, Prisma, GrundflÃ¤che, MantelflÃ¤che, OberflÃ¤che, Volumen, Masse, Dichte.
 
 ---
 
-## Klassenstufe 8 – Hauptschulbildungsgang
+## Klassenstufe 8 â€“ Hauptschulbildungsgang
 
 ### Lernbereich 1: Wirtschaftliches Rechnen
 
-* (1) Ich kann die Prozentrechnung auf die Zinsrechnung übertragen.
+* (1) Ich kann die Prozentrechnung auf die Zinsrechnung Ã¼bertragen.
 * (2) Ich kann Kapital, Zinssatz und Jahreszins berechnen.
-* (3) Ich kann Preiserhöhungen und Preissenkungen berechnen.
+* (3) Ich kann PreiserhÃ¤hungen und Preissenkungen berechnen.
 * (4) Ich kann Skonto, Rabatt und Mehrwertsteuer berechnen.
-* (5) Ich kann Diagramme (Säulen-, Linien-, Kreisdiagramm) erstellen und deuten.
-* (6) Ich kann Sparformen, Kredit- und Ratenzahlungspläne beurteilen.
+* (5) Ich kann Diagramme (SÃ¤ulen-, Linien-, Kreisdiagramm) erstellen und deuten.
+* (6) Ich kann Sparformen, Kredit- und RatenzahlungsplÃ¤ne beurteilen.
 
-**Fachbegriffe:** Kapital, Zinssatz, Zinsen, Jahreszins, Skonto, Rabatt, Mehrwertsteuer, Preiserhöhung, Preissenkung, Säulendiagramm, Liniendiagramm, Kreisdiagramm, Kredit, Ratenzahlung.
+**Fachbegriffe:** Kapital, Zinssatz, Zinsen, Jahreszins, Skonto, Rabatt, Mehrwertsteuer, PreiserhÃ¤hung, Preissenkung, SÃ¤ulendiagramm, Liniendiagramm, Kreisdiagramm, Kredit, Ratenzahlung.
 
 ---
 
@@ -224,7 +224,7 @@
 * (2) Ich kann Formeln umstellen.
 * (3) Ich kann Werte mithilfe von Formeln berechnen.
 * (4) Ich kann die Formelsammlung sachgerecht verwenden.
-* (5) Ich kann Gleichungen als Problemlösestrategie aufstellen.
+* (5) Ich kann Gleichungen als ProblemlÃ¤sestrategie aufstellen.
 
 **Fachbegriffe:** Formel, Variable, Term, Gleichung, Umstellen, Formelsammlung.
 
@@ -232,75 +232,75 @@
 
 ### Lernbereich 3: Vom Vieleck zum Kreis
 
-* (1) Ich kann Eigenschaften regelmäßiger Vielecke (Achsen- und Drehsymmetrien, Umkreis) erläutern.
-* (2) Ich kann regelmäßige Vielecke konstruieren.
+* (1) Ich kann Eigenschaften regelmÃ¤ÃŸiger Vielecke (Achsen- und Drehsymmetrien, Umkreis) erlÃ¤utern.
+* (2) Ich kann regelmÃ¤Ã¤ige Vielecke konstruieren.
 * (3) Ich kann den Umfang eines Kreises berechnen.
-* (4) Ich kann den Flächeninhalt eines Kreises berechnen.
-* (5) Ich kann den Flächeninhalt eines Kreisrings berechnen.
+* (4) Ich kann den FlÃ¤cheninhalt eines Kreises berechnen.
+* (5) Ich kann den FlÃ¤cheninhalt eines Kreisrings berechnen.
 * (6) Ich kann die Lagebeziehungen von Kreis und Gerade (Sehne, Sekante, Tangente) beschreiben.
 
-**Fachbegriffe:** Regelmäßiges Vieleck, Achsensymmetrie, Drehsymmetrie, Umkreis, Innenwinkel, Innenwinkelsumme, Kreiszahl p, Kreisumfang, Kreisfläche, Kreisring, Sehne, Sekante, Tangente.
+**Fachbegriffe:** RegelmÃ¤ÃŸiges Vieleck, Achsensymmetrie, Drehsymmetrie, Umkreis, Innenwinkel, Innenwinkelsumme, Kreiszahl p, Kreisumfang, KreisflÃ¤che, Kreisring, Sehne, Sekante, Tangente.
 
 ---
 
 ### Lernbereich 4: Kreiszylinder und Hohlzylinder
 
-* (1) Ich kann Kreiszylinder in Netzen, verschiedenen Ansichten und als Schrägbild darstellen.
-* (2) Ich kann die Begriffe Grundfläche, Mantelfläche und Oberfläche vom Prisma auf den Kreiszylinder übertragen.
-* (3) Ich kann den Grundflächeninhalt, den Mantelinhalt und den Oberflächeninhalt eines Kreiszylinders berechnen.
+* (1) Ich kann Kreiszylinder in Netzen, verschiedenen Ansichten und als SchrÃ¤gbild darstellen.
+* (2) Ich kann die Begriffe GrundflÃ¤che, MantelflÃ¤che und OberflÃ¤che vom Prisma auf den Kreiszylinder Ã¼bertragen.
+* (3) Ich kann den GrundflÃ¤cheninhalt, den Mantelinhalt und den OberflÃ¤cheninhalt eines Kreiszylinders berechnen.
 * (4) Ich kann das Volumen von Kreiszylindern und Hohlzylindern berechnen.
 * (5) Ich kann die Masse von Kreiszylindern und Hohlzylindern berechnen.
 
-**Fachbegriffe:** Kreiszylinder, Hohlzylinder, Grundfläche, Mantelfläche, Oberfläche, Volumen, Masse, Radius, Durchmesser, Höhe.
+**Fachbegriffe:** Kreiszylinder, Hohlzylinder, GrundflÃ¤che, MantelflÃ¤che, OberflÃ¤che, Volumen, Masse, Radius, Durchmesser, HÃ¶he.
 
 ---
 
 ### Lernbereich 5: Mathematik im Alltag
 
-* (1) Ich kann ein Haushaltsbuch führen und Einnahmen sowie Ausgaben berechnen.
-* (2) Ich kann Rechnungen lesen und prüfen (z. B. unter Einbeziehung von Skonto, Rabatt und Mehrwertsteuer).
+* (1) Ich kann ein Haushaltsbuch fÃ¤hren und Einnahmen sowie Ausgaben berechnen.
+* (2) Ich kann Rechnungen lesen und prÃ¤fen (z. B. unter Einbeziehung von Skonto, Rabatt und Mehrwertsteuer).
 * (3) Ich kann Wohnkosten (Miete, Grundsteuer, Wasser- und Energieabrechnung) berechnen.
-* (4) Ich kann Baukosten (umbauter Raum, Materialbedarf, Fassungsvermögen) berechnen.
+* (4) Ich kann Baukosten (umbauter Raum, Materialbedarf, FassungsvermÃ¤gen) berechnen.
 * (5) Ich kann verschiedene Angebote vergleichen (Sparanlagen, Tarife, Ratenzahlungen).
-* (6) Ich kann Verzinsungsmöglichkeiten berechnen, auch einfache Aufgaben zum Zinseszins.
-* (7) Ich kann ebene Figuren und Körper maßstäblich darstellen.
+* (6) Ich kann VerzinsungsmÃ¤glichkeiten berechnen, auch einfache Aufgaben zum Zinseszins.
+* (7) Ich kann ebene Figuren und KÃ¶rper maÃŸstÃ¤blich darstellen.
 
-**Fachbegriffe:** Haushaltsbuch, Einnahme, Ausgabe, Skonto, Rabatt, Mehrwertsteuer, Miete, Grundsteuer, Maßstab, Zinseszins.
+**Fachbegriffe:** Haushaltsbuch, Einnahme, Ausgabe, Skonto, Rabatt, Mehrwertsteuer, Miete, Grundsteuer, MaÃŸstab, Zinseszins.
 
 ---
 
-## Klassenstufe 9 – Hauptschulbildungsgang
+## Klassenstufe 9 â€“ Hauptschulbildungsgang
 
 ### Lernbereich 1: Rechtwinklige Dreiecke
 
-* (1) Ich kann den Satz des Pythagoras anwenden, um Seitenlängen im rechtwinkligen Dreieck zu berechnen.
-* (2) Ich kann die Umkehrung des Satzes des Pythagoras anwenden, um rechte Winkel zu überprüfen.
-* (3) Ich kann den Sinus als Streckenverhältnis im rechtwinkligen Dreieck berechnen und anwenden.
-* (4) Ich kann Seitenlängen und Innenwinkelgrößen in rechtwinkligen Dreiecken berechnen.
-* (5) Ich kann den Satz des Pythagoras und den Sinus auf vielfältige Sachaufgaben anwenden.
+* (1) Ich kann den Satz des Pythagoras anwenden, um SeitenlÃ¤ngen im rechtwinkligen Dreieck zu berechnen.
+* (2) Ich kann die Umkehrung des Satzes des Pythagoras anwenden, um rechte Winkel zu Ã¼berprÃ¼fen.
+* (3) Ich kann den Sinus als StreckenverhÃ¤ltnis im rechtwinkligen Dreieck berechnen und anwenden.
+* (4) Ich kann SeitenlÃ¤ngen und InnenwinkelgrÃ¤Ã¤en in rechtwinkligen Dreiecken berechnen.
+* (5) Ich kann den Satz des Pythagoras und den Sinus auf vielfÃ¤ltige Sachaufgaben anwenden.
 
-**Fachbegriffe:** Rechtwinkliges Dreieck, Hypotenuse, Kathete, Satz des Pythagoras, Umkehrung des Satzes des Pythagoras, Sinus, Winkelgröße, Innenwinkel.
+**Fachbegriffe:** Rechtwinkliges Dreieck, Hypotenuse, Kathete, Satz des Pythagoras, Umkehrung des Satzes des Pythagoras, Sinus, WinkelgrÃ¤Ã¤e, Innenwinkel.
 
 ---
 
-### Lernbereich 2: Körperdarstellung und Körperberechnung
+### Lernbereich 2: KÃ¶rperdarstellung und KÃ¶rperberechnung
 
-* (1) Ich kann Pyramiden und Kreiskegel als Schrägbildskizze darstellen.
-* (2) Ich kann Netze, Schrägbilder und verschiedene Seitenansichten gerader Pyramiden mit rechteckiger Grundfläche zeichnen.
-* (3) Ich kann die Seitenhöhe einer Pyramide mit quadratischer Grundfläche berechnen.
-* (4) Ich kann den Grund-, Mantel- und Oberflächeninhalt einer Pyramide mit quadratischer Grundfläche berechnen.
+* (1) Ich kann Pyramiden und Kreiskegel als SchrÃ¤gbildskizze darstellen.
+* (2) Ich kann Netze, SchrÃ¤gbilder und verschiedene Seitenansichten gerader Pyramiden mit rechteckiger GrundflÃ¤che zeichnen.
+* (3) Ich kann die SeitenhÃ¤he einer Pyramide mit quadratischer GrundflÃ¤che berechnen.
+* (4) Ich kann den Grund-, Mantel- und OberflÃ¤cheninhalt einer Pyramide mit quadratischer GrundflÃ¤che berechnen.
 * (5) Ich kann das Volumen einer Pyramide berechnen.
 * (6) Ich kann das Volumen eines Kreiskegels berechnen.
-* (7) Ich kann die Berechnungen auf zusammengesetzte Körper anwenden.
+* (7) Ich kann die Berechnungen auf zusammengesetzte KÃ¶rper anwenden.
 
-**Fachbegriffe:** Pyramide, Kreiskegel, Seitenhöhe, Grundfläche, Mantelfläche, Oberfläche, Volumen, Schrägbild, Körpernetz, Seitenansicht, zusammengesetzter Körper.
+**Fachbegriffe:** Pyramide, Kreiskegel, SeitenhÃ¤he, GrundflÃ¤che, MantelflÃ¤che, OberflÃ¤che, Volumen, SchrÃ¤gbild, KÃ¶rpernetz, Seitenansicht, zusammengesetzter KÃ¶rper.
 
 ---
 
-### Lernbereich 3: Funktionale Zusammenhänge
+### Lernbereich 3: Funktionale ZusammenhÃ¤nge
 
-* (1) Ich kann den Unterschied zwischen Zuordnung und Funktion erklären.
-* (2) Ich kann lineare Funktionen mit der Gleichung y = m·x + n beschreiben.
+* (1) Ich kann den Unterschied zwischen Zuordnung und Funktion erklÃ¤ren.
+* (2) Ich kann lineare Funktionen mit der Gleichung y = mÂ·x + n beschreiben.
 * (3) Ich kann lineare Funktionen in verschiedenen Darstellungsformen (Wertetabelle, Graph, Gleichung) darstellen.
 * (4) Ich kann Schnittpunktkoordinaten zweier linearer Funktionen zeichnerisch ermitteln.
 * (5) Ich kann Schnittpunktkoordinaten zweier linearer Funktionen rechnerisch ermitteln.
@@ -311,41 +311,41 @@
 
 ### Lernbereich 4: Mathematik im Alltag
 
-* (1) Ich kann Kalkulationen im Alltag selbstständig durchführen.
-* (2) Ich kann Aufgaben zur ebenen und räumlichen Geometrie (Darstellungen, Materialbedarf) lösen.
-* (3) Ich kann funktionale Zusammenhänge auf Alltagssituationen anwenden.
+* (1) Ich kann Kalkulationen im Alltag selbststÃ¤ndig durchfÃ¤hren.
+* (2) Ich kann Aufgaben zur ebenen und rÃ¤umlichen Geometrie (Darstellungen, Materialbedarf) lÃ¶sen.
+* (3) Ich kann funktionale ZusammenhÃ¤nge auf Alltagssituationen anwenden.
 * (4) Ich kann Daten darstellen und auswerten.
 
 **Fachbegriffe:** Kalkulation, Materialbedarf, Darstellung, Datenauswertung.
 
 ---
 
-## Klassenstufe 7 – Realschulbildungsgang
+## Klassenstufe 7 â€“ Realschulbildungsgang
 
 ### Lernbereich 1: Prozent- und Zinsrechnung
 
-* (1) Ich kann den Dreisatz auf Grundaufgaben der Prozentrechnung übertragen.
-* (2) Ich kann bequeme Prozentsätze verwenden.
+* (1) Ich kann den Dreisatz auf Grundaufgaben der Prozentrechnung Ã¼bertragen.
+* (2) Ich kann bequeme ProzentsÃ¤tze verwenden.
 * (3) Ich kann Anteile im Kreisdiagramm darstellen.
-* (4) Ich kann die Begriffe Prozent, Prozentwert, Prozentsatz und Grundwert erklären.
-* (5) Ich kann die Prozentrechnung auf Aufgaben mit Bezügen zu Umwelt und Wirtschaft anwenden (Preiserhöhung, Preissenkung, Skonto, Rabatt, Mehrwertsteuer).
+* (4) Ich kann die Begriffe Prozent, Prozentwert, Prozentsatz und Grundwert erklÃ¤ren.
+* (5) Ich kann die Prozentrechnung auf Aufgaben mit BezÃ¤gen zu Umwelt und Wirtschaft anwenden (PreiserhÃ¤hung, Preissenkung, Skonto, Rabatt, Mehrwertsteuer).
 * (6) Ich kann Zinssatz, Zinsen und Kapital berechnen.
 * (7) Ich kann Tageszinsen und den Zinseszins berechnen.
 
-**Fachbegriffe:** Prozent, Prozentwert, Prozentsatz, Grundwert, bequemer Prozentsatz, Kreisdiagramm, Zinssatz, Zinsen, Kapital, Tageszins, Zinseszins, Preiserhöhung, Preissenkung.
+**Fachbegriffe:** Prozent, Prozentwert, Prozentsatz, Grundwert, bequemer Prozentsatz, Kreisdiagramm, Zinssatz, Zinsen, Kapital, Tageszins, Zinseszins, PreiserhÃ¤hung, Preissenkung.
 
 ---
 
 ### Lernbereich 2: Elemente der Stochastik
 
-* (1) Ich kann Zufallsversuche durchführen und auswerten.
-* (2) Ich kann Ergebnis, Ergebnismenge und Ereignis erklären und benennen.
-* (3) Ich kann absolute und relative Häufigkeiten bestimmen.
-* (4) Ich kann das Stabilisieren relativer Häufigkeiten erklären.
-* (5) Ich kann den Begriff Wahrscheinlichkeit erläutern.
+* (1) Ich kann Zufallsversuche durchfÃ¤hren und auswerten.
+* (2) Ich kann Ergebnis, Ergebnismenge und Ereignis erklÃ¤ren und benennen.
+* (3) Ich kann absolute und relative HÃ¤ufigkeiten bestimmen.
+* (4) Ich kann das Stabilisieren relativer HÃ¤ufigkeiten erklÃ¤ren.
+* (5) Ich kann den Begriff Wahrscheinlichkeit erlÃ¤utern.
 * (6) Ich kann Darstellungen zu statistischen Erhebungen beurteilen.
 
-**Fachbegriffe:** Zufallsversuch, Ergebnis, Ergebnismenge, Ereignis, Urliste, Strichliste, absolute Häufigkeit, relative Häufigkeit, Wahrscheinlichkeit, Laplace-Versuch.
+**Fachbegriffe:** Zufallsversuch, Ergebnis, Ergebnismenge, Ereignis, Urliste, Strichliste, absolute HÃ¤ufigkeit, relative HÃ¤ufigkeit, Wahrscheinlichkeit, Laplace-Versuch.
 
 ---
 
@@ -356,14 +356,14 @@
 * (3) Ich kann Punktkoordinaten im Koordinatensystem (alle vier Quadranten) eintragen und ablesen.
 * (4) Ich kann rationale Zahlen addieren und subtrahieren.
 * (5) Ich kann rationale Zahlen multiplizieren, dividieren und potenzieren.
-* (6) Ich kann Rechengesetze einschließlich der Vorrangregeln auf rationale Zahlen anwenden.
-* (7) Ich kann Verhältnisgleichungen kalkülmäßig lösen.
-* (8) Ich kann lineare Gleichungen der Form a·x + b = c·x + d kalkülmäßig lösen.
+* (6) Ich kann Rechengesetze einschlieÃ¤lich der Vorrangregeln auf rationale Zahlen anwenden.
+* (7) Ich kann VerhÃ¤ltnisgleichungen kalkÃ¼lmÃ¤ÃŸig lÃ¶sen.
+* (8) Ich kann lineare Gleichungen der Form aÃ¤x + b = cÃ¤x + d kalkÃ¼lmÃ¤ÃŸig lÃ¶sen.
 * (9) Ich kann Formeln umstellen.
 * (10) Ich kann Termwerte berechnen.
-* (11) Ich kann Gleichungen für geometrische Sachverhalte und Zahlenrätsel aufstellen.
+* (11) Ich kann Gleichungen fÃ¼r geometrische Sachverhalte und ZahlenrÃ¤tsel aufstellen.
 
-**Fachbegriffe:** Rationale Zahl, Zahlengerade, Zahlbereich, Teilmenge, Variable, Variablengrundbereich, Term, Aussage, Lösung, Lösungsmenge, Verhältnisgleichung, lineare Gleichung, Termwert.
+**Fachbegriffe:** Rationale Zahl, Zahlengerade, Zahlbereich, Teilmenge, Variable, Variablengrundbereich, Term, Aussage, LÃ¶sung, LÃ¶sungsmenge, VerhÃ¤ltnisgleichung, lineare Gleichung, Termwert.
 
 ---
 
@@ -371,19 +371,19 @@
 
 * (1) Ich kann reale Objekte mithilfe geometrischer Begriffe beschreiben.
 * (2) Ich kann Parallelogramme, Drachenvierecke und Trapeze konstruieren.
-* (3) Ich kann Flächeninhalte und Umfänge von Parallelogramm, Drachenviereck und Trapez berechnen.
-* (4) Ich kann Flächeninhalte und Umfänge von Vielecken berechnen.
-* (5) Ich kann Körpernetze, Schrägbilder, senkrechte Zweitafelbilder und verschiedene Seitenansichten von Prismen zeichnen.
-* (6) Ich kann Oberflächeninhalte und Volumen von Prismen berechnen.
+* (3) Ich kann FlÃ¤cheninhalte und UmfÃ¤nge von Parallelogramm, Drachenviereck und Trapez berechnen.
+* (4) Ich kann FlÃ¤cheninhalte und UmfÃ¤nge von Vielecken berechnen.
+* (5) Ich kann KÃ¶rpernetze, SchrÃ¤gbilder, senkrechte Zweitafelbilder und verschiedene Seitenansichten von Prismen zeichnen.
+* (6) Ich kann OberflÃ¤cheninhalte und Volumen von Prismen berechnen.
 * (7) Ich kann die Masse von Prismen unter Einbeziehung der Dichte berechnen.
-* (8) Ich kann zusammengesetzte Körper berechnen und darstellen.
+* (8) Ich kann zusammengesetzte KÃ¶rper berechnen und darstellen.
 * (9) Ich kann den Materialverbrauch bei Verpackungen beurteilen.
 
-**Fachbegriffe:** Vieleck, Parallelogramm, Drachenviereck, Trapez, Prisma, Körpernetz, Schrägbild, Zweitafelbild, Seitenansicht, Grundfläche, Mantelfläche, Oberfläche, Volumen, Masse, Dichte.
+**Fachbegriffe:** Vieleck, Parallelogramm, Drachenviereck, Trapez, Prisma, KÃ¶rpernetz, SchrÃ¤gbild, Zweitafelbild, Seitenansicht, GrundflÃ¤che, MantelflÃ¤che, OberflÃ¤che, Volumen, Masse, Dichte.
 
 ---
 
-## Klassenstufe 8 – Realschulbildungsgang
+## Klassenstufe 8 â€“ Realschulbildungsgang
 
 ### Lernbereich 1: Lineare Gleichungen
 
@@ -391,23 +391,23 @@
 * (2) Ich kann Terme durch Addition und Subtraktion von Summen umformen.
 * (3) Ich kann einen Faktor mit einer Summe multiplizieren (Distributivgesetz).
 * (4) Ich kann einen gemeinsamen Faktor ausklammern.
-* (5) Ich kann lineare Gleichungen kalkülmäßig lösen.
+* (5) Ich kann lineare Gleichungen kalkÃ¼lmÃ¤ÃŸig lÃ¶sen.
 * (6) Ich kann Formeln umstellen.
 
-**Fachbegriffe:** Term, Termumformung, Summe, Faktor, Ausklammern, Distributivgesetz, lineare Gleichung, kalkülmäßiges Lösen, Formel.
+**Fachbegriffe:** Term, Termumformung, Summe, Faktor, Ausklammern, Distributivgesetz, lineare Gleichung, kalkÃ¼lmÃ¤ÃŸiges LÃ¤sen, Formel.
 
 ---
 
 ### Lernbereich 2: Lineare Funktionen und Gleichungssysteme
 
-* (1) Ich kann verschiedene funktionale Zusammenhänge darstellen.
-* (2) Ich kann den Begriff Funktion als eindeutige Zuordnung erklären.
-* (3) Ich kann die Begriffe Argument, Funktionswert, Definitionsbereich und Wertebereich erläutern.
+* (1) Ich kann verschiedene funktionale ZusammenhÃ¤nge darstellen.
+* (2) Ich kann den Begriff Funktion als eindeutige Zuordnung erklÃ¤ren.
+* (3) Ich kann die Begriffe Argument, Funktionswert, Definitionsbereich und Wertebereich erlÃ¤utern.
 * (4) Ich kann lineare Funktionen unter Beachtung der Parameter m und n grafisch darstellen.
 * (5) Ich kann Nullstellen linearer Funktionen zeichnerisch und rechnerisch ermitteln.
-* (6) Ich kann lineare Gleichungssysteme zeichnerisch lösen.
-* (7) Ich kann lineare Gleichungssysteme rechnerisch lösen.
-* (8) Ich kann Gleichungssysteme mit genau einer, keiner oder unendlich vielen Lösungen unterscheiden.
+* (6) Ich kann lineare Gleichungssysteme zeichnerisch lÃ¶sen.
+* (7) Ich kann lineare Gleichungssysteme rechnerisch lÃ¶sen.
+* (8) Ich kann Gleichungssysteme mit genau einer, keiner oder unendlich vielen LÃ¶sungen unterscheiden.
 
 **Fachbegriffe:** Funktion, Argument, Funktionswert, Definitionsbereich, Wertebereich, lineare Funktion, Steigung, y-Achsenabschnitt, Nullstelle, lineares Gleichungssystem, Schnittpunkt.
 
@@ -416,59 +416,59 @@
 ### Lernbereich 3: Kreis und Kreiszylinder
 
 * (1) Ich kann die Lagebeziehungen von Kreis und Gerade (Sehne, Sekante, Tangente) beschreiben.
-* (2) Ich kann den Satz des Thales erläutern.
-* (3) Ich kann den Umfang und den Flächeninhalt eines Kreises berechnen.
-* (4) Ich kann den Flächeninhalt eines Kreisrings berechnen.
+* (2) Ich kann den Satz des Thales erlÃ¤utern.
+* (3) Ich kann den Umfang und den FlÃ¤cheninhalt eines Kreises berechnen.
+* (4) Ich kann den FlÃ¤cheninhalt eines Kreisrings berechnen.
 * (5) Ich kann Netze und verschiedene Ansichten des Kreiszylinders zeichnen.
-* (6) Ich kann eine Schrägbildskizze des Kreiszylinders und Hohlzylinders anfertigen.
-* (7) Ich kann den Grundflächeninhalt, den Mantelinhalt und den Oberflächeninhalt von Kreiszylindern berechnen.
+* (6) Ich kann eine SchrÃ¤gbildskizze des Kreiszylinders und Hohlzylinders anfertigen.
+* (7) Ich kann den GrundflÃ¤cheninhalt, den Mantelinhalt und den OberflÃ¤cheninhalt von Kreiszylindern berechnen.
 * (8) Ich kann das Volumen und die Masse von Kreiszylindern und Hohlzylindern berechnen.
 
-**Fachbegriffe:** Kreis, Kreiszahl p, Kreisumfang, Kreisfläche, Kreisring, Sehne, Sekante, Tangente, Satz des Thales, Kreiszylinder, Hohlzylinder, Grundfläche, Mantelfläche, Oberfläche, Volumen, Masse.
+**Fachbegriffe:** Kreis, Kreiszahl p, Kreisumfang, KreisflÃ¤che, Kreisring, Sehne, Sekante, Tangente, Satz des Thales, Kreiszylinder, Hohlzylinder, GrundflÃ¤che, MantelflÃ¤che, OberflÃ¤che, Volumen, Masse.
 
 ---
 
-### Lernbereich 4: Ähnlichkeit
+### Lernbereich 4: Ã„hnlichkeit
 
-* (1) Ich kann zentrisches Strecken zum maßstäblichen Vergrößern und Verkleinern anwenden.
-* (2) Ich kann den Hauptähnlichkeitssatz auf innermathematische Sachverhalte anwenden.
-* (3) Ich kann die Beziehungen für Längen, Flächen und Volumen bei zueinander ähnlichen Figuren beschreiben und anwenden.
-* (4) Ich kann Kongruenz als Spezialfall der Ähnlichkeit erklären.
+* (1) Ich kann zentrisches Strecken zum maÃŸstÃ¤blichen VergrÃ¤Ã¤ern und Verkleinern anwenden.
+* (2) Ich kann den HauptÃ„hnlichkeitssatz auf innermathematische Sachverhalte anwenden.
+* (3) Ich kann die Beziehungen fÃ¼r LÃ¤ngen, FlÃ¤chen und Volumen bei zueinander Ã¤hnlichen Figuren beschreiben und anwenden.
+* (4) Ich kann Kongruenz als Spezialfall der Ã„hnlichkeit erklÃ¤ren.
 
-**Fachbegriffe:** Ähnlichkeit, zentrisches Strecken, Streckfaktor, Hauptähnlichkeitssatz, ähnliche Figuren, Kongruenz, Maßstab.
+**Fachbegriffe:** Ã„hnlichkeit, zentrisches Strecken, Streckfaktor, HauptÃ„hnlichkeitssatz, Ã¤hnliche Figuren, Kongruenz, MaÃŸstab.
 
 ---
 
-### Lernbereich 5: Zufällige Ereignisse
+### Lernbereich 5: ZufÃ¤llige Ereignisse
 
-* (1) Ich kann abhängige und unabhängige Ereignisse unterscheiden.
-* (2) Ich kann kombinatorisches Zählen auf das Ermitteln von Wahrscheinlichkeiten übertragen.
-* (3) Ich kann Wahrscheinlichkeiten für Ergebnisse und Ereignisse bei mehrstufigen Zufallsversuchen mithilfe des Baumdiagramms bestimmen.
+* (1) Ich kann abhÃ¤ngige und unabhÃ¤ngige Ereignisse unterscheiden.
+* (2) Ich kann kombinatorisches ZÃ¤hlen auf das Ermitteln von Wahrscheinlichkeiten Ã¼bertragen.
+* (3) Ich kann Wahrscheinlichkeiten fÃ¼r Ergebnisse und Ereignisse bei mehrstufigen Zufallsversuchen mithilfe des Baumdiagramms bestimmen.
 * (4) Ich kann die Pfadregeln anwenden.
 
-**Fachbegriffe:** Zufallsversuch, Ergebnis, Ereignis, abhängiges Ereignis, unabhängiges Ereignis, Wahrscheinlichkeit, Baumdiagramm, Pfadregel, Fakultät (n!), mehrstufiger Zufallsversuch.
+**Fachbegriffe:** Zufallsversuch, Ergebnis, Ereignis, abhÃ¤ngiges Ereignis, unabhÃ¤ngiges Ereignis, Wahrscheinlichkeit, Baumdiagramm, Pfadregel, FakultÃ¤t (n!), mehrstufiger Zufallsversuch.
 
 ---
 
 ### Lernbereich 6: Mathematik im Alltag
 
 * (1) Ich kann Lebenshaltungskosten (Miete, Grundsteuer, Betriebskosten, Energieabrechnung) berechnen.
-* (2) Ich kann Baukosten (umbauter Raum, Materialbedarf, Fassungsvermögen) berechnen.
+* (2) Ich kann Baukosten (umbauter Raum, Materialbedarf, FassungsvermÃ¤gen) berechnen.
 * (3) Ich kann verschiedene Angebote (Sparanlagen, Preise, Tarife, Ratenzahlungen) vergleichen und beurteilen.
 
-**Fachbegriffe:** Lebenshaltungskosten, Miete, Grundsteuer, Betriebskosten, Energieabrechnung, Baukosten, Materialbedarf, Fassungsvermögen, Sparanlage, Tarif, Ratenzahlung.
+**Fachbegriffe:** Lebenshaltungskosten, Miete, Grundsteuer, Betriebskosten, Energieabrechnung, Baukosten, Materialbedarf, FassungsvermÃ¤gen, Sparanlage, Tarif, Ratenzahlung.
 
 ---
 
-## Klassenstufe 9 – Realschulbildungsgang
+## Klassenstufe 9 â€“ Realschulbildungsgang
 
 ### Lernbereich 1: Rechtwinklige Dreiecke
 
-* (1) Ich kann den Satz des Pythagoras anwenden, um Seitenlängen im rechtwinkligen Dreieck zu berechnen.
+* (1) Ich kann den Satz des Pythagoras anwenden, um SeitenlÃ¤ngen im rechtwinkligen Dreieck zu berechnen.
 * (2) Ich kann die Umkehrung des Satzes des Pythagoras anwenden.
 * (3) Ich kann Sinus, Kosinus und Tangens eines Winkels im rechtwinkligen Dreieck berechnen und anwenden.
-* (4) Ich kann Seitenlängen und Innenwinkelgrößen in rechtwinkligen Dreiecken mithilfe trigonometrischer Beziehungen berechnen.
-* (5) Ich kann den Satz des Pythagoras und trigonometrische Beziehungen auf vielfältige Sachaufgaben anwenden.
+* (4) Ich kann SeitenlÃ¤ngen und InnenwinkelgrÃ¤Ã¤en in rechtwinkligen Dreiecken mithilfe trigonometrischer Beziehungen berechnen.
+* (5) Ich kann den Satz des Pythagoras und trigonometrische Beziehungen auf vielfÃ¤ltige Sachaufgaben anwenden.
 
 **Fachbegriffe:** Rechtwinkliges Dreieck, Hypotenuse, Kathete, Satz des Pythagoras, Sinus, Kosinus, Tangens, Innenwinkel, Trigonometrie.
 
@@ -476,16 +476,16 @@
 
 ### Lernbereich 2: Pyramide, Kreiskegel, Kugel
 
-* (1) Ich kann Pyramiden und Kreiskegel als Schrägbildskizze darstellen.
-* (2) Ich kann Netze, Schrägbilder und senkrechte Zweitafelbilder gerader Pyramiden zeichnen.
-* (3) Ich kann Kantenlänge, Körperhöhe und Seitenhöhe einer Pyramide berechnen.
+* (1) Ich kann Pyramiden und Kreiskegel als SchrÃ¤gbildskizze darstellen.
+* (2) Ich kann Netze, SchrÃ¤gbilder und senkrechte Zweitafelbilder gerader Pyramiden zeichnen.
+* (3) Ich kann KantenlÃ¤nge, KÃ¶rperhÃ¤he und SeitenhÃ¤he einer Pyramide berechnen.
 * (4) Ich kann die Mantellinie eines Kreiskegels berechnen.
-* (5) Ich kann Mantel- und Oberflächeninhalt sowie Volumen und Masse von Pyramiden berechnen.
-* (6) Ich kann Mantel- und Oberflächeninhalt sowie Volumen und Masse von Kreiskegeln berechnen.
-* (7) Ich kann den Oberflächeninhalt und das Volumen der Kugel berechnen.
-* (8) Ich kann Berechnungen und Darstellungen auf zusammengesetzte Körper anwenden.
+* (5) Ich kann Mantel- und OberflÃ¤cheninhalt sowie Volumen und Masse von Pyramiden berechnen.
+* (6) Ich kann Mantel- und OberflÃ¤cheninhalt sowie Volumen und Masse von Kreiskegeln berechnen.
+* (7) Ich kann den OberflÃ¤cheninhalt und das Volumen der Kugel berechnen.
+* (8) Ich kann Berechnungen und Darstellungen auf zusammengesetzte KÃ¶rper anwenden.
 
-**Fachbegriffe:** Pyramide, Kreiskegel, Kugel, Seitenhöhe, Körperhöhe, Kantenlänge, Mantellinie, Grundfläche, Mantelfläche, Oberfläche, Volumen, Masse, Kubikwurzel, zusammengesetzter Körper.
+**Fachbegriffe:** Pyramide, Kreiskegel, Kugel, SeitenhÃ¤he, KÃ¶rperhÃ¤he, KantenlÃ¤nge, Mantellinie, GrundflÃ¤che, MantelflÃ¤che, OberflÃ¤che, Volumen, Masse, Kubikwurzel, zusammengesetzter KÃ¶rper.
 
 ---
 
@@ -497,9 +497,9 @@
 * (4) Ich kann den Scheitelpunkt einer quadratischen Funktion zeichnerisch bestimmen.
 * (5) Ich kann den Scheitelpunkt einer quadratischen Funktion rechnerisch bestimmen.
 * (6) Ich kann den Scheitelpunkt als Extrempunkt (Minimum oder Maximum) interpretieren.
-* (7) Ich kann quadratische Gleichungen lösen, um Nullstellen zu berechnen.
+* (7) Ich kann quadratische Gleichungen lÃ¶sen, um Nullstellen zu berechnen.
 * (8) Ich kann Schnittpunktkoordinaten mithilfe quadratischer Gleichungen berechnen.
-* (9) Ich kann das Prinzip der Fallunterscheidung erläutern.
+* (9) Ich kann das Prinzip der Fallunterscheidung erlÃ¤utern.
 
 **Fachbegriffe:** Quadratische Funktion, Definitionsbereich, Wertebereich, Funktionsgleichung, Graph, Nullstelle, Scheitelpunkt, Extrempunkt, Minimum, Maximum, Monotonieverhalten, quadratische Gleichung, Fallunterscheidung.
 
@@ -508,56 +508,56 @@
 ### Lernbereich 4: Beschreibende Statistik
 
 * (1) Ich kann Darstellungen und Inhalte von Datenerhebungen beurteilen und hinterfragen.
-* (2) Ich kann Häufigkeitsverteilungen und ihre Aussagekraft auf Beispiele aus der Umwelt anwenden.
+* (2) Ich kann HÃ¤ufigkeitsverteilungen und ihre Aussagekraft auf Beispiele aus der Umwelt anwenden.
 * (3) Ich kann arithmetisches Mittel, Zentralwert und Modalwert berechnen.
 * (4) Ich kann Maximum, Minimum und Spannweite einer Datenmenge bestimmen.
 * (5) Ich kann ein Projekt zu einer statistischen Erhebung aus dem Lebensumfeld gestalten.
 
-**Fachbegriffe:** Häufigkeitsverteilung, arithmetisches Mittel, Zentralwert, Modalwert, Maximum, Minimum, Spannweite, Datenerhebung, Tabellenkalkulation.
+**Fachbegriffe:** HÃ¤ufigkeitsverteilung, arithmetisches Mittel, Zentralwert, Modalwert, Maximum, Minimum, Spannweite, Datenerhebung, Tabellenkalkulation.
 
 ---
 
-## Klassenstufe 10 – Realschulbildungsgang
+## Klassenstufe 10 â€“ Realschulbildungsgang
 
 ### Lernbereich 1: Dreiecke und Vielecke
 
 * (1) Ich kann Dreiecke und Vierecke systematisieren und beschreiben.
 * (2) Ich kann trigonometrische Beziehungen auf beliebige Dreiecke und Vielecke anwenden.
-* (3) Ich kann Längen, Winkelgrößen und Flächeninhalte in beliebigen Dreiecken mithilfe des Sinussatzes berechnen.
-* (4) Ich kann Längen, Winkelgrößen und Flächeninhalte in beliebigen Dreiecken mithilfe des Kosinussatzes berechnen.
+* (3) Ich kann LÃ¤ngen, WinkelgrÃ¤Ã¤en und FlÃ¤cheninhalte in beliebigen Dreiecken mithilfe des Sinussatzes berechnen.
+* (4) Ich kann LÃ¤ngen, WinkelgrÃ¤Ã¤en und FlÃ¤cheninhalte in beliebigen Dreiecken mithilfe des Kosinussatzes berechnen.
 
-**Fachbegriffe:** Dreieck, Viereck, Sinussatz, Kosinussatz, Trigonometrie, Flächeninhalt, Winkelgröße.
+**Fachbegriffe:** Dreieck, Viereck, Sinussatz, Kosinussatz, Trigonometrie, FlÃ¤cheninhalt, WinkelgrÃ¤Ã¤e.
 
 ---
 
-### Lernbereich 2: Funktionale Zusammenhänge
+### Lernbereich 2: Funktionale ZusammenhÃ¤nge
 
-* (1) Ich kann Potenzfunktionen mit der Gleichung y = a·xn (für n = -2; -1; 1; 2; 3) beschreiben und darstellen.
-* (2) Ich kann Exponentialfunktionen mit der Gleichung y = c·a? beschreiben und darstellen.
-* (3) Ich kann die Sinusfunktion y = a·sin(b·x) beschreiben und deren Eigenschaften in Abhängigkeit von den Parametern a und b bestimmen.
-* (4) Ich kann die Periodizität von Funktionen beschreiben.
+* (1) Ich kann Potenzfunktionen mit der Gleichung y = aÂ·xâ¿ (fÃ¼r n = -2; -1; 1; 2; 3) beschreiben und darstellen.
+* (2) Ich kann Exponentialfunktionen mit der Gleichung y = cÂ·aË£ beschreiben und darstellen.
+* (3) Ich kann die Sinusfunktion y = aÂ·sin(bÂ·x) beschreiben und deren Eigenschaften in AbhÃ¤ngigkeit von den Parametern a und b bestimmen.
+* (4) Ich kann die PeriodizitÃ¤t von Funktionen beschreiben.
 * (5) Ich kann Funktionen systematisieren.
 
-**Fachbegriffe:** Potenzfunktion, Exponentialfunktion, Sinusfunktion, Parameter, Periodizität, Grad­maß, Bogenmaß, Wachstumsprozess.
+**Fachbegriffe:** Potenzfunktion, Exponentialfunktion, Sinusfunktion, Parameter, PeriodizitÃ¤t, GradmaÃŸ, BogenmaÃ¤, Wachstumsprozess.
 
 ---
 
-### Lernbereich 3: Zufallsgrößen
+### Lernbereich 3: ZufallsgrÃ¤Ã¤en
 
-* (1) Ich kann den Begriff Zufallsgröße erläutern.
-* (2) Ich kann den Erwartungswert einer Zufallsgröße als Kenngröße zur Beurteilung von Sachsituationen berechnen und interpretieren.
+* (1) Ich kann den Begriff ZufallsgrÃ¤Ã¤e erlÃ¤utern.
+* (2) Ich kann den Erwartungswert einer ZufallsgrÃ¤Ã¤e als KenngrÃ¤Ã¤e zur Beurteilung von Sachsituationen berechnen und interpretieren.
 * (3) Ich kann Zufallsversuche simulieren.
 
-**Fachbegriffe:** Zufallsgröße, Erwartungswert, Simulation, Zufallszahl.
+**Fachbegriffe:** ZufallsgrÃ¤Ã¤e, Erwartungswert, Simulation, Zufallszahl.
 
 ---
 
 ### Lernbereich 4: Mathematik im Alltag
 
-* (1) Ich kann Körper (einschließlich Pyramiden- und Kegelstumpf) darstellen und berechnen.
+* (1) Ich kann KÃ¶rper (einschlieÃ¤lich Pyramiden- und Kegelstumpf) darstellen und berechnen.
 * (2) Ich kann Formeln herleiten.
 * (3) Ich kann Wahrscheinlichkeiten und Erwartungswerte bestimmen.
-* (4) Ich kann funktionale Zusammenhänge auf vielfältige Sachverhalte anwenden.
+* (4) Ich kann funktionale ZusammenhÃ¤nge auf vielfÃ¤ltige Sachverhalte anwenden.
 * (5) Ich kann mich zu Problemen aus Umwelt und Wirtschaft (Haushalt, Konsum, Sparen, Kredit) positionieren.
 
 **Fachbegriffe:** Pyramidenstumpf, Kegelstumpf, Wahrscheinlichkeit, Erwartungswert, Formel, Haushalt, Kredit, Schuldenfalle.
