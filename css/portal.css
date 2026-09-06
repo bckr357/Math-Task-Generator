@@ -196,10 +196,6 @@
     }
     .portal-card--quiz-auto-single .portal-card-kicker { color: #0284c7; }
 
-
-    /* =====================================================================
-
-
     @media (max-width: 900px) {
         .portal-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
