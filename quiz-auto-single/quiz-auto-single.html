@@ -119,6 +119,7 @@
 
                 <div class="quiz-single-answer-section">
                     <math-key-input
+                        ref="taskInputRef"
                         v-model="currentTask.userInput"
                         @confirm="checkCurrentTask"
                         :disabled="currentTask.checked"

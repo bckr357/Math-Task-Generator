@@ -2,6 +2,8 @@ const grading = require('../quiz-auto-single/grading.js');
 
 const cases = [
   { answer: { kind: 'number', value: 3 }, raw: '3', expected: true },
+  { answer: { kind: 'number', value: 5.5 }, raw: '5,5', expected: true },
+  { answer: { kind: 'number', value: 5.5 }, raw: '5.5', expected: true },
   { answer: { kind: 'number', value: 3 }, raw: 'x=3', expected: true },
   { answer: { kind: 'number', value: 3 }, raw: 'x = 3', expected: true },
   { answer: { kind: 'number', value: 3 }, raw: 'x= 3 ', expected: true },

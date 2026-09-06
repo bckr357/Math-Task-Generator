@@ -16,7 +16,8 @@
 			return null;
 		}
 
-		const stripped = rawText.replace(/^([A-Za-z]+)\s*=\s*/i, '').trim();
+		const normalizedDecimalText = rawText.replace(/,/g, '.');
+		const stripped = normalizedDecimalText.replace(/^([A-Za-z]+)\s*=\s*/i, '').trim();
 		if (!stripped) {
 			return null;
 		}
@@ -209,7 +210,9 @@
 			return expressionEquivalent(expectedExpr, userExpr);
 		}
 
-		const parsed = parseUserAnswer(raw);
+		const parsed = answer.kind === 'list'
+			? parseUserAnswer(raw)
+			: (parseSingleNumber(raw) ?? parseUserAnswer(raw));
 		if (!parsed) {
 			return false;
 		}

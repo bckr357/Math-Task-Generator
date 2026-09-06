@@ -19,6 +19,7 @@ const app = createApp({
 		// Aktuelle Einzelfrage
 		const currentTask = ref(null);
 		const taskCounter = ref(0);
+		const taskInputRef = ref(null);
 
 		// Laufende Statistiken
 		const stats = reactive({
@@ -139,6 +140,11 @@ const app = createApp({
 			});
 		};
 
+		const focusCurrentInput = async () => {
+			await nextTick();
+			taskInputRef.value?.focusInput?.();
+		};
+
 		const startQuiz = async () => {
 			if (selectedTypes.value.length === 0) return;
 
@@ -148,6 +154,7 @@ const app = createApp({
 
 			await nextTick();
 			await typesetMathJax();
+			await focusCurrentInput();
 		};
 
 		const checkCurrentTask = async () => {
@@ -181,6 +188,7 @@ const app = createApp({
 
 			await nextTick();
 			await typesetMathJax();
+			await focusCurrentInput();
 		};
 
 		const handleGlobalKeydown = async (event) => {
@@ -227,6 +235,7 @@ const app = createApp({
 			quizStarted,
 			currentTask,
 			taskCounter,
+			taskInputRef,
 			stats,
 			leaderboard,
 			availableTypes,
