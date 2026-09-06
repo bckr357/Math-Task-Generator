@@ -56,9 +56,14 @@
             </div>
 
             <div class="quiz-single-type-grid">
-                <label v-for="type in availableTypes" :key="type" class="quiz-single-type-chip">
+                <label
+                    v-for="type in availableTypes"
+                    :key="type"
+                    class="quiz-single-type-chip"
+                    :class="{ 'quiz-single-type-chip--selected': selectedTypes.includes(type) }"
+                >
                     <input type="checkbox" :value="type" v-model="selectedTypes">
-                    {{ typeLabels[type] || type }}
+                    <span class="quiz-single-type-name">{{ typeLabels[type] || type }}</span>
                 </label>
             </div>
 
@@ -156,7 +161,7 @@
 </div>
 
 <script src="../js/utils.js"></script>
-<script src="./tasks.js"></script>
+<script src="./tasks-quiz-auto.js"></script>
 <script src="./grading.js"></script>
 <script src="./mathKeyInput.js"></script>
 <script src="./quiz-auto-single.js"></script>

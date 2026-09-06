@@ -1,6 +1,6 @@
 // ============================================================
 // QUIZ-AUTO-SINGLE: Auswertung von Nutzereingaben gegen ein `answer`-Objekt
-// aus tasks.js ({kind:'number'|'fraction'|'either'|'expression', ...})
+// aus tasks-quiz-auto.js ({kind:'number'|'fraction'|'either'|'expression', ...})
 // ============================================================
 
 (function (global) {
@@ -127,6 +127,37 @@
 		return fn(...values);
 	};
 
+	const splitEquation = (expr) => {
+		const normalized = normalizeExpressionText(expr);
+		if (!normalized || !normalized.includes('=')) {
+			return null;
+		}
+		const parts = normalized.split('=');
+		if (parts.length !== 2) {
+			return null;
+		}
+		const [lhs, rhs] = parts;
+		if (!lhs || !rhs) {
+			return null;
+		}
+		return { lhs, rhs };
+	};
+
+	const equationEquivalent = (expectedExpr, userExpr) => {
+		const expectedEq = splitEquation(expectedExpr);
+		const userEq = splitEquation(userExpr);
+		if (!expectedEq || !userEq) {
+			return false;
+		}
+		if (!/[yY]/.test(`${expectedEq.lhs}${expectedEq.rhs}`) || !/[yY]/.test(`${userEq.lhs}${userEq.rhs}`)) {
+			return false;
+		}
+		const expectedDiff = `(${expectedEq.lhs})-(${expectedEq.rhs})`;
+		const userDiff = `(${userEq.lhs})-(${userEq.rhs})`;
+		return expressionEquivalent(expectedDiff, userDiff)
+			|| expressionEquivalent(expectedDiff, `-(${userDiff})`);
+	};
+
 	const expressionEquivalent = (expectedExpr, userExpr) => {
 		const normalize = (expr) => normalizeExpressionText(expr).replace(/\*\*/g, '^');
 		const expectedVars = [...new Set((String(expectedExpr ?? '').match(/[A-Za-z]/g) || []))];
@@ -171,6 +202,9 @@
 			const userExpr = normalizeExpressionText(raw);
 			if (!expectedExpr || !userExpr) {
 				return false;
+			}
+			if (expectedExpr.includes('=') || userExpr.includes('=')) {
+				return equationEquivalent(expectedExpr, userExpr);
 			}
 			return expressionEquivalent(expectedExpr, userExpr);
 		}
@@ -228,6 +262,9 @@
 			}
 			if (answer.requireReduced) {
 				return getGcd(parsed.num, parsed.den) === 1;
+			}
+			if (answer.exact) {
+				return parsed.num === answer.num && parsed.den === answer.den;
 			}
 			return true;
 		}

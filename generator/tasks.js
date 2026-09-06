@@ -1067,17 +1067,26 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 			// Zufällig mischen für die Aufgabenstellung
 			const displayOrder = fisherYatesShuffle(fracs);
-			const smallestFrac = [...fracs].sort((a, b) => a.ext - b.ext)[0];
-			const smallestOrig = smallestFrac.orig;
+			// Aufsteigend sortiert für die Lösung
+			const sortedAsc = [...fracs].sort((a, b) => a.ext - b.ext);
 
 			const fmtFrac = ([n, d]) => `\\dfrac{${n}}{${d}}`;
 
 			// Aufgabe: Brüche in zufälliger Reihenfolge, Lücken zum Eintragen
 			const displayStr = displayOrder.map(f => fmtFrac(f.orig)).join(' \\quad ');
 
-			textDisplay = `Welcher Bruch ist am kleinsten? \\( \\quad ${displayStr} \\)`;
-			s = `\\[ \\text{Der kleinste Bruch ist } \\dfrac{${smallestOrig[0]}}{${smallestOrig[1]}} \\]`;
-			answer = fractionAnswer(smallestOrig[0], smallestOrig[1], true);
+			// Erweiterungsschritt für jeden Bruch
+			const extStep = displayOrder.map(f => {
+				const factor = hn / f.orig[1];
+				if (factor === 1) return `\\dfrac{${f.orig[0]}}{${f.orig[1]}}`;
+				return `\\dfrac{${f.orig[0]}}{${f.orig[1]}} \\overset{${factor}}{=} \\dfrac{${f.ext}}{${hn}}`;
+			}).join(' \\qquad ');
+
+			// Sortierte Lösung
+			const sortedStr = sortedAsc.map(f => fmtFrac(f.orig)).join(' < ');
+
+			textDisplay = `Ordne von klein nach groß: \\( \\quad ${displayStr} \\)`;
+			s = `\\[ ${sortedStr} \\quad \\left(${extStep}\\right) \\]`;
 			break;
 		}
 
@@ -1963,9 +1972,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				}
 				case 'ax+c=by': {
 					textEquation = `${aTerm} ${cSigned} = ${bTerm}`;
-					step1 = `${aTerm} ${cSigned} &= ${bTerm} &&| \\, ${invTermOp(a_lin, 'x')}`;
-					step2 = `${c_lin} &= ${bTerm} ${a_lin >= 0 ? '-' : '+'} ${absATerm} &&| \\, : ${fmt(b_lin)}`;
-					finalStep = `y &= ${formatLinearExpr(-a_lin / b_lin, c_lin / b_lin)}`;
+					step1 = `${aTerm} ${cSigned} &= ${bTerm} &&| \\, : ${fmt(b_lin)}`;
+					finalStep = `y &= ${formatLinearExpr(a_lin / b_lin, c_lin / b_lin)}`;
 					break;
 				}
 				case 'ax=by+c': {
@@ -3237,7 +3245,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let W = (G / n) * z;            // Der Anteil (Prozentwert)
 
 				textDisplay = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)} ${einheit} sind ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)}  ${einheit} sind ${comma(W)} ${einheit}<br>
+				s = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)}  ${einheit} sind <b>${comma(W)} ${einheit}</b><br>
 				\\((${comma(G)} : ${n} \\cdot ${z} = ${comma(W)})\\)`;
 
 			} else if (rd > 0.3) {
@@ -3249,7 +3257,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let G = (W / z) * n;            // Das Ganze
 				
 				textDisplay = `\\( \\frac{${z}}{${n}} \\)  sind ${comma(W)} ${einheit} von ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\) sind ${comma(W)} ${einheit} von ${comma(G)} ${einheit}<br>
+				s = `\\( \\frac{${z}}{${n}} \\) sind ${comma(W)} ${einheit} von <b>${comma(G)} ${einheit}</b><br>
 				\\((${comma(W)} : ${z} \\cdot ${n} = ${comma(G)})\\)`;
 
 			} else {
@@ -3261,7 +3269,8 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let G = n * multiplier;
 				
 				textDisplay = `${comma(W)} ${einheit} von ${comma(G)}  ${einheit} sind ${blank(3)} (als gekürzter Bruch)`;
-				s = `${comma(W)}  ${einheit} von  ${comma(G)}  ${einheit} sind  \\(\\dfrac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\dfrac{${z}}{${n}} \\)`;
+				s = `${comma(W)}  ${einheit} von  ${comma(G)}  ${einheit} sind  \\(\\dfrac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\mathbf{\\dfrac{${z}}{${n}}}\\)`;
+				
 			}
 			break;
 		}

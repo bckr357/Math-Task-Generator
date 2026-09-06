@@ -31,12 +31,15 @@ const app = createApp({
 		// Leaderboard
 		const leaderboard = ref([]);
 
-		// Verfügbare Typen je nach Stufe: nur die aktuell funktionierenden Auto-Typen anzeigen
-		const workingTypes = computed(() => window.QUIZ_AUTO_TYPES || []);
+		// Verfügbare Typen je nach Stufe: alle für die Klasse definierten Aufgabentypen anzeigen
 		const availableTypes = computed(() => {
 			const configured = taskTypesByGrade[`klasse${grade.value}`] || [];
-			const active = new Set(workingTypes.value);
-			return configured.filter(type => active.has(type));
+			return [...new Set(configured)].sort((a, b) => {
+				const orderA = typeOrderIndex[a] ?? Number.MAX_SAFE_INTEGER;
+				const orderB = typeOrderIndex[b] ?? Number.MAX_SAFE_INTEGER;
+				if (orderA !== orderB) return orderA - orderB;
+				return a.localeCompare(b);
+			});
 		});
 
 		const loadLeaderboard = () => {

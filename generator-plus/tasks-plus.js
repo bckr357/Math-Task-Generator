@@ -1586,9 +1586,8 @@ function createTask(type, isEasyMode, grade = 5, options = {}) {
 				}
 				case 'ax+c=by': {
 					textEquation = `${aTerm} ${cSigned} = ${bTerm}`;
-					step1 = `${aTerm} ${cSigned} &= ${bTerm} &&| \\, ${invTermOp(a_lin, 'x')}`;
-					step2 = `${c_lin} &= ${bTerm} ${a_lin >= 0 ? '-' : '+'} ${absATerm} &&| \\, : ${fmt(b_lin)}`;
-					finalStep = `y &= ${formatLinearExpr(-a_lin / b_lin, c_lin / b_lin)}`;
+					step1 = `${aTerm} ${cSigned} &= ${bTerm} &&| \\, : ${fmt(b_lin)}`;
+					finalStep = `y &= ${formatLinearExpr(a_lin / b_lin, c_lin / b_lin)}`;
 					break;
 				}
 				case 'ax=by+c': {

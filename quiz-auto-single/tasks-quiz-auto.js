@@ -16,7 +16,7 @@ const QUIZ_AUTO_DEFAULT_TYPES = [
 // Alle automatisch auswertbaren Aufgabentypen.
 const QUIZ_AUTO_TYPES = [
 	'z_as', 'z_md', 'db_as', 'db_md', 'pow10',
-	'percent', 'pv', 'equations', 'equations_adv', 'vorrang', 'round',
+	'percent', 'pv', 'terme', 'equations', 'equations_adv', 'vorrang', 'round',
 	'potenzen', 'units', 'statistik', 'ueberschlag',
 	'frac_as', 'frac_md', 'frac_simplify', 'frac_convert', 'anteile', 'wkt',
 	'geometry', 'prop', 'units_calc'
@@ -96,27 +96,27 @@ const quizTaskTypesByGrade = {
 		'teiler', 'primzahlen', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order',
 		'anteile', 'prop', 'percent', 'pv',
-		'equations', 'equations_lin', 'formel_umstellen',
+		'terme', 'equations', 'equations_lin', 'formel_umstellen',
 		'round', 'ueberschlag', 'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse8: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag',
 		'anteile', 'prop', 'percent', 'pv',
-		'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
+		'terme', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse9: [
 		'teiler', 'primzahlen', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag',
 		'anteile', 'prop', 'percent', 'pv',
-		'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
+		'terme', 'equations', 'equations_adv', 'equations_lin', 'formel_umstellen',
 		'geometry', 'winkel', 'schraegbild', 'kongruenz', 'statistik', 'wkt'
 	],
 	klasse10: [
 		'teiler', 'units', 'potenzen', 'z_as', 'z_md', 'db_as', 'db_md', 'pow10', 'vorrang', 'primzahlen',
 		'frac_simplify', 'frac_convert', 'frac_as', 'frac_md', 'frac_order', 'round', 'ueberschlag',
-		'anteile', 'prop', 'percent', 'pv', 'word_terms',
+		'anteile', 'prop', 'percent', 'pv', 'terme', 'word_terms',
 		'equations', 'geometry', 'winkel', 'statistik', 'wkt'
 	]
 };
@@ -809,7 +809,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				N = n_base * k;
 			} while (Z === N || getGcd(z_base, n_base) > 1 || Z % N === 0 || N % Z === 0);
 
-			textDisplay = `kürze vollständig: \\( \\quad\\dfrac{${Z}}{${N}} = \\)`;
+			textDisplay = `Kürze vollständig: \\( \\quad\\dfrac{${Z}}{${N}} = \\)`;
 			answer = fractionAnswer(z_base, n_base, true);
 
 			// Lösungsweg mit \underset unter dem Gleichheitszeichen
@@ -908,17 +908,22 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 
 			// Zufällig mischen für die Aufgabenstellung
 			const displayOrder = fisherYatesShuffle(fracs);
-			const smallestFrac = [...fracs].sort((a, b) => a.ext - b.ext)[0];
-			const smallestOrig = smallestFrac.orig;
+			// Aufsteigend sortiert für die Lösung
+			const sortedAsc = [...fracs].sort((a, b) => a.ext - b.ext);
+			const smallest = sortedAsc[0];
 
 			const fmtFrac = ([n, d]) => `\\dfrac{${n}}{${d}}`;
 
 			// Aufgabe: Brüche in zufälliger Reihenfolge, Lücken zum Eintragen
 			const displayStr = displayOrder.map(f => fmtFrac(f.orig)).join(' \\quad ');
 
+			// Nur der kleinste Bruch in der Lösung als exakte Darstellung des Aufgabenbruchs
+			const exactSmallest = smallest.orig;
+			const exactAnswer = { kind: 'fraction', num: exactSmallest[0], den: exactSmallest[1], exact: true };
+			answer = exactAnswer;
+
 			textDisplay = `Welcher Bruch ist am kleinsten? \\( \\quad ${displayStr} \\)`;
-			s = `\\[ \\text{Der kleinste Bruch ist } \\dfrac{${smallestOrig[0]}}{${smallestOrig[1]}} \\]`;
-			answer = fractionAnswer(smallestOrig[0], smallestOrig[1], true);
+			s = `\\[ ${fmtFrac(exactSmallest)} \\]`;
 			break;
 		}
 
@@ -1773,6 +1778,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			let step1 = '';
 			let step2 = '';
 			let finalStep = '';
+			let finalAnswerExpression = '';
 
 			switch (form) {
 				case 'ax+by=c': {
@@ -1780,13 +1786,14 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					step1 = `${aTerm} ${varTerm(b_lin, 'y', true)} &= ${c_lin} &&| \\, ${invTermOp(a_lin, 'x')}`;
 					step2 = `${bTerm} &= ${c_lin} ${a_lin >= 0 ? '-' : '+'} ${absATerm} &&| \\, : ${fmt(b_lin)}`;
 					finalStep = `y &= ${formatLinearExpr(-a_lin / b_lin, c_lin / b_lin)}`;
+					finalAnswerExpression = `y = ${formatLinearExpr(-a_lin / b_lin, c_lin / b_lin)}`;
 					break;
 				}
 				case 'ax+c=by': {
 					textEquation = `${aTerm} ${cSigned} = ${bTerm}`;
-					step1 = `${aTerm} ${cSigned} &= ${bTerm} &&| \\, ${invTermOp(a_lin, 'x')}`;
-					step2 = `${c_lin} &= ${bTerm} ${a_lin >= 0 ? '-' : '+'} ${absATerm} &&| \\, : ${fmt(b_lin)}`;
-					finalStep = `y &= ${formatLinearExpr(-a_lin / b_lin, c_lin / b_lin)}`;
+					step1 = `${aTerm} ${cSigned} &= ${bTerm} &&| \\, : ${fmt(b_lin)}`;
+					finalStep = `y &= ${formatLinearExpr(a_lin / b_lin, c_lin / b_lin)}`;
+					finalAnswerExpression = `y = ${formatLinearExpr(a_lin / b_lin, c_lin / b_lin)}`;
 					break;
 				}
 				case 'ax=by+c': {
@@ -1794,12 +1801,14 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					step1 = `${aTerm} &= ${bTerm} ${cSigned} &&| \\, ${cOppSigned}`;
 					step2 = `${aTerm} ${cOppSigned} &= ${bTerm} &&| \\, : ${fmt(b_lin)}`;
 					finalStep = `y &= ${formatLinearExpr(a_lin / b_lin, -c_lin / b_lin)}`;
+					finalAnswerExpression = `y = ${formatLinearExpr(a_lin / b_lin, -c_lin / b_lin)}`;
 					break;
 				}
 				default: {
 					textEquation = `${bTerm} = ${aTerm} ${cSigned}`;
 					step1 = `${bTerm} &= ${aTerm} ${cSigned} &&| \\, : ${fmt(b_lin)}`;
 					finalStep = `y &= ${formatLinearExpr(a_lin / b_lin, c_lin / b_lin)}`;
+					finalAnswerExpression = `y = ${formatLinearExpr(a_lin / b_lin, c_lin / b_lin)}`;
 					break;
 				}
 			}
@@ -1811,6 +1820,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			${step2 ? `${step2} \\\\` : ''}
 			${finalStep}
 			\\end{aligned} \\]`;
+			answer = expressionAnswer(finalAnswerExpression);
 			break;
 		}
 		
@@ -1926,7 +1936,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					       : resV > 0     ? ` + ${resV}${v}`
 					       :               ` - ${Math.abs(resV)}${v}`;
 					const step = cNum > 0 ? `${term1} + ${term2}` : `${term1} - ${term2}`;
-					resStr = `${step} \\\\ = ${p1}${p2}`;
+					const finalRes = `${p1}${p2}`.trim();
+					resStr = `${step} \\\\ = ${finalRes}`;
+					answer = expressionAnswer(finalRes);
 				} else {
 					const resV = factorCoef * cVarCoef;
 					const resN = factorCoef * cNum;
@@ -1937,7 +1949,9 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 					       :              `${resV}${v}`;
 					let p2 = resN > 0 ? `+ ${resN}` : `- ${Math.abs(resN)}`;
 					const step = cNum > 0 ? `${term1} + ${term2}` : `${term1} - ${term2}`;
-					resStr = `${step} \\\\ = ${p1} ${p2}`;
+					const finalRes = `${p1} ${p2}`.trim();
+					resStr = `${step} \\\\ = ${finalRes}`;
+					answer = expressionAnswer(finalRes);
 				}
 
 				textDisplay = `Löse die Klammer auf: <br>\\( ${taskStr} \\)`;
@@ -2489,7 +2503,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				textDisplay = `Welchen Winkel haben ${p} % in einem Kreisdiagramm?`;
 				s = `10 % ≙ 36° &#x2192; ${p} % ≙ ${result}°`;
 				
-			} else {
+			}  else  {
 				let a = rnd(25, 45), b = rnd(61, 129);
 				textPrint = `Dreieck mit Winkeln \\( \\alpha = ${a}° \\) und \\( \\beta = ${b}°. \\quad \\gamma = \\) ${blank(1.5)} `;
 				textDisplay = `Dreieck mit Winkeln \\( \\alpha = ${a}° \\) und \\( \\beta = ${b}°\\). Winkel \\(\\gamma \\)?`;
@@ -2499,153 +2513,162 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 			break;
 		}
 		
-				case 'kongruenz': {
+		case 'kongruenz': {
+			// Permutation bleibt: Zuordnung von Seiten-/Winkelnamen wird zufaellig gemischt.
+			let p = [0, 1, 2];
+			for (let i = 2; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[p[i], p[j]] = [p[j], p[i]];
+			}
+			
+			const type = randInt(0, 3); // 0: SSS, 1: SWS, 2: WSW, 3: SsW
+			const kongruenzsatz = ['SSS', 'SWS', 'WSW', 'SsW'][type];
 			const cm = (x) => formatDecimal(x, 1);
-			const pickDec = (minTenths, maxTenths) => randInt(minTenths, maxTenths) / 10;
-
-			// Typen:
-			// Gültig: 0: SSS, 1: SWS, 2: WSW, 3: SsW
-			// Kein Satz: 4: WWW, 5: WWS (nicht anliegend), 6: sSw (Winkel ggü. kleinerer Seite), 7: Dreiecksungleichung verletzt
-			const mode = randInt(0, 7);
-
-			let givenParts = [];
-			let theoremName = '';
-			let explanation = '';
-
-			if (mode === 0) {
-				// SSS: 3 Seiten mit gültiger Dreiecksungleichung
-				let s1, s2, s3;
+			const pickDecNoZeroTenth = (minTenths, maxTenths) => {
+				let n;
 				do {
-					s1 = pickDec(30, 80);
-					s2 = pickDec(30, 80);
-					s3 = pickDec(30, 80);
-				} while (s1 + s2 <= s3 || s1 + s3 <= s2 || s2 + s3 <= s1);
+					n = randInt(minTenths, maxTenths);
+				} while (n % 10 === 0);
+				return n / 10;
+			};
 
-				givenParts = [
-					`a = ${cm(s1)}\\,\\text{cm}`,
-					`b = ${cm(s2)}\\,\\text{cm}`,
-					`c = ${cm(s3)}\\,\\text{cm}`
-				];
-				theoremName = 'SSS';
-				explanation = 'Drei Seiten gegeben, Dreiecksungleichung erfüllt.';
-			} else if (mode === 1) {
-				// SWS: 2 Seiten und der eingeschlossene Winkel
-				const pairIdx = randInt(0, 2); // 0: (a,b)->gamma, 1: (b,c)->alpha, 2: (a,c)->beta
-				const s1 = pickDec(30, 80);
-				const s2 = pickDec(30, 80);
-				const ang = randInt(25, 120);
+			let givenStr = '';
+			let givenSides = [false, false, false];
+			let givenAngles = [false, false, false];
+			let s1, s2, s3, a1, a2, a3;
+			const deg = Math.PI / 180;
+			const computeTriangleHeight = (sides, angles, given) => {
+				const givenSideIndexes = [0, 1, 2].filter((i) => given[i]);
+				if (!givenSideIndexes.length) return 0;
+				const baseIndex = givenSideIndexes.reduce((maxIdx, idx) =>
+					sides[idx] > sides[maxIdx] ? idx : maxIdx,
+					givenSideIndexes[0]
+				);
+				if (baseIndex === 0) return sides[1] * Math.sin(angles[2] * deg);
+				if (baseIndex === 1) return sides[0] * Math.sin(angles[2] * deg);
+				if (baseIndex === 2) return sides[0] * Math.sin(angles[1] * deg);
+				return 0;
+			};
+			const buildGivenStr = () => {
+				const parts = [];
+				if (givenSides[0]) parts.push(`a=${cm(resS[0])}\\,\\text{cm}`);
+				if (givenSides[1]) parts.push(`b=${cm(resS[1])}\\,\\text{cm}`);
+				if (givenSides[2]) parts.push(`c=${cm(resS[2])}\\,\\text{cm}`);
+				if (givenAngles[0]) parts.push(`\\alpha=${resA[0]}^\\circ`);
+				if (givenAngles[1]) parts.push(`\\beta=${resA[1]}^\\circ`);
+				if (givenAngles[2]) parts.push(`\\gamma=${resA[2]}^\\circ`);
+				return parts.length ? `\\( \\; ${parts.join('; \\; ')} \\)` : '';
+			};
 
-				if (pairIdx === 0) {
-					givenParts = [`a = ${cm(s1)}\\,\\text{cm}`, `b = ${cm(s2)}\\,\\text{cm}`, `\\gamma = ${ang}^\\circ`];
-				} else if (pairIdx === 1) {
-					givenParts = [`b = ${cm(s1)}\\,\\text{cm}`, `c = ${cm(s2)}\\,\\text{cm}`, `\\alpha = ${ang}^\\circ`];
-				} else {
-					givenParts = [`a = ${cm(s1)}\\,\\text{cm}`, `c = ${cm(s2)}\\,\\text{cm}`, `\\beta = ${ang}^\\circ`];
-				}
-				theoremName = 'SWS';
-				explanation = 'Zwei Seiten und der von ihnen eingeschlossene Winkel sind gegeben.';
-			} else if (mode === 2) {
-				// WSW: 1 Seite und die beiden anliegenden Winkel
-				const sideIdx = randInt(0, 2); // 0: a mit beta/gamma, 1: b mit alpha/gamma, 2: c mit alpha/beta
-				const sVal = pickDec(30, 80);
-				let a1 = randInt(25, 75);
-				let a2 = randInt(25, 75);
+			if (type === 0) {
+				// SSS
+				do {
+					s1 = pickDecNoZeroTenth(31, 69);
+					s2 = pickDecNoZeroTenth(31, 69);
+					const minS3 = Math.abs(s1 - s2) + 1.5;
+					const maxS3 = Math.min(s1 + s2 - 1.5, 10);
+					const minS3Tenths = Math.ceil(minS3 * 10);
+					const maxS3Tenths = Math.floor(maxS3 * 10);
+					if (minS3Tenths > maxS3Tenths) continue;
+					
+					s3 = pickDecNoZeroTenth(minS3Tenths, maxS3Tenths);
+					
+					a1 = Math.round(Math.acos((s2 * s2 + s3 * s3 - s1 * s1) / (2 * s2 * s3)) * 180 / Math.PI);
+					a2 = Math.round(Math.acos((s1 * s1 + s3 * s3 - s2 * s2) / (2 * s1 * s3)) * 180 / Math.PI);
+					a3 = 180 - a1 - a2;
+					givenSides = [true, true, true];
+					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
+				} while (Math.max(s1, s2, s3) > 9 || triangleHeight > 4 || triangleHeight < 2);
 
-				if (sideIdx === 0) {
-					givenParts = [`a = ${cm(sVal)}\\,\\text{cm}`, `\\beta = ${a1}^\\circ`, `\\gamma = ${a2}^\\circ`];
-				} else if (sideIdx === 1) {
-					givenParts = [`b = ${cm(sVal)}\\,\\text{cm}`, `\\alpha = ${a1}^\\circ`, `\\gamma = ${a2}^\\circ`];
-				} else {
-					givenParts = [`c = ${cm(sVal)}\\,\\text{cm}`, `\\alpha = ${a1}^\\circ`, `\\beta = ${a2}^\\circ`];
-				}
-				theoremName = 'WSW';
-				explanation = 'Eine Seite und die beiden anliegenden Winkel sind gegeben.';
-			} else if (mode === 3) {
-				// SsW: 2 Seiten und der Winkel gegenüber der GRÖSSEREN Seite
-				const pairIdx = randInt(0, 2); // 0: a, b; 1: b, c; 2: a, c
-				let sBig = pickDec(55, 85);
-				let sSmall = pickDec(30, 50);
-				const ang = randInt(35, 95);
+			} else if (type === 1) {
+				// SWS
+				do {
+					givenSides = [false, false, false];
+					givenAngles = [false, false, false];
+					s1 = pickDecNoZeroTenth(31, 69);
+					s2 = pickDecNoZeroTenth(31, 69);
+					a3 = randInt(25, 125);
+					
+					s3 = Math.sqrt(s1 * s1 + s2 * s2 - 2 * s1 * s2 * Math.cos(a3 * Math.PI / 180));
+					a1 = Math.round(Math.acos((s2 * s2 + s3 * s3 - s1 * s1) / (2 * s2 * s3)) * 180 / Math.PI);
+					s3 = Math.round(s3 * 10) / 10;
+					a2 = 180 - a3 - a1;
+					givenSides[p[0]] = true;
+					givenSides[p[1]] = true;
+					givenAngles[p[2]] = true;
+					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
+				} while (Math.max(s1, s2, s3) > 9 || a2 <= 0 || triangleHeight > 4 || triangleHeight < 2);
+			} else if (type === 2) {
+				// WSW
+				do {
+					givenSides = [false, false, false];
+					givenAngles = [false, false, false];
+					s3 = pickDecNoZeroTenth(31, 69);
+					a1 = randInt(25, 50);
+					a2 = randInt(90, 120);
+					a3 = 180 - a1 - a2;
+					
+					s1 = Math.round((s3 * Math.sin(a1 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
+					s2 = Math.round((s3 * Math.sin(a2 * Math.PI / 180) / Math.sin(a3 * Math.PI / 180)) * 10) / 10;
+					givenSides[p[2]] = true;
+					givenAngles[p[0]] = true;
+					givenAngles[p[1]] = true;
+					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
+				} while (a3 < 10 || Math.max(s1, s2, s3) > 9 || triangleHeight > 4 || triangleHeight < 2);
 
-				if (pairIdx === 0) {
-					// a > b, Winkel alpha
-					givenParts = [`a = ${cm(sBig)}\\,\\text{cm}`, `b = ${cm(sSmall)}\\,\\text{cm}`, `\\alpha = ${ang}^\\circ`];
-				} else if (pairIdx === 1) {
-					// b > c, Winkel beta
-					givenParts = [`b = ${cm(sBig)}\\,\\text{cm}`, `c = ${cm(sSmall)}\\,\\text{cm}`, `\\beta = ${ang}^\\circ`];
-				} else {
-					// c > a, Winkel gamma
-					givenParts = [`c = ${cm(sBig)}\\,\\text{cm}`, `a = ${cm(sSmall)}\\,\\text{cm}`, `\\gamma = ${ang}^\\circ`];
-				}
-				theoremName = 'SsW';
-				explanation = 'Zwei Seiten und der Gegenwinkel der größeren Seite sind gegeben.';
-			} else if (mode === 4) {
-				// WWW: 3 Winkel
-				let a1 = randInt(30, 80);
-				let a2 = randInt(30, 80);
-				let a3 = 180 - a1 - a2;
-				if (a3 <= 10) {
-					a1 = 50; a2 = 60; a3 = 70;
-				}
-				givenParts = [`\\alpha = ${a1}^\\circ`, `\\beta = ${a2}^\\circ`, `\\gamma = ${a3}^\\circ`];
-				theoremName = 'kein';
-				explanation = 'Drei gegebene Winkel (WWW) legen nur die Form fest, nicht aber die Größe des Dreiecks.';
-			} else if (mode === 5) {
-				// WWS / SWW: 2 Winkel und eine nicht-anliegende bzw. nicht-eingeschlossene Seite
-				const sVal = pickDec(30, 80);
-				let a1 = randInt(25, 75);
-				let a2 = randInt(25, 75);
-				const variant = randInt(0, 2);
-				if (variant === 0) {
-					givenParts = [`a = ${cm(sVal)}\\,\\text{cm}`, `\\alpha = ${a1}^\\circ`, `\\beta = ${a2}^\\circ`];
-				} else if (variant === 1) {
-					givenParts = [`b = ${cm(sVal)}\\,\\text{cm}`, `\\beta = ${a1}^\\circ`, `\\gamma = ${a2}^\\circ`];
-				} else {
-					givenParts = [`c = ${cm(sVal)}\\,\\text{cm}`, `\\alpha = ${a1}^\\circ`, `\\gamma = ${a2}^\\circ`];
-				}
-				theoremName = 'kein';
-				explanation = 'WWS/SWW ist kein Kongruenzsatz (die Seite liegt nicht zwischen den beiden Winkeln).';
-			} else if (mode === 6) {
-				// sSw: 2 Seiten und der Winkel gegenüber der KLEINEREN Seite
-				const pairIdx = randInt(0, 2);
-				let sSmall = pickDec(30, 48);
-				let sBig = pickDec(55, 85);
-				const ang = randInt(35, 75);
-
-				if (pairIdx === 0) {
-					// a < b, aber Winkel alpha (gegenüber a)
-					givenParts = [`a = ${cm(sSmall)}\\,\\text{cm}`, `b = ${cm(sBig)}\\,\\text{cm}`, `\\alpha = ${ang}^\\circ`];
-				} else if (pairIdx === 1) {
-					// b < c, aber Winkel beta (gegenüber b)
-					givenParts = [`b = ${cm(sSmall)}\\,\\text{cm}`, `c = ${cm(sBig)}\\,\\text{cm}`, `\\beta = ${ang}^\\circ`];
-				} else {
-					// a < c, aber Winkel alpha (gegenüber a)
-					givenParts = [`a = ${cm(sSmall)}\\,\\text{cm}`, `c = ${cm(sBig)}\\,\\text{cm}`, `\\alpha = ${ang}^\\circ`];
-				}
-				theoremName = 'kein';
-				explanation = 'Der gegebene Winkel liegt der kleineren Seite gegenüber (sSw ist kein Kongruenzsatz).';
 			} else {
-				// Dreiecksungleichung verletzt: 3 Seiten
-				let s1 = pickDec(20, 35);
-				let s2 = pickDec(20, 35);
-				let s3 = pickDec(75, 95); // s1 + s2 < s3
-				givenParts = [`a = ${cm(s1)}\\,\\text{cm}`, `b = ${cm(s2)}\\,\\text{cm}`, `c = ${cm(s3)}\\,\\text{cm}`];
-				theoremName = 'kein';
-				explanation = 'Die Dreiecksungleichung ist verletzt (Summe zweier Seiten ist kleiner als die dritte Seite).';
+				// SsW
+				do {
+					givenSides = [false, false, false];
+					givenAngles = [false, false, false];
+					s1 = pickDecNoZeroTenth(51, 69);
+					s2 = pickDecNoZeroTenth(31, 49);
+					a1 = randInt(25, 110);
+					
+					const sinA2 = (s2 * Math.sin(a1 * Math.PI / 180)) / s1;
+					if (sinA2 >= 1 || sinA2 <= -1) {
+						a2 = NaN;
+						a3 = NaN;
+						s3 = NaN;
+						continue;
+					}
+
+					a2 = Math.round(Math.asin(sinA2) * 180 / Math.PI);
+					a3 = 180 - a1 - a2;
+					s3 = Math.round((s1 * Math.sin(a3 * Math.PI / 180) / Math.sin(a1 * Math.PI / 180)) * 10) / 10;
+					givenSides[p[0]] = true;
+					givenSides[p[1]] = true;
+					givenAngles[p[0]] = true;
+					triangleHeight = computeTriangleHeight([s1, s2, s3], [a1, a2, a3], givenSides);
+				} while (!Number.isFinite(s3) || a3 < 10 || Math.max(s1, s2, s3) > 9 || triangleHeight > 4 || triangleHeight < 2);
+
 			}
 
-			// Reihenfolge der gegebenen Angaben zufällig mischen
-			const displayGiven = fisherYatesShuffle(givenParts).join('; \\; ');
-			const displayPrompt = 'Welcher Kongruenzsatz liegt vor? (SSS, SWS, WSW, SsW oder kein)';
+			const resS = [], resA = [];
+			resS[p[0]] = s1; resS[p[1]] = s2; resS[p[2]] = s3;
+			resA[p[0]] = a1; resA[p[1]] = a2; resA[p[2]] = a3;
 
-			textDisplay = `${displayPrompt} <br>\\( ${displayGiven} \\)`;
-			textPrint = `${displayPrompt} \\( ${displayGiven} \\)`;
+			givenStr = buildGivenStr();
 
-			if (theoremName === 'kein') {
-				s = `\\[ \\text{Kein Kongruenzsatz} \\] (${explanation})`;
-			} else {
-				s = `\\[ \\text{Kongruenzsatz } \\mathbf{${theoremName}} \\] (${explanation})`;
-			}
+			// Höhe des zu zeichnenden Dreiecks berechnen (bei längster gegebener Seite als Grundseite).
+			// Über Heron: A = sqrt(u(u-a)(u-b)(u-c)), dann h = 2A/g.
+			const sideA = resS[0], sideB = resS[1], sideC = resS[2];
+			const givenSideValues = [];
+			if (givenSides[0]) givenSideValues.push(sideA);
+			if (givenSides[1]) givenSideValues.push(sideB);
+			if (givenSides[2]) givenSideValues.push(sideC);
+			const base = givenSideValues.length ? Math.max(...givenSideValues) : Math.max(sideA, sideB, sideC);
+			const semi = (sideA + sideB + sideC) / 2;
+			const areaSq = semi * (semi - sideA) * (semi - sideB) * (semi - sideC);
+			const area = Math.sqrt(Math.max(0, areaSq));
+			const computedHeight = base > 0 ? (2 * area) / base : 0;
+			const reservedHeight = Number(computedHeight + 0.5).toFixed(1);
+			
+			textDisplay = `Skizziere eine Planfigur, zeichne und beschrifte das Dreieck und miss alle Größen: <br>${givenStr}`;
+			textPrint = `Skizziere eine Planfigur, zeichne und beschrifte das Dreieck und miss alle Größen: ${givenStr}${space(reservedHeight)}`;
+			s = `Kongruenzsatz ${kongruenzsatz}, alle Maße:<br>\\[ \\begin{aligned}
+				a &= ${cm(resS[0])}\\,\\text{cm}; &\\quad b &= ${cm(resS[1])}\\,\\text{cm}; &\\quad c &= ${cm(resS[2])}\\,\\text{cm} \\\\ \\alpha &= ${resA[0]}^\\circ; &\\quad \\beta &= ${resA[1]}^\\circ; &\\quad \\gamma &= ${resA[2]}^\\circ
+			\\end{aligned} \\]`;
 			break;
 		}
 
@@ -2671,10 +2694,10 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let multiplier = isMentalMode ? rnd(2, 9) : rnd(3, 13);
 				let G = n * multiplier * scale; // Das Ganze (Grundwert)
 				let W = (G / n) * z;            // Der Anteil (Prozentwert)
-				answer = { kind: 'number', value: W };
+				answer = { kind: 'number', value: W, unit: einheit };
 
-				textDisplay = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)} ${einheit} sind ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\) von ${comma(G)}  ${einheit} sind ${comma(W)} ${einheit}<br>
+				textDisplay = `\\( \\dfrac{${z}}{${n}} \\) von ${comma(G)} ${einheit} sind ${blank(3)}`;
+				s = `\\( \\dfrac{${z}}{${n}} \\) von ${comma(G)}  ${einheit} sind <b>${comma(W)} ${einheit}</b><br>
 				\\((${comma(G)} : ${n} \\cdot ${z} = ${comma(W)})\\)`;
 
 			} else if (rd > 0.3) {
@@ -2684,10 +2707,10 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				let multiplier = isMentalMode ? rnd(2, 9) : rnd(3, 13);
 				let W = z * multiplier * scale; // Der Anteil
 				let G = (W / z) * n;            // Das Ganze
-				answer = { kind: 'number', value: G };
+				answer = { kind: 'number', value: G, unit: einheit };
 				
-				textDisplay = `\\( \\frac{${z}}{${n}} \\)  sind ${comma(W)} ${einheit} von ${blank(3)}`;
-				s = `\\( \\frac{${z}}{${n}} \\) sind ${comma(W)} ${einheit} von ${comma(G)} ${einheit}<br>
+				textDisplay = `\\( \\dfrac{${z}}{${n}} \\)  sind ${comma(W)} ${einheit} von ${blank(3)}`;
+				s = `\\( \\dfrac{${z}}{${n}} \\) sind ${comma(W)} ${einheit} von <b>${comma(G)} ${einheit}</b><br>
 				\\((${comma(W)} : ${z} \\cdot ${n} = ${comma(G)})\\)`;
 
 			} else {
@@ -2700,7 +2723,7 @@ function createTask(type, isMentalMode, grade = 5, options = {}) {
 				answer = { kind: 'fraction', num: z, den: n, requireReduced: true };
 				
 				textDisplay = `${comma(W)} ${einheit} von ${comma(G)}  ${einheit} sind ${blank(3)} (als gekürzter Bruch)`;
-				s = `${comma(W)}  ${einheit} von  ${comma(G)}  ${einheit} sind  \\(\\dfrac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\dfrac{${z}}{${n}} \\)`;
+				s = `${comma(W)}  ${einheit} von  ${comma(G)}  ${einheit} sind  \\(\\dfrac{${comma(W)}}{${comma(G)}} \\underset{${multiplier}}{=} \\mathbf{\\dfrac{${z}}{${n}}} \\)`;
 			}
 			break;
 		}
