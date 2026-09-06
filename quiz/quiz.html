@@ -2,17 +2,37 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Elite-Turbo-Ninja-Laser-Mathe-Battle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,300..900;1,300..900&display=swap">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="../js/utils.js"></script>
     <script src="./quiz.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/shell.css">
     <link rel="stylesheet" href="./quiz.css">
 </head>
 <body>
 
-<a href="../index.html" class="back-link">← Zurück zur Startseite</a>
 <div id="app">
+    <header v-if="!quizActive" class="site-header">
+        <!--
+        <button class="site-hamburger" aria-label="Hauptmenü öffnen" title="Module" type="button">
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <line x1="2.5" y1="4" x2="17.5" y2="4"></line>
+                <line x1="2.5" y1="10" x2="17.5" y2="10"></line>
+                <line x1="2.5" y1="16" x2="17.5" y2="16"></line>
+            </svg>
+        </button>
+        -->
+        <a href="../index.html" class="site-header-brand">becker357 - Startseite</a>
+        <span class="site-header-sep" aria-hidden="true">/</span>
+        <span class="site-header-page">Quiz</span>
+    </header>
+
     <div v-if="!quizActive" class="setup-screen">
         <h1 class="quiz-setup-title">Ultra-Elite-Turbo-Ninja-Laser-Mathe-Battle<br>(ohne Hilfsmittel)</h1>
         <div class="file-input">

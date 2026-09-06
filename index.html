@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mathe-Werkzeuge</title>
+    <title>becker357 - Startseite</title>
     <meta name="description" content="Interaktive Werkzeuge für den Mathematikunterricht – Aufgabengenerator, Visualisierungen, Rechner-Tools und Kompetenzraster.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,59 +16,66 @@
 <body class="portal-body">
 
 <header class="site-header">
-    <button class="site-hamburger" aria-label="Hauptmenü öffnen" title="Module">
-        <span class="site-hamburger-line"></span>
-        <span class="site-hamburger-line"></span>
-        <span class="site-hamburger-line"></span>
+    <!--
+    <button class="site-hamburger" aria-label="Hauptmenü öffnen" title="Module" type="button">
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <line x1="2.5" y1="4" x2="17.5" y2="4"></line>
+            <line x1="2.5" y1="10" x2="17.5" y2="10"></line>
+            <line x1="2.5" y1="16" x2="17.5" y2="16"></line>
+        </svg>
     </button>
-    <a href="index.html" class="site-header-brand">Mathe-Werkzeuge</a>
+    -->
+    <a href="index.html" class="site-header-brand">becker357 - Startseite</a>
 </header>
 
 <main class="portal-main">
     <div class="portal-hero">
-        <div class="portal-hero-eyebrow">Didaktische Werkzeuge</div>
-        <h1 class="portal-hero-title">Mathe-Werkzeuge</h1>
-        <p class="portal-hero-desc">Interaktive Hilfsmittel für den Mathematikunterricht – Aufgabengenerator, Visualisierungen, Rechner-Tools und Kompetenzraster für die Klassen 5 bis 10.</p>
+        <div class="portal-hero-eyebrow">Mathematik üben und verstehen</div>
+        <h1 class="portal-hero-title">becker357 - Startseite</h1>
     </div>
 
     <div class="portal-grid">
 
         <a href="generator/generator.html" class="portal-card portal-card--generator">
-            <div class="portal-card-icon" aria-hidden="true">📝</div>
-            <div class="portal-card-body">
+            <div class="portal-card-header">
+                <div class="portal-card-icon" aria-hidden="true">📝</div>
                 <div class="portal-card-kicker">Aufgabengenerator</div>
-                <h2 class="portal-card-title">Aufgaben & Übungen</h2>
-                <p class="portal-card-desc">Erzeuge Arbeitsblätter, Trainings, Quiz und Präsentationen mit automatisch generierten Mathe-Aufgaben für verschiedene Klassen.</p>
             </div>
-            <div class="portal-card-footer">
-                <span class="portal-badge portal-badge--active">Aktiv</span>
-                <span class="portal-card-arrow" aria-hidden="true">→</span>
+            <div class="portal-card-body">
+                <h2 class="portal-card-title">Aufgaben ohne TR & TW</h2>
+                <p class="portal-card-desc">Zufallsgenerierte Aufgaben, die ohne Taschenrechner und Tafelwerk gelöst werden sollen, als Arbeitsblatt oder zur Vollbild-Anzeige. Ideal als tägliche Übung der Grundlagen.</p>
             </div>
         </a>
-
+<!--
         <a href="generator-plus/generator-plus.html" class="portal-card portal-card--generator-plus">
             <div class="portal-card-icon" aria-hidden="true">✨</div>
             <div class="portal-card-body">
-                <div class="portal-card-kicker">Generator Plus</div>
-                <h2 class="portal-card-title">Weitere Aufgabentypen</h2>
+                <div class="portal-card-kicker">Aufgabengenerator</div>
+                <h2 class="portal-card-title">Aufgaben mit TR & TW</h2>
                 <p class="portal-card-desc">Zusätzliche Aufgabenformate und erweiterte Aufgabentypen, die über den Basis-Generator hinausgehen.</p>
             </div>
-            <div class="portal-card-footer">
-                <span class="portal-badge portal-badge--wip">In Vorbereitung</span>
-                <span class="portal-card-arrow" aria-hidden="true">→</span>
+        </a>
+-->
+
+        <a href="generator/generator.html?view=training&standalone=1" class="portal-card portal-card--training">
+            <div class="portal-card-header">
+                <div class="portal-card-icon" aria-hidden="true">🧠</div>
+                <div class="portal-card-kicker">Training</div>
+            </div>
+            <div class="portal-card-body">
+                <h2 class="portal-card-title">Einzelaufgaben üben</h2>
+                <p class="portal-card-desc">Übe einzelne Aufgaben in einem ablenkungsarmen Training-Modus. Kontrolliere deine Ergebnisse anhand der vorgegebenen Lösungen.</p>
             </div>
         </a>
 
         <a href="visualisierung/visualisierung.html" class="portal-card portal-card--visualisierung">
-            <div class="portal-card-icon" aria-hidden="true">📊</div>
-            <div class="portal-card-body">
-                <div class="portal-card-kicker">Visualisierung</div>
-                <h2 class="portal-card-title">Mathematik verstehen</h2>
-                <p class="portal-card-desc">Interaktive Visualisierungen mathematischer Konzepte und Sachverhalte für ein besseres Verständnis im Unterricht.</p>
+            <div class="portal-card-header">
+                <div class="portal-card-icon" aria-hidden="true">📊</div>
+                <div class="portal-card-kicker">Animationen</div>
             </div>
-            <div class="portal-card-footer">
-                <span class="portal-badge portal-badge--wip">In Vorbereitung</span>
-                <span class="portal-card-arrow" aria-hidden="true">→</span>
+            <div class="portal-card-body">
+                <h2 class="portal-card-title">Grafische Darstellungen</h2>
+                <p class="portal-card-desc">Interaktive Animationen mathematischer Konzepte und Sachverhalte für ein besseres Verständnis. [Noch im Aufbau]</p>
             </div>
         </a>
 <!--
@@ -86,28 +93,24 @@
         </a>
 -->
         <a href="quiz/quiz.html" class="portal-card portal-card--quiz-battle">
-            <div class="portal-card-icon" aria-hidden="true">⚔️</div>
-            <div class="portal-card-body">
-                <div class="portal-card-kicker">Battle-Quiz</div>
-                <h2 class="portal-card-title">Mathe-Battle</h2>
-                <p class="portal-card-desc">Importiere ein Quiz-JSON und starte das Ultra-Elite-Turbo-Ninja-Laser-Mathe-Battle mit drei Gruppen live im Unterricht.</p>
+            <div class="portal-card-header">
+                <div class="portal-card-icon" aria-hidden="true">⚔️</div>
+                <div class="portal-card-kicker">Mathe-Quiz</div>
             </div>
-            <div class="portal-card-footer">
-                <span class="portal-badge portal-badge--active">Aktiv</span>
-                <span class="portal-card-arrow" aria-hidden="true">→</span>
+            <div class="portal-card-body">
+                <h2 class="portal-card-title">Quiz für die ganze Klasse</h2>
+                <p class="portal-card-desc">Drei Gruppen treten im Ultra-Elite-Turbo-Ninja-Laser-Mathe-Battle im Unterricht live gegeneinander an.</p>
             </div>
         </a>
 
         <a href="quiz-auto-single/quiz-auto-single.html" class="portal-card portal-card--quiz-auto-single">
-            <div class="portal-card-icon" aria-hidden="true">🎯</div>
-            <div class="portal-card-body">
-                <div class="portal-card-kicker">Quiz-Auto Einzelfragen</div>
-                <h2 class="portal-card-title">Einzelfragen & Streaks</h2>
-                <p class="portal-card-desc">Endlos-Training im Einzelfragen-Modus mit automatischer Auswertung, Musterlösungen und Streaks.</p>
+            <div class="portal-card-header">
+                <div class="portal-card-icon" aria-hidden="true">✅</div>
+                <div class="portal-card-kicker">Mathe-Quiz</div>
             </div>
-            <div class="portal-card-footer">
-                <span class="portal-badge portal-badge--active">Aktiv</span>
-                <span class="portal-card-arrow" aria-hidden="true">→</span>
+            <div class="portal-card-body">
+                <h2 class="portal-card-title">Individuelles Quiz</h2>
+                <p class="portal-card-desc">Löse Aufgaben aus verschiedenen Themengebieten und versuche, eine möglichst lange Antwort-Serie zu erreichen.</p>
             </div>
         </a>
 

@@ -34,6 +34,21 @@
 </head>
 <body>
 
+<header class="site-header">
+    <!--
+    <button class="site-hamburger" aria-label="Hauptmenü öffnen" title="Module" type="button">
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <line x1="2.5" y1="4" x2="17.5" y2="4"></line>
+            <line x1="2.5" y1="10" x2="17.5" y2="10"></line>
+            <line x1="2.5" y1="16" x2="17.5" y2="16"></line>
+        </svg>
+    </button>
+    -->
+    <a href="../index.html" class="site-header-brand">becker357 - Startseite</a>
+    <span class="site-header-sep" aria-hidden="true">/</span>
+    <span class="site-header-page">Aufgabengenerator</span>
+</header>
+
 <div id="app">
 
     <div v-if="currentView !== 'home' && currentView !== 'worksheet-builder'" :class="['settings-drawer-overlay', { 'is-open': isSettingsSidebarOpen }]" @click="closeSettingsSidebar"></div>
@@ -92,15 +107,7 @@
         </div>
     </aside>
 
-    <div v-if="currentView === 'home'" class="home-view">
-        <div class="generator-home-topbar">
-            <button class="site-hamburger toolbar-hamburger" aria-label="Module wechseln" title="Zu anderen Modulen wechseln">
-                <span class="site-hamburger-line"></span>
-                <span class="site-hamburger-line"></span>
-                <span class="site-hamburger-line"></span>
-            </button>
-            <a href="../index.html" class="generator-home-back-link">&#8592; Mathe-Werkzeuge</a>
-        </div>
+    <div v-if="currentView === 'home' && !directTrainingView" class="home-view">
         <div class="home-hero">
             <div class="home-eyebrow">Mathe-Aufgaben-Generator</div>
             <h1 class="home-title">Modus wählen</h1>
@@ -126,34 +133,12 @@
                 <span>Stelle Aufgaben einzeln zusammen, importiere JSON-Sets und bearbeite jede Aufgabe separat.</span>
             </button>
 
-            <button @click="switchView('training')" class="mode-card mode-card--training">
-                <span class="mode-card-kicker">Interaktiv</span>
-                <strong>Training</strong>
-                <span>Einzelaufgaben nacheinander mit schneller Navigation und Lösungsumschaltung.</span>
-            </button>
-
-            <button @click="switchView('quiz')" class="mode-card mode-card--quiz">
-                <span class="mode-card-kicker">Quiz Setup</span>
-                <strong>Quiz generieren</strong>
-                <span>Erzeuge Quiz-Aufgaben im 3-Spalten-Layout mit spaltenweiser Nummerierung.</span>
-            </button>
-
-            <a href="../quiz/quiz.html" class="mode-card mode-card--import">
-                <span class="mode-card-kicker">Battle-Quiz</span>
-                <strong>Mathe-Battle starten</strong>
-                <span>Importiere eine Aufgaben-JSON und starte das Battle-Quiz. Auch direkt von der Startseite erreichbar.</span>
-            </a>
         </div>
     </div>
 
     <div v-else-if="currentView === 'worksheet'" class="worksheet-view">
         <div class="worksheet-toolbar no-print">
             <div class="toolbar-main-controls">
-                <button class="site-hamburger toolbar-hamburger" aria-label="Module wechseln" title="Zu anderen Modulen wechseln">
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                </button>
                 <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
                 <h3 class="settings-drawer-section-title">Modul:</h3>
                 <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
@@ -387,11 +372,6 @@
         <section class="builder-main">
             <div class="worksheet-toolbar no-print builder-toolbar">
                 <div class="toolbar-main-controls">
-                    <button class="site-hamburger toolbar-hamburger" aria-label="Module wechseln" title="Zu anderen Modulen wechseln">
-                        <span class="site-hamburger-line"></span>
-                        <span class="site-hamburger-line"></span>
-                        <span class="site-hamburger-line"></span>
-                    </button>
                     <h3 class="settings-drawer-section-title">Modul:</h3>
                     <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
                         <option v-for="tab in viewTabs" :key="'builder-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
@@ -506,13 +486,8 @@
     <div v-else-if="currentView === 'training'" class="training-view">
         <div class="training-top-bar">
             <div class="toolbar-main-controls">
-                <button class="site-hamburger toolbar-hamburger" aria-label="Module wechseln" title="Zu anderen Modulen wechseln">
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                </button>
                 <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
-                <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
+                <select v-if="!directTrainingView" :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
                     <option v-for="tab in viewTabs" :key="'training-select-'+tab.key" :value="tab.key">{{ tab.label }}</option>
                 </select>
             </div>
@@ -559,11 +534,6 @@
     <div v-else-if="currentView === 'quiz'" class="quiz-view">
         <div class="worksheet-toolbar no-print quiz-top-bar">
             <div class="toolbar-main-controls">
-                <button class="site-hamburger toolbar-hamburger" aria-label="Module wechseln" title="Zu anderen Modulen wechseln">
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                </button>
                 <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
                 <h3 class="settings-drawer-section-title">Modul:</h3>
                 <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">
@@ -640,11 +610,6 @@
     <div v-else :class="['presentation-view', { 'dark-mode': isDarkMode }]">
         <div class="worksheet-toolbar no-print top-bar">
             <div class="toolbar-main-controls">
-                <button class="site-hamburger toolbar-hamburger" aria-label="Module wechseln" title="Zu anderen Modulen wechseln">
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                    <span class="site-hamburger-line"></span>
-                </button>
                 <button @click="toggleSettingsSidebar" class="btn btn--export">Aufgabenauswahl</button>
                 <h3 class="settings-drawer-section-title">Modul:</h3>
                 <select :value="currentView" @change="onModuleSelect" @mouseenter="openViewDropdown" class="view-switch-select">

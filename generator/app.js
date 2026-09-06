@@ -57,6 +57,16 @@ createApp({
         const viewTabs = isQuizEnabled
             ? state.viewTabs
             : state.viewTabs.filter(tab => tab.key !== 'quiz');
+        const directTrainingView = (() => {
+            const url = new URL(window.location.href);
+            const isStandalone = url.searchParams.get('standalone') === '1';
+            const isTraining = url.searchParams.get('view') === 'training' || url.hash.replace(/^#/, '') === 'training';
+            return isStandalone || isTraining;
+        })();
+
+        if (directTrainingView) {
+            state.currentView.value = 'training';
+        }
         const allTypes = sortByTypeDefinitions(Object.keys(typeLabels));
         const selectedGrade = ref(10);
         const gradeOptions = [5, 6, 7, 8, 9, 10];
@@ -940,7 +950,7 @@ createApp({
             }
         };
 
-        const allowedViews = new Set(viewTabs.map(tab => tab.key));
+        const allowedViews = new Set([...viewTabs.map(tab => tab.key), 'training']);
 
         const getViewFromUrl = () => {
             const url = new URL(window.location.href);
@@ -953,6 +963,26 @@ createApp({
             }
 
             return candidate;
+        };
+
+        const initializeViewFromUrl = async () => {
+            const initialView = getViewFromUrl();
+            if (initialView !== 'home') {
+                suppressHistorySync = true;
+                try {
+                    if (initialView === 'training') {
+                        state.currentView.value = 'training';
+                        await navigation.switchView('training');
+                        return;
+                    }
+                    await navigation.switchView(initialView);
+                } finally {
+                    suppressHistorySync = false;
+                }
+                return;
+            }
+
+            await navigation.switchView('home');
         };
 
         const syncUrlWithView = view => {
@@ -1024,7 +1054,7 @@ createApp({
         };
 
         onMounted(async () => {
-            await applyViewFromUrl();
+            await initializeViewFromUrl();
             window.addEventListener('popstate', applyViewFromUrl);
         });
 
@@ -1034,6 +1064,7 @@ createApp({
 
         return {
             ...state,
+            directTrainingView,
             viewTabs,
             selectedGrade,
             gradeOptions,

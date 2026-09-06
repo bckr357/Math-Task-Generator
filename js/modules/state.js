@@ -64,11 +64,9 @@ window.MTGStateModule = {
             return selectedTypes.value.length > 0;
         });
         const viewTabs = [
-            { key: 'home', label: 'Start' },
             { key: 'worksheet', label: 'Arbeitsblatt' },
             { key: 'presentation', label: 'Präsentation' },
             { key: 'worksheet-builder', label: 'Customizer' },
-            { key: 'training', label: 'Training' },
             { key: 'quiz', label: 'Quiz generieren' }
         ];
 

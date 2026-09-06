@@ -18,42 +18,35 @@
             label: 'Aufgabengenerator',
             icon: '📝',
             url: 'generator/generator.html',
-            desc: 'Aufgaben generieren & üben'
+            desc: 'Aufgaben ohne TR & TW'
         },
         {
-            key: 'generator-plus',
-            label: 'Generator Plus',
-            icon: '✨',
-            url: 'generator-plus/generator-plus.html',
-            desc: 'Weitere Aufgabentypen'
+            key: 'training',
+            label: 'Training',
+            icon: '🧠',
+            url: 'generator/generator.html?view=training&standalone=1',
+            desc: 'Einzelaufgaben üben'
         },
         {
             key: 'visualisierung',
-            label: 'Visualisierung',
+            label: 'Animationen',
             icon: '📊',
             url: 'visualisierung/visualisierung.html',
-            desc: 'Mathe-Konzepte visuell erkunden'
+            desc: 'Grafische Darstellungen'
         },
         {
-            key: 'rechner-tools',
-            label: 'Rechner-Tools',
-            icon: '🧮',
-            url: 'rechner-tools/rechner-tools.html',
-            desc: 'Flächen & Körper berechnen'
-        },
-        {
-            key: 'kompetenzraster',
-            label: 'Kompetenzraster',
-            icon: '📋',
-            url: 'kompetenzraster/kompetenzraster.html',
-            desc: 'Klassen 5–10 im Überblick'
+            key: 'quiz',
+            label: 'Mathe-Quiz',
+            icon: '⚔️',
+            url: 'quiz/quiz.html',
+            desc: 'Quiz für die ganze Klasse'
         },
         {
             key: 'quiz-auto-single',
-            label: 'Quiz-Auto Single',
+            label: 'Individuelles Quiz',
             icon: '🎯',
             url: 'quiz-auto-single/quiz-auto-single.html',
-            desc: 'Endlos-Training mit Einzelfragen'
+            desc: 'Löse Aufgaben in Serien'
         }
     ];
 
@@ -71,18 +64,19 @@
     }
 
     function getCurrentKey() {
-        // Erkennt die aktive Seite anhand des Verzeichnisses (alle Module sind jetzt index.html)
         const path = window.location.pathname;
+        const search = window.location.search.toLowerCase();
         const dir = path.substring(0, path.lastIndexOf('/'));
         const lastSegment = dir.split('/').filter(Boolean).pop() || '';
+
+        if (lastSegment === 'generator' && search.includes('view=training')) {
+            return 'training';
+        }
+
         const dirMap = {
             'generator': 'generator',
-            'generator-plus': 'generator-plus',
             'quiz': 'quiz',
-            'quiz-auto': 'quiz-auto',
             'quiz-auto-single': 'quiz-auto-single',
-            'kompetenzraster': 'kompetenzraster',
-            'rechner-tools': 'rechner-tools',
             'visualisierung': 'visualisierung'
         };
         return dirMap[lastSegment] ?? 'home';

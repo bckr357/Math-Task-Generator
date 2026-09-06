@@ -80,9 +80,20 @@
         border-color: rgba(148, 163, 184, 0.5);
     }
 
+    .portal-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 2.6rem;
+    }
+
     .portal-card-icon {
         font-size: 2.4rem;
         line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
     }
 
     .portal-card-body {
@@ -97,6 +108,10 @@
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.09em;
+        line-height: 1.2;
+        display: flex;
+        align-items: center;
+        min-height: 1.2em;
     }
 
     .portal-card-title {

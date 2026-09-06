@@ -25,19 +25,25 @@
 <body>
 
 <header class="site-header">
-    <button class="site-hamburger" aria-label="Hauptmenü öffnen" title="Module">
-        <span class="site-hamburger-line"></span>
-        <span class="site-hamburger-line"></span>
-        <span class="site-hamburger-line"></span>
+    <!--
+    <button class="site-hamburger" aria-label="Hauptmenü öffnen" title="Module" type="button">
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <line x1="2.5" y1="4" x2="17.5" y2="4"></line>
+            <line x1="2.5" y1="10" x2="17.5" y2="10"></line>
+            <line x1="2.5" y1="16" x2="17.5" y2="16"></line>
+        </svg>
     </button>
-    <a href="../index.html" class="site-header-brand">Mathe-Werkzeuge</a>
+    -->
+    <a href="../index.html" class="site-header-brand">becker357 - Startseite</a>
+    <span class="site-header-sep" aria-hidden="true">/</span>
+    <span class="site-header-page">Quiz</span>
 </header>
 
 <div id="app">
     <main class="quiz-single-main">
         <div class="quiz-single-header">
-            <h1 class="quiz-single-title">🎯 Quiz-Auto (Einzelfragen)</h1>
-            <p class="quiz-single-subtitle">Endlosmodus mit automatischer Auswertung, Streaks und Musterlösungen.</p>
+            <h1 class="quiz-single-title">✅ Idividuelles-Quiz</h1>
+            <p class="quiz-single-subtitle">Löse Aufgaben und versuche, eine möglichst lange Antwort-Serie zu erreichen.</p>
         </div>
 
         <!-- SETUP BEREICH -->
@@ -80,13 +86,19 @@
             <!-- STATS & STREAK BAR -->
             <div class="quiz-single-stats-bar">
                 <div class="quiz-single-stat-group">
+                    <div class="quiz-single-streak-badge" title="Aktueller Streak (aufeinanderfolgende richtige Antworten)">
+                        🔥 Serie: {{ stats.streak }}
+                    </div>
+                    <!--<button type="button" class="quiz-single-btn-reset" @click="resetCurrentStats" title="Laufende Zähler auf 0 zurücksetzen">🔄 Reset Zähler</button>-->
+                </div>
+                <div class="quiz-single-stat-group">
+                    <div class="quiz-single-stat-item">
+                        <span>📊 Aufgaben:</span>
+                        <span class="quiz-single-stat-value">{{ stats.totalChecked }}</span>
+                    </div>
                     <div class="quiz-single-stat-item">
                         <span>🎯 Richtig:</span>
                         <span class="quiz-single-stat-value">{{ stats.correct }}</span>
-                    </div>
-                    <div class="quiz-single-stat-item">
-                        <span>📊 Geprüft:</span>
-                        <span class="quiz-single-stat-value">{{ stats.totalChecked }}</span>
                     </div>
                     <div class="quiz-single-stat-item">
                         <span>📈 Quote:</span>
@@ -94,12 +106,6 @@
                     </div>
                 </div>
 
-                <div class="quiz-single-stat-group">
-                    <div class="quiz-single-streak-badge" title="Aktueller Streak (aufeinanderfolgende richtige Antworten)">
-                        🔥 Streak: {{ stats.streak }}
-                    </div>
-                    <button type="button" class="quiz-single-btn-reset" @click="resetCurrentStats" title="Laufende Zähler auf 0 zurücksetzen">🔄 Reset Zähler</button>
-                </div>
             </div>
 
             <!-- AUFGABENKARTE -->

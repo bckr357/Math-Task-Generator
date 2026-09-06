@@ -61,31 +61,38 @@
     /* ---- Hamburger Button ---- */
     .site-hamburger {
         display: inline-flex;
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
-        gap: 5px;
+        justify-content: center;
         width: 40px;
         height: 40px;
-        padding: 8px;
+        padding: 0;
         border: none;
         background: transparent;
         border-radius: 10px;
         cursor: pointer;
         flex-shrink: 0;
         transition: background 0.15s ease;
+        box-sizing: border-box;
+        line-height: 0;
     }
 
     .site-hamburger:hover {
         background: var(--slate-100);
     }
 
-    .site-hamburger-line {
+    .site-hamburger svg {
         display: block;
-        width: 20px;
-        height: 2px;
-        background: var(--slate-800);
-        border-radius: 2px;
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+    }
+
+    .site-hamburger line {
+        stroke: var(--slate-800);
+        stroke-width: 2.4;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+        shape-rendering: geometricPrecision;
     }
 
     /* ---- Off-Canvas Overlay ---- */
